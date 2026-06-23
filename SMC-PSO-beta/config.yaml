@@ -333,8 +333,10 @@ pso:
       min: 0.01
       max: 0.05 # [CIT-059]
 physics:
-  # The nominal plant parameters defined below correspond to a standard double-inverted pendulum
-  # physical prototype used in control benchmarks (e.g. Prasad et al., 2014, "Modeling and simulation of double inverted pendulum").
+  # The nominal plant parameters below correspond to a standard double-inverted-pendulum-on-cart
+  # benchmark (M/C/G structure per Bogdanov 2004, CSE-04-006; cf. Graichen 2007, Automatica).
+  # Link COM inertias are the uniform thin-rod values I_com = (1/12) m L^2 (see
+  # references/proofs/inertia_validation_proof_CORRECTION.md). No Prasad source is used.
   cart_mass: 1.5 # [CIT-063]
   pendulum1_mass: 0.2
   pendulum2_mass: 0.15
