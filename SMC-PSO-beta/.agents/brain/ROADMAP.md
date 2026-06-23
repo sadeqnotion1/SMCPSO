@@ -1,29 +1,39 @@
 # ROADMAP — migration milestones
 
-> Only the **current** milestone is active. Don't pull work forward. Repo:
-> https://github.com/sadeqnotion1/smcpso (`SMC-PSO-beta/`)
+> Dependency-first order, folded from `ai/planning/migration_plan.md`. Only the
+> **current** milestone is active. Repo: https://github.com/sadeqnotion1/smcpso (`SMC-PSO-beta/`)
 
-## ✅ M0 — Scaffold + brain (DONE-ish)
-- Clean beta scaffold (`config.yaml`, `requirements.txt`, `setup.py`, `src/`).
-- `.agents/` brain installed and filled. ← you are here
+## ✅ M0 — Scaffold + brain
+- Clean beta scaffold; `.agents/` brain installed; `ai/` merged into `.agents/`.
 
-## 🟦 M1 — Controllers (ACTIVE)
-- Port `src/controllers/` (classical, sta, adaptive, hybrid) + `factory.py`.
-- Controllers instantiate from `config.yaml`.
+## ✅ M1 — Environment & configuration (Phase 1)
+- `requirements.txt`, `setup.py`, `config.yaml`, `src/config/` (Pydantic schema + loader).
 
-## ⬜ M2 — Plant + core simulation engine
-- Port `src/plant/` (simplified / full nonlinear / low-rank).
-- Port `src/core/` (`simulation_runner`, `vector_sim`, `safety_guards`).
+## 🟦 M2 — Plant dynamics (Phase 2) — ACTIVE
+- Port `src/plant/`: base interface, full nonlinear, simplified, low-rank. ← you are here
+
+## ⬜ M3 — Utils & math primitives (Phase 3)
+- Port `src/utils/`: types, validation, control primitives, monitoring, metrics.
+
+## ⬜ M4 — Controllers base + simulation core (Phase 4)
+- Port `src/controllers/base.py` and `src/simulation/` (integrators, context, orchestrator).
 - One end-to-end simulation runs in beta.
 
-## ⬜ M3 — Optimization (PSO)
-- Port `src/optimization/` (PSO algorithms, cost objectives, results).
-- A PSO tuning run produces optimized gains.
+## ⬜ M5 — Controller implementations (Phase 5)
+- Port classical / sta / adaptive / hybrid + `src/controllers/factory.py`.
+- Controllers instantiate from `config.yaml`.
 
-## ⬜ M4 — Analysis, interfaces, utils + entry points
-- Port `src/analysis/`, `src/interfaces/` (HIL), `src/utils/`.
-- Add `simulate.py` CLI and the Streamlit dashboard.
+## ⬜ M6 — Optimization (Phase 6)
+- Port `src/optimization/` (PSO algorithms + objectives). A PSO run yields tuned gains.
 
-## ⬜ M5 — Tests, docs, parity sign-off
-- Port `tests/` (pytest) green in beta.
-- Confirm numeric parity vs. source on a benchmark set; refresh docs + graph.
+## ⬜ M7 — Entry points (Phase 7)
+- Add `simulate.py` CLI and `streamlit_app.py` dashboard.
+
+## ⬜ M8 — Verification & tests (Phase 8)
+- Port `tests/` (pytest) green in beta; confirm numeric parity vs. source; refresh graph.
+
+### Per-file migration checklist (apply to every port)
+1. Copy file/dir from `SMC-PSO/` to the matching path in `SMC-PSO-beta/`.
+2. Run syntax checks + linting.
+3. Validate imports (adjust relative imports if package structure shifts).
+4. Mark the phase item done in STATE.md.

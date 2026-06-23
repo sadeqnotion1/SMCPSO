@@ -1,29 +1,29 @@
 {
   "meta": {
     "project": "SMC-PSO-beta",
-    "version": 1,
+    "version": 2,
     "generated": "2026-06-23",
-    "source": "Seeded from SMC-PSO (dip-smc-pso) architecture; refine as beta src/ lands.",
+    "source": "Reconciled to the canonical src/ layout from ai/AGENTS.md (src/simulation/, src/optimization/). src/core/ and src/optimizer/ are deprecated compat shims and are not graphed.",
     "note": "Repo knowledge graph. Query it, never dump it whole. See README.md for schema + recipes."
   },
   "nodes": [
-    { "id": "cli", "kind": "entrypoint", "path": "simulate.py", "desc": "Command-line interface" },
+    { "id": "cli", "kind": "entrypoint", "path": "simulate.py", "desc": "Command-line interface (sim, PSO, HIL)" },
     { "id": "web", "kind": "entrypoint", "path": "streamlit_app.py", "desc": "Streamlit dashboard" },
-    { "id": "config", "kind": "config", "path": "config.yaml", "desc": "YAML-validated configuration" },
+    { "id": "config", "kind": "config", "path": "config.yaml + src/config/", "desc": "Pydantic-validated configuration" },
     { "id": "factory", "kind": "module", "path": "src/controllers/factory.py", "desc": "Type-safe controller factory" },
-    { "id": "smc_classical", "kind": "controller", "path": "src/controllers/smc/classical", "desc": "Classical SMC (boundary layer)" },
-    { "id": "smc_sta", "kind": "controller", "path": "src/controllers/smc/sta", "desc": "Super-twisting SMC" },
-    { "id": "smc_adaptive", "kind": "controller", "path": "src/controllers/smc/adaptive", "desc": "Adaptive SMC (online tuning)" },
-    { "id": "smc_hybrid", "kind": "controller", "path": "src/controllers/smc/hybrid", "desc": "Hybrid adaptive-STA SMC" },
-    { "id": "plant_models", "kind": "module", "path": "src/plant/models", "desc": "DIP dynamics: simplified / full nonlinear / low-rank" },
-    { "id": "runner", "kind": "module", "path": "src/core/simulation_runner.py", "desc": "Simulation orchestration" },
-    { "id": "vector_sim", "kind": "module", "path": "src/core/vector_sim.py", "desc": "Batch / Numba-accelerated sim" },
-    { "id": "safety_guards", "kind": "module", "path": "src/core/safety_guards.py", "desc": "Constraint monitoring" },
+    { "id": "smc_classical", "kind": "controller", "path": "src/controllers/classical_smc.py", "desc": "Classical SMC (boundary layer)" },
+    { "id": "smc_sta", "kind": "controller", "path": "src/controllers/sta_smc.py", "desc": "Super-twisting SMC" },
+    { "id": "smc_adaptive", "kind": "controller", "path": "src/controllers/adaptive_smc.py", "desc": "Adaptive SMC (online tuning)" },
+    { "id": "smc_hybrid", "kind": "controller", "path": "src/controllers/hybrid_adaptive_sta_smc.py", "desc": "Hybrid adaptive-STA SMC" },
+    { "id": "plant_models", "kind": "module", "path": "src/plant/", "desc": "DIP dynamics: simplified / full nonlinear / low-rank" },
+    { "id": "runner", "kind": "module", "path": "src/simulation/", "desc": "Simulation runner / orchestrator / context" },
+    { "id": "vector_sim", "kind": "module", "path": "src/simulation/", "desc": "Batch / Numba vectorized simulators" },
+    { "id": "safety_guards", "kind": "module", "path": "src/simulation/safety", "desc": "Constraint monitoring / safety guards" },
     { "id": "pso", "kind": "module", "path": "src/optimization/algorithms", "desc": "PSO gain tuner" },
     { "id": "cost", "kind": "module", "path": "src/optimization/objectives", "desc": "Multi-objective cost functions" },
     { "id": "analysis", "kind": "module", "path": "src/analysis", "desc": "FDI, validation, statistics, visualization" },
     { "id": "hil", "kind": "module", "path": "src/interfaces/hil", "desc": "Hardware-in-the-loop interface" },
-    { "id": "utils", "kind": "module", "path": "src/utils", "desc": "Validation, reproducibility (seeds), types" }
+    { "id": "utils", "kind": "module", "path": "src/utils", "desc": "Validation, monitoring, visualization, types" }
   ],
   "edges": [
     { "from": "cli", "to": "factory", "rel": "creates" },
