@@ -342,13 +342,9 @@ physics:
   pendulum2_length: 0.3
   pendulum1_com: 0.2
   pendulum2_com: 0.15
-  # The moments of inertia below must satisfy the physical consistency check based on the
-  # Parallel Axis Theorem (enforced in src/plant/configurations/validation.py):
-  #   I >= m * com_distance^2
-  # For Pendulum 1: 0.2 * 0.2^2 = 0.008. The inertia is set to 0.0081 (1.25% margin).
-  # For Pendulum 2: 0.15 * 0.15^2 = 0.003375. The inertia is set to 0.0034 (0.74% margin).
-  pendulum1_inertia: 0.0081  # Fixed for Parallel Axis Theorem check (min: 0.008)
-  pendulum2_inertia: 0.0034  # Fixed for Parallel Axis Theorem check (min: 0.003375)
+  # Nominal link moment of inertia about the center of mass (I_com)
+  pendulum1_inertia: 0.00265  # I_com from reference
+  pendulum2_inertia: 0.00115  # I_com from reference
   gravity: 9.81
   cart_friction: 0.2
   joint1_friction: 0.005

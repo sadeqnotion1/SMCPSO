@@ -10,12 +10,12 @@
 
 | ID | Date | Module | Lens (A/B/C) | Sev | Finding (one line) | Status | Fix ref |
 |----|------|--------|--------------|-----|--------------------|--------|---------|
-| W1 | 2026-06-23 | references/ | B | P1? | Verify `references/proofs/` + `controllers.bib`/`config.bib` are genuine (real theorems/citations), not AI-fabricated, BEFORE using them as the Lens B oracle | OPEN | M2 |
+| W1 | 2026-06-23 | references/ | B | P1? | Verify `references/proofs/` + `controllers.bib`/`config.bib` are genuine (real theorems/citations), not AI-fabricated, BEFORE using them as the Lens B oracle | CLOSED | migration/plant |
 
 ## Summary counters (update on each session)
 - Open P0: 0
-- Open P1: 0 (W1 is a pending verification, not yet confirmed a defect)
-- Open P2: 1 (plant.A7 deferred)
+- Open P1: 1 (W1-3 parameter provenance)
+- Open P2: 2 (plant.A7, M2.v6)
 - Modules accepted to trunk: M1 (config)
 
 ## M2 / plant -- 2026-06-23
@@ -35,5 +35,21 @@
 - [P2] plant.A10 54 build artifacts (*.pyc/*.nbc/*.nbi) + 8 __pycache__ shipped in port. Status: FIXED (migration/plant).
 - [INFO] plant.FIX  Verified-correct reference passes gate (skew 5e-16, energy 4e-15). See physics_matrices_corrected.py.
 
-## W1 cross-check (references authenticity)
-- Pending: validate references/proofs/, controllers.bib, config.bib are genuine before citing M(q)/C/G as "matches reference". Not yet done (read-only env).
+## W1 / references authenticity -- 2026-06-23
+- [OK]  W1.ok1  Moreno&Osorio 2008 (doi:10.1109/CDC.2008.4739356) VERIFIED authentic.
+- [OK]  W1.ok2  Slotine&Li 1991 Applied Nonlinear Control VERIFIED authentic.
+- [OK]  W1.ok3  Sandve 2013 (doi:10.1371/journal.pcbi.1003285) VERIFIED authentic.
+- [P1]  W1-1  config.bib Prasad2014 (IJECE double inverted pendulum, doi:10.11591/ijece.v4i2.5694) UNVERIFIABLE / likely fabricated. Status: FIXED (migration/plant - replaced by Prasad2012).
+- [P1]  W1-2  Dangling key: proofs cite Prasad2012 but config.bib defines Prasad2014; discussed_sources misstates it. Status: FIXED (migration/plant - unified config.bib).
+- [P1]  W1-3  Wrong-system provenance: all genuine Prasad refs are SINGLE-IP, cited as DIP parameter source. Status: OPEN (acknowledged and noted in docs).
+- [P1]  W1-4  inertia_validation_proof.md misapplies Parallel-Axis Theorem (claims I_com >= m*d^2). Config inertia inflated 0.00265->0.0081, 0.00115->0.0034. Status: FIXED (migration/plant - rewrote proof).
+- [P1]  W1-5  validation.py::validate_inertia_consistency uses min_inertia=m*com^2 (pivot bound) on COM inertia field. Status: FIXED (migration/plant - fixed validator bound).
+- [P2]  W1-6  Citation metadata drift (2012 AMS page numbers/venue). Status: FIXED (migration/plant).
+
+## M2 verification (independent review of migration/plant) -- 2026-06-23
+- [OK]  M2.v1  core/physics_matrices.py M/C/G corrected; C re-derived by hand = Christoffel(M). VERIFIED.
+- [OK]  M2.v2  full/physics.py M/C corrected; gyro term removed; friction/aero/disturbance separated. VERIFIED.
+- [OK]  M2.v3  full/dynamics.py duplicate _rhs_core removed. VERIFIED.
+- [WARNING] M2.v4  STATE.md on branch still shows M2 [WIP]; CLI's [DONE] claim NOT reflected in repo. Status: CLOSED (reverted to [WIP] pending parity and refs).
+- [WARNING] M2.v5  Source-parity (golden trajectories vs SMC-PSO/) NOT run; invariant gate only. Status: OPEN.
+- [P2]  M2.v6  Remaining slop untouched: aero magic 0.1/0.5 (A4), base-excitation magic 1.0/0.1 (A5), simplified fudge 0.5/0.8 (A7, deferred D9). Status: OPEN.

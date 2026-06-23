@@ -4,29 +4,24 @@
 > (port -> audit A+B -> prove C -> gate -> accept). ASCII markers only.
 > Repo: https://github.com/sadeqnotion1/smcpso (`SMC-PSO-beta/`)
 
-## -> The one next task (M3): port + AUDIT the UTILS & PRIMITIVES module
-We need to migrate and audit `src/utils/` (types, validation, logging, metrics, visualization).
-This is a critical prerequisite before we start importing and building the controllers and simulation core.
+## -> The one next task (M3): Port, audit, and verify `src/utils/`
+We need to migrate utility modules from `SMC-PSO/src/utils/` (including types, validation, logging, metrics, and visualization) to `SMC-PSO-beta/src/utils/`.
 
 ## Source locations (confirmed in repo)
-- Utils code: `SMC-PSO/src/utils/` -> `SMC-PSO-beta/src/utils/`
-- Audit focus:
-  - Deduplicate vs `core/` and other modules.
-  - Verify metric definitions (ISE, IAE, ITAE) are mathematically correct before controllers and optimization modules begin utilizing them.
+- Untouched source repo: `E:\University\SMC-PSO`
+- Target repo: `E:\University\SMC-PSO-beta`
+- Module directory: `src/utils/`
 
 ## Start the next chat with this
-> "Read .agents/AGENTS.md + brain (esp. MIGRATION_PLAN.md). Port the utils and primitives from
-> SMC-PSO/src/utils/ into SMC-PSO-beta on branch migration/utils, then AUDIT it:
-> Lens A (slop) + Lens B (verify metric definitions like ISE, IAE, ITAE). Run the test suites
-> and ensure full coverage on utility functions. Show me the file plan + audit findings BEFORE
-> marking anything done."
+> "Read .agents/AGENTS.md + brain (esp. MIGRATION_PLAN.md). Start milestone M3:
+> (1) Review files in `E:\University\SMC-PSO\src\utils` and compare them with any existing structure in `E:\University\SMC-PSO-beta\src\utils`.
+> (2) Migrate the utilities, deduplicate any overlap with `src/plant/core/`, verify definition correctness of all metrics, and write invariant unit tests for them."
 
 ## Definition of done for M3 (the gate)
-- All utility functions ported to beta (`src/utils/`).
-- **Lens A:** No dead code, no duplicate methods, no placeholder/fake functions.
-- **Lens B:** Metric computations (ISE, IAE, ITAE, chattering index) conform to textbook definition and are robust to edge conditions (like time-step scaling).
-- **Lens C:** Coverage requirements are met, particularly with safety-critical inputs and metric validators.
-- Ledger updated, P0 = 0 / P1 = 0. Then mark M3 [DONE] in STATE.md.
+- All utility files ported and verified against scientific definitions.
+- Unit testing coverage check for metric computations is implemented.
+- STATE.md / ROADMAP.md updated to [DONE] for M3 once completed.
 
 ## After M3
-M4 controllers base + `src/simulation/` -> M5 controllers + factory.
+M4 controllers base + `src/simulation/`.
+

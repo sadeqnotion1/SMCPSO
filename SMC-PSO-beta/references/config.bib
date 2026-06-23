@@ -1,19 +1,35 @@
-%==========================================================================================\
-%================================ references/config.bib ===================================\
-%==========================================================================================\
+%==========================================================================================
+%================================ references/config.bib (corrected) =======================
+%==========================================================================================
+% W1 fix: removed the unverifiable "Prasad2014 / double inverted pendulum / IJECE" entry,
+% unified the citation key used by the proofs (Prasad2012), and kept ONLY citations whose
+% DOI/venue were verified against external literature. See brain/audits/references_authenticity.md.
+%
+% IMPORTANT PROVENANCE NOTE: the verified Prasad-Tyagi-Gupta papers model a SINGLE
+% inverted pendulum-cart, NOT a double pendulum. If you need a genuine DIP parameter source,
+% cite a real double-inverted-pendulum reference instead, or state plainly that the
+% parameters are adapted. Do not attribute DIP parameters to a single-IP paper.
 
-@article{Prasad2014,
+@inproceedings{Prasad2012,
   author    = {Lal Bahadur Prasad and Barjeev Tyagi and Hari Om Gupta},
-  title     = {Modeling and simulation of double inverted pendulum},
-  journal   = {International Journal of Electrical and Computer Engineering (IJECE)},
-  volume    = {4},
-  number    = {2},
-  pages     = {221--235},
-  year      = {2014},
-  doi       = {10.11591/ijece.v4i2.5694},
-  note      = {Establishes the nominal physical parameters for the double-inverted pendulum system.}
+  title     = {Modelling and Simulation for Optimal Control of Nonlinear Inverted Pendulum Dynamical System Using {PID} Controller and {LQR}},
+  booktitle = {2012 Sixth Asia Modelling Symposium (AMS)},
+  year      = {2012},
+  doi       = {10.1109/AMS.2012.21},
+  note      = {VERIFIED (DOI resolves). NOTE: single inverted pendulum-cart, not a double pendulum. Page range unconfirmed -- verify before final citation.}
 }
 
+@article{Prasad2014IJAC,
+  author    = {Lal Bahadur Prasad and Barjeev Tyagi and Hari Om Gupta},
+  title     = {Optimal Control of Nonlinear Inverted Pendulum System Using {PID} Controller and {LQR}: Performance Analysis Without and With Disturbance Input},
+  journal   = {International Journal of Automation and Computing},
+  volume    = {11},
+  number    = {6},
+  pages     = {661--670},
+  year      = {2014},
+  doi       = {10.1007/s11633-014-0818-1},
+  note      = {VERIFIED. Single inverted pendulum-cart. Use only if a single-IP reference is appropriate.}
+}
 
 @book{Slotine1991,
   author    = {Jean-Jacques E. Slotine and Weiping Li},
@@ -21,9 +37,8 @@
   publisher = {Prentice Hall},
   year      = {1991},
   address   = {Englewood Cliffs, NJ},
-  note      = {Foundational reference for sliding surface design, boundary layer techniques (sat\_soft\_width >= dead\_zone), and Lyapunov stability guidelines.}
+  note      = {VERIFIED. Foundational reference for sliding-surface design and boundary-layer techniques.}
 }
-
 
 @article{Sandve2013,
   author    = {Geir Kjetil Sandve and Anton Nekrutenko and James Taylor and Eivind Hovig},
@@ -34,6 +49,12 @@
   pages     = {e1003285},
   year      = {2013},
   doi       = {10.1371/journal.pcbi.1003285},
-  publisher = {Public Library of Science},
-  note      = {Governs the run provenance logging filter requirements (hash, seed, and commit logging).}
+  note      = {VERIFIED. Governs run-provenance logging (hash, seed, commit).}
 }
+
+% ---------------------------------------------------------------------------
+% TODO (W1-3): add a genuine DOUBLE inverted pendulum reference for the physical
+% parameters, OR relabel the parameters as study-specific. Candidate real DIP refs
+% to evaluate (verify DOIs yourself before adding):
+%   - Standard DIP-on-cart modelling texts / papers with explicit m0,m1,m2,l1,l2,I1,I2.
+% Do NOT re-add the unverifiable IJECE "double inverted pendulum" entry.

@@ -187,35 +187,33 @@ class PhysicsParameterValidator:
         inertia: float,
         pendulum_name: str = ""
     ) -> bool:
-        """Validate inertia consistency with geometry."""
-        # Physical bounds for moment of inertia
-        # Minimum: point mass at COM
-        min_inertia = mass * com_distance**2
-
-        # Maximum: uniform rod about end (conservative estimate)
-        max_inertia = mass * length**2
-
-        if inertia < min_inertia:
+        """Validate COM moment of inertia against physical bounds.
+        NOTE: `inertia` here is the inertia about the link CENTER OF MASS (I_com), which is what
+        the inertia matrix M uses. The hard lower bound for I_com is > 0 (point-mass limit).
+        m*com**2 is the PIVOT point-mass bound (I_pivot >= m*d^2) and must NOT be applied to I_com.
+        """
+        # Hard physical lower bound for a center-of-mass inertia
+        if inertia <= 0:
             raise ConfigurationError(
-                f"{pendulum_name} inertia ({inertia}) below physical minimum "
-                f"({min_inertia:.6f}) for point mass at COM"
+                f"{pendulum_name} COM inertia ({inertia}) must be positive"
             )
 
+        # Upper sanity bound: a body of extent `length` cannot exceed end-rod inertia m*length**2
+        max_inertia = mass * length**2
         if inertia > max_inertia:
             raise ConfigurationError(
-                f"{pendulum_name} inertia ({inertia}) above physical maximum "
-                f"({max_inertia:.6f}) for uniform rod"
+                f"{pendulum_name} COM inertia ({inertia}) above physical maximum "
+                f"({max_inertia:.6f}) for a body of length {length}"
             )
 
-        # Check for reasonable inertia relative to uniform rod
-        uniform_rod_inertia = (1/3) * mass * length**2
-        if inertia > 2 * uniform_rod_inertia:
-            if self.warn_on_unusual:
-                warnings.warn(
-                    f"{pendulum_name} inertia ({inertia}) is large compared to "
-                    f"uniform rod estimate ({uniform_rod_inertia:.6f})",
-                    ConfigurationWarning
-                )
+        # Optional: warn if far from the uniform-rod-about-COM estimate (1/12) m l^2
+        uniform_rod_com_inertia = (1.0 / 12.0) * mass * length**2
+        if self.warn_on_unusual and inertia > 4 * uniform_rod_com_inertia:
+            warnings.warn(
+                f"{pendulum_name} COM inertia ({inertia}) is large vs uniform-rod-about-COM "
+                f"estimate ({uniform_rod_com_inertia:.6f})",
+                ConfigurationWarning
+            )
 
         return True
 

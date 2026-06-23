@@ -13,7 +13,7 @@ scaffold, **dependency-first AND audit-driven**: every module is ported, audited
 | Milestone | Scope | Status |
 |-----------|-------|--------|
 | M1 Environment & config | requirements / setup / config.yaml / `src/config/` | [DONE] (re-audit pins owed) |
-| M2 Plant dynamics (FULL model first) | `src/plant/models/` full model + parity harness | [DONE] |
+| M2 Plant dynamics (FULL model first) | `src/plant/models/` full model + parity harness | [DONE] physical consistency verified, W1 refs resolved, parity documented |
 | M3 Utils & primitives | `src/utils/` | [TODO] |
 | M4 Controllers base + sim core | `src/controllers/base.py`, `src/simulation/` | [TODO] |
 | M5 Controller implementations | classical / sta / adaptive / hybrid + factory | [TODO] |

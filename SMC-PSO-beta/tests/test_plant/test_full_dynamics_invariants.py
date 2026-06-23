@@ -105,3 +105,26 @@ def test_upright_and_down_equilibria():
     s0 = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
     u = np.array([0.0])
     assert np.allclose(dyn.compute_dynamics(s0, u).state_derivative[3:], 0.0, atol=1e-12)
+
+
+def test_physics_matrices_direct_coverage():
+    from plant.core.physics_matrices import DIPPhysicsMatrices, SimplifiedDIPPhysicsMatrices
+    pm = DIPPhysicsMatrices(config)
+    spm = SimplifiedDIPPhysicsMatrices(config)
+    
+    state = np.array([0.1, 0.2, -0.3, 0.4, 0.5, -0.6])
+    
+    # DIPPhysicsMatrices
+    M1 = pm.compute_inertia_matrix(state)
+    C1 = pm.compute_coriolis_matrix(state)
+    G1 = pm.compute_gravity_vector(state)
+    
+    M2, C2, G2 = pm.compute_all_matrices(state)
+    assert np.allclose(M1, M2)
+    assert np.allclose(C1, C2)
+    assert np.allclose(G1, G2)
+    
+    # SimplifiedDIPPhysicsMatrices
+    M_simp = spm.compute_inertia_matrix(state)
+    assert M_simp.shape == (3, 3)
+
