@@ -22,3 +22,17 @@
 - Re-pointed NEXT to Migration Phase 2 (`src/plant/`).
 - The old `ai/` folder is to be deleted on apply (see APPLY.md). No project code changes.
 - **Stop point / next:** M2 — port `src/plant/` (base + full/simplified/low-rank dynamics).
+
+## 2026-06-23 — Session 3: M2 Plant Dynamics Port & Audit Fixes
+- Checked out a new branch `migration/plant` on `SMC-PSO-beta/`.
+- Copied the `src/plant/` module from `SMC-PSO/` to `SMC-PSO-beta/`.
+- Copied the fix kit files to their respective paths (`physics_matrices_corrected.py`, `parity_check.py`, and `test_full_dynamics_invariants.py`).
+- Corrected the inertia (M), Coriolis (C), and gravity (G) calculation formulas in `src/plant/core/physics_matrices.py` and `src/plant/models/full/physics.py` with textbook formulations and decoupled friction.
+- Removed the fabricated gyroscopic term in JIT full Coriolis computations.
+- Decoupled `src/plant/models/full/dynamics.py` from `src.utils.config_compatibility` using duck-typing checks.
+- Deleted duplicate `_rhs_core` methods and fixed state order docstrings in `src/plant/models/full/dynamics.py`.
+- Corrected shims in `src/plant/core/dynamics.py` and `src/plant/models/dynamics.py` to point to modular plant dynamics instead of the deprecated `src/core`.
+- Ran the invariant gate (`python scripts/parity_check.py`) and pytest suite (`python -m pytest tests/test_plant/test_full_dynamics_invariants.py`), resulting in 602/602 tests successfully passing.
+- Stripped temporary build artifacts from the workspace.
+- Updated `AUDIT_LEDGER.md` and `STATE.md` to reflect M2 completion.
+- **Stop point / next:** M3 — Port `src/utils/` and verify metrics definitions.

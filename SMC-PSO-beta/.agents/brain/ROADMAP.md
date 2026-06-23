@@ -12,13 +12,13 @@
 - `requirements.txt`, `setup.py`, `config.yaml`, `src/config/`.
 - Re-audit owed: confirm `numpy<2.0` pin (Numba), Pydantic rejects unknown keys, no secrets.
 
-## [WIP] M2 -- Plant dynamics  <- ACTIVE
+## [DONE] M2 -- Plant dynamics
 - Port `src/plant/` (base + full + simplified + low-rank).
 - Science gate: `M(q)` symmetric PD; energy-conservation test; equilibria/linearization;
   approximation-error bound for simplified/low-rank.
 - Build the shared **parity harness** here (`scripts/parity_check.py` + golden baselines).
 
-## [TODO] M3 -- Utils & primitives
+## [WIP] M3 -- Utils & primitives  <- ACTIVE
 - `src/utils/` (types, validation, logging, metrics, viz). Dedupe vs `core/`; verify metric defs.
 
 ## [TODO] M4 -- Controllers base + simulation core
