@@ -1,39 +1,55 @@
-# ROADMAP — migration milestones
+# ROADMAP -- migration milestones (audit-driven)
 
-> Dependency-first order, folded from `ai/planning/migration_plan.md`. Only the
-> **current** milestone is active. Repo: https://github.com/sadeqnotion1/smcpso (`SMC-PSO-beta/`)
+> Dependency-first. Only the **current** milestone is active. Every milestone is gated by
+> the audit in `brain/MIGRATION_PLAN.md` (port -> audit -> prove -> gate -> accept).
+> A milestone is `[DONE]` only when its Audit Card passes the gate. ASCII markers only.
+> Repo: https://github.com/sadeqnotion1/smcpso (`SMC-PSO-beta/`)
 
-## ✅ M0 — Scaffold + brain
+## [DONE] M0 -- Scaffold + brain
 - Clean beta scaffold; `.agents/` brain installed; `ai/` merged into `.agents/`.
 
-## ✅ M1 — Environment & configuration (Phase 1)
-- `requirements.txt`, `setup.py`, `config.yaml`, `src/config/` (Pydantic schema + loader).
+## [DONE] M1 -- Environment & configuration (Phase 1)
+- `requirements.txt`, `setup.py`, `config.yaml`, `src/config/`.
+- Re-audit owed: confirm `numpy<2.0` pin (Numba), Pydantic rejects unknown keys, no secrets.
 
-## 🟦 M2 — Plant dynamics (Phase 2) — ACTIVE
-- Port `src/plant/`: base interface, full nonlinear, simplified, low-rank. ← you are here
+## [WIP] M2 -- Plant dynamics  <- ACTIVE
+- Port `src/plant/` (base + full + simplified + low-rank).
+- Science gate: `M(q)` symmetric PD; energy-conservation test; equilibria/linearization;
+  approximation-error bound for simplified/low-rank.
+- Build the shared **parity harness** here (`scripts/parity_check.py` + golden baselines).
 
-## ⬜ M3 — Utils & math primitives (Phase 3)
-- Port `src/utils/`: types, validation, control primitives, monitoring, metrics.
+## [TODO] M3 -- Utils & primitives
+- `src/utils/` (types, validation, logging, metrics, viz). Dedupe vs `core/`; verify metric defs.
 
-## ⬜ M4 — Controllers base + simulation core (Phase 4)
-- Port `src/controllers/base.py` and `src/simulation/` (integrators, context, orchestrator).
-- One end-to-end simulation runs in beta.
+## [TODO] M4 -- Controllers base + simulation core
+- `src/controllers/base.py`, `src/simulation/`. Integrator + energy/parity on an uncontrolled
+  drop test; one full end-to-end sim runs.
 
-## ⬜ M5 — Controller implementations (Phase 5)
-- Port classical / sta / adaptive / hybrid + `src/controllers/factory.py`.
-- Controllers instantiate from `config.yaml`.
+## [TODO] M5 -- Controller implementations  (highest scrutiny)
+- classical / sta / adaptive / hybrid + `factory.py`.
+- Science gate: Lyapunov/reaching per controller; STA gain conditions; adaptive boundedness;
+  chattering index; actuator saturation behavior.
 
-## ⬜ M6 — Optimization (Phase 6)
-- Port `src/optimization/` (PSO algorithms + objectives). A PSO run yields tuned gains.
+## [TODO] M6 -- Optimization
+- `src/optimization/` (PSO + objectives + validation). Fitness penalizes instability; bounds
+  respected; seed-reproducible; hold-out scenarios.
 
-## ⬜ M7 — Entry points (Phase 7)
-- Add `simulate.py` CLI and `streamlit_app.py` dashboard.
+## [TODO] M7 -- Interfaces / HIL  (was MISSING from old plan)
+- `src/interfaces/` (HIL server/client, test automation). Needed before entry points
+  (`simulate.py --run-hil`). Audit latency monitor + safe-stop on deadline miss.
 
-## ⬜ M8 — Verification & tests (Phase 8)
-- Port `tests/` (pytest) green in beta; confirm numeric parity vs. source; refresh graph.
+## [TODO] M8 -- Analysis  (was MISSING from old plan)
+- `src/analysis/` (statistics, metrics, comparison). Stats-correctness audit (CI/t-test
+  assumptions, sample size, multiple-comparison correction).
 
-### Per-file migration checklist (apply to every port)
-1. Copy file/dir from `SMC-PSO/` to the matching path in `SMC-PSO-beta/`.
-2. Run syntax checks + linting.
-3. Validate imports (adjust relative imports if package structure shifts).
-4. Mark the phase item done in STATE.md.
+## [TODO] M9 -- Entry points
+- `simulate.py`, `streamlit_app.py`. Every CLI flag / UI control maps to working code; HIL works.
+
+## [TODO] M10 -- Benchmarks (+ decide on integration/, assets/)  (was MISSING from old plan)
+- `src/benchmarks/`. Confirm benchmarks measure what they claim; pin baselines.
+
+## [TODO] M11 -- Verification suite & gates
+- Full `tests/`; wire `.pytest.ini` / `.coveragerc`; CI runs parity + property tests on push.
+
+> Skipped on purpose (deprecated compat shims): `src/core/`, `src/optimizer/`, `src/deprecated/`.
+> Full audit checklists + gate live in `brain/MIGRATION_PLAN.md`.
