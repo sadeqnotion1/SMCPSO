@@ -12,7 +12,7 @@ references/
   ├── controllers.bib         # BibTeX database for controller stability references
   │
   ├── discussed_sources/      # Reference details for sources discussed during configuration tuning
-  │   └── README.md           # Manifest & retrieval links (Prasad 2012, Moreno 2008, Slotine 1991)
+  │   └── README.md           # Manifest & retrieval links (Bogdanov 2004, Moreno 2008, Slotine 1991)
   │
   ├── undiscussed_sources/    # Migrated PDFs from the original repository (not discussed in this session)
   │   ├── articles/           # Technical control theory and optimization papers

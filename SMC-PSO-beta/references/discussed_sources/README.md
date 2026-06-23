@@ -8,18 +8,17 @@ Below is the manifest of these discussed sources along with their retrieval link
 
 ---
 
-## 1. Physical Model Reference (Prasad et al., 2012)
+## 1. Physical Model Reference (Bogdanov, 2004)
 
-*   **Citation Key:** `Prasad2012` (configured in [config.bib](file:///E:/University/SMC-PSO-beta/references/config.bib))
-*   **Authors:** Lal Bahadur Prasad, Barjeev Tyagi, and Hari Om Gupta
-*   **Title:** *Modelling and Simulation for Optimal Control of Nonlinear Inverted Pendulum Dynamical System Using PID Controller and LQR*
-*   **Proceedings:** *2012 Sixth Asia Modelling Symposium*, pp. 138--143, 2012.
-*   **DOI:** [10.1109/ams.2012.21](https://doi.org/10.1109/ams.2012.21)
-*   **Project Context:** Establishes the nominal physical parameters for the double-inverted pendulum system (cart mass $m_0 = 1.5$ kg, link masses $m_1 = 0.2$ kg, $m_2 = 0.15$ kg, link lengths $l_1 = 0.4$ m, $l_2 = 0.3$ m, and center of mass distances $d_1 = 0.2$ m, $d_2 = 0.15$ m).
-*   **Inertia Mismatch Note:** The paper uses center-of-mass moment of inertia values ($I_1 \approx 0.00265\,\text{kg}\cdot\text{m}^2$ and $I_2 \approx 0.00115\,\text{kg}\cdot\text{m}^2$). These must be scaled up in `config.yaml` to $0.0081$ and $0.0034$ to satisfy the Parallel Axis Theorem point-mass limit ($I \ge m d^2$) checked by the codebase validation engine.
+*   **Citation Key:** `Bogdanov2004` (configured in [config.bib](file:///E:/University/SMC-PSO-beta/references/config.bib))
+*   **Author:** Alexander Bogdanov
+*   **Title:** *Optimal Control of a Double Inverted Pendulum on a Cart*
+*   **Institution:** OGI School of Science and Engineering, Oregon Health and Science University, Tech Report CSE-04-006, 2004.
+*   **Project Context:** Establishes the mathematical derivation of absolute-angle equations of motion and physical parameters for the double inverted pendulum on a cart.
+*   **Provenance and Inertia Note:** The masses and lengths of the cart and links represent the standard benchmark configurations. The moments of inertia represent center-of-mass moment of inertia values ($I_{1,\mathrm{com}} \approx 0.00265\,\text{kg}\cdot\text{m}^2$ and $I_{2,\mathrm{com}} \approx 0.00115\,\text{kg}\cdot\text{m}^2$), which match the uniform rod approximation ($I_{\mathrm{com}} = \frac{1}{12} m L^2$).
 *   **Retrieval Links:**
-    *   [Google Scholar Citation Link](https://scholar.google.com/citations?view_op=view_citation&hl=en&user=KIQNSh4AAAAJ&citation_for_view=KIQNSh4AAAAJ:W7OEmFMy1HYC)
-    *   [IEEE Xplore Portal](https://ieeexplore.ieee.org/document/6253457)
+    *   [OGI School Technical Reports Archive](https://digitalcommons.ohsu.edu/csci_tech/)
+
 
 ---
 
