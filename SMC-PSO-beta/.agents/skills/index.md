@@ -10,13 +10,26 @@ Two kinds of skills are tracked here:
 
 ---
 
-## 1) Local skills (authored here)
+## 1) Local skills (authored/vendored here)
 
 | Skill | When to use | Path |
 |-------|-------------|------|
-| _template | Copy to start a new skill | `skills/_template/SKILL.md` |
-
-(None authored yet beyond the template.)
+| `_template` | Copy to start a new skill | `skills/_template/SKILL.md` |
+| `ai-research-reproduction` | Ground PSO-tuned gains against cited paper benchmark metrics | `skills/ai-research-reproduction/SKILL.md` |
+| `paper-context-resolver` | Resolves reference papers to keep agent context grounded | `skills/paper-context-resolver/SKILL.md` |
+| `minimal-run-and-audit` | Runs project minimally and audits outputs (port-and-audit loop) | `skills/minimal-run-and-audit/SKILL.md` |
+| `safe-debug` | Structured side-effect-free debugging for JIT/solvers | `skills/safe-debug/SKILL.md` |
+| `explore-run` | Maps Numba batch-sim and Optuna execution paths | `skills/explore-run/SKILL.md` |
+| `repo-intake-and-plan` | Emits structured work plans for src/ modules | `skills/repo-intake-and-plan/SKILL.md` |
+| `test-driven-development` | Write failing tests first for Hypothesis/pytest expansion | `skills/test-driven-development/SKILL.md` |
+| `systematic-debugging` | Structured fault isolation for SMC gain/PSO failures | `skills/systematic-debugging/SKILL.md` |
+| `verification-before-completion` | Verified outcomes vs criteria before completing (quality gate) | `skills/verification-before-completion/SKILL.md` |
+| `writing-plans` | Create checkable migration plans per module | `skills/writing-plans/SKILL.md` |
+| `dispatching-parallel-agents` | Spawns multiple parallel agents to audit modules simultaneously | `skills/dispatching-parallel-agents/SKILL.md` |
+| `finishing-a-development-branch` | Branch closure and validation workflow | `skills/finishing-a-development-branch/SKILL.md` |
+| `tdd` | Red-green-refactor testing workflow | `skills/tdd/SKILL.md` |
+| `improve-codebase-architecture` | Structure improvement and module layout suggestions | `skills/improve-codebase-architecture/SKILL.md` |
+| `diagnosing-bugs` | Structured bug-triage for config validation and solver errors | `skills/diagnosing-bugs/SKILL.md` |
 
 ---
 
