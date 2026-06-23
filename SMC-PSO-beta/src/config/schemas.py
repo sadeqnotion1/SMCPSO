@@ -48,17 +48,18 @@ class PhysicsConfig(StrictModel):
 
     References
     ----------
-    - Prasad, L. B., Tyagi, B., & Gupta, H. O. (2014). "Modeling and simulation
-      of double inverted pendulum." International Journal of Electrical and Computer
-      Engineering (IJECE), 4(2), 221-235. doi:10.11591/ijece.v4i2.5694
+    - Bogdanov, A. (2004). "Optimal Control of a Double Inverted Pendulum on a Cart."
+      OGI School of Science and Engineering, OHSU, Tech Report CSE-04-006.
+    - Graichen, K., Treuer, M., & Zeitz, M. (2007). "Swing-up of the double pendulum
+      on a cart by feedforward and feedback control..." Automatica, 43(1), 63-71.
       
     Constraints & Invariants
     ------------------------
     - All physical dimensions, masses, and inertia values must be strictly positive.
     - Center of mass distances (com) must lie within the physical rod lengths (com < length).
-    - Moments of inertia must satisfy the Parallel Axis Theorem check:
-        I_i >= m_i * com_i^2
-      to ensure physical consistency of link distributions (enforced in
+    - Moments of inertia must satisfy physical bounds for center of mass moment of inertia:
+        0 < I_i <= m_i * length_i^2
+      to ensure physical consistency (enforced in
       `src/plant/configurations/validation.py`).
     """
     cart_mass: float

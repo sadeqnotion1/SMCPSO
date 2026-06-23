@@ -41,7 +41,7 @@
 - [OK]  W1.ok3  Sandve 2013 (doi:10.1371/journal.pcbi.1003285) VERIFIED authentic.
 - [P1]  W1-1  config.bib Prasad2014 (IJECE double inverted pendulum, doi:10.11591/ijece.v4i2.5694) UNVERIFIABLE / likely fabricated. Status: FIXED (removed and replaced by genuine double-inverted-pendulum sources: Bogdanov2004, Graichen2007, Zhong2001).
 - [P1]  W1-2  Dangling key: proofs cite Prasad2012 but config.bib defines Prasad2014; discussed_sources misstates it. Status: FIXED (all dangling citation keys replaced with verified keys).
-- [P1]  W1-3  Wrong-system provenance: all genuine Prasad refs are SINGLE-IP, cited as DIP parameter source. Status: FIXED (removed and replaced by genuine DIP-on-cart sources).
+- [P1]  W1-3  Wrong-system provenance: all genuine Prasad refs are SINGLE-IP, cited as DIP parameter source. Status: FIXED (all occurrences of Prasad removed from schemas, configs, proofs, and documentation).
 - [P1]  W1-4  inertia_validation_proof.md misapplies Parallel-Axis Theorem (claims I_com >= m*d^2). Config inertia inflated 0.00265->0.0081, 0.00115->0.0034. Status: FIXED (re-written to reflect physical center-of-mass bounds and citable thin-rod values).
 - [P1]  W1-5  validation.py::validate_inertia_consistency uses min_inertia=m*com^2 (pivot bound) on COM inertia field. Status: FIXED (validate_inertia_consistency checks physical center-of-mass bounds).
 - [P2]  W1-6  Citation metadata drift (2012 AMS page numbers/venue). Status: FIXED (metadata-drift citations removed).

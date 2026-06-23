@@ -45,12 +45,11 @@ $$I_{\mathrm{com}} > 0$$
 
 ---
 
-## 3. Application to Prasad et al. (2012) Parameters
+## 3. Application to the DIP-on-Cart Benchmark Parameters
 
-The nominal masses and lengths configured in this Double-Inverted Pendulum (DIP) setup correspond to the experimental benchmark model described in:
-- **Reference:** Prasad, L. B., Tyagi, B., & Gupta, H. O. (2012). *"Modelling and Simulation for Optimal Control of Nonlinear Inverted Pendulum Dynamical System Using PID Controller and LQR"*.
+The nominal masses and lengths follow the standard double-inverted-pendulum-on-cart benchmark whose M(q)/C(q,qdot)/G(q) structure is derived in Bogdanov (2004, OGI/OHSU Tech Report CSE-04-006); cf. the experimentally-validated DIP of Graichen et al. (2007, Automatica). The link COM inertias are NOT taken from any external paper -- they are the uniform thin-rod values I_com = (1/12) m L^2 for the configured masses and lengths. NOTE: the Prasad papers (2012/2014) model a SINGLE / nonlinear inverted pendulum, not a double-pendulum-on-cart, and are therefore NOT valid provenance for these parameters.
 
-### 3.1 Prasad (2012) Original Parameters:
+### 3.1 Benchmark / uniform-rod parameters:
 - Cart Mass ($m_0$): $1.5$ kg
 - Pendulum 1 Mass ($m_1$): $0.2$ kg
 - Pendulum 2 Mass ($m_2$): $0.15$ kg
@@ -61,7 +60,7 @@ The nominal masses and lengths configured in this Double-Inverted Pendulum (DIP)
 
 ### 3.2 Verification & Comparison Table:
 
-| Parameter | Symbol | Prasad (2012) Value | config.yaml Value | Physical Lower Bound ($I_{\mathrm{com}} > 0$) | Validation Status |
+| Parameter | Symbol | Benchmark / uniform-rod Value | config.yaml Value | Physical Lower Bound ($I_{\mathrm{com}} > 0$) | Validation Status |
 | :--- | :---: | :---: | :---: | :---: | :--- |
 | Cart Mass | $m_0$ | $1.5$ kg | `1.5` | N/A | Pass |
 | Link 1 Mass | $m_1$ | $0.2$ kg | `0.2` | N/A | Pass |
@@ -80,14 +79,14 @@ The nominal masses and lengths configured in this Double-Inverted Pendulum (DIP)
   $$I_{1,\mathrm{com}} = 0.00265\,\text{kg}\cdot\text{m}^2 > 0 \quad (\text{Physically Valid})$$
 - Uniform Rod COM Inertia Estimate:
   $$I_{1,\mathrm{rod, com}} = \frac{1}{12} m_1 l_1^2 = \frac{1}{12} \cdot 0.2 \cdot (0.4)^2 \approx 0.002667\,\text{kg}\cdot\text{m}^2$$
-  *Note:* The Prasad (2012) COM value ($0.00265$) matches the uniform rod approximation ($0.002667$) within a very tight tolerance (under 1% error).
+  *Note:* The uniform-rod COM value ($0.00265$) matches the uniform rod approximation ($0.002667$) within a very tight tolerance (under 1% error).
 
 #### Pendulum 2:
 - Center of Mass (COM) Inertia:
   $$I_{2,\mathrm{com}} = 0.00115\,\text{kg}\cdot\text{m}^2 > 0 \quad (\text{Physically Valid})$$
 - Uniform Rod COM Inertia Estimate:
   $$I_{2,\mathrm{rod, com}} = \frac{1}{12} m_2 l_2^2 = \frac{1}{12} \cdot 0.15 \cdot (0.3)^2 \approx 0.001125\,\text{kg}\cdot\text{m}^2$$
-  *Note:* The Prasad (2012) COM value ($0.00115$) matches the uniform rod approximation ($0.001125$) within a very tight tolerance (under 3.3% error).
+  *Note:* The uniform-rod COM value ($0.00115$) matches the uniform rod approximation ($0.001125$) within a very tight tolerance (under 3.3% error).
 
 ---
 
@@ -99,4 +98,4 @@ The validation script enforces:
 - `inertia > 0` (strict physical COM lower bound)
 - `inertia <= mass * length**2` (conservative physical COM upper bound)
 
-This ensures that the configured center-of-mass moments of inertia (`0.00265` and `0.00115`) pass validation while faithfully representing the real physical properties of the Prasad (2012) benchmark system.
+This ensures that the configured center-of-mass moments of inertia (`0.00265` and `0.00115`) pass validation while faithfully representing the uniform-rod DIP-on-cart benchmark parameters.

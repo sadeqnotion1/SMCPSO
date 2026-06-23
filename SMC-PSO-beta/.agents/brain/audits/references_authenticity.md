@@ -19,7 +19,7 @@
 |----|----------|---------|---------------------|
 | W1-1 | **P1** | **`Prasad2014` in config.bib is unverifiable / likely fabricated.** | **FIXED** -- Replaced with genuine DIP-on-cart references (`Bogdanov2004`, `Graichen2007`, `Zhong2001`) in `config.bib`. |
 | W1-2 | **P1** | **Dangling citation key.** `discussed_sources/README.md` cited `Prasad2012`/`Prasad2014` which were not resolved. | **FIXED** -- All dangling citation keys replaced with verified keys (`Bogdanov2004`, `Moreno2008`, `Slotine1991`). |
-| W1-3 | **P1** | **Wrong-system provenance.** Prasad refs model single IP, not double IP. | **FIXED** -- Removed Prasad papers from `config.bib` and updated project files to correctly cite Bogdanov (2004). |
+| W1-3 | **P1** | **Wrong-system provenance.** Prasad refs model single IP, not double IP. | **FIXED** -- All occurrences of Prasad removed from schemas, configs, proofs, and documentation. |
 | W1-4 | **P1** | **inertia_validation_proof.md misapplies Parallel-Axis Theorem.** | **FIXED** -- Added `inertia_validation_proof_CORRECTION.md` and updated `inertia_validation_proof.md` to properly define COM bounds. |
 | W1-5 | **P1** | **Validator bug in validation.py.** Incorrect lower bound `m*d^2` rejected genuine COM inertias. | **FIXED** -- Changed lower bound check to `inertia > 0` in `validation.py`. |
 | W1-6 | P2 | Metadata drift on Prasad citations. | **FIXED** -- Fabricated/drifted Prasad citations removed from the active database. |
