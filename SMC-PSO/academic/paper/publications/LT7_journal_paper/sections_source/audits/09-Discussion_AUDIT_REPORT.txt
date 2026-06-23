@@ -1,0 +1,89 @@
+# AUDIT REPORT: Section 9 - Discussion
+
+**Date:** December 26, 2025
+**Auditor:** Gemini Agent
+**Target Document:** LT-7-RESEARCH-PAPER-v2.1 (Section 9)
+**Status:** **CONDITIONAL PASS** (Issues Identified)
+
+---
+
+## 1. Executive Summary
+
+Section 9 provides a strong synthesis of the paper's findings, offering clear, actionable guidelines for practitioners. The "Decision Tree" and "Application-Specific Recommendations" are excellent additions that bridge the gap between theory and practice. The connection back to theoretical validation (Section 9.4) is also a strong point.
+
+However, the audit identified **SEVERITY 2 (HIGH)** issues regarding the "50.4x degradation" claim (persistent inconsistency) and **SEVERITY 3 (MEDIUM)** issues where the discussion glosses over the "Robustness Score" definition gap identified in Section 8. The **$\beta \neq 1$** issue from Section 4 is implicitly relevant to the "Theoretical vs Experimental" validation, as the predictions being validated might have been based on the flawed assumption.
+
+---
+
+## 2. Detailed Findings
+
+### 2.1 Mathematical Rigor & Implicit Assumptions
+
+*   **Robustness Score Definition (SEVERITY 3):**
+    *   **Table 7.8 (Weighted Score):** "Weighted Score" is calculated as $\sum (Weight \times Rating)$.
+    *   **Issue:** The "Robustness" rating in Table 7.8 (e.g., Adaptive=10/10) doesn't perfectly align with the "Robustness Score" in Table 8.1 (which was 30.0/100). The text doesn't explain the mapping from raw metrics to the 1-10 scale used in the discussion.
+    *   **Impact:** The scoring feels slightly subjective without a defined mapping function.
+
+*   **Theoretical Validation (SEVERITY 2):**
+    *   **Table 9.1:** "Experimental Validation: 96.2% of samples show $\dot{V} < 0$".
+    *   **Context:** This validates Theorem 4.1.
+    *   **Assumption:** Theorem 4.3 (Adaptive) had a math error ($\beta \neq 1$). The table claims "Bounded adaptive gains ... CONFIRMED".
+    *   **Conflict:** While the *result* (bounded gains) confirms the *conclusion* of Theorem 4.3, the *proof* of Theorem 4.3 was flawed. The discussion should ideally acknowledge that stability holds *despite* the proof's simplification, or referencing a corrected proof.
+
+### 2.2 Data/Results Rigor & Verification
+
+| Claim | Location | Calculation | Source | Verified? | Notes |
+|-------|----------|-------------|--------|-----------|-------|
+| "50.4x degradation" | Section 9.3 | N/A | Section 8/5 | â‌Œ | Still inconsistent with 144.6x / 49.3x / 19.3x. |
+| "16% faster than Classical" | Section 9.4 | $(2.15-1.82)/2.15$ | Section 7 | âœ“ | 15.3%. Close enough. |
+| "74% chattering reduction" | Section 9.6 | $(8.2-2.1)/8.2$ | Section 7 | âœ“ | 74.4%. Verified. |
+| "11.8J energy" | Section 9.6 | N/A | Section 7 | âœ“ | Matches Table 7.4. |
+
+### 2.3 Cross-Section Consistency
+
+*   **Generalization Failure Magnitude:**
+    *   **Section 9.3:** Cites "50.4x".
+    *   **Section 8.3:** Table says "50.4x", Text says "144.59x".
+    *   **Consistency:** Section 9 matches the *Table* in Section 8, but contradicts the *Text* in Section 8.
+    *   **Fix:** As per previous audits, standardizing on one metric (RMS) and one value (likely ~50x) is required.
+
+*   **Settling Time:**
+    *   **Section 7:** 1.82s.
+    *   **Section 9:** 1.82s.
+    *   **Consistency:** Consistent.
+
+---
+
+## 3. Severity-Classified Issues
+
+### âڑ ï¸ڈ SEVERITY 1 (CRITICAL)
+*   *(None identified directly in this section, but relies on previous fixes)*
+
+### âڑ ï¸ڈ SEVERITY 2 (HIGH)
+1.  **Persistent Degradation Ratio Inconsistency:**
+    *   **Location:** Section 9.3 (Limitation 1).
+    *   **Issue:** Repeats the "50.4x" claim which conflicts with the "144.6x" claim in Section 8 text.
+    *   **Fix:** Harmonize all instances to the RMS-based value.
+
+### âڑ ï¸ڈ SEVERITY 3 (MEDIUM)
+1.  **Subjective Scoring in Table 7.8:**
+    *   **Location:** Section 9 (Table 7.8 is referenced here).
+    *   **Issue:** The mapping from physical units (s, %, J) to "1-10 Rating" is not defined.
+    *   **Fix:** Add a note: "Ratings normalized relative to best/worst performer in each category."
+
+2.  **Theory Validation Nuance:**
+    *   **Location:** Table 9.1.
+    *   **Issue:** Validating Theorem 4.3 (Adaptive) as "Strong Agreement" is risky given the known proof error.
+    *   **Fix:** Change "Agreement" to "Empirically Supported (Proof Revision Needed)" or similar, or ensure the proof in Section 4 is fixed first.
+
+---
+
+## 4. Recommendations
+
+1.  **Harmonize Degradation Ratio:** Ensure Section 9 uses the exact same number as the corrected Abstract and Section 8.
+2.  **Qualify Theory Validation:** In Section 9.4, add a footnote acknowledging that while experimental results align with stability properties, the strict theoretical bounds (especially for Adaptive SMC) rely on assumptions ($\beta=1$) that were simplified.
+3.  **Define Scoring Logic:** Briefly explain how the 1-10 scores in the "Performance Trade-off Matrix" were derived to improve transparency.
+
+---
+
+**Final Score:** 8/10 (Excellent synthesis, minor consistency issues)

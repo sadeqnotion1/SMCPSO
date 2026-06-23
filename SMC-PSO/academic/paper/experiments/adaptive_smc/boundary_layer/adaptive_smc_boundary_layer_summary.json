@@ -1,0 +1,41 @@
+{
+  "controller_type": "adaptive_smc",
+  "phase53_gains": [
+    23.670769359566975,
+    14.288596313057464,
+    8.86878335929106,
+    3.5473665394849467,
+    0.3278231762685661
+  ],
+  "best_parameters": {
+    "epsilon_min": 0.017058389039001715,
+    "alpha": 1.1416660272849808
+  },
+  "pso_optimization": {
+    "n_particles": 30,
+    "n_iterations": 50,
+    "final_fitness": 5.967131402321258
+  },
+  "validation_statistics": {
+    "n_runs": 100,
+    "chattering_index": {
+      "mean": 0.0360171932477708,
+      "std": 0.006010693057327607,
+      "ci_95": 0.001178095839236211
+    },
+    "settling_time": {
+      "mean": 10.0,
+      "std": 0.0,
+      "ci_95": 0.0
+    },
+    "overshoot": {
+      "mean": 4.2406493430069085,
+      "std": 0.6346956518295924,
+      "ci_95": 0.12440034775860012
+    },
+    "control_energy": {
+      "mean": 222447.22534525683,
+      "std": 691.3331354437785
+    }
+  }
+}

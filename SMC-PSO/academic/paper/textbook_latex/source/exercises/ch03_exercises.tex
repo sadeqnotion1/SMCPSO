@@ -1,0 +1,394 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CHAPTER 3 EXERCISES: Classical Sliding Mode Control
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section*{Exercises}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Conceptual Questions}
+
+\begin{exercise}[Hurwitz Stability Criterion]
+\label{ex:ch3_hurwitz}
+Explain why the sliding surface coefficients $(\lambda_1, \lambda_2, k_1, k_2)$ must form a Hurwitz polynomial.
+\begin{enumerate}[label=(\alph*)]
+    \item What does "Hurwitz" mean in terms of eigenvalue locations?
+    \item Give an example of Hurwitz vs non-Hurwitz coefficient sets
+    \item How does this relate to exponential convergence on the sliding surface?
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Equivalent Control Physical Interpretation]
+\label{ex:ch3_equiv_control}
+The equivalent control $u_{eq}$ is defined by setting $\dot{\sigma} = 0$ and solving for $u$.
+\begin{enumerate}[label=(\alph*)]
+    \item Explain why $u_{eq}$ represents the control needed to maintain sliding motion
+    \item What happens if the system dynamics are perfectly known vs. imperfectly known?
+    \item Why is $u_{eq}$ insufficient alone without the switching term $-K \sign(\sigma)$?
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Boundary Layer vs Chattering Trade-off]
+\label{ex:ch3_boundary_tradeoff}
+Compare the boundary layer saturation function $\sat(\sigma/\epsilon)$ with pure $\sign(\sigma)$.
+\begin{enumerate}[label=(\alph*)]
+    \item Sketch both functions for $\epsilon = 0.01, 0.05, 0.1$ rad
+    \item Explain the chattering reduction mechanism
+    \item What is lost by using saturation instead of sign?
+    \item For a system with $\pm 10\%$ model uncertainty, recommend an appropriate $\epsilon$
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Gain Positivity Constraints]
+\label{ex:ch3_gain_positivity}
+All classical SMC gains must be positive: $K, k_d, \lambda_i, k_i > 0$.
+\begin{enumerate}[label=(\alph*)]
+    \item Explain the physical consequence of violating $K > 0$
+    \item What happens if $k_d < 0$ (negative damping)?
+    \item Use Lyapunov analysis to show why $K > 0$ is required for $\dot{V} < 0$
+\end{enumerate}
+\end{exercise}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Derivation and Proof Problems}
+
+\begin{exercise}[Equivalent Control Derivation]
+\label{ex:ch3_equiv_control_derive}
+Derive the equivalent control for the DIP system starting from $\dot{\sigma} = 0$.
+\begin{enumerate}[label=(\alph*)]
+    \item Define $\sigma = \vect{L}^T \vect{x}$ where $\vect{L} = [\lambda_1, \lambda_2, k_1, k_2, 0, 0]^T$
+    \item Compute $\dot{\sigma} = \vect{L}^T \dot{\vect{x}}$ using the DIP dynamics
+    \item Set $\dot{\sigma} = 0$ and solve for $u = u_{eq}$
+    \item Show that $u_{eq} = (\vect{L}^T \mat{M}^{-1} \mat{B})^{-1} [\vect{L}^T \mat{M}^{-1}(\mat{C}\dot{\vect{q}} + \vect{G})]$
+    \item Identify conditions under which $u_{eq}$ is well-defined (denominator $\neq 0$)
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Lyapunov Proof of Exponential Convergence]
+\label{ex:ch3_lyapunov_proof}
+Prove that classical SMC achieves exponential convergence to the sliding surface.
+\begin{enumerate}[label=(\alph*)]
+    \item Start with $V = \frac{1}{2}\sigma^2$ and compute $\dot{V}$
+    \item Use the control law $u = u_{eq} - K \sat(\sigma/\epsilon) - k_d \sigma$
+    \item Show that $\dot{V} \leq -k_d \sigma^2 = -2 k_d V$ (outside boundary layer)
+    \item Integrate to obtain $V(t) \leq V(0) e^{-2 k_d t}$
+    \item Conclude that $|\sigma(t)| \leq |\sigma(0)| e^{-k_d t}$ (exponential convergence rate $\lambda = k_d$)
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Sliding Surface Pole Placement]
+\label{ex:ch3_pole_placement}
+Design sliding surface parameters $(\lambda_1, \lambda_2, k_1, k_2)$ to place the closed-loop poles at desired locations.
+\begin{enumerate}[label=(\alph*)]
+    \item The sliding dynamics are $\dot{\vect{e}} = \mat{A}_s \vect{e}$ where $\mat{A}_s$ depends on $(\lambda_i, k_i)$
+    \item For a 2-DOF system, $\mat{A}_s$ is $4 \times 4$. Derive the characteristic polynomial.
+    \item Design parameters for poles at $s = -5 \pm 3i, -8, -10$ (2 complex conjugate, 2 real)
+    \item Verify your design by computing eigenvalues of $\mat{A}_s$
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Reaching Time Estimation]
+\label{ex:ch3_reaching_time}
+Derive an upper bound on the time to reach the sliding surface.
+\begin{enumerate}[label=(\alph*)]
+    \item Assume $\sigma \dot{\sigma} \leq -\eta |\sigma|$ with $\eta = K - \delta$ (disturbance bound)
+    \item Write this as $\frac{d}{dt}|\sigma| \leq -\eta$
+    \item Integrate to obtain $|\sigma(t)| \leq |\sigma(0)| - \eta t$
+    \item Solve for reaching time $t_r = |\sigma(0)| / \eta$
+    \item If $|\sigma(0)| = 0.5$ rad and $K = 15$ N, $\delta = 5$ N, compute $t_r$
+\end{enumerate}
+\end{exercise}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Controller Tuning Problems}
+
+\begin{exercise}[Manual Gain Tuning]
+\label{ex:ch3_manual_tuning}
+Given a DIP with parameters $M = 1.0$ kg, $m_1 = m_2 = 0.1$ kg, $L_1 = L_2 = 0.5$ m, manually tune classical SMC gains.
+\begin{enumerate}[label=(\alph*)]
+    \item Start with $\lambda_1 = \lambda_2 = 5$, $k_1 = k_2 = 1$. Simulate for 5 seconds from $\theta_1(0) = 0.1$ rad.
+    \item Increase $K$ from 5 to 50 in steps of 5. Plot settling time vs. $K$. What is the optimal $K$?
+    \item Fix $K = 20$ and vary $\epsilon$ from 0.005 to 0.05 rad. Plot chattering amplitude vs. $\epsilon$.
+    \item Adjust $k_d$ to improve damping. What value gives critical damping?
+    \item Report final gains and justify each choice
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Boundary Layer Thickness Selection]
+\label{ex:ch3_boundary_thickness}
+Design the boundary layer thickness $\epsilon$ to meet specifications.
+\begin{enumerate}[label=(\alph*)]
+    \item Maximum allowable steady-state error: $|e_{ss}| \leq 0.02$ rad
+    \item Maximum chattering frequency: $f_{chat} \leq 50$ Hz
+    \item Sampling frequency: $f_s = 1000$ Hz
+    \item Derive the relationship $\epsilon \approx e_{ss}$ for the boundary layer method
+    \item Determine $\epsilon$ to satisfy both constraints
+    \item Validate via simulation
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Robustness to Disturbances]
+\label{ex:ch3_disturbance_robustness}
+Test classical SMC robustness to matched disturbances.
+\begin{enumerate}[label=(\alph*)]
+    \item Add a sinusoidal disturbance $d(t) = 5 \sin(2\pi \cdot 2 t)$ N to the control input
+    \item Simulate with $K = 10, 15, 20, 25$ N
+    \item For each $K$, measure maximum tracking error $\max_t |\theta_1(t)|$
+    \item Determine the minimum $K$ such that $\max_t |\theta_1(t)| < 0.05$ rad
+    \item Explain why $K > d_{\max} = 5$ N is necessary but not sufficient
+\end{enumerate}
+\end{exercise}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Implementation Problems}
+
+\begin{exercise}[Classical SMC Implementation]
+\label{ex:ch3_classical_impl}
+Implement the complete classical SMC controller in Python:
+
+\begin{lstlisting}[language=Python]
+import numpy as np
+
+class ClassicalSMC:
+    def __init__(self, lambda1, lambda2, k1, k2, K, kd, epsilon):
+        """
+        Initialize classical SMC controller.
+
+        Args:
+            lambda1, lambda2: sliding surface slopes for theta1, theta2
+            k1, k2: sliding surface velocity gains
+            K: switching gain (N)
+            kd: damping coefficient
+            epsilon: boundary layer thickness (rad)
+        """
+        self.lambda1 = lambda1
+        self.lambda2 = lambda2
+        self.k1 = k1
+        self.k2 = k2
+        self.K = K
+        self.kd = kd
+        self.epsilon = epsilon
+
+    def compute_sliding_surface(self, state):
+        """
+        Compute sliding surface value sigma.
+
+        Args:
+            state: [x_cart, theta1, theta2, dx_cart, dtheta1, dtheta2]
+
+        Returns:
+            sigma: sliding surface value (scalar)
+        """
+        # YOUR CODE HERE
+        pass
+
+    def compute_equivalent_control(self, state, params):
+        """
+        Compute equivalent control u_eq.
+
+        Args:
+            state: current state
+            params: system parameters (M, m1, m2, L1, L2, g)
+
+        Returns:
+            u_eq: equivalent control (N)
+        """
+        # YOUR CODE HERE
+        # Compute M(q), C(q, dq), G(q)
+        # Use formula: u_eq = (L^T M^-1 B)^-1 * [L^T M^-1 (C*dq + G)]
+        pass
+
+    def saturation(self, sigma):
+        """
+        Boundary layer saturation function.
+
+        Args:
+            sigma: sliding surface value
+
+        Returns:
+            sat(sigma/epsilon): saturated value in [-1, 1]
+        """
+        return np.clip(sigma / self.epsilon, -1.0, 1.0)
+
+    def compute_control(self, state, params):
+        """
+        Compute total control output.
+
+        Args:
+            state: current state
+            params: system parameters
+
+        Returns:
+            u: control force (N)
+        """
+        sigma = self.compute_sliding_surface(state)
+        u_eq = self.compute_equivalent_control(state, params)
+
+        # Complete control law: u = u_eq - K*sat(sigma/eps) - kd*sigma
+        u_switch = -self.K * self.saturation(sigma)
+        u_damp = -self.kd * sigma
+
+        return u_eq + u_switch + u_damp
+
+# Test controller
+controller = ClassicalSMC(lambda1=5.0, lambda2=5.0, k1=1.0, k2=1.0,
+                           K=15.0, kd=2.0, epsilon=0.02)
+state_test = np.array([0.0, 0.1, 0.05, 0.0, 0.0, 0.0])
+params = {'M': 1.0, 'm1': 0.1, 'm2': 0.1, 'L1': 0.5, 'L2': 0.5, 'g': 9.81}
+u_out = controller.compute_control(state_test, params)
+print(f"Control output: {u_out:.2f} N")
+\end{lstlisting}
+\end{exercise}
+
+\begin{exercise}[Gain Validation Test Suite]
+\label{ex:ch3_gain_validation}
+Implement automated gain validation checks:
+
+\begin{lstlisting}[language=Python]
+def validate_classical_smc_gains(lambda1, lambda2, k1, k2, K, kd, epsilon):
+    """
+    Validate that all gains satisfy physical and stability constraints.
+
+    Args:
+        lambda1, lambda2, k1, k2, K, kd, epsilon: controller gains
+
+    Returns:
+        is_valid: bool (True if all checks pass)
+        errors: list of str (validation error messages)
+    """
+    errors = []
+
+    # Check 1: All gains must be positive
+    if lambda1 <= 0: errors.append("lambda1 must be > 0")
+    if lambda2 <= 0: errors.append("lambda2 must be > 0")
+    # ... add more checks
+
+    # Check 2: Sliding surface must be Hurwitz
+    # Compute eigenvalues of A_s matrix
+    # If any have Re(lambda) >= 0, add error
+
+    # Check 3: Boundary layer thickness must be reasonable
+    if epsilon < 0.001: errors.append("epsilon too small (< 0.001), may cause chattering")
+    if epsilon > 0.1: errors.append("epsilon too large (> 0.1), poor tracking")
+
+    # Check 4: Switching gain must exceed expected disturbances
+    # Assume max disturbance = 10 N for DIP
+    if K < 10: errors.append("K < 10 N, may not reject disturbances")
+
+    # Check 5: Controllability threshold
+    # Ensure L^T M^-1 B > epsilon_threshold
+
+    is_valid = (len(errors) == 0)
+    return is_valid, errors
+
+# Test validation
+is_valid, errors = validate_classical_smc_gains(5.0, 5.0, 1.0, 1.0, 15.0, 2.0, 0.02)
+if is_valid:
+    print("All gains valid!")
+else:
+    print("Validation errors:")
+    for err in errors:
+        print(f"  - {err}")
+\end{lstlisting}
+\end{exercise}
+
+\begin{exercise}[Performance Metrics Computation]
+\label{ex:ch3_performance_metrics}
+Implement functions to compute key performance metrics:
+
+\begin{lstlisting}[language=Python]
+def compute_settling_time(time, theta1, tolerance=0.02):
+    """
+    Compute settling time (time to reach and stay within tolerance).
+
+    Args:
+        time: array of time values (s)
+        theta1: array of theta1 values (rad)
+        tolerance: settling tolerance (rad)
+
+    Returns:
+        t_settle: settling time (s), or np.inf if never settles
+    """
+    # YOUR CODE HERE
+    pass
+
+def compute_chattering_metric(control_signal, dt):
+    """
+    Compute chattering amplitude as control variation.
+
+    Args:
+        control_signal: array of control values (N)
+        dt: timestep (s)
+
+    Returns:
+        chattering: sum of abs(u[i+1] - u[i]) / N
+    """
+    # YOUR CODE HERE
+    pass
+
+def compute_tracking_error_rms(theta1, theta2, theta1_ref=0, theta2_ref=0):
+    """
+    Compute RMS tracking error.
+
+    Args:
+        theta1, theta2: arrays of angle values
+        theta1_ref, theta2_ref: reference values
+
+    Returns:
+        rms_error: sqrt(mean((theta1 - ref1)^2 + (theta2 - ref2)^2))
+    """
+    # YOUR CODE HERE
+    pass
+
+# Use in simulation
+time, theta1, theta2, control = simulate_classical_smc(T=5.0, dt=0.01)
+t_settle = compute_settling_time(time, theta1)
+chat = compute_chattering_metric(control, dt=0.01)
+rms = compute_tracking_error_rms(theta1, theta2)
+print(f"Settling time: {t_settle:.2f} s")
+print(f"Chattering: {chat:.2f}")
+print(f"RMS error: {rms:.4f} rad")
+\end{lstlisting}
+\end{exercise}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Advanced Problems}
+
+\begin{exercise}[Time-Varying Sliding Surface]
+\label{ex:ch3_time_varying}
+Design a time-varying sliding surface $\sigma(t) = \lambda(t) e + \dot{e}$ where $\lambda(t)$ decreases over time.
+\begin{enumerate}[label=(\alph*)]
+    \item Propose $\lambda(t) = \lambda_0 + (\lambda_f - \lambda_0) e^{-\alpha t}$
+    \item Choose $\lambda_0 = 10$ (fast initial convergence), $\lambda_f = 2$ (low chattering), $\alpha = 1$ s$^{-1}$
+    \item Derive the modified reaching condition for time-varying $\sigma$
+    \item Implement and compare to constant $\lambda = 5$
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Uncertainty Quantification]
+\label{ex:ch3_uncertainty}
+Analyze classical SMC robustness under parametric uncertainty.
+\begin{enumerate}[label=(\alph*)]
+    \item Introduce $\pm 30\%$ uncertainty in masses: $m_1, m_2 \in [0.07, 0.13]$ kg
+    \item Run Monte Carlo simulation (100 trials) with random mass values
+    \item Compute success rate (percentage where $\max_t |\theta_1| < 0.1$ rad)
+    \item Vary $K$ from 10 to 30 N and plot success rate vs. $K$
+    \item Determine minimum $K$ for 95\% success rate
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Comparative Study: Saturation Functions]
+\label{ex:ch3_saturation_compare}
+Compare three boundary layer functions: linear saturation, hyperbolic tangent, and sigmoid.
+\begin{enumerate}[label=(\alph*)]
+    \item $\text{sat}_{\text{lin}}(\sigma) = \sigma/\epsilon$ for $|\sigma| \leq \epsilon$
+    \item $\text{sat}_{\text{tanh}}(\sigma) = \tanh(\sigma/\epsilon)$
+    \item $\text{sat}_{\text{sig}}(\sigma) = 2/(1 + e^{-\sigma/\epsilon}) - 1$
+    \item Plot all three for $\epsilon = 0.02$ rad
+    \item Implement each in controller and compare chattering amplitude, settling time, RMS error
+    \item Recommend the best choice for the DIP benchmark
+\end{enumerate}
+\end{exercise}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% End of Chapter 3 Exercises
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

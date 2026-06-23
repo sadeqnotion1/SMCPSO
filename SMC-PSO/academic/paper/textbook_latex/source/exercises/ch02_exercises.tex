@@ -1,0 +1,271 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CHAPTER 2 EXERCISES: Mathematical Foundations
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section*{Exercises}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Conceptual Questions}
+
+\begin{exercise}[Hamilton's Principle Intuition]
+\label{ex:ch2_hamilton}
+Explain in physical terms why Hamilton's Principle (the action integral is stationary) is equivalent to Newton's second law. Give an example from everyday experience that illustrates this "principle of least action."
+\end{exercise}
+
+\begin{exercise}[Mass Matrix Properties]
+\label{ex:ch2_mass_matrix_properties}
+For the DIP inertia matrix $\mat{M}(\vect{q})$, explain why:
+\begin{enumerate}[label=(\alph*)]
+    \item Symmetry ($\mat{M}^T = \mat{M}$) is guaranteed from the Lagrangian formulation
+    \item Positive definiteness is required for physical realizability
+    \item Configuration dependence (entries depend on $\theta_1, \theta_2$) complicates control design
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Matched vs Unmatched Disturbances]
+\label{ex:ch2_disturbances}
+Consider a quadrotor with dynamics $\ddot{z} = -g + \frac{T}{m} + d_z$ (vertical) and $\ddot{\phi} = \frac{\tau_\phi}{I_x} + d_\phi$ (roll), where $T$ is total thrust and $\tau_\phi$ is roll torque.
+\begin{enumerate}[label=(\alph*)]
+    \item Classify $d_z$ and $d_\phi$ as matched or unmatched with respect to control inputs $(T, \tau_\phi)$.
+    \item Can classical SMC completely reject both disturbances? Why or why not?
+    \item What additional control strategy would be needed for unmatched disturbances?
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Stability Hierarchy]
+\label{ex:ch2_stability_hierarchy}
+Rank the following stability concepts from weakest to strongest:
+\begin{itemize}
+    \item Asymptotic stability
+    \item Exponential stability
+    \item Finite-time stability
+    \item Stability in the sense of Lyapunov
+\end{itemize}
+For each, provide the key defining property and a physical example.
+\end{exercise}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Derivation Problems}
+
+\begin{exercise}[Lagrangian Derivation - Link 1]
+\label{ex:ch2_lagrangian_link1}
+Derive the kinetic energy $T_1$ for link 1 of the DIP from first principles.
+\begin{enumerate}[label=(\alph*)]
+    \item Start with the position vector $\vect{r}_1 = [x_{\text{cart}} + \frac{L_1}{2}\sin\theta_1, \frac{L_1}{2}\cos\theta_1]^T$
+    \item Compute the velocity vector $\dot{\vect{r}}_1$
+    \item Calculate the squared velocity $v_1^2 = \dot{\vect{r}}_1^T \dot{\vect{r}}_1$
+    \item Include both translational ($\frac{1}{2}m_1 v_1^2$) and rotational ($\frac{1}{2}I_1 \dot{\theta}_1^2$) kinetic energy
+    \item Verify that your result matches the expression in Section 2.2.3
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Mass Matrix Symmetry Proof]
+\label{ex:ch2_mass_symmetry}
+Prove that the inertia matrix $\mat{M}(\vect{q})$ is symmetric by showing:
+\begin{enumerate}[label=(\alph*)]
+    \item $M_{12} = M_{21}$ using the explicit expressions from Equation (2.21)
+    \item $M_{13} = M_{31}$ using the kinetic energy expression
+    \item Why does symmetry follow generally from the Lagrangian $T = \frac{1}{2}\dot{\vect{q}}^T \mat{M}(\vect{q}) \dot{\vect{q}}$?
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Gravity Linearization]
+\label{ex:ch2_gravity_linearization}
+Linearize the gravity vector $\vect{G}(\vect{q})$ around the upright equilibrium $\theta_1 = \theta_2 = 0$.
+\begin{enumerate}[label=(\alph*)]
+    \item Use the small-angle approximation $\sin\theta \approx \theta$
+    \item Show that $\vect{G}_{\text{lin}} = -\mat{K}_g \vect{\theta}$ where $\mat{K}_g$ is a "negative stiffness" matrix
+    \item Compute the eigenvalues of $\mat{K}_g$ for typical parameters
+    \item Explain why negative eigenvalues confirm instability of the upright equilibrium
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Christoffel Symbols Computation]
+\label{ex:ch2_christoffel}
+Compute the Christoffel symbol $c_{123}$ for the DIP using Equation (2.27):
+\begin{equation*}
+c_{123} = \frac{1}{2}\left(\pdiff{M_{12}}{\theta_2} + \pdiff{M_{13}}{\theta_1} - \pdiff{M_{23}}{\theta_1}\right)
+\end{equation*}
+Use the mass matrix components from Section 2.3 and verify your result by checking that $C_{12} = c_{123} \dot{\theta}_2$.
+\end{exercise}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Lyapunov Stability Analysis}
+
+\begin{exercise}[Lyapunov Function Verification]
+\label{ex:ch2_lyapunov_verification}
+For the candidate Lyapunov function $V = \frac{1}{2}\sigma^2$, verify:
+\begin{enumerate}[label=(\alph*)]
+    \item $V$ is positive definite: $V(0) = 0$ and $V(\sigma) > 0$ for $\sigma \neq 0$
+    \item $V$ is radially unbounded: $V(\sigma) \to \infty$ as $|\sigma| \to \infty$
+    \item If $\sigma \dot{\sigma} \leq -\eta|\sigma|$ for $\eta > 0$, then $\dot{V} \leq -\eta \sqrt{2V}$
+    \item The convergence rate to $\sigma = 0$ is at least exponential with rate $\lambda = \eta$
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Reaching Condition Design]
+\label{ex:ch2_reaching_condition}
+For the DIP system, design a control law that satisfies the reaching condition $\sigma \dot{\sigma} < 0$.
+\begin{enumerate}[label=(\alph*)]
+    \item Choose a sliding surface $\sigma = \lambda_1 \theta_1 + \lambda_2 \theta_2 + k_1 \dot{\theta}_1 + k_2 \dot{\theta}_2$
+    \item Compute $\dot{\sigma}$ using the DIP dynamics (assume simplified model with $\mat{M}$ constant)
+    \item Propose a control law $u = -K \sign(\sigma)$ and determine the minimum $K$
+    \item Prove that $\sigma \dot{\sigma} < -\alpha |\sigma|$ for some $\alpha > 0$
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Extended Lyapunov Functions]
+\label{ex:ch2_extended_lyapunov}
+Consider a combined Lyapunov function $V = \frac{1}{2}\sigma^2 + \frac{1}{2\gamma}\tilde{K}^2$ where $\tilde{K} = K - \hat{K}$ is gain estimation error.
+\begin{enumerate}[label=(\alph*)]
+    \item Compute $\dot{V}$ assuming $\dot{\hat{K}} = \gamma |\sigma|$ (adaptive law)
+    \item Show that $\dot{V} \leq 0$ if $K > \delta$ (disturbance bound)
+    \item What does this imply about convergence of $\sigma$ and $\tilde{K}$?
+    \item Is the convergence asymptotic or exponential?
+\end{enumerate}
+\end{exercise}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Numerical Integration}
+
+\begin{exercise}[Euler Method Stability]
+\label{ex:ch2_euler_stability}
+Analyze the stability of the Euler method for the test equation $\dot{x} = \lambda x$ with $\lambda < 0$.
+\begin{enumerate}[label=(\alph*)]
+    \item Apply the Euler method: $x_{n+1} = x_n + h \lambda x_n = (1 + h\lambda) x_n$
+    \item Derive the maximum timestep $h_{\max}$ such that $|x_n| \to 0$ as $n \to \infty$
+    \item For the DIP linearized around upright equilibrium with eigenvalues $\lambda = \{-15, -10, -5, +12\}$, what is the stability-limited timestep?
+    \item How does this compare to the accuracy requirement (typically $h \leq 0.01$ s)?
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[RK4 Convergence Verification]
+\label{ex:ch2_rk4_convergence}
+Run RK4 with timesteps $h$, $h/2$, and $h/4$ on the test problem $\dot{x} = -x$, $x(0) = 1$ with analytical solution $x(t) = e^{-t}$.
+\begin{enumerate}[label=(\alph*)]
+    \item Implement RK4 in Python (or use \pyclass{scipy.integrate.RK45})
+    \item Compute the global error at $t = 5$ for each timestep: $e_i = |x_{\text{num}}(5) - x_{\text{exact}}(5)|$
+    \item Verify that $e(h) / e(h/2) \approx 2^4 = 16$ (fourth-order convergence)
+    \item Plot error vs. timestep on a log-log scale and confirm slope = 4
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Controllability Matrix Computation]
+\label{ex:ch2_controllability_matrix}
+Linearize the DIP dynamics around upright equilibrium to obtain $\dot{\vect{x}} = \mat{A}\vect{x} + \mat{B}u$.
+\begin{enumerate}[label=(\alph*)]
+    \item Compute the Jacobian $\mat{A} = \pdiff{\vect{f}}{\vect{x}}\big|_{\vect{x}=\vect{0}}$
+    \item Construct the controllability matrix $\mathcal{C} = [\mat{B}, \mat{A}\mat{B}, \ldots, \mat{A}^5\mat{B}]$
+    \item Verify that $\rank(\mathcal{C}) = 6$ (full rank, system is controllable)
+    \item What are the implications for SMC design?
+\end{enumerate}
+\end{exercise}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Python Implementation}
+
+\begin{exercise}[DIP Dynamics Simulator]
+\label{ex:ch2_dip_simulator}
+Implement a Python simulator for the DIP dynamics using RK4 integration:
+
+\begin{lstlisting}[language=Python]
+import numpy as np
+
+def dip_dynamics(state, u, params):
+    """
+    Compute state derivative for DIP system.
+
+    Args:
+        state: [x_cart, theta1, theta2, dx_cart, dtheta1, dtheta2] (6,)
+        u: control force (scalar)
+        params: dict with M, m1, m2, L1, L2, g, b (friction)
+
+    Returns:
+        state_dot: derivative [dx_cart, dtheta1, dtheta2, ddx, ddtheta1, ddtheta2]
+    """
+    q = state[:3]  # positions
+    dq = state[3:]  # velocities
+
+    # Compute M(q), C(q, dq), G(q)
+    M = compute_mass_matrix(q, params)
+    C = compute_coriolis_matrix(q, dq, params)
+    G = compute_gravity_vector(q, params)
+    B = np.array([1, 0, 0])
+
+    # Solve M * ddq = B*u - C*dq - G
+    ddq = np.linalg.solve(M, B*u - C @ dq - G)
+
+    return np.concatenate([dq, ddq])
+
+def rk4_step(state, u, dt, params):
+    """
+    Single RK4 integration step.
+
+    Args:
+        state: current state (6,)
+        u: control input (scalar)
+        dt: timestep (s)
+        params: system parameters
+
+    Returns:
+        next_state: state after dt seconds
+    """
+    # YOUR CODE HERE
+    # Implement the 4-stage RK4 algorithm
+    pass
+
+# Test with free fall from theta1 = 0.1 rad
+state0 = np.array([0, 0.1, 0, 0, 0, 0])
+params = {'M': 1.0, 'm1': 0.1, 'm2': 0.1, 'L1': 0.5, 'L2': 0.5, 'g': 9.81, 'b': 0.1}
+states = []
+t_max = 2.0
+dt = 0.01
+state = state0
+for i in range(int(t_max/dt)):
+    states.append(state.copy())
+    state = rk4_step(state, u=0, dt=dt, params=params)
+
+# Plot theta1 vs time
+import matplotlib.pyplot as plt
+plt.plot([i*dt for i in range(len(states))], [s[1] for s in states])
+plt.xlabel('Time (s)')
+plt.ylabel('theta1 (rad)')
+plt.title('DIP Free Fall')
+plt.show()
+\end{lstlisting}
+\end{exercise}
+
+\begin{exercise}[Lyapunov Function Visualization]
+\label{ex:ch2_lyapunov_viz}
+Create a 3D visualization of a Lyapunov function for the sliding surface:
+
+\begin{lstlisting}[language=Python]
+import numpy as np
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+
+def lyapunov_surface(k1=5.0, k2=1.0, theta_range=(-0.5, 0.5), dtheta_range=(-2, 2)):
+    """
+    Plot V = 0.5 * sigma^2 as a 3D surface where sigma = k1*theta + k2*dtheta.
+
+    Args:
+        k1: sliding surface parameter
+        k2: sliding surface parameter
+        theta_range: (min, max) for theta axis
+        dtheta_range: (min, max) for dtheta axis
+    """
+    # YOUR CODE HERE
+    # Create meshgrid for (theta, dtheta)
+    # Compute sigma = k1*theta + k2*dtheta
+    # Compute V = 0.5 * sigma**2
+    # Plot 3D surface with contour lines
+    pass
+
+# Generate plot
+lyapunov_surface(k1=5.0, k2=1.0)
+\end{lstlisting}
+\end{exercise}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% End of Chapter 2 Exercises
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

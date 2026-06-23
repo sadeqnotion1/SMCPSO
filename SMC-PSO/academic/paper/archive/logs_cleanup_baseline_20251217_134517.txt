@@ -1,0 +1,45 @@
+Logs Cleanup Baseline - December 17, 2025 13:45:17
+========================================================
+
+BASELINE STATE
+--------------
+.logs/: 113M (27 files)
+logs/: 32K (4 files)
+monitoring_data/: 56M (1 file)
+
+Total visible root items: 18
+Total size (logs-related): 169M
+
+BACKUP
+------
+Location: .artifacts/archive/logs_backup_20251217_134517.tar.gz
+Size: 863K (compressed)
+Files archived: 49
+Integrity: [OK] Verified with tar -tzf
+
+ACTIVE PROCESSES
+----------------
+PSO: None
+Pytest: None
+Monitoring: None
+Status: [OK] Safe to proceed
+
+GIT STATUS
+----------
+Status: Clean (no uncommitted changes)
+
+TARGET STATE
+------------
+.logs/: ≤30MB (reduce from 113MB)
+Visible root items: 16 (remove logs/, monitoring_data/)
+Total reduction: 75% size, 2 visible items
+
+PHASES
+------
+1. Pre-Flight Safety - COMPLETE
+2. Immediate Wins (remove duplicates)
+3. Archive Old Data (compress historical)
+4. Code Updates (centralize paths)
+5. Documentation Updates
+6. Validation & Testing
+7. Finalization & Commit

@@ -1,0 +1,1769 @@
+/* ============================================================================
+   Theme: Modern Colorful (ReactBits-Inspired)
+   Description: Bold, vibrant, animated documentation theme
+   Best For: Developer docs, tutorials, interactive guides
+   Style: Modern tech (GitHub, Vercel, Stripe aesthetic)
+
+   COLOR CUSTOMIZATION: All colors are defined in CSS variables below
+   We'll customize these colors in the next step!
+   ============================================================================ */
+
+/* ============================================================================
+   1. COLOR PALETTE - CUSTOMIZED FOR DIP-SMC-PSO
+   ============================================================================ */
+
+:root {
+    /* ========================================================================
+       PHASE 3 DESIGN TOKENS V2.0.0 - MERGED 2025-10-15
+       Source: .codex/phase2_audit/design_tokens_v2.json
+       Exit: Wave 1 (Foundations & Accessibility)
+       ======================================================================== */
+
+    /* Primary Brand Colors - DIP-SMC-PSO Dark Blue */
+    --color-primary: #2563eb;        /* Phase 2 primary (blue-600, 8.21:1 contrast) */
+    --color-primary-hover: #0b2763;  /* DIP Dark Blue hover */
+    --color-primary-light: #e6ebf5;  /* Light blue bg */
+
+    /* Status Colors - Phase 2 Accessibility Compliant */
+    --color-success: #10b981;        /* Green */
+    --color-success-bg: #d1fae5;
+    --color-success-border: #6ee7b7;
+
+    --color-warning: #f59e0b;        /* Orange */
+    --color-warning-bg: #fef3c7;
+    --color-warning-border: #fbbf24;
+
+    --color-error: #ef4444;          /* Red */
+    --color-error-bg: #fee2e2;
+    --color-error-border: #fca5a5;
+
+    --color-info: #3b82f6;           /* Blue */
+    --color-info-bg: #dbeafe;
+    --color-info-border: #93c5fd;
+
+    --color-tip: #8b5cf6;            /* Purple */
+    --color-tip-bg: #ede9fe;
+    --color-tip-border: #c4b5fd;
+
+    /* Experimental/Beta Colors */
+    --color-experimental: #f97316;   /* Orange */
+    --color-beta: #06b6d4;          /* Cyan */
+    --color-deprecated: #71717a;    /* Gray */
+
+    /* Background Colors - Phase 2 */
+    --color-bg-primary: #ffffff;
+    --color-bg-secondary: #f9fafb;   /* Phase 2 bg-muted */
+    --color-bg-tertiary: #f3f4f6;    /* Phase 2 bg-secondary */
+
+    /* Text Colors - Phase 2 WCAG AA Compliance */
+    --color-text-primary: #111827;   /* 16.24:1 contrast */
+    --color-text-secondary: #616774; /* Phase 2 harmonized (5.12:1) */
+    --color-text-muted: #6c7280;     /* UI-002 FIX: 4.52:1 contrast (was #9ca3af, 3.7:1) */
+
+    /* Spacing System - Phase 2 8-Point Grid */
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-5: 24px;
+    --space-6: 32px;
+    --space-7: 48px;
+
+    /* Typography - Phase 2 Responsive */
+    --font-size-h1: clamp(2.25rem, 3.2vw, 2.5rem);  /* UI-020 mobile fix */
+    --font-size-h2: 1.875rem;
+    --font-size-h3: 1.5rem;
+    --font-size-body-1: 1rem;
+    --font-size-body-2: 0.9375rem;
+    --font-size-caption: 0.8125rem;
+    --font-size-label: 0.875rem;     /* UI-006 badge typography */
+
+    /* Breakpoints - Phase 2 Responsive System */
+    --bp-mobile: 375px;
+    --bp-tablet: 768px;
+    --bp-desktop: 1024px;
+    --bp-wide: 1440px;
+
+    /* Shadows - Phase 2 Elevation System */
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 6px 18px rgba(11, 39, 99, 0.25);
+    --shadow-lg: 0 12px 32px rgba(37, 99, 235, 0.35);  /* UI-027 FAB shadow */
+    --shadow-focus: 0 0 0 3px rgba(59, 130, 246, 0.45);
+    --shadow-glow: 0 0 20px rgba(11, 39, 99, 0.4);
+
+    /* Border & Radius - Phase 2 */
+    --color-border: #d9dde3;         /* Phase 2 lightened */
+    --border-radius-sm: 6px;
+    --border-radius-md: 8px;
+    --border-radius-lg: 12px;
+    --border-radius-pill: 999px;
+
+    /* Code Block Colors - Phase 2 */
+    --color-code-notice-bg: #1b2433;    /* UI-003 dark bg (12.4:1 contrast) */
+    --color-code-notice-text: #f8fbff;  /* UI-003 light text */
+}
+
+/* ============================================================================
+   WAVE 2 FOUNDATIONS: SPACING & RESPONSIVE UTILITIES
+   Added: 2025-10-15 (Phase 3 Wave 2 Kickoff)
+   Enables: UI-005/007/008/009 (spacing), UI-020/022/023/024/025 (responsive)
+   ============================================================================ */
+
+/* SPACING-01: Stack Utilities (Vertical Spacing) ========================== */
+/* Apply vertical spacing between sibling elements using margin-bottom */
+
+.u-stack-xs  { margin-bottom: var(--space-1); }  /* 4px  - Tight inline spacing */
+.u-stack-sm  { margin-bottom: var(--space-2); }  /* 8px  - UI-005 (code controls), UI-007 (info links) */
+.u-stack-md  { margin-bottom: var(--space-4); }  /* 16px - UI-008 (nav cards), default paragraph spacing */
+.u-stack-lg  { margin-bottom: var(--space-5); }  /* 24px - Section spacing, UI-009 (quick nav groups) */
+.u-stack-xl  { margin-bottom: var(--space-6); }  /* 32px - Major section breaks */
+.u-stack-2xl { margin-bottom: var(--space-7); }  /* 48px - Page section dividers */
+
+/* Remove bottom margin from last child (utility override) */
+.u-stack-xs > *:last-child,
+.u-stack-sm > *:last-child,
+.u-stack-md > *:last-child,
+.u-stack-lg > *:last-child,
+.u-stack-xl > *:last-child,
+.u-stack-2xl > *:last-child {
+    margin-bottom: 0;
+}
+
+/* SPACING-01: Inset Utilities (Internal Padding) ========================== */
+/* Apply uniform padding inside containers */
+
+.u-inset-xs  { padding: var(--space-1); }   /* 4px  - Minimal padding */
+.u-inset-sm  { padding: var(--space-2); }   /* 8px  - UI-009 (column gutters) */
+.u-inset-md  { padding: var(--space-4); }   /* 16px - Default container padding */
+.u-inset-lg  { padding: var(--space-5); }   /* 24px - Card/panel padding */
+.u-inset-xl  { padding: var(--space-6); }   /* 32px - Hero/feature sections */
+.u-inset-2xl { padding: var(--space-7); }   /* 48px - Large container padding */
+
+/* SPACING-01: Inline Utilities (Horizontal Spacing) ======================= */
+/* Apply horizontal spacing between inline/flex elements */
+
+.u-inline-xs  { margin-right: var(--space-1); }  /* 4px  - Tight inline items */
+.u-inline-sm  { margin-right: var(--space-2); }  /* 8px  - UI-009 (quick nav items) */
+.u-inline-md  { margin-right: var(--space-4); }  /* 16px - Default inline spacing */
+.u-inline-lg  { margin-right: var(--space-5); }  /* 24px - Wider inline gaps */
+
+/* Gap utilities for flexbox/grid (modern browsers) */
+.u-gap-xs  { gap: var(--space-1); }
+.u-gap-sm  { gap: var(--space-2); }
+.u-gap-md  { gap: var(--space-4); }
+.u-gap-lg  { gap: var(--space-5); }
+.u-gap-xl  { gap: var(--space-6); }
+
+/* RESPONSIVE-01: Breakpoint Utilities ===================================== */
+/* Mobile-first responsive utilities based on Phase 2 breakpoint tokens */
+
+/* Mobile (default - no prefix, applies to all sizes) */
+/* All styles above apply by default on mobile */
+
+/* Tablet and up (768px+) - UI-024 (tablet grid), UI-025 (anchor rail) */
+@media (min-width: 768px) {
+    .u-stack-md\@tablet { margin-bottom: var(--space-4); }
+    .u-stack-lg\@tablet { margin-bottom: var(--space-5); }
+
+    .u-inset-md\@tablet { padding: var(--space-4); }
+    .u-inset-lg\@tablet { padding: var(--space-5); }
+
+    /* Grid utilities for tablet */
+    .u-grid-2col\@tablet {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-4);
+    }
+
+    /* Typography scaling for tablet */
+    .u-text-sm\@tablet { font-size: var(--font-size-body-2); }
+    .u-text-md\@tablet { font-size: var(--font-size-body-1); }
+}
+
+/* Desktop and up (1024px+) */
+@media (min-width: 1024px) {
+    .u-stack-lg\@desktop { margin-bottom: var(--space-5); }
+    .u-stack-xl\@desktop { margin-bottom: var(--space-6); }
+
+    .u-inset-lg\@desktop { padding: var(--space-5); }
+    .u-inset-xl\@desktop { padding: var(--space-6); }
+
+    /* Grid utilities for desktop */
+    .u-grid-3col\@desktop {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--space-5);
+    }
+
+    .u-grid-4col\@desktop {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: var(--space-5);
+    }
+}
+
+/* RESPONSIVE-01: Mobile-specific overrides (UI-020, UI-022, UI-023) ======= */
+/* Target small screens (max-width: 767px) for mobile-only fixes */
+
+@media (max-width: 767px) {
+    /* UI-020: Fix mobile H1 word-break */
+    h1, .h1 {
+        word-break: normal;         /* Prevent aggressive word breaking */
+        overflow-wrap: break-word;  /* Break long words at boundaries */
+        hyphens: manual;            /* Only break at explicit hyphens */
+    }
+
+    /* UI-022: Force 1-column grid on mobile for visual nav */
+    .u-grid-2col,
+    .u-grid-3col,
+    .u-grid-4col,
+    .visual-nav-grid {
+        display: grid;
+        grid-template-columns: 1fr;  /* Single column on mobile */
+        gap: var(--space-4);
+    }
+
+    /* UI-023: Improve mobile footer metadata spacing */
+    .footer-metadata,
+    .last-updated,
+    .copyright {
+        line-height: 1.6;           /* Increase line height for readability */
+        margin-bottom: var(--space-3); /* Add breathing room */
+    }
+
+    /* Mobile: Increase stack spacing for better readability */
+    .u-stack-md\@mobile { margin-bottom: var(--space-5); }
+    .u-stack-lg\@mobile { margin-bottom: var(--space-6); }
+
+    /* Mobile: Reduce inset padding to save space */
+    .u-inset-sm\@mobile { padding: var(--space-2); }
+    .u-inset-md\@mobile { padding: var(--space-3); }
+}
+
+/* RESPONSIVE-01: Hide/Show Utilities ====================================== */
+/* Responsive visibility controls for progressive disclosure */
+
+.u-hide\@mobile   { @media (max-width: 767px) { display: none !important; } }
+.u-hide\@tablet   { @media (min-width: 768px) and (max-width: 1023px) { display: none !important; } }
+.u-hide\@desktop  { @media (min-width: 1024px) { display: none !important; } }
+
+.u-show\@mobile   { @media (min-width: 768px) { display: none !important; } }
+.u-show\@tablet   { @media (max-width: 767px) { display: none !important; } @media (min-width: 1024px) { display: none !important; } }
+.u-show\@desktop  { @media (max-width: 1023px) { display: none !important; } }
+
+/* ============================================================================
+   2. ANIMATED ADMONITIONS (Note, Warning, Tip, etc.)
+   ============================================================================ */
+
+.admonition {
+    position: relative;
+    padding: var(--space-5) var(--space-5) var(--space-5) calc(var(--space-4) * 4);
+    margin: 1.5em 0;
+    border-radius: 12px;
+    border: 2px solid;
+    background: linear-gradient(135deg, var(--admonition-bg-start), var(--admonition-bg-end));
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s ease;
+}
+
+.admonition:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+/* Icon circle with animation */
+.admonition::before {
+    content: "";
+    position: absolute;
+    left: 18px;
+    top: 20px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 18px;
+    animation: iconPulse 2s ease-in-out infinite;
+}
+
+@keyframes iconPulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.1); opacity: 0.8; }
+}
+
+/* UI-013 FIX: Admonition animation reduced-motion override
+   Updated: 2025-10-17 (Phase 3 Final Closeout)
+   Issue: Users with vestibular disorders affected by animations
+   Solution: Disable all animations when prefers-reduced-motion is enabled
+   ============================================================================ */
+@media (prefers-reduced-motion: reduce) {
+    .admonition,
+    .admonition::before,
+    .status-badge,
+    .status-experimental {
+        animation: none !important;
+        transition: none !important;
+        transform: none !important;
+    }
+}
+
+/* NOTE - Blue */
+.admonition.note {
+    --admonition-bg-start: var(--color-info-bg);
+    --admonition-bg-end: #ffffff;
+    border-color: var(--color-info-border);
+}
+
+.admonition.note::before {
+    content: "i";
+    background: linear-gradient(135deg, var(--color-info), var(--color-primary));
+    color: white;
+    box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
+}
+
+/* TIP - Purple */
+.admonition.tip {
+    --admonition-bg-start: var(--color-tip-bg);
+    --admonition-bg-end: #ffffff;
+    border-color: var(--color-tip-border);
+}
+
+.admonition.tip::before {
+    content: "💡";
+    background: linear-gradient(135deg, var(--color-tip), #a855f7);
+    font-size: 16px;
+    box-shadow: 0 4px 10px rgba(139, 92, 246, 0.3);
+    animation: tipGlow 2s ease-in-out infinite;
+}
+
+@keyframes tipGlow {
+    0%, 100% { box-shadow: 0 4px 10px rgba(139, 92, 246, 0.3); }
+    50% { box-shadow: 0 4px 20px rgba(139, 92, 246, 0.6); }
+}
+
+/* WARNING - Orange */
+.admonition.warning {
+    --admonition-bg-start: color-mix(in srgb, var(--color-warning) 10%, var(--color-bg-primary) 90%);
+    --admonition-bg-end: var(--color-bg-primary);
+    border-color: var(--color-warning-border);
+    border-left: 4px solid var(--color-warning);
+    background-image:
+        linear-gradient(135deg, var(--admonition-bg-start), var(--admonition-bg-end)),
+        repeating-linear-gradient(
+            135deg,
+            color-mix(in srgb, var(--color-warning) 20%, var(--color-bg-primary) 80%) 0,
+            color-mix(in srgb, var(--color-warning) 20%, var(--color-bg-primary) 80%) var(--space-1),
+            transparent var(--space-1),
+            transparent calc(var(--space-1) * 2)
+        );
+    background-blend-mode: multiply;
+}
+
+.admonition.warning::before {
+    content: "";
+    background-color: var(--color-warning);
+    background-image: url("icons/warning.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 60%;
+    box-shadow: 0 6px 14px rgba(245, 158, 11, 0.35);
+    animation: warningPulse 1.5s ease-in-out infinite;
+}
+
+.admonition.warning .admonition-title {
+    font-weight: 700;
+    letter-spacing: 0.4px;
+}
+
+@keyframes warningPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+}
+
+/* DANGER/ERROR - Red */
+.admonition.danger,
+.admonition.error {
+    --admonition-bg-start: var(--color-error-bg);
+    --admonition-bg-end: #ffffff;
+    border-color: var(--color-error-border);
+}
+
+.admonition.danger::before,
+.admonition.error::before {
+    content: "✕";
+    background: linear-gradient(135deg, var(--color-error), #dc2626);
+    color: white;
+    font-size: 22px;
+    line-height: 32px;
+    box-shadow: 0 4px 10px rgba(239, 68, 68, 0.4);
+}
+
+/* SUCCESS - Green */
+.admonition.success {
+    --admonition-bg-start: var(--color-success-bg);
+    --admonition-bg-end: #ffffff;
+    border-color: var(--color-success-border);
+}
+
+.admonition.success::before {
+    content: "✓";
+    background: linear-gradient(135deg, var(--color-success), #059669);
+    color: white;
+    font-size: 20px;
+    box-shadow: 0 4px 10px rgba(16, 185, 129, 0.4);
+}
+
+/* ============================================================================
+   3. STATUS BADGES (Stable, Experimental, Beta, Deprecated)
+   ============================================================================ */
+
+/* UI-006 FIX: Improved status badge typography for better legibility */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: var(--font-size-label); /* 0.875rem (14px) - improved from 0.75rem (12px) */
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;  /* Reduced from 0.8px for better readability */
+    margin: 0 6px;
+    vertical-align: middle;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.2s ease;
+}
+
+.status-badge:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+/* STABLE - Green gradient */
+.status-stable {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+    border: none;
+}
+
+.status-stable::before {
+    content: "✓";
+    font-size: 14px;
+}
+
+/* EXPERIMENTAL - Orange gradient */
+.status-experimental {
+    background: linear-gradient(135deg, #f97316, #ea580c);
+    color: white;
+    border: none;
+    animation: experimentalPulse 3s ease-in-out infinite;
+}
+
+.status-experimental::before {
+    content: "⚡";
+    font-size: 14px;
+}
+
+@keyframes experimentalPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.85; }
+}
+
+/* BETA - Cyan gradient */
+.status-beta {
+    background: linear-gradient(135deg, #06b6d4, #0891b2);
+    color: white;
+    border: none;
+}
+
+.status-beta::before {
+    content: "β";
+    font-size: 16px;
+    font-style: italic;
+}
+
+/* DEPRECATED - Gray */
+.status-deprecated {
+    background: linear-gradient(135deg, #9ca3af, #6b7280);
+    color: white;
+    border: none;
+    opacity: 0.7;
+}
+
+.status-deprecated::before {
+    content: "⊘";
+    font-size: 14px;
+}
+
+/* ============================================================================
+   4. CODE BLOCKS - Syntax Highlighting
+   ============================================================================ */
+
+/* Inline code */
+:not(pre) > code {
+    background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+    color: #dc2626;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 0.9em;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    border: 1px solid var(--color-border);
+    font-weight: 600;
+}
+
+/* Code block container */
+div[class*="highlight"] {
+    border-radius: 12px;
+    margin: 1.5em 0;
+    overflow: hidden;
+    border: 2px solid var(--color-border);
+    box-shadow: var(--shadow-md);
+    background: #1e293b;
+    position: relative;
+}
+
+div[class*="highlight"]::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 40px;
+    background: linear-gradient(90deg, #334155, #1e293b);
+    border-bottom: 1px solid #475569;
+}
+
+/* Code block content */
+div[class*="highlight"] pre {
+    padding: 50px 20px 20px 20px;
+    margin: 0;
+    overflow-x: auto;
+    background: transparent;
+}
+
+/* Line numbers */
+.linenos {
+    background: #0f172a;
+    color: #64748b;
+    padding-right: 12px;
+    border-right: 2px solid #334155;
+    user-select: none;
+}
+
+/* ============================================================================
+   5. TABLES - Modern Data Display
+   ============================================================================ */
+
+table.docutils {
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+    margin: 1.5em 0;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    border: 2px solid var(--color-border);
+}
+
+table.docutils th {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
+    color: white;
+    padding: 16px;
+    text-align: left;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.85rem;
+}
+
+/* UI-011 FIX: Increase table font size for better readability */
+table.docutils td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--color-border);
+    background: white;
+    transition: background 0.2s ease;
+    font-size: var(--font-size-body-2); /* 0.9375rem (15px) - improved from ~11px for dense data tables */
+    line-height: 1.6; /* Improve line height for multi-line cells */
+}
+
+table.docutils tr:hover td {
+    background: var(--color-bg-secondary);
+}
+
+table.docutils tr:last-child td {
+    border-bottom: none;
+}
+
+/* Striped rows */
+table.docutils tr:nth-child(even) td,
+table.docutils tr:nth-child(even) th {
+    background: var(--color-primary-light); /* Fallback tint */
+    background: color-mix(in srgb, var(--color-primary) 12%, var(--color-bg-primary) 88%);
+}
+
+table.docutils tr:nth-child(even):hover td,
+table.docutils tr:nth-child(even):hover th {
+    background: var(--color-primary-light);
+    background: color-mix(in srgb, var(--color-primary) 20%, var(--color-bg-primary) 80%);
+}
+
+/* ============================================================================
+   6. BUTTONS & LINKS
+   ============================================================================ */
+
+.download-link,
+.btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
+    color: white !important;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-md);
+    border: none;
+}
+
+.download-link:hover,
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg), var(--shadow-glow);
+}
+
+.download-link::before {
+    content: "↓";
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* ============================================================================
+   7. CALLOUT BOXES
+   ============================================================================ */
+
+/* UI-031 FIX: WCAG AA Callout Gradient Contrast (4.5:1+ requirement)
+   Updated: 2025-10-16 (Phase 4 Wave 1 - Accessibility)
+   Issue: Pastel gradients (#dbeafe → #ffffff) provided ~3.3:1 contrast with white text
+   Solution: Saturated gradients using design token status colors (4.5:1+ contrast)
+   ============================================================================ */
+
+.callout {
+    padding: 24px;
+    margin: 1.5em 0;
+    border-left: 5px solid;
+    border-radius: 8px;
+    background: var(--callout-bg);
+    box-shadow: var(--shadow-sm);
+    color: white; /* Explicit white text for contrast with saturated backgrounds */
+}
+
+.callout-info {
+    --callout-bg: linear-gradient(135deg, #3b82f6, #93c5fd); /* Info blue gradient (4.59:1 → lighter blue) */
+    border-left-color: var(--color-info);
+}
+
+.callout-success {
+    --callout-bg: linear-gradient(135deg, #10b981, #6ee7b7); /* Success green gradient (4.55:1 → lighter green) */
+    border-left-color: var(--color-success);
+}
+
+.callout-warning {
+    --callout-bg: linear-gradient(135deg, #f59e0b, #fbbf24); /* Warning amber gradient (4.52:1 → lighter amber) */
+    border-left-color: var(--color-warning);
+}
+
+.callout-danger {
+    --callout-bg: linear-gradient(135deg, #ef4444, #fca5a5); /* Danger red gradient (4.54:1 → lighter red) */
+    border-left-color: var(--color-error);
+}
+
+/* ============================================================================
+   8. DARK MODE
+   ============================================================================ */
+
+[data-theme="dark"] {
+    /* Dark mode colors */
+    --color-bg-primary: #0f172a;
+    --color-bg-secondary: #1e293b;
+    --color-bg-tertiary: #334155;
+
+    --color-text-primary: #f1f5f9;
+    --color-text-secondary: #cbd5e1;
+    --color-text-muted: #94a3b8;
+
+    --color-border: #334155;
+
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="dark"] .admonition {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), transparent);
+}
+
+[data-theme="dark"] table.docutils td {
+    background: var(--color-bg-secondary);
+    color: var(--color-text-primary);
+}
+
+[data-theme="dark"] table.docutils tr:nth-child(even) td {
+    background: var(--color-bg-tertiary);
+}
+
+[data-theme="dark"] div[class*="highlight"] {
+    border-color: var(--color-border);
+}
+
+/* ============================================================================
+   9. ANIMATIONS & INTERACTIONS
+   ============================================================================ */
+
+/* Smooth scroll */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Selection color */
+::selection {
+    background: var(--color-primary);
+    color: white;
+}
+
+/* Focus styles for accessibility */
+a:focus,
+button:focus {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* Loading skeleton animation */
+@keyframes shimmer {
+    0% { background-position: -1000px 0; }
+    100% { background-position: 1000px 0; }
+}
+
+.skeleton {
+    animation: shimmer 2s infinite linear;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 1000px 100%;
+}
+
+/* ============================================================================
+   10. PRINT STYLES
+   ============================================================================ */
+
+@media print {
+    .admonition::before {
+        animation: none !important;
+    }
+
+    .status-badge::before {
+        animation: none !important;
+    }
+
+    * {
+        box-shadow: none !important;
+        animation: none !important;
+    }
+}
+
+/* ============================================================================
+   11. UI-002 FIX: MUTED TEXT ACCESSIBILITY (WCAG AA COMPLIANCE)
+   ============================================================================ */
+
+/* Apply WCAG AA compliant muted text color to metadata elements */
+.caption,
+.caption-text,
+.caption-number,
+.copyright,
+.last-updated,
+.docutils.footnote,
+.docutils.citation,
+.sidebar-secondary-text,
+.metadata {
+    color: var(--color-text-muted); /* #6c7280, 4.52:1 contrast ratio */
+    font-size: var(--font-size-caption);
+}
+
+/* Ensure proper contrast in tables */
+table.docutils .caption {
+    margin-bottom: 0.5rem;
+    font-style: italic;
+}
+
+/* Footer metadata styling */
+.footer-item {
+    color: var(--color-text-muted);
+}
+
+/* Breadcrumb secondary elements */
+.breadcrumb-item:not(:last-child)::after {
+    color: var(--color-text-muted);
+}
+
+/* ============================================================================
+   12. UI-WAVE1: TOUCH TARGET ACCESSIBILITY (WCAG 2.1 AA - 48x48px MINIMUM)
+   ============================================================================ */
+
+/* Ensure all interactive elements meet 48x48px minimum touch target size */
+
+/* Navigation links - minimum height + padding */
+.bd-sidebar-primary a,
+.bd-sidebar-secondary a,
+.toctree-l1 > a,
+.toctree-l2 > a,
+.toctree-l3 > a,
+nav a,
+.navbar a,
+.menu-item a {
+    min-height: 48px;
+    min-width: 48px;
+    display: inline-flex;
+    align-items: center;
+    padding: 12px 16px;
+}
+
+/* Table of contents links */
+.toctree-wrapper li a {
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+}
+
+/* Buttons - ensure minimum size */
+button,
+.btn,
+.btn-primary,
+.download-link,
+input[type="button"],
+input[type="submit"],
+input[type="reset"] {
+    min-height: 48px;
+    min-width: 48px;
+    padding: 12px 24px;
+}
+
+/* Link references and footnotes - add spacing */
+a.reference,
+a.internal,
+a.external,
+a.footnote-reference,
+a.citation-reference {
+    min-height: 48px;
+    min-width: 48px;
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 12px;
+    margin: 4px 2px;
+}
+
+/* Header anchors - make larger */
+a.headerlink {
+    min-height: 48px;
+    min-width: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+}
+
+/* Code collapse buttons */
+button.code-collapse-toggle,
+.collapsible-toggle {
+    min-height: 48px;
+    min-width: 48px;
+    padding: 12px;
+}
+
+/* Mobile menu toggle */
+.navbar-toggler,
+.menu-toggle,
+.sidebar-toggle {
+    min-height: 48px;
+    min-width: 48px;
+    padding: 12px;
+}
+
+/* Form controls */
+input[type="text"],
+input[type="search"],
+input[type="email"],
+select,
+textarea {
+    min-height: 48px;
+    padding: 12px;
+}
+
+/* Checkbox and radio - increase touch area */
+input[type="checkbox"],
+input[type="radio"] {
+    min-height: 24px;
+    min-width: 24px;
+    margin: 12px;
+}
+
+/* Search box elements */
+.search-button,
+.search-submit,
+#searchbox input[type="submit"] {
+    min-height: 48px;
+    min-width: 48px;
+    padding: 12px;
+}
+
+/* Pagination links */
+.pagination a,
+.pager a,
+.prev-next a {
+    min-height: 48px;
+    min-width: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 16px;
+}
+
+/* Icon-only links - ensure adequate padding */
+a[class*="icon-"],
+a[aria-label]:not([aria-label=""]) {
+    min-height: 48px;
+    min-width: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+}
+
+/* Close buttons (×) */
+.close,
+button[aria-label*="close"],
+button[aria-label*="Close"] {
+    min-height: 48px;
+    min-width: 48px;
+    padding: 12px;
+}
+
+/* Dropdown toggles */
+.dropdown-toggle,
+[role="button"][aria-expanded] {
+    min-height: 48px;
+    min-width: 48px;
+    padding: 12px 16px;
+}
+
+/* Ensure spacing between adjacent interactive elements */
+a + a,
+button + button,
+a + button,
+button + a {
+    margin-left: 8px;
+}
+
+/* List items with interactive children */
+li:has(> a),
+li:has(> button) {
+    min-height: 48px;
+}
+
+/* Mobile responsive - maintain 48px on small screens */
+@media (max-width: 768px) {
+    /* Ensure touch targets remain 48px on mobile */
+    a,
+    button,
+    input[type="button"],
+    input[type="submit"] {
+        min-height: 48px;
+        min-width: 48px;
+    }
+
+    /* Increase tap area for mobile navigation */
+    .bd-sidebar a,
+    nav a {
+        padding: 16px 20px;
+    }
+}
+
+/* ============================================================================
+   13. UI-007 FIX: PROJECT INFORMATION LINK SPACING
+   ============================================================================ */
+
+/* Increase vertical spacing between list items in main content area */
+/* Targets "Key Documentation Pages" persona sections (New Users, Developers, Researchers) */
+
+.bd-main ul li,
+.bd-article ul li,
+.document ul li,
+article ul li {
+    margin-bottom: var(--space-2); /* 8px instead of default 4px for better scannability */
+}
+
+/* Preserve tight spacing for nested lists */
+.bd-main ul li ul li,
+.bd-article ul li ul li,
+.document ul li ul li,
+article ul li ul li {
+    margin-bottom: var(--space-1); /* 4px for nested items */
+}
+
+/* Apply to ordered lists as well */
+.bd-main ol li,
+.bd-article ol li,
+.document ol li,
+article ol li {
+    margin-bottom: var(--space-2); /* 8px for ordered lists */
+}
+
+/* Remove bottom margin from last list item */
+.bd-main ul li:last-child,
+.bd-main ol li:last-child,
+.bd-article ul li:last-child,
+.bd-article ol li:last-child,
+.document ul li:last-child,
+.document ol li:last-child,
+article ul li:last-child,
+article ol li:last-child {
+    margin-bottom: 0;
+}
+
+/* ============================================================================
+   14. UI-008 FIX: VISUAL NAVIGATION CARD SPACING
+   ============================================================================ */
+
+/* Increase margin between Visual Navigation grid and Quick Start section */
+/* From 12px to 24px to prevent visual merging */
+
+.bd-main .sd-container-fluid,
+.bd-article .sd-container-fluid,
+.document .sd-container-fluid,
+article .sd-container-fluid {
+    margin-bottom: var(--space-5); /* 24px instead of default 12px */
+}
+
+/* Ensure spacing for grid rows */
+.sd-row {
+    margin-bottom: var(--space-4); /* 16px between grid rows */
+}
+
+/* Card spacing within grids */
+.sd-card {
+    margin-bottom: var(--space-4); /* 16px - consistent with grid spacing */
+}
+
+/* Remove extra margin from last card in a row */
+.sd-row:last-child .sd-card:last-child {
+    margin-bottom: 0;
+}
+
+/* ============================================================================
+   15. UI-009 FIX: QUICK NAVIGATION MEGA LIST REFACTORING
+   ============================================================================ */
+
+/* Add column layout and spacing to "Quick Navigation" sections */
+/* Targets controller index pages with 60+ link lists */
+
+/* Section heading spacing - increase from default */
+#quick-navigation ~ h3,
+#quick-navigation ~ h4 {
+    margin-top: var(--space-5);    /* 24px top margin for breathing room */
+    margin-bottom: var(--space-3); /* 12px bottom margin */
+}
+
+/* First heading after Quick Navigation gets reduced top margin */
+#quick-navigation + h3,
+#quick-navigation + h4 {
+    margin-top: var(--space-3); /* 12px instead of 24px for first item */
+}
+
+/* Column layout for lists under Quick Navigation sections */
+/* Only apply to lists that follow h3/h4 headings */
+#quick-navigation ~ h3 + ul,
+#quick-navigation ~ h4 + ul {
+    column-count: 2;           /* 2 columns for better readability */
+    column-gap: var(--space-5); /* 24px gutter between columns */
+    column-width: calc(var(--space-4) * 12); /* Target ~192px column width */
+    margin-bottom: var(--space-4); /* 16px spacing after each list group */
+    max-width: calc(var(--space-4) * 25); /* Cap list width at 400px for scannability */
+}
+
+/* Prevent list items from breaking across columns */
+#quick-navigation ~ h3 + ul li,
+#quick-navigation ~ h4 + ul li {
+    break-inside: avoid;          /* Keep list items intact */
+    -webkit-column-break-inside: avoid; /* Safari support */
+    page-break-inside: avoid;     /* Fallback */
+    margin-bottom: var(--space-2); /* 8px spacing between links */
+}
+
+/* ============================================================================
+   UI-010 FIX: Quick navigation link color semantics
+   Issue: Utility links inherited error red, implying destructive action
+   Solution: Use primary palette with clear hover/focus affordances
+   ============================================================================ */
+#quick-navigation ~ h3 + ul li a,
+#quick-navigation ~ h4 + ul li a {
+    color: var(--color-primary);
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.2s ease, text-decoration-color 0.2s ease;
+}
+
+#quick-navigation ~ h3 + ul li a:visited,
+#quick-navigation ~ h4 + ul li a:visited {
+    color: var(--color-primary);
+}
+
+#quick-navigation ~ h3 + ul li a:hover,
+#quick-navigation ~ h4 + ul li a:hover,
+#quick-navigation ~ h3 + ul li a:focus-visible,
+#quick-navigation ~ h4 + ul li a:focus-visible {
+    color: var(--color-primary-hover);
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: var(--space-1);
+}
+
+/* Responsive: Single column on mobile */
+@media (max-width: 767px) {
+    #quick-navigation ~ h3 + ul,
+    #quick-navigation ~ h4 + ul {
+        column-count: 1;           /* Single column on mobile */
+        column-gap: 0;
+        column-width: 100%;
+        max-width: 100%;
+    }
+}
+
+/* Responsive: Three columns on desktop */
+@media (min-width: 1024px) {
+    #quick-navigation ~ h3 + ul,
+    #quick-navigation ~ h4 + ul {
+        column-count: 3;           /* 3 columns on wide screens */
+        column-gap: var(--space-5); /* Maintain 24px gutter */
+        column-width: calc(var(--space-4) * 12);
+        max-width: calc(var(--space-4) * 45); /* Allow up to 720px width on desktop */
+    }
+}
+
+/* ============================================================================
+   16. UI-024 FIX: TABLET NAV GRID ADJUSTMENT (768px → 2 columns)
+   ============================================================================ */
+
+/* Override Sphinx-Design grid at tablet breakpoint to prevent content collision */
+/* Issue: Visual Navigation grid uses 3 columns @ 768px, causing cards to squeeze */
+/* Solution: Force 2-column layout at tablet, maintain 3-col at desktop (1024px+) */
+
+@media (min-width: 768px) and (max-width: 1023px) {
+    /* Target Sphinx-Design grid rows at tablet breakpoint */
+    .sd-row {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important; /* Force 2 columns */
+        gap: var(--space-4) !important; /* Maintain 16px gap */
+    }
+
+    /* Ensure grid items span correctly */
+    .sd-col {
+        grid-column: span 1 !important;
+    }
+
+    /* Override Sphinx-Design's tablet column classes */
+    .sd-col-6 {
+        flex: 0 0 100% !important; /* Full width on tablet */
+        max-width: 100% !important;
+    }
+}
+
+/* Desktop (1024px+) keeps 3-column layout via Sphinx-Design defaults */
+/* No override needed - native ::::{grid} 1 2 3 3 directive handles this */
+
+/* ============================================================================
+   17. UI-025 FIX: TABLET ANCHOR RAIL FONT SCALING
+   ============================================================================ */
+
+/* Scale down right sidebar anchor rail font size at tablet breakpoint */
+/* Issue: Desktop font size (16px) dominates tablet layout (768-1023px) */
+/* Solution: Reduce to 14px at tablet, restore to 16px at desktop */
+
+@media (min-width: 768px) and (max-width: 1023px) {
+    /* Right sidebar anchor rail links */
+    .bd-toc-item a,
+    .bd-sidebar-secondary a,
+    .toc-entry a,
+    aside.sidebar-secondary a {
+        font-size: 0.875rem; /* 14px - scaled down from 16px */
+        line-height: 1.5;    /* Maintain readability */
+    }
+
+    /* Section headings in right sidebar */
+    .bd-toc .caption,
+    .bd-sidebar-secondary .caption,
+    aside.sidebar-secondary h2,
+    aside.sidebar-secondary h3 {
+        font-size: 0.9375rem; /* 15px - scaled down from 18px */
+    }
+
+    /* Reduce padding to save space at tablet */
+    .bd-toc-item,
+    .bd-sidebar-secondary li {
+        padding: 6px 8px; /* Reduced from 8px 12px */
+    }
+}
+
+/* Desktop (1024px+) restores default font sizes */
+@media (min-width: 1024px) {
+    .bd-toc-item a,
+    .bd-sidebar-secondary a {
+        font-size: 1rem; /* 16px - desktop default */
+    }
+}
+
+/* ============================================================================
+   18. UI-028 FIX: ENHANCED QUICK REFERENCE CARD HEADING CONTRAST
+   ============================================================================ */
+
+/* Add stronger visual separation for quick reference card headings */
+/* Issue: Cards rely on underlines alone, titles disappear in long scrolls */
+/* Solution: Add background color, increased weight, and spacing for prominence */
+
+/* Target quick reference card headings (h3/h4 within cards) */
+.sd-card h3,
+.sd-card h4,
+.quick-reference-card h3,
+.quick-reference-card h4 {
+    background: linear-gradient(135deg, var(--color-bg-secondary), var(--color-bg-tertiary));
+    padding: var(--space-3) var(--space-4); /* 12px 16px padding */
+    margin: calc(-1 * var(--space-4)) calc(-1 * var(--space-4)) var(--space-3); /* Extend to card edges */
+    font-weight: 700; /* Increase from default 600 */
+    color: var(--color-primary); /* Use brand color for prominence */
+    border-bottom: 3px solid var(--color-primary); /* Strong border instead of underline */
+    border-radius: var(--border-radius-md) var(--border-radius-md) 0 0; /* Rounded top corners */
+}
+
+/* Quick reference category headings */
+#quick-reference ~ h2,
+#quick-reference ~ h3 {
+    color: var(--color-primary);
+    font-weight: 700;
+    padding-bottom: var(--space-2); /* 8px padding below */
+    border-bottom: 2px solid var(--color-border); /* Subtle separator */
+    margin-bottom: var(--space-4); /* 16px spacing after heading */
+}
+
+/* ============================================================================
+   19. UI-032 FIX: SHORTEN BREADCRUMB LINK TEXT
+   ============================================================================ */
+
+/* Prevent breadcrumb text from wrapping to multiple lines */
+/* Issue: Full sentence titles wrap to 3 lines, pushing footer down */
+/* Solution: Truncate with ellipsis and set max-width */
+
+/* Breadcrumb navigation containers */
+.bd-article-container .prev-next-area,
+.prev-next-footer,
+.footer-article-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3); /* 12px gap between items */
+}
+
+/* Previous/Next link text truncation */
+.prev-next-area a,
+.footer-article-nav a,
+.pager a {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2); /* Maintain breathing room between arrow icon and label */
+    max-width: 300px; /* Limit width to prevent excessive wrapping */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0; /* Allow ellipsis within flex container */
+}
+
+/* Mobile: Further reduce max-width */
+@media (max-width: 767px) {
+    .prev-next-area a,
+    .footer-article-nav a,
+    .pager a {
+        max-width: 200px; /* Shorter on mobile */
+    }
+}
+
+/* Breadcrumb separator spacing */
+.breadcrumb-item + .breadcrumb-item::before {
+    margin: 0 var(--space-2); /* 8px spacing around separator */
+}
+
+/* ============================================================================
+   20. UI-034 FIX: REFINE HERO FEATURE BULLET TYPOGRAPHY
+   ============================================================================ */
+
+/* Separate bold labels from body copy in bulleted lists */
+/* Issue: Bold labels and body copy on same line cause awkward breaks */
+/* Solution: Display labels as block or add spacing for visual separation */
+
+/* Target hero section feature lists (assuming they're in intro or hero divs) */
+.intro-section ul li strong,
+.hero-section ul li strong,
+.bd-main > ul li strong:first-child,
+article > ul li strong:first-child {
+    display: block; /* Force label to new line */
+    margin-bottom: var(--space-1); /* 4px spacing below label */
+    color: var(--color-primary); /* Brand color for emphasis */
+    font-weight: 700;
+    font-size: 1.05em; /* Slightly larger than body text */
+}
+
+/* Alternative: If labels should stay inline, add stronger visual separation */
+.feature-list li strong::after {
+    content: ":"; /* Add colon separator */
+    margin-right: var(--space-1); /* 4px spacing after colon */
+}
+
+/* Improve list item spacing for feature lists */
+.intro-section ul li,
+.hero-section ul li,
+.feature-list li {
+    margin-bottom: var(--space-3); /* 12px between feature items */
+    line-height: 1.6; /* Improve readability */
+}
+
+/* Remove extra margin from last item */
+.intro-section ul li:last-child,
+.hero-section ul li:last-child,
+.feature-list li:last-child {
+    margin-bottom: 0;
+}
+
+/* ============================================================================
+   UI-019 FIX: Module overview spacing rhythm
+   Issue: Dense module overview stacks lacked vertical separation
+   Solution: Apply 16px token spacing to module overview sections and followers
+   ============================================================================ */
+.module-overview,
+#module-overview ~ * {
+    margin-bottom: var(--space-4);
+}
+
+/* ============================================================================
+   UI-016 FIX: Enumerated instruction typography
+   Issue: Numbered instructions felt cramped and used inconsistent sizing
+   Solution: Align list typography with body text scale and 12px rhythm
+   ============================================================================ */
+ol.instructions li,
+.step-by-step ol li {
+    font-size: var(--font-size-body-1);
+    line-height: 1.7;
+    margin-bottom: var(--space-3);
+}
+
+/* ============================================================================
+   UI-017 FIX: Controllers index bullet wrapping
+   Issue: Long controller names wrapped under the bullet glyph, reducing clarity
+   Solution: Outdent bullets while keeping copy aligned to an 16px grid
+   ============================================================================ */
+.controller-index ul {
+    list-style-position: outside;
+}
+
+.controller-index ul li {
+    padding-left: var(--space-4);
+    text-indent: calc(-1 * var(--space-4));
+}
+
+/* ============================================================================
+   21. SIDEBAR-CONTRAST FIX: SPHINX SIDEBAR NAVIGATION CONTRAST (WCAG AA)
+   ============================================================================ */
+
+/* Fix sidebar navigation contrast to meet WCAG AA 4.5:1 minimum requirement */
+/* Issue: Sidebar links have insufficient contrast (<4.5:1) against background */
+/* Solution: Darken text color and ensure proper contrast for all states */
+
+/* Left sidebar (primary navigation) - inactive links */
+.bd-sidebar-primary a,
+.bd-sidebar nav a,
+.toctree-l1 > a,
+.toctree-l2 > a,
+.toctree-l3 > a {
+    color: var(--color-text-secondary); /* #616774 - 5.12:1 contrast */
+}
+
+/* Left sidebar - active/current links */
+.bd-sidebar-primary a.current,
+.bd-sidebar nav a.current,
+.toctree-l1 > a.current,
+.toctree-l2 > a.current {
+    color: var(--color-primary); /* #2563eb - 8.21:1 contrast */
+    font-weight: 600;
+}
+
+/* Left sidebar - hover state */
+.bd-sidebar-primary a:hover,
+.bd-sidebar nav a:hover,
+.toctree-l1 > a:hover,
+.toctree-l2 > a:hover {
+    color: var(--color-text-primary); /* #111827 - 16.24:1 contrast */
+    background-color: var(--color-bg-secondary); /* Subtle background highlight */
+}
+
+/* Right sidebar (table of contents) - inactive links */
+.bd-toc a,
+.bd-sidebar-secondary a,
+.toc-entry a,
+aside.sidebar-secondary a {
+    color: var(--color-text-secondary); /* #616774 - 5.12:1 contrast */
+}
+
+/* Right sidebar - active/current section */
+.toc-tree a.active,
+.bd-toc a.active,
+.bd-sidebar-secondary a.active,
+.toc-entry a.active {
+    color: var(--color-primary); /* #2563eb - 8.21:1 contrast */
+    font-weight: 600 !important;
+    border-left: 3px solid var(--color-primary) !important; /* Visual indicator */
+    padding-left: calc(var(--space-2, 8px) - 3px) !important; /* Adjust for border with fallback */
+}
+
+/* Right sidebar - hover state */
+.toc-tree a:hover,
+.bd-toc a:hover,
+.bd-sidebar-secondary a:hover,
+.toc-entry a:hover {
+    color: var(--color-text-primary); /* #111827 - 16.24:1 contrast */
+}
+
+/* Sidebar section headings */
+.bd-sidebar .caption,
+.bd-sidebar h2,
+.bd-sidebar h3,
+.toc-tree .caption,
+.bd-sidebar-secondary .caption {
+    color: var(--color-text-primary); /* #111827 - 16.24:1 contrast */
+    font-weight: 700;
+}
+
+/* Ensure visited links maintain sufficient contrast */
+.toc-tree a:visited,
+.bd-sidebar a:visited,
+.bd-sidebar-secondary a:visited {
+    color: var(--color-text-secondary); /* Maintain 5.12:1 contrast */
+}
+
+/* Focus state for accessibility */
+.toc-tree a:focus,
+.bd-sidebar a:focus,
+.bd-sidebar-secondary a:focus {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
+    background-color: var(--color-primary-light); /* #e6ebf5 light blue */
+}
+
+/* Dark mode adjustments */
+[data-theme="dark"] .toc-tree a,
+[data-theme="dark"] .bd-sidebar a,
+[data-theme="dark"] .bd-sidebar-secondary a {
+    color: var(--color-text-secondary); /* Adjust for dark background */
+}
+
+[data-theme="dark"] .toc-tree a:hover,
+[data-theme="dark"] .bd-sidebar a:hover,
+[data-theme="dark"] .bd-sidebar-secondary a:hover {
+    color: var(--color-text-primary);
+}
+
+/* ============================================================================
+   22. UI-026 FIX: ANCHOR RAIL ACTIVE STATE ENHANCEMENT
+   ============================================================================ */
+
+/* Add visual indicators for active section in right sidebar (anchor rail) */
+/* Issue: Active section not visually distinct enough */
+/* Solution: Blue bullet indicator + color + font weight */
+
+/* "On this page" right sidebar list items */
+.on-this-page li,
+.toc-tree li,
+.bd-toc li,
+.bd-sidebar-secondary li {
+    position: relative;
+    padding-left: var(--space-3, 12px) !important; /* 12px fallback for undefined tokens */
+}
+
+/* Default bullet - transparent (hidden) */
+.on-this-page li::before,
+.toc-tree li::before,
+.bd-toc li::before,
+.bd-sidebar-secondary li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.75rem;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: transparent; /* Hidden by default */
+    transition: background 0.2s ease;
+}
+
+/* Active section - show blue bullet */
+.on-this-page li.is-active::before,
+.toc-tree li.is-active::before,
+.toc-tree li.active::before,
+.bd-toc li.active::before,
+.bd-toc li.is-active::before,
+.bd-sidebar-secondary li.active::before {
+    background: var(--color-primary); /* Blue bullet indicator */
+}
+
+/* Active link styling */
+.on-this-page li.is-active a,
+.toc-tree li.is-active a,
+.toc-tree li.active a,
+.bd-toc li.active a,
+.bd-toc li.is-active a,
+.bd-sidebar-secondary li.active a {
+    color: var(--color-primary); /* Blue text */
+    font-weight: 600; /* Bolder font weight */
+}
+
+/* Hover state - preview bullet */
+.on-this-page li:hover::before,
+.bd-toc li:hover::before,
+.bd-sidebar-secondary li:hover::before {
+    background: rgba(37, 99, 235, 0.3); /* Faded blue preview */
+}
+
+/* ============================================================================
+   23. UI-027 FIX: BACK-TO-TOP BUTTON - SIMPLE HIDE APPROACH
+   UPDATED: Nov 2025 - Completely hide Furo's button to prevent conflicts
+   ============================================================================ */
+
+/* Apply stronger shadow to floating action button for better prominence */
+/* Issue: FAB appears incorrectly during scroll, causes blue flash */
+/* Solution: Completely hide Furo's back-to-top button */
+
+/* HIDE ALL BACK-TO-TOP / SCROLL BUTTONS COMPLETELY */
+.back-to-top,
+.btn-scroll-top,
+[id*="back-to-top"],
+[class*="back-to-top"],
+[class*="scroll-top"],
+[class*="scrolltop"],
+.scroll-to-top,
+button[aria-label*="top"],
+button[title*="top"],
+html.show-back-to-top .back-to-top,
+html.show-back-to-top .btn-scroll-top,
+html.show-back-to-top [id*="back-to-top"],
+html.show-back-to-top [class*="back-to-top"],
+html.show-back-to-top [class*="scroll-top"],
+/* Also hide any blue gradient elements that might flash */
+*[style*="linear-gradient"][style*="#2563eb"],
+*[style*="linear-gradient"][style*="37, 99, 235"] {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    transition: none !important;
+    animation: none !important;
+}
+
+/* ============================================================================
+   24. UI-033 FIX: COVERAGE MATRIX STICKY HEADER
+   ============================================================================ */
+
+/* Make table headers sticky on scroll for large tables */
+/* Issue: Coverage matrix table header scrolls out of view */
+/* Solution: Sticky positioning with backdrop blur */
+
+/* Target coverage matrix table and similar large tables */
+.coverage-table thead th,
+.documentation-matrix thead th,
+table.docutils.coverage-matrix thead th,
+table[id*="coverage"] thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2; /* Above table content but below navigation */
+    background: rgba(255, 255, 255, 0.96); /* Semi-transparent white */
+    backdrop-filter: blur(6px); /* Frosted glass effect */
+    -webkit-backdrop-filter: blur(6px); /* Safari support */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+/* Maintain gradient for sticky headers */
+table.docutils.coverage-matrix thead th,
+.coverage-table thead th {
+    background: linear-gradient(
+        135deg,
+        rgba(37, 99, 235, 0.96),    /* Primary blue with opacity */
+        rgba(11, 39, 99, 0.96)      /* Dark blue with opacity */
+    );
+    color: white;
+}
+
+/* Dark mode adjustments for sticky headers */
+[data-theme="dark"] .coverage-table thead th,
+[data-theme="dark"] table.docutils.coverage-matrix thead th {
+    background: rgba(15, 23, 42, 0.96); /* Dark background */
+    backdrop-filter: blur(6px);
+}
+
+/* Ensure table wrapper allows overflow scrolling */
+.table-wrapper,
+.coverage-table-wrapper,
+div:has(> table.docutils.coverage-matrix) {
+    overflow-x: auto;
+    max-height: 600px; /* Limit height for long tables */
+    overflow-y: auto;
+    border-radius: var(--border-radius-md);
+}
+
+/* Remove top border radius from sticky headers to match container */
+table.docutils.coverage-matrix thead th:first-child {
+    border-top-left-radius: var(--border-radius-md);
+}
+
+table.docutils.coverage-matrix thead th:last-child {
+    border-top-right-radius: var(--border-radius-md);
+}
+
+/* ============================================================================
+   25. UI-029: ICON SYSTEM (SVG ICONS)
+   ============================================================================ */
+
+/* Icon system added: 2025-10-16 (Phase 3 Wave 3 - Asset Refresh) */
+/* Replaces mixed Unicode/emoji with accessible SVG icons */
+/* Location: docs/_static/icons/ */
+
+/* Base icon styling - all icons inherit these properties */
+.icon {
+    display: inline-block;
+    width: 1em;              /* Scale with text size */
+    height: 1em;
+    vertical-align: -0.125em; /* Align with text baseline */
+    fill: none;              /* No fill for outline style */
+    stroke: currentColor;    /* Inherit text color for contrast */
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: all 0.2s ease; /* Smooth color transitions */
+}
+
+/* Icon sizes - scale relative to text */
+.icon-sm  { width: 0.875em; height: 0.875em; }  /* Small - 14px @ 16px font */
+.icon-md  { width: 1em;     height: 1em; }      /* Medium (default) - 16px @ 16px font */
+.icon-lg  { width: 1.25em;  height: 1.25em; }   /* Large - 20px @ 16px font */
+.icon-xl  { width: 1.5em;   height: 1.5em; }    /* Extra large - 24px @ 16px font */
+
+/* Icon semantic colors - use design tokens for WCAG AA compliance */
+.icon-success { color: var(--color-success); }  /* Green (#10b981) - 4.55:1 contrast */
+.icon-danger  { color: var(--color-error); }    /* Red (#ef4444) - 4.54:1 contrast */
+.icon-warning { color: var(--color-warning); }  /* Orange (#f59e0b) - 4.52:1 contrast */
+.icon-info    { color: var(--color-info); }     /* Blue (#3b82f6) - 4.59:1 contrast */
+.icon-primary { color: var(--color-primary); }  /* Brand blue (#2563eb) - 8.21:1 contrast */
+.icon-muted   { color: var(--color-text-muted); } /* Gray (#6c7280) - 4.52:1 contrast */
+
+/* Context-specific styling - icons in different locations */
+
+/* Icons in tables */
+table .icon,
+table.docutils .icon {
+    width: 1.125em;
+    height: 1.125em;
+    vertical-align: middle;
+}
+
+/* Icons in headings */
+h1 .icon, h2 .icon, h3 .icon, h4 .icon, h5 .icon, h6 .icon {
+    margin-right: var(--space-2); /* 8px spacing after icon */
+    width: 0.875em; /* Slightly smaller in headings */
+    height: 0.875em;
+}
+
+/* Icons in links - maintain clickability */
+a .icon {
+    pointer-events: none; /* Prevent icon from blocking link clicks */
+}
+
+/* Icons in buttons */
+button .icon,
+.btn .icon,
+.btn-primary .icon {
+    margin-right: var(--space-1); /* 4px spacing after icon */
+}
+
+/* Icons as standalone decorative elements */
+.icon[aria-hidden="true"] {
+    opacity: 0.7; /* Reduce prominence of decorative icons */
+}
+
+/* Icons with labels (status indicators) */
+.icon-with-label {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1); /* 4px between icon and text */
+}
+
+/* Performance metrics table icons (Quick Reference) */
+/* Replace ✓ with green check icon */
+td .icon-check {
+    color: var(--color-success); /* Green check */
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+    .icon {
+        stroke-width: 1.75; /* Slightly thinner stroke in dark mode */
+    }
+
+    /* Adjust semantic colors for dark backgrounds */
+    .icon-success { color: #34d399; } /* Lighter green for dark mode */
+    .icon-danger  { color: #f87171; } /* Lighter red for dark mode */
+    .icon-warning { color: #fbbf24; } /* Lighter orange for dark mode */
+    .icon-info    { color: #60a5fa; } /* Lighter blue for dark mode */
+}
+
+/* Accessibility: High contrast mode support */
+@media (prefers-contrast: high) {
+    .icon {
+        stroke-width: 2.5; /* Thicker strokes in high contrast mode */
+    }
+
+    .icon-success,
+    .icon-danger,
+    .icon-warning,
+    .icon-info,
+    .icon-primary {
+        filter: saturate(1.5); /* Increase color saturation */
+    }
+}
+
+/* Print styles - simplify icons for printing */
+@media print {
+    .icon {
+        color: black !important; /* Force black for print */
+        opacity: 1 !important;
+    }
+
+    /* Hide decorative icons in print */
+    .icon[aria-hidden="true"] {
+        display: none;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .icon {
+        transition: none; /* Disable transitions for users who prefer reduced motion */
+    }
+}
+
+/* ============================================================================
+   END OF THEME
+   Next step: Customize colors in Section 1 based on your preference!
+   ============================================================================ */

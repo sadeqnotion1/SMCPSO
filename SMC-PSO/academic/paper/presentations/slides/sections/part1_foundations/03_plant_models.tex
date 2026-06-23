@@ -1,0 +1,191 @@
+% ============================================================================
+% SECTION 3: PLANT MODELS & DYNAMICS
+% ============================================================================
+\section{Plant Models \& Dynamics}
+
+\begin{frame}{Three Fidelity Levels}
+    \begin{enumerate}
+        \item \highlight{Simplified Dynamics} -- Linearized, fast prototyping
+        \begin{itemize}
+            \item \texttt{src/plant/models/simplified\_dynamics.py}
+            \item 98\% test coverage \statusok
+            \item Ideal for initial controller design
+        \end{itemize}
+
+        \vspace{0.2cm}
+
+        \item \highlight{Full Nonlinear Model} -- High-fidelity with coupling effects
+        \begin{itemize}
+            \item \texttt{src/plant/models/full\_nonlinear\_dynamics.py}
+            \item Includes centripetal, Coriolis forces
+            \item Used for final validation
+        \end{itemize}
+
+        \vspace{0.2cm}
+
+        \item \highlight{Low-Rank Approximation} -- Computationally efficient reduced-order
+        \begin{itemize}
+            \item \texttt{src/plant/models/lowrank\_dynamics.py}
+            \item Truncated state representation
+            \item Suitable for real-time embedded systems
+        \end{itemize}
+    \end{enumerate}
+
+    \vspace{0.3cm}
+
+    \begin{alertblock}{Model Selection Trade-Off}
+        Accuracy vs Computational Cost -- Choose based on application requirements
+    \end{alertblock}
+\end{frame}
+
+\begin{frame}{Physical System Parameters}
+    \textbf{Default Configuration (\texttt{config.yaml}):}
+
+    \vspace{0.3cm}
+
+    \begin{tabular}{lll}
+        \toprule
+        \textbf{Parameter} & \textbf{Value} & \textbf{Units} \\
+        \midrule
+        Cart mass ($m_0$) & 1.0 & kg \\
+        Pole 1 mass ($m_1$) & 0.1 & kg \\
+        Pole 2 mass ($m_2$) & 0.1 & kg \\
+        Pole 1 length ($\ell_1$) & 0.5 & m \\
+        Pole 2 length ($\ell_2$) & 0.5 & m \\
+        Gravity ($g$) & 9.81 & m/s$^2$ \\
+        \midrule
+        \multicolumn{3}{l}{\textit{Control Constraints:}} \\
+        Max force ($u_{max}$) & 20.0 & N \\
+        Min force ($u_{min}$) & -20.0 & N \\
+        \bottomrule
+    \end{tabular}
+
+    \vspace{0.3cm}
+
+    \begin{block}{Model Uncertainty (LT-6)}
+        Tested parameter variations: \\
+        \textbf{Low:} ±10\% | \textbf{High:} ±20\% \\
+        All controllers remain stable under ±10\%
+    \end{block}
+\end{frame}
+
+\begin{frame}{State Space Representation}
+    \textbf{6-Dimensional State Vector:}
+    \begin{equation}
+        \statevec = \begin{bmatrix}
+            x & \dot{x} & \theta_1 & \dot{\theta}_1 & \theta_2 & \dot{\theta}_2
+        \end{bmatrix}^T
+    \end{equation}
+
+    where:
+    \begin{itemize}
+        \item $x$ -- Cart position
+        \item $\dot{x}$ -- Cart velocity
+        \item $\theta_1$ -- Pole 1 angle (from vertical)
+        \item $\dot{\theta}_1$ -- Pole 1 angular velocity
+        \item $\theta_2$ -- Pole 2 angle (from vertical)
+        \item $\dot{\theta}_2$ -- Pole 2 angular velocity
+    \end{itemize}
+
+    \vspace{0.3cm}
+
+    \textbf{Control Input:}
+    \begin{equation}
+        \controlvec = u \quad \text{(horizontal force on cart)}
+    \end{equation}
+
+    \vspace{0.3cm}
+
+    \textbf{Initial Condition (typical):}
+    \begin{equation}
+        \statevec_0 = [0, 0, 0.1, 0, -0.05, 0]^T \quad \text{(small angular perturbations)}
+    \end{equation}
+\end{frame}
+
+\begin{frame}{Lagrangian Formulation}
+    \textbf{Equations of Motion:}
+    \begin{equation}
+        \massmatrix(\mathbf{q}) \ddot{\mathbf{q}} + \coriolismatrix(\mathbf{q}, \dot{\mathbf{q}}) \dot{\mathbf{q}} + \gravitymatrix(\mathbf{q}) = \inputmatrix \controlvec
+    \end{equation}
+
+    where:
+    \begin{itemize}
+        \item $\mathbf{q} = [x, \theta_1, \theta_2]^T$ -- Generalized coordinates
+        \item $\massmatrix$ -- Mass/inertia matrix (3×3, positive definite)
+        \item $\coriolismatrix$ -- Coriolis/centripetal matrix (3×3)
+        \item $\gravitymatrix$ -- Gravity vector (3×1)
+        \item $\inputmatrix$ -- Input mapping (3×1)
+    \end{itemize}
+
+    \vspace{0.3cm}
+
+    \textbf{Key Properties:}
+    \begin{itemize}
+        \item \textbf{Nonlinearity:} $\massmatrix$, $\coriolismatrix$, $\gravitymatrix$ depend on $\mathbf{q}$
+        \item \textbf{Underactuated:} 3 DOF, 1 actuator
+        \item \textbf{Coupling:} Motion of one pole affects the other
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Mass Matrix Structure}
+    \textbf{General Form:}
+    \begin{equation}
+        \massmatrix = \begin{bmatrix}
+            M_{00} & M_{01} & M_{02} \\
+            M_{10} & M_{11} & M_{12} \\
+            M_{20} & M_{21} & M_{22}
+        \end{bmatrix}
+    \end{equation}
+
+    \vspace{0.3cm}
+
+    \textbf{Explicit Elements (simplified):}
+    \begin{align}
+        M_{00} &= m_0 + m_1 + m_2 \\
+        M_{01} &= (m_1 + m_2) \ell_1 \cos\theta_1 \\
+        M_{02} &= m_2 \ell_2 \cos\theta_2 \\
+        M_{11} &= (m_1 + m_2) \ell_1^2 \\
+        M_{12} &= m_2 \ell_1 \ell_2 \cos(\theta_1 - \theta_2) \\
+        M_{22} &= m_2 \ell_2^2
+    \end{align}
+
+    \vspace{0.3cm}
+
+    \begin{alertblock}{Numerical Stability}
+        $\massmatrix$ can become ill-conditioned at certain configurations \\
+        Robust inversion required: \texttt{numpy.linalg.solve(M, rhs)}
+    \end{alertblock}
+\end{frame}
+
+\begin{frame}{Plant Architecture: Code Organization}
+    \textbf{Module Structure:}
+
+    \vspace{0.3cm}
+
+    \begin{itemize}
+        \item \texttt{src/plant/core/} -- Core interfaces, base classes
+        \begin{itemize}
+            \item \texttt{physics\_matrices.py} -- $\massmatrix$, $\coriolismatrix$, $\gravitymatrix$ computation
+            \item \texttt{state\_validation.py} -- Bounds checking, NaN detection
+        \end{itemize}
+
+        \vspace{0.2cm}
+
+        \item \texttt{src/plant/models/} -- 8 dynamics files
+        \begin{itemize}
+            \item \texttt{simplified\_dynamics.py} -- Linearized (98\% coverage)
+            \item \texttt{full\_nonlinear\_dynamics.py} -- High-fidelity
+            \item \texttt{lowrank\_dynamics.py} -- Reduced-order
+            \item 5 other variants (experimental)
+        \end{itemize}
+
+        \vspace{0.2cm}
+
+        \item \texttt{src/plant/configurations/} -- Predefined plant setups
+        \begin{itemize}
+            \item \texttt{default\_config.yaml} -- Standard parameters
+            \item \texttt{heavy\_cart.yaml} -- Increased $m_0$
+            \item \texttt{long\_poles.yaml} -- Increased $\ell_1$, $\ell_2$
+        \end{itemize}
+    \end{itemize}
+\end{frame}

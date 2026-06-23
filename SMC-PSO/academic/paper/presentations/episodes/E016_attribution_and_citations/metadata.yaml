@@ -1,0 +1,15 @@
+﻿episode_id: E016
+slug: attribution_and_citations
+title: Attribution And Citations
+status: migrated_auto
+last_updated: 2026-02-24
+languages:
+  - en
+channels:
+  - podcast
+source_file_count: 7
+source_buckets:
+  - archive_part1_foundations
+  - cheatsheets_phase3_professional
+  - episodes_markdown
+  - episodes_pdf

@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Phase 1 Claim Extraction Quality Report - Interactive Dashboard">
+    <title>Phase 1 Quality Report | Claim Extraction</title>
+
+    <!-- Bootstrap 5.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Chart.js 4.4 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <!-- DataTables 1.13 -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
+
+    <style>
+        :root {
+            --primary-color: #007bff;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --warning-color: #ffc107;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), #0056b3);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .metric-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+
+        .metric-value {
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .metric-label {
+            font-size: 1rem;
+            color: #6c757d;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .pass {
+            color: var(--success-color);
+        }
+
+        .fail {
+            color: var(--danger-color);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin: 20px 0;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 30px 0 20px 0;
+            padding-bottom: 10px;
+            border-bottom: 3px solid var(--primary-color);
+        }
+
+        .status-badge {
+            font-size: 0.9rem;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .recommendation-card {
+            background: #fff3cd;
+            border-left: 5px solid var(--warning-color);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+
+        .priority-tag {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .priority-high {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .priority-medium {
+            background-color: #ffc107;
+            color: black;
+        }
+
+        .priority-low {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        table.dataTable {
+            font-size: 0.9rem;
+        }
+
+        .table-responsive {
+            margin-top: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .metric-value {
+                font-size: 2rem;
+            }
+
+            .chart-container {
+                height: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <h1>Phase 1 Claim Extraction Quality Report</h1>
+        <p class="mb-0">Generation Timestamp: <span id="generation-timestamp">Loading...</span></p>
+        <p class="mb-0">Tools Version: <span id="tools-version">Loading...</span></p>
+    </div>
+
+    <!-- Executive Summary -->
+    <div class="row">
+        <div class="col-md-3 col-sm-6">
+            <div class="metric-card text-center">
+                <div class="metric-label">Total Claims</div>
+                <div class="metric-value" id="total-claims">-</div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="metric-card text-center">
+                <div class="metric-label">Precision</div>
+                <div class="metric-value" id="precision">-</div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="metric-card text-center">
+                <div class="metric-label">Recall</div>
+                <div class="metric-value" id="recall">-</div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="metric-card text-center">
+                <div class="metric-label">Execution Time</div>
+                <div class="metric-value" id="execution-time">-</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Precision Analysis Section -->
+    <div class="section-title">Precision Analysis (Stratified Sample: 40 Claims)</div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="metric-card">
+                <h5>Precision by Priority Tier</h5>
+                <div class="table-responsive">
+                    <table class="table table-striped" id="precision-table">
+                        <thead>
+                            <tr>
+                                <th>Priority</th>
+                                <th>Sample Count</th>
+                                <th>Correct</th>
+                                <th>Precision</th>
+                                <th>Target</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="precision-tbody">
+                            <!-- Populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <h6 class="mt-4">False Positives</h6>
+                <div class="table-responsive">
+                    <table class="table table-sm" id="false-positives-table">
+                        <thead>
+                            <tr>
+                                <th>Claim ID</th>
+                                <th>Claim Text</th>
+                                <th>Reason</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="false-positives-tbody">
+                            <!-- Populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recall Analysis Section -->
+    <div class="section-title">Recall Analysis (Ground Truth Validation)</div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="metric-card">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Ground Truth Files</h6>
+                        <ul id="ground-truth-files">
+                            <!-- Populated by JavaScript -->
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Recall Metrics</h6>
+                        <p><strong>Expected Claims:</strong> <span id="expected-claims">-</span></p>
+                        <p><strong>Extracted Claims:</strong> <span id="extracted-claims">-</span></p>
+                        <p><strong>Recall:</strong> <span id="recall-metric" class="pass">-</span></p>
+                    </div>
+                </div>
+
+                <h6 class="mt-4">False Negatives</h6>
+                <div class="table-responsive">
+                    <table class="table table-sm" id="false-negatives-table">
+                        <thead>
+                            <tr>
+                                <th>Expected Claim</th>
+                                <th>File</th>
+                                <th>Line</th>
+                                <th>Reason</th>
+                            </tr>
+                        </thead>
+                        <tbody id="false-negatives-tbody">
+                            <!-- Populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Distribution Charts -->
+    <div class="section-title">Claim Distribution Analysis</div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="metric-card">
+                <h6 class="text-center">By Source</h6>
+                <div class="chart-container">
+                    <canvas id="source-chart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="metric-card">
+                <h6 class="text-center">By Priority</h6>
+                <div class="chart-container">
+                    <canvas id="priority-chart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="metric-card">
+                <h6 class="text-center">By Confidence</h6>
+                <div class="chart-container">
+                    <canvas id="confidence-chart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Performance Dashboard -->
+    <div class="section-title">Performance Metrics</div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="metric-card">
+                <div class="table-responsive">
+                    <table class="table table-striped" id="performance-table">
+                        <thead>
+                            <tr>
+                                <th>Tool</th>
+                                <th>Execution Time (s)</th>
+                                <th>Target (s)</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="performance-tbody">
+                            <!-- Populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recommendations Section -->
+    <div class="section-title">Recommendations for Phase 2</div>
+    <div class="row">
+        <div class="col-md-12">
+            <div id="recommendations-container">
+                <!-- Populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5.3 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- jQuery (required for DataTables) -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <!-- DataTables -->
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+
+    <script>
+        // Data loading and visualization
+        let qualityData = null;
+
+        async function loadReport() {
+            try {
+                // Load data from JSON file (adjust path as needed)
+                const response = await fetch('../../artifacts/quality_report_sample.json');
+                qualityData = await response.json();
+
+                // Populate executive summary
+                populateExecutiveSummary();
+
+                // Populate precision analysis
+                populatePrecisionAnalysis();
+
+                // Populate recall analysis
+                populateRecallAnalysis();
+
+                // Create distribution charts
+                createDistributionCharts();
+
+                // Populate performance metrics
+                populatePerformanceMetrics();
+
+                // Populate recommendations
+                populateRecommendations();
+
+                // Initialize DataTables
+                $('#false-positives-table').DataTable({
+                    pageLength: 5,
+                    order: [[0, 'asc']]
+                });
+
+                $('#false-negatives-table').DataTable({
+                    pageLength: 5,
+                    order: [[0, 'asc']]
+                });
+
+            } catch (error) {
+                console.error('Error loading quality report data:', error);
+                alert('Failed to load quality report data. Please check the console for details.');
+            }
+        }
+
+        function populateExecutiveSummary() {
+            const metadata = qualityData.report_metadata;
+            const precision = qualityData.precision_analysis;
+            const recall = qualityData.recall_analysis;
+            const performance = qualityData.performance_metrics;
+
+            // Header metadata
+            document.getElementById('generation-timestamp').textContent = metadata.generation_timestamp;
+            document.getElementById('tools-version').textContent = metadata.tools_version;
+
+            // Metrics
+            document.getElementById('total-claims').textContent = metadata.total_claims_extracted;
+
+            const precisionValue = (precision.overall_precision * 100).toFixed(1) + '%';
+            const precisionElement = document.getElementById('precision');
+            precisionElement.textContent = precisionValue;
+            precisionElement.className = 'metric-value ' + (precision.overall_precision >= 0.9 ? 'pass' : 'fail');
+
+            const recallValue = (recall.recall * 100).toFixed(1) + '%';
+            const recallElement = document.getElementById('recall');
+            recallElement.textContent = recallValue;
+            recallElement.className = 'metric-value ' + (recall.recall >= 0.95 ? 'pass' : 'fail');
+
+            const timeValue = performance.total_time_sec.toFixed(2) + 's';
+            const timeElement = document.getElementById('execution-time');
+            timeElement.textContent = timeValue;
+            timeElement.className = 'metric-value ' + (performance.total_time_sec < 5.0 ? 'pass' : 'fail');
+        }
+
+        function populatePrecisionAnalysis() {
+            const stratification = qualityData.precision_analysis.stratification;
+            const tbody = document.getElementById('precision-tbody');
+
+            const tiers = [
+                { key: 'CRITICAL', target: 0.95 },
+                { key: 'HIGH', target: 0.90 },
+                { key: 'MEDIUM', target: 0.85 }
+            ];
+
+            tiers.forEach(tier => {
+                const data = stratification[tier.key];
+                const precision = (data.precision * 100).toFixed(1) + '%';
+                const status = data.precision >= tier.target ?
+                    '<span class="badge bg-success">PASS</span>' :
+                    '<span class="badge bg-danger">FAIL</span>';
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td><strong>${tier.key}</strong></td>
+                        <td>${data.count}</td>
+                        <td>${data.correct}</td>
+                        <td>${precision}</td>
+                        <td>${(tier.target * 100).toFixed(0)}%</td>
+                        <td>${status}</td>
+                    </tr>
+                `;
+            });
+
+            // False positives
+            const fpTbody = document.getElementById('false-positives-tbody');
+            qualityData.precision_analysis.false_positives.forEach(fp => {
+                fpTbody.innerHTML += `
+                    <tr>
+                        <td><code>${fp.claim_id}</code></td>
+                        <td>${fp.claim_text}</td>
+                        <td><span class="badge bg-warning text-dark">${fp.reason}</span></td>
+                        <td><small>${fp.action}</small></td>
+                    </tr>
+                `;
+            });
+        }
+
+        function populateRecallAnalysis() {
+            const recall = qualityData.recall_analysis;
+
+            // Ground truth files
+            const filesList = document.getElementById('ground-truth-files');
+            recall.ground_truth_files.forEach(file => {
+                filesList.innerHTML += `<li><code>${file}</code></li>`;
+            });
+
+            // Metrics
+            document.getElementById('expected-claims').textContent = recall.expected_claims;
+            document.getElementById('extracted-claims').textContent = recall.extracted_claims;
+
+            const recallValue = (recall.recall * 100).toFixed(1) + '%';
+            const recallElement = document.getElementById('recall-metric');
+            recallElement.textContent = recallValue;
+            recallElement.className = recall.recall >= 0.95 ? 'pass' : 'fail';
+
+            // False negatives
+            const fnTbody = document.getElementById('false-negatives-tbody');
+            recall.false_negatives.forEach(fn => {
+                fnTbody.innerHTML += `
+                    <tr>
+                        <td>${fn.expected_claim}</td>
+                        <td><code>${fn.file_path}</code></td>
+                        <td>${fn.line_number}</td>
+                        <td><small>${fn.reason}</small></td>
+                    </tr>
+                `;
+            });
+        }
+
+        function createDistributionCharts() {
+            const distribution = qualityData.distribution_analysis;
+
+            // Source chart (Pie)
+            new Chart(document.getElementById('source-chart'), {
+                type: 'pie',
+                data: {
+                    labels: ['Formal Extractor', 'Code Extractor'],
+                    datasets: [{
+                        data: [distribution.by_source.formal_extractor, distribution.by_source.code_extractor],
+                        backgroundColor: ['#007bff', '#28a745']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+
+            // Priority chart (Bar)
+            new Chart(document.getElementById('priority-chart'), {
+                type: 'bar',
+                data: {
+                    labels: ['CRITICAL', 'HIGH', 'MEDIUM'],
+                    datasets: [{
+                        label: 'Claims',
+                        data: [
+                            distribution.by_priority.CRITICAL,
+                            distribution.by_priority.HIGH,
+                            distribution.by_priority.MEDIUM
+                        ],
+                        backgroundColor: ['#dc3545', '#ffc107', '#6c757d']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // Confidence chart (Doughnut)
+            new Chart(document.getElementById('confidence-chart'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['High (0.8-1.0)', 'Medium (0.5-0.8)', 'Low (0.0-0.5)'],
+                    datasets: [{
+                        data: [
+                            distribution.by_confidence.high_0_8_1_0,
+                            distribution.by_confidence.medium_0_5_0_8,
+                            distribution.by_confidence.low_0_0_0_5
+                        ],
+                        backgroundColor: ['#28a745', '#ffc107', '#dc3545']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
+
+        function populatePerformanceMetrics() {
+            const perf = qualityData.performance_metrics;
+            const tbody = document.getElementById('performance-tbody');
+
+            const tools = [
+                { name: 'Formal Extractor', time: perf.formal_extractor_time_sec, target: 1.4 },
+                { name: 'Code Extractor', time: perf.code_extractor_time_sec, target: 2.5 },
+                { name: 'Merge Claims', time: perf.merge_time_sec, target: 0.5 },
+                { name: 'Total Pipeline', time: perf.total_time_sec, target: 5.0 }
+            ];
+
+            tools.forEach(tool => {
+                const status = tool.time <= tool.target ?
+                    '<span class="badge bg-success">PASS</span>' :
+                    '<span class="badge bg-danger">FAIL</span>';
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td><strong>${tool.name}</strong></td>
+                        <td>${tool.time.toFixed(2)}</td>
+                        <td>${tool.target.toFixed(2)}</td>
+                        <td>${status}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        function populateRecommendations() {
+            const recommendations = qualityData.recommendations || [];
+            const container = document.getElementById('recommendations-container');
+
+            if (recommendations.length === 0) {
+                container.innerHTML = '<p class="text-muted">No recommendations at this time.</p>';
+                return;
+            }
+
+            recommendations.forEach(rec => {
+                const priorityClass = rec.priority === 'HIGH' ? 'priority-high' :
+                                     rec.priority === 'MEDIUM' ? 'priority-medium' : 'priority-low';
+
+                container.innerHTML += `
+                    <div class="recommendation-card">
+                        <span class="priority-tag ${priorityClass}">${rec.priority}</span>
+                        <strong>Issue:</strong> ${rec.issue}<br>
+                        <strong>Action:</strong> ${rec.action}<br>
+                        <strong>Expected Impact:</strong> ${rec.expected_impact}
+                    </div>
+                `;
+            });
+        }
+
+        // Load report on page load
+        document.addEventListener('DOMContentLoaded', loadReport);
+    </script>
+</body>
+</html>

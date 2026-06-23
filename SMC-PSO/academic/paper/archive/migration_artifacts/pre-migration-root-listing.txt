@@ -1,0 +1,27 @@
+__pycache__
+benchmarks
+CHANGELOG.md
+CLAUDE.md
+config.yaml
+D:Projectsmain.artifactstemp_tree.txt
+data
+docs
+htmlcov
+nul
+optimization_results
+package.json
+package-lock.json
+pre-reorganization-backup-$(date +%Y%m%d_%H%M%S).tar.gz
+pre-reorganization-backup-20251229_104617.tar.gz
+README.md
+report.log
+requirements.txt
+scripts
+setup.py
+simulate.py
+src
+streamlit_app.py
+test_error.txt
+test_logs
+test_output.txt
+tests

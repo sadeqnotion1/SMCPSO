@@ -1,0 +1,16 @@
+﻿episode_id: E022
+slug: key_statistics_and_metrics
+title: Key Statistics And Metrics
+status: migrated_auto
+last_updated: 2026-02-24
+languages:
+  - en
+channels:
+  - podcast
+source_file_count: 10
+source_buckets:
+  - archive_part2_infrastructure
+  - cheatsheets_phase4_appendix
+  - episodes_markdown
+  - episodes_pdf
+  - episodes_specialized_advisor_report

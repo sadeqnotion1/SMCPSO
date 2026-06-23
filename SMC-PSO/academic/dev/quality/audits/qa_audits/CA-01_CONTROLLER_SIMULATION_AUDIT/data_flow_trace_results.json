@@ -1,0 +1,2089 @@
+{
+  "classical_smc": {
+    "status": "SUCCESS",
+    "controller_type": "classical_smc",
+    "trace_log": [
+      {
+        "step": 0,
+        "timestamp": "2025-11-11T06:19:10.636693",
+        "stage": "factory_create",
+        "component": "SMCFactory",
+        "data_type": "controller_type",
+        "data_value": "classical_smc",
+        "metadata": {
+          "operation": "create_from_gains"
+        }
+      },
+      {
+        "step": 0,
+        "timestamp": "2025-11-11T06:19:10.636693",
+        "stage": "factory_create",
+        "component": "SMCFactory",
+        "data_type": "gains",
+        "data_value": [
+          10.0,
+          5.0,
+          8.0,
+          3.0,
+          15.0,
+          2.0
+        ],
+        "metadata": {
+          "n_gains": 6
+        }
+      },
+      {
+        "step": 0,
+        "timestamp": "2025-11-11T06:19:10.636693",
+        "stage": "factory_create",
+        "component": "SMCFactory",
+        "data_type": "controller_instance",
+        "data_value": "ClassicalSMC",
+        "metadata": {
+          "has_compute_control": true,
+          "has_max_force": true
+        }
+      },
+      {
+        "step": 0,
+        "timestamp": "2025-11-11T06:19:10.636693",
+        "stage": "controller_init",
+        "component": "ClassicalSMC",
+        "data_type": "state_vars",
+        "data_value": [],
+        "metadata": {
+          "state_vars_type": "tuple"
+        }
+      },
+      {
+        "step": 0,
+        "timestamp": "2025-11-11T06:19:10.636693",
+        "stage": "controller_init",
+        "component": "ClassicalSMC",
+        "data_type": "history",
+        "data_value": {},
+        "metadata": {
+          "history_type": "dict",
+          "history_keys": []
+        }
+      },
+      {
+        "step": 0,
+        "timestamp": "2025-11-11T06:19:10.636693",
+        "stage": "simulation_setup",
+        "component": "LowRankDIPDynamics",
+        "data_type": "config",
+        "data_value": "LowRankDIPConfig",
+        "metadata": {
+          "config_type": "LowRankDIPConfig"
+        }
+      },
+      {
+        "step": 0,
+        "timestamp": "2025-11-11T06:19:10.636693",
+        "stage": "simulation_setup",
+        "component": "SimulationRunner",
+        "data_type": "initial_state",
+        "data_value": {
+          "type": "ndarray",
+          "shape": [
+            6
+          ],
+          "dtype": "float64",
+          "value": [
+            0.0,
+            0.1,
+            0.1,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "metadata": {
+          "state_dim": 6
+        }
+      },
+      {
+        "step": 0,
+        "timestamp": "2025-11-11T06:19:10.636693",
+        "stage": "simulation_setup",
+        "component": "SimulationRunner",
+        "data_type": "sim_params",
+        "data_value": {
+          "sim_time": 0.1,
+          "dt": 0.01
+        },
+        "metadata": {}
+      },
+      {
+        "step": 0,
+        "timestamp": "2025-11-11T06:19:10.636693",
+        "stage": "control_loop",
+        "component": "Controller",
+        "data_type": "state_input",
+        "data_value": {
+          "type": "ndarray",
+          "shape": [
+            6
+          ],
+          "dtype": "float64",
+          "value": [
+            0.0,
+            0.1,
+            0.1,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "metadata": {
+          "step": 0
+        }
+      },
+      {
+        "step": 0,
+        "timestamp": "2025-11-11T06:19:10.636693",
+        "stage": "control_loop",
+        "component": "Controller",
+        "data_type": "control_output",
+        "data_value": [
+          -17.2,
+          [],
+          {
+            "sigma": [
+              1.1
+            ],
+            "epsilon_eff": [
+              0.01
+            ],
+            "u_eq": [
+              0.0
+            ],
+            "u_robust": [
+              -17.2
+            ],
+            "u_total": [
+              -17.2
+            ],
+            "u": [
+              -17.2
+            ]
+          }
+        ],
+        "metadata": {
+          "output_type": "ClassicalSMCOutput"
+        }
+      },
+      {
+        "step": 0,
+        "timestamp": "2025-11-11T06:19:10.636693",
+        "stage": "control_loop",
+        "component": "Controller",
+        "data_type": "control_value",
+        "data_value": -17.2,
+        "metadata": {
+          "step": 0,
+          "units": "N"
+        }
+      },
+      {
+        "step": 0,
+        "timestamp": "2025-11-11T06:19:10.661507",
+        "stage": "dynamics_step",
+        "component": "Dynamics",
+        "data_type": "state_output",
+        "data_value": {
+          "type": "ndarray",
+          "shape": [
+            6
+          ],
+          "dtype": "float64",
+          "value": [
+            0.0,
+            0.1,
+            0.1,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "metadata": {
+          "step": 0,
+          "is_finite": true
+        }
+      },
+      {
+        "step": 1,
+        "timestamp": "2025-11-11T06:19:10.661507",
+        "stage": "control_loop",
+        "component": "Controller",
+        "data_type": "state_input",
+        "data_value": {
+          "type": "ndarray",
+          "shape": [
+            6
+          ],
+          "dtype": "float64",
+          "value": [
+            0.0,
+            0.1,
+            0.1,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "metadata": {
+          "step": 1
+        }
+      },
+      {
+        "step": 1,
+        "timestamp": "2025-11-11T06:19:10.661507",
+        "stage": "control_loop",
+        "component": "Controller",
+        "data_type": "control_output",
+        "data_value": [
+          -17.2,
+          [],
+          {
+            "sigma": [
+              1.1,
+              1.1
+            ],
+            "epsilon_eff": [
+              0.01,
+              0.01
+            ],
+            "u_eq": [
+              0.0,
+              0.0
+            ],
+            "u_robust": [
+              -17.2,
+              -17.2
+            ],
+            "u_total": [
+              -17.2,
+              -17.2
+            ],
+            "u": [
+              -17.2,
+              -17.2
+            ]
+          }
+        ],
+        "metadata": {
+          "output_type": "ClassicalSMCOutput"
+        }
+      },
+      {
+        "step": 1,
+        "timestamp": "2025-11-11T06:19:10.661507",
+        "stage": "control_loop",
+        "component": "Controller",
+        "data_type": "control_value",
+        "data_value": -17.2,
+        "metadata": {
+          "step": 1,
+          "units": "N"
+        }
+      },
+      {
+        "step": 1,
+        "timestamp": "2025-11-11T06:19:10.661507",
+        "stage": "dynamics_step",
+        "component": "Dynamics",
+        "data_type": "state_output",
+        "data_value": {
+          "type": "ndarray",
+          "shape": [
+            6
+          ],
+          "dtype": "float64",
+          "value": [
+            0.0,
+            0.1,
+            0.1,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "metadata": {
+          "step": 1,
+          "is_finite": true
+        }
+      },
+      {
+        "step": 2,
+        "timestamp": "2025-11-11T06:19:10.661507",
+        "stage": "control_loop",
+        "component": "Controller",
+        "data_type": "state_input",
+        "data_value": {
+          "type": "ndarray",
+          "shape": [
+            6
+          ],
+          "dtype": "float64",
+          "value": [
+            0.0,
+            0.1,
+            0.1,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "metadata": {
+          "step": 2
+        }
+      },
+      {
+        "step": 2,
+        "timestamp": "2025-11-11T06:19:10.661507",
+        "stage": "control_loop",
+        "component": "Controller",
+        "data_type": "control_output",
+        "data_value": [
+          -17.2,
+          [],
+          {
+            "sigma": [
+              1.1,
+              1.1,
+              1.1
+            ],
+            "epsilon_eff": [
+              0.01,
+              0.01,
+              0.01
+            ],
+            "u_eq": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "u_robust": [
+              -17.2,
+              -17.2,
+              -17.2
+            ],
+            "u_total": [
+              -17.2,
+              -17.2,
+              -17.2
+            ],
+            "u": [
+              -17.2,
+              -17.2,
+              -17.2
+            ]
+          }
+        ],
+        "metadata": {
+          "output_type": "ClassicalSMCOutput"
+        }
+      },
+      {
+        "step": 2,
+        "timestamp": "2025-11-11T06:19:10.661507",
+        "stage": "control_loop",
+        "component": "Controller",
+        "data_type": "control_value",
+        "data_value": -17.2,
+        "metadata": {
+          "step": 2,
+          "units": "N"
+        }
+      },
+      {
+        "step": 2,
+        "timestamp": "2025-11-11T06:19:10.661507",
+        "stage": "dynamics_step",
+        "component": "Dynamics",
+        "data_type": "state_output",
+        "data_value": {
+          "type": "ndarray",
+          "shape": [
+            6
+          ],
+          "dtype": "float64",
+          "value": [
+            0.0,
+            0.1,
+            0.1,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "metadata": {
+          "step": 2,
+          "is_finite": true
+        }
+      },
+      {
+        "step": 2,
+        "timestamp": "2025-11-11T06:19:10.663517",
+        "stage": "output",
+        "component": "SimulationRunner",
+        "data_type": "time_array",
+        "data_value": {
+          "type": "ndarray",
+          "shape": [
+            11
+          ],
+          "dtype": "float64",
+          "value": [
+            0.0,
+            0.01,
+            0.02,
+            0.03,
+            0.04,
+            0.05,
+            0.06,
+            0.07,
+            0.08,
+            0.09,
+            0.1
+          ]
+        },
+        "metadata": {
+          "length": 11
+        }
+      },
+      {
+        "step": 2,
+        "timestamp": "2025-11-11T06:19:10.663517",
+        "stage": "output",
+        "component": "SimulationRunner",
+        "data_type": "state_trajectory",
+        "data_value": {
+          "type": "ndarray",
+          "shape": [
+            11,
+            6
+          ],
+          "dtype": "float64",
+          "value": "array((11, 6))"
+        },
+        "metadata": {
+          "shape": [
+            11,
+            6
+          ]
+        }
+      },
+      {
+        "step": 2,
+        "timestamp": "2025-11-11T06:19:10.663517",
+        "stage": "output",
+        "component": "SimulationRunner",
+        "data_type": "control_trajectory",
+        "data_value": {
+          "type": "ndarray",
+          "shape": [
+            10
+          ],
+          "dtype": "float64",
+          "value": [
+            -17.2,
+            -17.2,
+            -17.2,
+            -17.2,
+            -17.2,
+            -17.2,
+            -17.2,
+            -17.2,
+            -17.2,
+            -17.2
+          ]
+        },
+        "metadata": {
+          "shape": [
+            10
+          ],
+          "rms": 17.2
+        }
+      }
+    ],
+    "flow_diagram": "================================================================================\nDATA FLOW DIAGRAM: Controller Factory -> Simulation Runner\n================================================================================\n\n\n[FACTORY_CREATE]\n--------------------------------------------------------------------------------\n  SMCFactory: controller_type\n    (operation=create_from_gains)\n  SMCFactory: gains\n    (n_gains=6)\n  SMCFactory: controller_instance\n    (has_compute_control=True, has_max_force=True)\n\n[CONTROLLER_INIT]\n--------------------------------------------------------------------------------\n  ClassicalSMC: state_vars\n    (state_vars_type=tuple)\n  ClassicalSMC: history\n    (history_type=dict, history_keys=[])\n\n[SIMULATION_SETUP]\n--------------------------------------------------------------------------------\n  LowRankDIPDynamics: config\n    (config_type=LowRankDIPConfig)\n  SimulationRunner: initial_state\n    -> {'type': 'ndarray', 'shape': (6,), 'dtype': 'float64', 'value': [0.0, 0.1, 0.1, 0.0, 0.0, 0.0]}\n    (state_dim=6)\n  SimulationRunner: sim_params\n\n[CONTROL_LOOP]\n--------------------------------------------------------------------------------\n  Controller: state_input\n    -> {'type': 'ndarray', 'shape': (6,), 'dtype': 'float64', 'value': [0.0, 0.1, 0.1, 0.0, 0.0, 0.0]}\n    (step=0)\n  Controller: control_output\n    (output_type=ClassicalSMCOutput)\n  Controller: control_value\n    (step=0, units=N)\n  Controller: state_input\n    -> {'type': 'ndarray', 'shape': (6,), 'dtype': 'float64', 'value': [0.0, 0.1, 0.1, 0.0, 0.0, 0.0]}\n    (step=1)\n  Controller: control_output\n    (output_type=ClassicalSMCOutput)\n  Controller: control_value\n    (step=1, units=N)\n  Controller: state_input\n    -> {'type': 'ndarray', 'shape': (6,), 'dtype': 'float64', 'value': [0.0, 0.1, 0.1, 0.0, 0.0, 0.0]}\n    (step=2)\n  Controller: control_output\n    (output_type=ClassicalSMCOutput)\n  Controller: control_value\n    (step=2, units=N)\n\n[DYNAMICS_STEP]\n--------------------------------------------------------------------------------\n  Dynamics: state_output\n    -> {'type': 'ndarray', 'shape': (6,), 'dtype': 'float64', 'value': [0.0, 0.1, 0.1, 0.0, 0.0, 0.0]}\n    (step=0, is_finite=True)\n  Dynamics: state_output\n    -> {'type': 'ndarray', 'shape': (6,), 'dtype': 'float64', 'value': [0.0, 0.1, 0.1, 0.0, 0.0, 0.0]}\n    (step=1, is_finite=True)\n  Dynamics: state_output\n    -> {'type': 'ndarray', 'shape': (6,), 'dtype': 'float64', 'value': [0.0, 0.1, 0.1, 0.0, 0.0, 0.0]}\n    (step=2, is_finite=True)\n\n[OUTPUT]\n--------------------------------------------------------------------------------\n  SimulationRunner: time_array\n    -> {'type': 'ndarray', 'shape': (11,), 'dtype': 'float64', 'value': [0.0, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.1]}\n    (length=11)\n  SimulationRunner: state_trajectory\n    -> {'type': 'ndarray', 'shape': (11, 6), 'dtype': 'float64', 'value': 'array((11, 6))'}\n    (shape=(11, 6))\n  SimulationRunner: control_trajectory\n    -> {'type': 'ndarray', 'shape': (10,), 'dtype': 'float64', 'value': [-17.2, -17.2, -17.2, -17.2, -17.2, -17.2, -17.2, -17.2, -17.2, -17.2]}\n    (shape=(10,), rms=17.2)\n\n================================================================================",
+    "summary": {
+      "total_events": 23,
+      "simulation_steps": 11,
+      "control_effort_rms": 17.2,
+      "final_state_norm": 0.14142135623730953
+    }
+  },
+  "adaptive_smc": {
+    "status": "SUCCESS",
+    "controller_type": "adaptive_smc",
+    "trace_log": [
+      {
+        "step": 0,
+        "timestamp": "2025-11-11T06:19:10.689746",
+        "stage": "factory_create",
+        "component": "SMCFactory",
+        "data_type": "controller_type",
+        "data_value": "adaptive_smc",
+        "metadata": {
+          "operation": "create_from_gains"
+        }
+      },
+      {
+        "step": 0,
+        "timestamp": "2025-11-11T06:19:10.689746",
+        "stage": "factory_create",
+        "component": "SMCFactory",
+        "data_type": "gains",
+        "data_value": [
+          10.0,
+          5.0,
+          8.0,
+          3.0,
+          15.0,
+          2.0
+        ],
+        "metadata": {
+          "n_gains": 6
+        }
+      },
+      {
+        "step": 0,
+        "timestamp": "2025-11-11T06:19:10.689746",
+        "stage": "factory_create",
+        "component": "SMCFactory",
+        "data_type": "controller_instance",
+        "data_value": "AdaptiveSMC",
+        "metadata": {
+          "has_compute_control": true,
+          "has_max_force": true
+        }
+      },
+      {
+        "step": 0,
+        "timestamp": "2025-11-11T06:19:10.689746",
+        "stage": "controller_init",
+        "component": "AdaptiveSMC",
+        "data_type": "state_vars",
+        "data_value": [
+          10.0,
+          0.0,
+          0.0
+        ],
+        "metadata": {
+          "state_vars_type": "tuple"
+        }
+      },
+      {
+        "step": 0,
+        "timestamp": "2025-11-11T06:19:10.689746",
+        "stage": "controller_init",
+        "component": "AdaptiveSMC",
+        "data_type": "history",
+        "data_value": {
+          "K": [],
+          "sigma": [],
+          "u_sw": [],
+          "dK": [],
+          "time_in_sliding": []
+        },
+        "metadata": {
+          "history_type": "dict",
+          "history_keys": [
+            "K",
+            "sigma",
+            "u_sw",
+            "dK",
+            "time_in_sliding"
+          ]
+        }
+      },
+      {
+        "step": 0,
+        "timestamp": "2025-11-11T06:19:10.689746",
+        "stage": "simulation_setup",
+        "component": "LowRankDIPDynamics",
+        "data_type": "config",
+        "data_value": "LowRankDIPConfig",
+        "metadata": {
+          "config_type": "LowRankDIPConfig"
+        }
+      },
+      {
+        "step": 0,
+        "timestamp": "2025-11-11T06:19:10.689746",
+        "stage": "simulation_setup",
+        "component": "SimulationRunner",
+        "data_type": "initial_state",
+        "data_value": {
+          "type": "ndarray",
+          "shape": [
+            6
+          ],
+          "dtype": "float64",
+          "value": [
+            0.0,
+            0.1,
+            0.1,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "metadata": {
+          "state_dim": 6
+        }
+      },
+      {
+        "step": 0,
+        "timestamp": "2025-11-11T06:19:10.689746",
+        "stage": "simulation_setup",
+        "component": "SimulationRunner",
+        "data_type": "sim_params",
+        "data_value": {
+          "sim_time": 0.1,
+          "dt": 0.01
+        },
+        "metadata": {}
+      },
+      {
+        "step": 0,
+        "timestamp": "2025-11-11T06:19:10.689746",
+        "stage": "control_loop",
+        "component": "Controller",
+        "data_type": "state_input",
+        "data_value": {
+          "type": "ndarray",
+          "shape": [
+            6
+          ],
+          "dtype": "float64",
+          "value": [
+            0.0,
+            0.1,
+            0.1,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "metadata": {
+          "step": 0
+        }
+      },
+      {
+        "step": 0,
+        "timestamp": "2025-11-11T06:19:10.689746",
+        "stage": "control_loop",
+        "component": "Controller",
+        "data_type": "control_output",
+        "data_value": [
+          -14.75,
+          [
+            11.0,
+            -14.75,
+            0.0
+          ],
+          {
+            "K": [
+              11.0
+            ],
+            "sigma": [
+              9.5
+            ],
+            "u_sw": [
+              -10.0
+            ],
+            "dK": [
+              100.0
+            ],
+            "time_in_sliding": [
+              0.0
+            ]
+          },
+          9.5
+        ],
+        "metadata": {
+          "output_type": "AdaptiveSMCOutput"
+        }
+      },
+      {
+        "step": 0,
+        "timestamp": "2025-11-11T06:19:10.689746",
+        "stage": "control_loop",
+        "component": "Controller",
+        "data_type": "control_value",
+        "data_value": -14.75,
+        "metadata": {
+          "step": 0,
+          "units": "N"
+        }
+      },
+      {
+        "step": 0,
+        "timestamp": "2025-11-11T06:19:10.690776",
+        "stage": "dynamics_step",
+        "component": "Dynamics",
+        "data_type": "state_output",
+        "data_value": {
+          "type": "ndarray",
+          "shape": [
+            6
+          ],
+          "dtype": "float64",
+          "value": [
+            0.0,
+            0.1,
+            0.1,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "metadata": {
+          "step": 0,
+          "is_finite": true
+        }
+      },
+      {
+        "step": 1,
+        "timestamp": "2025-11-11T06:19:10.690776",
+        "stage": "control_loop",
+        "component": "Controller",
+        "data_type": "state_input",
+        "data_value": {
+          "type": "ndarray",
+          "shape": [
+            6
+          ],
+          "dtype": "float64",
+          "value": [
+            0.0,
+            0.1,
+            0.1,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "metadata": {
+          "step": 1
+        }
+      },
+      {
+        "step": 1,
+        "timestamp": "2025-11-11T06:19:10.690776",
+        "stage": "control_loop",
+        "component": "Controller",
+        "data_type": "control_output",
+        "data_value": [
+          -14.75,
+          [
+            11.0,
+            -14.75,
+            0.0
+          ],
+          {
+            "K": [
+              11.0,
+              11.0
+            ],
+            "sigma": [
+              9.5,
+              9.5
+            ],
+            "u_sw": [
+              -10.0,
+              -10.0
+            ],
+            "dK": [
+              100.0,
+              100.0
+            ],
+            "time_in_sliding": [
+              0.0,
+              0.0
+            ]
+          },
+          9.5
+        ],
+        "metadata": {
+          "output_type": "AdaptiveSMCOutput"
+        }
+      },
+      {
+        "step": 1,
+        "timestamp": "2025-11-11T06:19:10.690776",
+        "stage": "control_loop",
+        "component": "Controller",
+        "data_type": "control_value",
+        "data_value": -14.75,
+        "metadata": {
+          "step": 1,
+          "units": "N"
+        }
+      },
+      {
+        "step": 1,
+        "timestamp": "2025-11-11T06:19:10.690776",
+        "stage": "dynamics_step",
+        "component": "Dynamics",
+        "data_type": "state_output",
+        "data_value": {
+          "type": "ndarray",
+          "shape": [
+            6
+          ],
+          "dtype": "float64",
+          "value": [
+            0.0,
+            0.1,
+            0.1,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "metadata": {
+          "step": 1,
+          "is_finite": true
+        }
+      },
+      {
+        "step": 2,
+        "timestamp": "2025-11-11T06:19:10.690776",
+        "stage": "control_loop",
+        "component": "Controller",
+        "data_type": "state_input",
+        "data_value": {
+          "type": "ndarray",
+          "shape": [
+            6
+          ],
+          "dtype": "float64",
+          "value": [
+            0.0,
+            0.1,
+            0.1,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "metadata": {
+          "step": 2
+        }
+      },
+      {
+        "step": 2,
+        "timestamp": "2025-11-11T06:19:10.690776",
+        "stage": "control_loop",
+        "component": "Controller",
+        "data_type": "control_output",
+        "data_value": [
+          -14.75,
+          [
+            11.0,
+            -14.75,
+            0.0
+          ],
+          {
+            "K": [
+              11.0,
+              11.0,
+              11.0
+            ],
+            "sigma": [
+              9.5,
+              9.5,
+              9.5
+            ],
+            "u_sw": [
+              -10.0,
+              -10.0,
+              -10.0
+            ],
+            "dK": [
+              100.0,
+              100.0,
+              100.0
+            ],
+            "time_in_sliding": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          9.5
+        ],
+        "metadata": {
+          "output_type": "AdaptiveSMCOutput"
+        }
+      },
+      {
+        "step": 2,
+        "timestamp": "2025-11-11T06:19:10.690776",
+        "stage": "control_loop",
+        "component": "Controller",
+        "data_type": "control_value",
+        "data_value": -14.75,
+        "metadata": {
+          "step": 2,
+          "units": "N"
+        }
+      },
+      {
+        "step": 2,
+        "timestamp": "2025-11-11T06:19:10.690776",
+        "stage": "dynamics_step",
+        "component": "Dynamics",
+        "data_type": "state_output",
+        "data_value": {
+          "type": "ndarray",
+          "shape": [
+            6
+          ],
+          "dtype": "float64",
+          "value": [
+            0.0,
+            0.1,
+            0.1,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "metadata": {
+          "step": 2,
+          "is_finite": true
+        }
+      },
+      {
+        "step": 2,
+        "timestamp": "2025-11-11T06:19:10.691781",
+        "stage": "output",
+        "component": "SimulationRunner",
+        "data_type": "time_array",
+        "data_value": {
+          "type": "ndarray",
+          "shape": [
+            11
+          ],
+          "dtype": "float64",
+          "value": [
+            0.0,
+            0.01,
+            0.02,
+            0.03,
+            0.04,
+            0.05,
+            0.06,
+            0.07,
+            0.08,
+            0.09,
+            0.1
+          ]
+        },
+        "metadata": {
+          "length": 11
+        }
+      },
+      {
+        "step": 2,
+        "timestamp": "2025-11-11T06:19:10.691781",
+        "stage": "output",
+        "component": "SimulationRunner",
+        "data_type": "state_trajectory",
+        "data_value": {
+          "type": "ndarray",
+          "shape": [
+            11,
+            6
+          ],
+          "dtype": "float64",
+          "value": "array((11, 6))"
+        },
+        "metadata": {
+          "shape": [
+            11,
+            6
+          ]
+        }
+      },
+      {
+        "step": 2,
+        "timestamp": "2025-11-11T06:19:10.691781",
+        "stage": "output",
+        "component": "SimulationRunner",
+        "data_type": "control_trajectory",
+        "data_value": {
+          "type": "ndarray",
+          "shape": [
+            10
+          ],
+          "dtype": "float64",
+          "value": [
+            -14.75,
+            -15.75,
+            -16.75,
+            -17.75,
+            -18.75,
+            -19.75,
+            -20.75,
+            -21.75,
+            -22.75,
+            -23.75
+          ]
+        },
+        "metadata": {
+          "shape": [
+            10
+          ],
+          "rms": 19.46310612415192
+        }
+      }
+    ],
+    "flow_diagram": "================================================================================\nDATA FLOW DIAGRAM: Controller Factory -> Simulation Runner\n================================================================================\n\n\n[FACTORY_CREATE]\n--------------------------------------------------------------------------------\n  SMCFactory: controller_type\n    (operation=create_from_gains)\n  SMCFactory: gains\n    (n_gains=6)\n  SMCFactory: controller_instance\n    (has_compute_control=True, has_max_force=True)\n\n[CONTROLLER_INIT]\n--------------------------------------------------------------------------------\n  AdaptiveSMC: state_vars\n    (state_vars_type=tuple)\n  AdaptiveSMC: history\n    (history_type=dict, history_keys=['K', 'sigma', 'u_sw', 'dK', 'time_in_sliding'])\n\n[SIMULATION_SETUP]\n--------------------------------------------------------------------------------\n  LowRankDIPDynamics: config\n    (config_type=LowRankDIPConfig)\n  SimulationRunner: initial_state\n    -> {'type': 'ndarray', 'shape': (6,), 'dtype': 'float64', 'value': [0.0, 0.1, 0.1, 0.0, 0.0, 0.0]}\n    (state_dim=6)\n  SimulationRunner: sim_params\n\n[CONTROL_LOOP]\n--------------------------------------------------------------------------------\n  Controller: state_input\n    -> {'type': 'ndarray', 'shape': (6,), 'dtype': 'float64', 'value': [0.0, 0.1, 0.1, 0.0, 0.0, 0.0]}\n    (step=0)\n  Controller: control_output\n    (output_type=AdaptiveSMCOutput)\n  Controller: control_value\n    (step=0, units=N)\n  Controller: state_input\n    -> {'type': 'ndarray', 'shape': (6,), 'dtype': 'float64', 'value': [0.0, 0.1, 0.1, 0.0, 0.0, 0.0]}\n    (step=1)\n  Controller: control_output\n    (output_type=AdaptiveSMCOutput)\n  Controller: control_value\n    (step=1, units=N)\n  Controller: state_input\n    -> {'type': 'ndarray', 'shape': (6,), 'dtype': 'float64', 'value': [0.0, 0.1, 0.1, 0.0, 0.0, 0.0]}\n    (step=2)\n  Controller: control_output\n    (output_type=AdaptiveSMCOutput)\n  Controller: control_value\n    (step=2, units=N)\n\n[DYNAMICS_STEP]\n--------------------------------------------------------------------------------\n  Dynamics: state_output\n    -> {'type': 'ndarray', 'shape': (6,), 'dtype': 'float64', 'value': [0.0, 0.1, 0.1, 0.0, 0.0, 0.0]}\n    (step=0, is_finite=True)\n  Dynamics: state_output\n    -> {'type': 'ndarray', 'shape': (6,), 'dtype': 'float64', 'value': [0.0, 0.1, 0.1, 0.0, 0.0, 0.0]}\n    (step=1, is_finite=True)\n  Dynamics: state_output\n    -> {'type': 'ndarray', 'shape': (6,), 'dtype': 'float64', 'value': [0.0, 0.1, 0.1, 0.0, 0.0, 0.0]}\n    (step=2, is_finite=True)\n\n[OUTPUT]\n--------------------------------------------------------------------------------\n  SimulationRunner: time_array\n    -> {'type': 'ndarray', 'shape': (11,), 'dtype': 'float64', 'value': [0.0, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.1]}\n    (length=11)\n  SimulationRunner: state_trajectory\n    -> {'type': 'ndarray', 'shape': (11, 6), 'dtype': 'float64', 'value': 'array((11, 6))'}\n    (shape=(11, 6))\n  SimulationRunner: control_trajectory\n    -> {'type': 'ndarray', 'shape': (10,), 'dtype': 'float64', 'value': [-14.75, -15.75, -16.75, -17.75, -18.75, -19.75, -20.75, -21.75, -22.75, -23.75]}\n    (shape=(10,), rms=19.46310612415192)\n\n================================================================================",
+    "summary": {
+      "total_events": 23,
+      "simulation_steps": 11,
+      "control_effort_rms": 19.46310612415192,
+      "final_state_norm": 0.14142135623730953
+    }
+  },
+  "sta_smc": {
+    "status": "SUCCESS",
+    "controller_type": "sta_smc",
+    "trace_log": [
+      {
+        "step": 0,
+        "timestamp": "2025-11-11T06:19:10.693942",
+        "stage": "factory_create",
+        "component": "SMCFactory",
+        "data_type": "controller_type",
+        "data_value": "sta_smc",
+        "metadata": {
+          "operation": "create_from_gains"
+        }
+      },
+      {
+        "step": 0,
+        "timestamp": "2025-11-11T06:19:10.693942",
+        "stage": "factory_create",
+        "component": "SMCFactory",
+        "data_type": "gains",
+        "data_value": [
+          10.0,
+          5.0,
+          8.0,
+          3.0,
+          15.0,
+          2.0
+        ],
+        "metadata": {
+          "n_gains": 6
+        }
+      },
+      {
+        "step": 0,
+        "timestamp": "2025-11-11T06:19:10.693942",
+        "stage": "factory_create",
+        "component": "SMCFactory",
+        "data_type": "controller_instance",
+        "data_value": "SuperTwistingSMC",
+        "metadata": {
+          "has_compute_control": true,
+          "has_max_force": true
+        }
+      },
+      {
+        "step": 0,
+        "timestamp": "2025-11-11T06:19:10.693942",
+        "stage": "controller_init",
+        "component": "SuperTwistingSMC",
+        "data_type": "state_vars",
+        "data_value": [
+          0.0,
+          0.0
+        ],
+        "metadata": {
+          "state_vars_type": "tuple"
+        }
+      },
+      {
+        "step": 0,
+        "timestamp": "2025-11-11T06:19:10.693942",
+        "stage": "controller_init",
+        "component": "SuperTwistingSMC",
+        "data_type": "history",
+        "data_value": {},
+        "metadata": {
+          "history_type": "dict",
+          "history_keys": []
+        }
+      },
+      {
+        "step": 0,
+        "timestamp": "2025-11-11T06:19:10.694990",
+        "stage": "simulation_setup",
+        "component": "LowRankDIPDynamics",
+        "data_type": "config",
+        "data_value": "LowRankDIPConfig",
+        "metadata": {
+          "config_type": "LowRankDIPConfig"
+        }
+      },
+      {
+        "step": 0,
+        "timestamp": "2025-11-11T06:19:10.694990",
+        "stage": "simulation_setup",
+        "component": "SimulationRunner",
+        "data_type": "initial_state",
+        "data_value": {
+          "type": "ndarray",
+          "shape": [
+            6
+          ],
+          "dtype": "float64",
+          "value": [
+            0.0,
+            0.1,
+            0.1,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "metadata": {
+          "state_dim": 6
+        }
+      },
+      {
+        "step": 0,
+        "timestamp": "2025-11-11T06:19:10.694990",
+        "stage": "simulation_setup",
+        "component": "SimulationRunner",
+        "data_type": "sim_params",
+        "data_value": {
+          "sim_time": 0.1,
+          "dt": 0.01
+        },
+        "metadata": {}
+      },
+      {
+        "step": 0,
+        "timestamp": "2025-11-11T06:19:10.694990",
+        "stage": "control_loop",
+        "component": "Controller",
+        "data_type": "state_input",
+        "data_value": {
+          "type": "ndarray",
+          "shape": [
+            6
+          ],
+          "dtype": "float64",
+          "value": [
+            0.0,
+            0.1,
+            0.1,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "metadata": {
+          "step": 0
+        }
+      },
+      {
+        "step": 0,
+        "timestamp": "2025-11-11T06:19:11.420323",
+        "stage": "control_loop",
+        "component": "Controller",
+        "data_type": "control_output",
+        "data_value": [
+          -35.4964786985977,
+          [
+            -0.05,
+            12.6
+          ],
+          {
+            "sigma": [
+              12.6
+            ],
+            "z": [
+              -0.05
+            ],
+            "u": [
+              -35.4964786985977
+            ],
+            "u_eq": [
+              0.0
+            ]
+          },
+          12.6
+        ],
+        "metadata": {
+          "output_type": "STAOutput"
+        }
+      },
+      {
+        "step": 0,
+        "timestamp": "2025-11-11T06:19:11.420323",
+        "stage": "control_loop",
+        "component": "Controller",
+        "data_type": "control_value",
+        "data_value": -35.4964786985977,
+        "metadata": {
+          "step": 0,
+          "units": "N"
+        }
+      },
+      {
+        "step": 0,
+        "timestamp": "2025-11-11T06:19:11.420323",
+        "stage": "dynamics_step",
+        "component": "Dynamics",
+        "data_type": "state_output",
+        "data_value": {
+          "type": "ndarray",
+          "shape": [
+            6
+          ],
+          "dtype": "float64",
+          "value": [
+            0.0,
+            0.1,
+            0.1,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "metadata": {
+          "step": 0,
+          "is_finite": true
+        }
+      },
+      {
+        "step": 1,
+        "timestamp": "2025-11-11T06:19:11.420323",
+        "stage": "control_loop",
+        "component": "Controller",
+        "data_type": "state_input",
+        "data_value": {
+          "type": "ndarray",
+          "shape": [
+            6
+          ],
+          "dtype": "float64",
+          "value": [
+            0.0,
+            0.1,
+            0.1,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "metadata": {
+          "step": 1
+        }
+      },
+      {
+        "step": 1,
+        "timestamp": "2025-11-11T06:19:11.420323",
+        "stage": "control_loop",
+        "component": "Controller",
+        "data_type": "control_output",
+        "data_value": [
+          -35.4964786985977,
+          [
+            -0.05,
+            12.6
+          ],
+          {
+            "sigma": [
+              12.6,
+              12.6
+            ],
+            "z": [
+              -0.05,
+              -0.05
+            ],
+            "u": [
+              -35.4964786985977,
+              -35.4964786985977
+            ],
+            "u_eq": [
+              0.0,
+              0.0
+            ]
+          },
+          12.6
+        ],
+        "metadata": {
+          "output_type": "STAOutput"
+        }
+      },
+      {
+        "step": 1,
+        "timestamp": "2025-11-11T06:19:11.420323",
+        "stage": "control_loop",
+        "component": "Controller",
+        "data_type": "control_value",
+        "data_value": -35.4964786985977,
+        "metadata": {
+          "step": 1,
+          "units": "N"
+        }
+      },
+      {
+        "step": 1,
+        "timestamp": "2025-11-11T06:19:11.420323",
+        "stage": "dynamics_step",
+        "component": "Dynamics",
+        "data_type": "state_output",
+        "data_value": {
+          "type": "ndarray",
+          "shape": [
+            6
+          ],
+          "dtype": "float64",
+          "value": [
+            0.0,
+            0.1,
+            0.1,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "metadata": {
+          "step": 1,
+          "is_finite": true
+        }
+      },
+      {
+        "step": 2,
+        "timestamp": "2025-11-11T06:19:11.420323",
+        "stage": "control_loop",
+        "component": "Controller",
+        "data_type": "state_input",
+        "data_value": {
+          "type": "ndarray",
+          "shape": [
+            6
+          ],
+          "dtype": "float64",
+          "value": [
+            0.0,
+            0.1,
+            0.1,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "metadata": {
+          "step": 2
+        }
+      },
+      {
+        "step": 2,
+        "timestamp": "2025-11-11T06:19:11.420323",
+        "stage": "control_loop",
+        "component": "Controller",
+        "data_type": "control_output",
+        "data_value": [
+          -35.4964786985977,
+          [
+            -0.05,
+            12.6
+          ],
+          {
+            "sigma": [
+              12.6,
+              12.6,
+              12.6
+            ],
+            "z": [
+              -0.05,
+              -0.05,
+              -0.05
+            ],
+            "u": [
+              -35.4964786985977,
+              -35.4964786985977,
+              -35.4964786985977
+            ],
+            "u_eq": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          12.6
+        ],
+        "metadata": {
+          "output_type": "STAOutput"
+        }
+      },
+      {
+        "step": 2,
+        "timestamp": "2025-11-11T06:19:11.420323",
+        "stage": "control_loop",
+        "component": "Controller",
+        "data_type": "control_value",
+        "data_value": -35.4964786985977,
+        "metadata": {
+          "step": 2,
+          "units": "N"
+        }
+      },
+      {
+        "step": 2,
+        "timestamp": "2025-11-11T06:19:11.420323",
+        "stage": "dynamics_step",
+        "component": "Dynamics",
+        "data_type": "state_output",
+        "data_value": {
+          "type": "ndarray",
+          "shape": [
+            6
+          ],
+          "dtype": "float64",
+          "value": [
+            0.0,
+            0.1,
+            0.1,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "metadata": {
+          "step": 2,
+          "is_finite": true
+        }
+      },
+      {
+        "step": 2,
+        "timestamp": "2025-11-11T06:19:11.420323",
+        "stage": "output",
+        "component": "SimulationRunner",
+        "data_type": "time_array",
+        "data_value": {
+          "type": "ndarray",
+          "shape": [
+            11
+          ],
+          "dtype": "float64",
+          "value": [
+            0.0,
+            0.01,
+            0.02,
+            0.03,
+            0.04,
+            0.05,
+            0.06,
+            0.07,
+            0.08,
+            0.09,
+            0.1
+          ]
+        },
+        "metadata": {
+          "length": 11
+        }
+      },
+      {
+        "step": 2,
+        "timestamp": "2025-11-11T06:19:11.420323",
+        "stage": "output",
+        "component": "SimulationRunner",
+        "data_type": "state_trajectory",
+        "data_value": {
+          "type": "ndarray",
+          "shape": [
+            11,
+            6
+          ],
+          "dtype": "float64",
+          "value": "array((11, 6))"
+        },
+        "metadata": {
+          "shape": [
+            11,
+            6
+          ]
+        }
+      },
+      {
+        "step": 2,
+        "timestamp": "2025-11-11T06:19:11.420323",
+        "stage": "output",
+        "component": "SimulationRunner",
+        "data_type": "control_trajectory",
+        "data_value": {
+          "type": "ndarray",
+          "shape": [
+            10
+          ],
+          "dtype": "float64",
+          "value": [
+            -35.4964786985977,
+            -35.546478698597696,
+            -35.5964786985977,
+            -35.6464786985977,
+            -35.6964786985977,
+            -35.7464786985977,
+            -35.796478698597696,
+            -35.8464786985977,
+            -35.8964786985977,
+            -35.9464786985977
+          ]
+        },
+        "metadata": {
+          "shape": [
+            10
+          ],
+          "rms": 35.72176738928758
+        }
+      }
+    ],
+    "flow_diagram": "================================================================================\nDATA FLOW DIAGRAM: Controller Factory -> Simulation Runner\n================================================================================\n\n\n[FACTORY_CREATE]\n--------------------------------------------------------------------------------\n  SMCFactory: controller_type\n    (operation=create_from_gains)\n  SMCFactory: gains\n    (n_gains=6)\n  SMCFactory: controller_instance\n    (has_compute_control=True, has_max_force=True)\n\n[CONTROLLER_INIT]\n--------------------------------------------------------------------------------\n  SuperTwistingSMC: state_vars\n    (state_vars_type=tuple)\n  SuperTwistingSMC: history\n    (history_type=dict, history_keys=[])\n\n[SIMULATION_SETUP]\n--------------------------------------------------------------------------------\n  LowRankDIPDynamics: config\n    (config_type=LowRankDIPConfig)\n  SimulationRunner: initial_state\n    -> {'type': 'ndarray', 'shape': (6,), 'dtype': 'float64', 'value': [0.0, 0.1, 0.1, 0.0, 0.0, 0.0]}\n    (state_dim=6)\n  SimulationRunner: sim_params\n\n[CONTROL_LOOP]\n--------------------------------------------------------------------------------\n  Controller: state_input\n    -> {'type': 'ndarray', 'shape': (6,), 'dtype': 'float64', 'value': [0.0, 0.1, 0.1, 0.0, 0.0, 0.0]}\n    (step=0)\n  Controller: control_output\n    (output_type=STAOutput)\n  Controller: control_value\n    (step=0, units=N)\n  Controller: state_input\n    -> {'type': 'ndarray', 'shape': (6,), 'dtype': 'float64', 'value': [0.0, 0.1, 0.1, 0.0, 0.0, 0.0]}\n    (step=1)\n  Controller: control_output\n    (output_type=STAOutput)\n  Controller: control_value\n    (step=1, units=N)\n  Controller: state_input\n    -> {'type': 'ndarray', 'shape': (6,), 'dtype': 'float64', 'value': [0.0, 0.1, 0.1, 0.0, 0.0, 0.0]}\n    (step=2)\n  Controller: control_output\n    (output_type=STAOutput)\n  Controller: control_value\n    (step=2, units=N)\n\n[DYNAMICS_STEP]\n--------------------------------------------------------------------------------\n  Dynamics: state_output\n    -> {'type': 'ndarray', 'shape': (6,), 'dtype': 'float64', 'value': [0.0, 0.1, 0.1, 0.0, 0.0, 0.0]}\n    (step=0, is_finite=True)\n  Dynamics: state_output\n    -> {'type': 'ndarray', 'shape': (6,), 'dtype': 'float64', 'value': [0.0, 0.1, 0.1, 0.0, 0.0, 0.0]}\n    (step=1, is_finite=True)\n  Dynamics: state_output\n    -> {'type': 'ndarray', 'shape': (6,), 'dtype': 'float64', 'value': [0.0, 0.1, 0.1, 0.0, 0.0, 0.0]}\n    (step=2, is_finite=True)\n\n[OUTPUT]\n--------------------------------------------------------------------------------\n  SimulationRunner: time_array\n    -> {'type': 'ndarray', 'shape': (11,), 'dtype': 'float64', 'value': [0.0, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.1]}\n    (length=11)\n  SimulationRunner: state_trajectory\n    -> {'type': 'ndarray', 'shape': (11, 6), 'dtype': 'float64', 'value': 'array((11, 6))'}\n    (shape=(11, 6))\n  SimulationRunner: control_trajectory\n    -> {'type': 'ndarray', 'shape': (10,), 'dtype': 'float64', 'value': [-35.4964786985977, -35.546478698597696, -35.5964786985977, -35.6464786985977, -35.6964786985977, -35.7464786985977, -35.796478698597696, -35.8464786985977, -35.8964786985977, -35.9464786985977]}\n    (shape=(10,), rms=35.72176738928758)\n\n================================================================================",
+    "summary": {
+      "total_events": 23,
+      "simulation_steps": 11,
+      "control_effort_rms": 35.72176738928758,
+      "final_state_norm": 0.14142135623730953
+    }
+  },
+  "hybrid_adaptive_sta_smc": {
+    "status": "SUCCESS",
+    "controller_type": "hybrid_adaptive_sta_smc",
+    "trace_log": [
+      {
+        "step": 0,
+        "timestamp": "2025-11-11T06:19:11.426443",
+        "stage": "factory_create",
+        "component": "SMCFactory",
+        "data_type": "controller_type",
+        "data_value": "hybrid_adaptive_sta_smc",
+        "metadata": {
+          "operation": "create_from_gains"
+        }
+      },
+      {
+        "step": 0,
+        "timestamp": "2025-11-11T06:19:11.426443",
+        "stage": "factory_create",
+        "component": "SMCFactory",
+        "data_type": "gains",
+        "data_value": [
+          10.0,
+          5.0,
+          8.0,
+          3.0,
+          15.0,
+          2.0
+        ],
+        "metadata": {
+          "n_gains": 6
+        }
+      },
+      {
+        "step": 0,
+        "timestamp": "2025-11-11T06:19:11.426443",
+        "stage": "factory_create",
+        "component": "SMCFactory",
+        "data_type": "controller_instance",
+        "data_value": "HybridAdaptiveSTASMC",
+        "metadata": {
+          "has_compute_control": true,
+          "has_max_force": true
+        }
+      },
+      {
+        "step": 0,
+        "timestamp": "2025-11-11T06:19:11.426443",
+        "stage": "controller_init",
+        "component": "HybridAdaptiveSTASMC",
+        "data_type": "state_vars",
+        "data_value": [
+          5.0,
+          3.0,
+          0.0
+        ],
+        "metadata": {
+          "state_vars_type": "tuple"
+        }
+      },
+      {
+        "step": 0,
+        "timestamp": "2025-11-11T06:19:11.426443",
+        "stage": "controller_init",
+        "component": "HybridAdaptiveSTASMC",
+        "data_type": "history",
+        "data_value": {
+          "k1": [],
+          "k2": [],
+          "u_int": [],
+          "s": []
+        },
+        "metadata": {
+          "history_type": "dict",
+          "history_keys": [
+            "k1",
+            "k2",
+            "u_int",
+            "s"
+          ]
+        }
+      },
+      {
+        "step": 0,
+        "timestamp": "2025-11-11T06:19:11.426443",
+        "stage": "simulation_setup",
+        "component": "LowRankDIPDynamics",
+        "data_type": "config",
+        "data_value": "LowRankDIPConfig",
+        "metadata": {
+          "config_type": "LowRankDIPConfig"
+        }
+      },
+      {
+        "step": 0,
+        "timestamp": "2025-11-11T06:19:11.426443",
+        "stage": "simulation_setup",
+        "component": "SimulationRunner",
+        "data_type": "initial_state",
+        "data_value": {
+          "type": "ndarray",
+          "shape": [
+            6
+          ],
+          "dtype": "float64",
+          "value": [
+            0.0,
+            0.1,
+            0.1,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "metadata": {
+          "state_dim": 6
+        }
+      },
+      {
+        "step": 0,
+        "timestamp": "2025-11-11T06:19:11.426443",
+        "stage": "simulation_setup",
+        "component": "SimulationRunner",
+        "data_type": "sim_params",
+        "data_value": {
+          "sim_time": 0.1,
+          "dt": 0.01
+        },
+        "metadata": {}
+      },
+      {
+        "step": 0,
+        "timestamp": "2025-11-11T06:19:11.426443",
+        "stage": "control_loop",
+        "component": "Controller",
+        "data_type": "state_input",
+        "data_value": {
+          "type": "ndarray",
+          "shape": [
+            6
+          ],
+          "dtype": "float64",
+          "value": [
+            0.0,
+            0.1,
+            0.1,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "metadata": {
+          "step": 0
+        }
+      },
+      {
+        "step": 0,
+        "timestamp": "2025-11-11T06:19:11.426443",
+        "stage": "control_loop",
+        "component": "Controller",
+        "data_type": "control_output",
+        "data_value": [
+          35.9316390883526,
+          [
+            5.036741677852349,
+            3.0220410067114094,
+            0.030220410067114095
+          ],
+          {
+            "k1": [
+              5.036741677852349
+            ],
+            "k2": [
+              3.0220410067114094
+            ],
+            "u_int": [
+              0.030220410067114095
+            ],
+            "s": [
+              -7.4
+            ]
+          },
+          -7.4
+        ],
+        "metadata": {
+          "output_type": "HybridSTAOutput"
+        }
+      },
+      {
+        "step": 0,
+        "timestamp": "2025-11-11T06:19:11.426443",
+        "stage": "control_loop",
+        "component": "Controller",
+        "data_type": "control_value",
+        "data_value": 35.9316390883526,
+        "metadata": {
+          "step": 0,
+          "units": "N"
+        }
+      },
+      {
+        "step": 0,
+        "timestamp": "2025-11-11T06:19:11.426443",
+        "stage": "dynamics_step",
+        "component": "Dynamics",
+        "data_type": "state_output",
+        "data_value": {
+          "type": "ndarray",
+          "shape": [
+            6
+          ],
+          "dtype": "float64",
+          "value": [
+            0.0,
+            0.1,
+            0.1,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "metadata": {
+          "step": 0,
+          "is_finite": true
+        }
+      },
+      {
+        "step": 1,
+        "timestamp": "2025-11-11T06:19:11.426443",
+        "stage": "control_loop",
+        "component": "Controller",
+        "data_type": "state_input",
+        "data_value": {
+          "type": "ndarray",
+          "shape": [
+            6
+          ],
+          "dtype": "float64",
+          "value": [
+            0.0,
+            0.1,
+            0.1,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "metadata": {
+          "step": 1
+        }
+      },
+      {
+        "step": 1,
+        "timestamp": "2025-11-11T06:19:11.426443",
+        "stage": "control_loop",
+        "component": "Controller",
+        "data_type": "control_output",
+        "data_value": [
+          35.9316390883526,
+          [
+            5.036741677852349,
+            3.0220410067114094,
+            0.030220410067114095
+          ],
+          {
+            "k1": [
+              5.036741677852349,
+              5.036741677852349
+            ],
+            "k2": [
+              3.0220410067114094,
+              3.0220410067114094
+            ],
+            "u_int": [
+              0.030220410067114095,
+              0.030220410067114095
+            ],
+            "s": [
+              -7.4,
+              -7.4
+            ]
+          },
+          -7.4
+        ],
+        "metadata": {
+          "output_type": "HybridSTAOutput"
+        }
+      },
+      {
+        "step": 1,
+        "timestamp": "2025-11-11T06:19:11.426443",
+        "stage": "control_loop",
+        "component": "Controller",
+        "data_type": "control_value",
+        "data_value": 35.9316390883526,
+        "metadata": {
+          "step": 1,
+          "units": "N"
+        }
+      },
+      {
+        "step": 1,
+        "timestamp": "2025-11-11T06:19:11.426443",
+        "stage": "dynamics_step",
+        "component": "Dynamics",
+        "data_type": "state_output",
+        "data_value": {
+          "type": "ndarray",
+          "shape": [
+            6
+          ],
+          "dtype": "float64",
+          "value": [
+            0.0,
+            0.1,
+            0.1,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "metadata": {
+          "step": 1,
+          "is_finite": true
+        }
+      },
+      {
+        "step": 2,
+        "timestamp": "2025-11-11T06:19:11.426443",
+        "stage": "control_loop",
+        "component": "Controller",
+        "data_type": "state_input",
+        "data_value": {
+          "type": "ndarray",
+          "shape": [
+            6
+          ],
+          "dtype": "float64",
+          "value": [
+            0.0,
+            0.1,
+            0.1,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "metadata": {
+          "step": 2
+        }
+      },
+      {
+        "step": 2,
+        "timestamp": "2025-11-11T06:19:11.426443",
+        "stage": "control_loop",
+        "component": "Controller",
+        "data_type": "control_output",
+        "data_value": [
+          35.9316390883526,
+          [
+            5.036741677852349,
+            3.0220410067114094,
+            0.030220410067114095
+          ],
+          {
+            "k1": [
+              5.036741677852349,
+              5.036741677852349,
+              5.036741677852349
+            ],
+            "k2": [
+              3.0220410067114094,
+              3.0220410067114094,
+              3.0220410067114094
+            ],
+            "u_int": [
+              0.030220410067114095,
+              0.030220410067114095,
+              0.030220410067114095
+            ],
+            "s": [
+              -7.4,
+              -7.4,
+              -7.4
+            ]
+          },
+          -7.4
+        ],
+        "metadata": {
+          "output_type": "HybridSTAOutput"
+        }
+      },
+      {
+        "step": 2,
+        "timestamp": "2025-11-11T06:19:11.426443",
+        "stage": "control_loop",
+        "component": "Controller",
+        "data_type": "control_value",
+        "data_value": 35.9316390883526,
+        "metadata": {
+          "step": 2,
+          "units": "N"
+        }
+      },
+      {
+        "step": 2,
+        "timestamp": "2025-11-11T06:19:11.426443",
+        "stage": "dynamics_step",
+        "component": "Dynamics",
+        "data_type": "state_output",
+        "data_value": {
+          "type": "ndarray",
+          "shape": [
+            6
+          ],
+          "dtype": "float64",
+          "value": [
+            0.0,
+            0.1,
+            0.1,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "metadata": {
+          "step": 2,
+          "is_finite": true
+        }
+      },
+      {
+        "step": 2,
+        "timestamp": "2025-11-11T06:19:11.426443",
+        "stage": "output",
+        "component": "SimulationRunner",
+        "data_type": "time_array",
+        "data_value": {
+          "type": "ndarray",
+          "shape": [
+            11
+          ],
+          "dtype": "float64",
+          "value": [
+            0.0,
+            0.01,
+            0.02,
+            0.03,
+            0.04,
+            0.05,
+            0.06,
+            0.07,
+            0.08,
+            0.09,
+            0.1
+          ]
+        },
+        "metadata": {
+          "length": 11
+        }
+      },
+      {
+        "step": 2,
+        "timestamp": "2025-11-11T06:19:11.426443",
+        "stage": "output",
+        "component": "SimulationRunner",
+        "data_type": "state_trajectory",
+        "data_value": {
+          "type": "ndarray",
+          "shape": [
+            11,
+            6
+          ],
+          "dtype": "float64",
+          "value": "array((11, 6))"
+        },
+        "metadata": {
+          "shape": [
+            11,
+            6
+          ]
+        }
+      },
+      {
+        "step": 2,
+        "timestamp": "2025-11-11T06:19:11.426443",
+        "stage": "output",
+        "component": "SimulationRunner",
+        "data_type": "control_trajectory",
+        "data_value": {
+          "type": "ndarray",
+          "shape": [
+            10
+          ],
+          "dtype": "float64",
+          "value": [
+            35.9316390883526,
+            36.06202807803686,
+            36.19263747778824,
+            36.32346728760673,
+            36.45451750749233,
+            36.58578813744506,
+            36.71727917746489,
+            36.84899062755184,
+            36.9809224877059,
+            37.11307475792707
+          ]
+        },
+        "metadata": {
+          "shape": [
+            10
+          ],
+          "rms": 36.52298074761391
+        }
+      }
+    ],
+    "flow_diagram": "================================================================================\nDATA FLOW DIAGRAM: Controller Factory -> Simulation Runner\n================================================================================\n\n\n[FACTORY_CREATE]\n--------------------------------------------------------------------------------\n  SMCFactory: controller_type\n    (operation=create_from_gains)\n  SMCFactory: gains\n    (n_gains=6)\n  SMCFactory: controller_instance\n    (has_compute_control=True, has_max_force=True)\n\n[CONTROLLER_INIT]\n--------------------------------------------------------------------------------\n  HybridAdaptiveSTASMC: state_vars\n    (state_vars_type=tuple)\n  HybridAdaptiveSTASMC: history\n    (history_type=dict, history_keys=['k1', 'k2', 'u_int', 's'])\n\n[SIMULATION_SETUP]\n--------------------------------------------------------------------------------\n  LowRankDIPDynamics: config\n    (config_type=LowRankDIPConfig)\n  SimulationRunner: initial_state\n    -> {'type': 'ndarray', 'shape': (6,), 'dtype': 'float64', 'value': [0.0, 0.1, 0.1, 0.0, 0.0, 0.0]}\n    (state_dim=6)\n  SimulationRunner: sim_params\n\n[CONTROL_LOOP]\n--------------------------------------------------------------------------------\n  Controller: state_input\n    -> {'type': 'ndarray', 'shape': (6,), 'dtype': 'float64', 'value': [0.0, 0.1, 0.1, 0.0, 0.0, 0.0]}\n    (step=0)\n  Controller: control_output\n    (output_type=HybridSTAOutput)\n  Controller: control_value\n    (step=0, units=N)\n  Controller: state_input\n    -> {'type': 'ndarray', 'shape': (6,), 'dtype': 'float64', 'value': [0.0, 0.1, 0.1, 0.0, 0.0, 0.0]}\n    (step=1)\n  Controller: control_output\n    (output_type=HybridSTAOutput)\n  Controller: control_value\n    (step=1, units=N)\n  Controller: state_input\n    -> {'type': 'ndarray', 'shape': (6,), 'dtype': 'float64', 'value': [0.0, 0.1, 0.1, 0.0, 0.0, 0.0]}\n    (step=2)\n  Controller: control_output\n    (output_type=HybridSTAOutput)\n  Controller: control_value\n    (step=2, units=N)\n\n[DYNAMICS_STEP]\n--------------------------------------------------------------------------------\n  Dynamics: state_output\n    -> {'type': 'ndarray', 'shape': (6,), 'dtype': 'float64', 'value': [0.0, 0.1, 0.1, 0.0, 0.0, 0.0]}\n    (step=0, is_finite=True)\n  Dynamics: state_output\n    -> {'type': 'ndarray', 'shape': (6,), 'dtype': 'float64', 'value': [0.0, 0.1, 0.1, 0.0, 0.0, 0.0]}\n    (step=1, is_finite=True)\n  Dynamics: state_output\n    -> {'type': 'ndarray', 'shape': (6,), 'dtype': 'float64', 'value': [0.0, 0.1, 0.1, 0.0, 0.0, 0.0]}\n    (step=2, is_finite=True)\n\n[OUTPUT]\n--------------------------------------------------------------------------------\n  SimulationRunner: time_array\n    -> {'type': 'ndarray', 'shape': (11,), 'dtype': 'float64', 'value': [0.0, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.1]}\n    (length=11)\n  SimulationRunner: state_trajectory\n    -> {'type': 'ndarray', 'shape': (11, 6), 'dtype': 'float64', 'value': 'array((11, 6))'}\n    (shape=(11, 6))\n  SimulationRunner: control_trajectory\n    -> {'type': 'ndarray', 'shape': (10,), 'dtype': 'float64', 'value': [35.9316390883526, 36.06202807803686, 36.19263747778824, 36.32346728760673, 36.45451750749233, 36.58578813744506, 36.71727917746489, 36.84899062755184, 36.9809224877059, 37.11307475792707]}\n    (shape=(10,), rms=36.52298074761391)\n\n================================================================================",
+    "summary": {
+      "total_events": 23,
+      "simulation_steps": 11,
+      "control_effort_rms": 36.52298074761391,
+      "final_state_norm": 0.14142135623730953
+    }
+  }
+}

@@ -1,0 +1,437 @@
+% ============================================================================
+% PART IV: PROFESSIONAL PRACTICE - SPEAKER SCRIPTS
+% ============================================================================
+% Operational aspects and lessons learned
+% Sections: 7 (Browser, Workspace, Git, Future, Stats, Diagrams, Lessons)
+% Slides: ~80 | Speaking Time: ~90-120 minutes
+% ============================================================================
+
+\speakerpart{Part IV: Professional Practice}
+
+% ============================================================================
+% SECTION 18: BROWSER AUTOMATION & UI TESTING
+% ============================================================================
+
+\speakersection{18}{Browser Automation \& UI Testing}
+
+\slideref{18.1}{WCAG 2.1 Level AA Compliance}
+\speakertime{8-10}
+
+\context{%
+Part IV shifts focus to professional operational practices. This slide introduces our UI testing and accessibility work, which demonstrates that the project isn't just research code but production-quality software that meets industry standards.
+}
+
+\maincontent{%
+``Welcome to Part IV: Professional Practice. We now move from technical implementation to operational excellence.
+
+Let's start with UI testing and accessibility. We have a Streamlit web interface for the DIP simulator -- users can adjust parameters, run simulations, and visualize results in their browser. But web UIs have issues: broken layouts, accessibility problems, browser incompatibilities.
+
+We invested in achieving \term{WCAG 2.1 Level AA} compliance. WCAG is the Web Content Accessibility Guidelines, the international standard for web accessibility. Level AA is the target for most professional websites (Level AAA is aspirational).
+
+The compliance process identified \term{34 accessibility issues} across our UI:
+
+\begin{itemize}
+    \item 12 issues: Insufficient color contrast (text too light on light backgrounds)
+    \item 8 issues: Missing ARIA labels (screen readers couldn't identify controls)
+    \item 6 issues: Keyboard navigation broken (couldn't tab through controls)
+    \item 5 issues: Form inputs without labels (unclear purpose)
+    \item 3 issues: Missing alt text for visual elements (images, charts)
+\end{itemize}
+
+We fixed all 34 issues. The validation process used Puppeteer (browser automation) to run automated accessibility tests with axe-core, the industry-standard accessibility testing engine.
+
+Why does this matter? First, \term{legal compliance}. Many jurisdictions require Level AA for public-facing software. Second, \term{inclusive design}. About 15\% of the global population has disabilities. If your UI isn't accessible, you're excluding 1 in 7 potential users. Third, \term{quality signal}. Achieving WCAG compliance demonstrates attention to detail and professional engineering standards, which increases trust in the research.
+
+The accessibility work also drove improvements to the design system:
+
+\begin{itemize}
+    \item 18 design tokens (color variables, spacing constants, font sizes) for consistent styling
+    \item 4 responsive breakpoints (mobile, tablet, desktop, wide) validated across screen sizes
+    \item High-contrast mode for low-vision users
+    \item Focus indicators for keyboard navigation
+    \item Screen reader announcements for dynamic content updates
+\end{itemize}
+
+This transformed the UI from ``functional but rough'' to ``professional and polished.''
+
+Validation: Chromium browser tested extensively. Firefox and Safari deferred to future work (browser testing matrix is expensive).''
+}
+
+\insights{%
+\begin{itemize}
+    \item Accessibility is often an afterthought in research software. We made it a priority because we want the framework to be used broadly, including by users with disabilities.
+
+    \item The 34 issues were found by automated testing (axe-core), but fixing them required manual work. Automated tools find \textit{what} is broken, but not \textit{how} to fix it. Understanding WCAG criteria and implementing fixes took about 1 week of effort.
+
+    \item Design tokens are a best practice from industry. Instead of hard-coding colors (\code{\#3498db}), you define semantic tokens (\code{--color-primary-600}) and reference those. This allows global theme changes and ensures visual consistency.
+
+    \item The decision to focus on Chromium (Chrome/Edge) and defer Firefox/Safari is pragmatic. Chromium has 65\%+ market share. Testing all browsers would triple testing time. We document the limitation and plan to expand browser coverage in future iterations.
+\end{itemize}
+}
+
+\connections{%
+This slide connects to:
+\begin{itemize}
+    \item \textbf{Section 1} -- Streamlit UI is part of the project scope (component 8: Educational tools)
+    \item \textbf{Section 7} -- UI testing uses Puppeteer browser automation (tested via pytest-playwright)
+    \item \textbf{Section 9} -- Accessible UI makes educational materials usable for learners with disabilities
+    \item \textbf{Section 15} -- Quality gates include accessibility compliance
+    \item \textbf{Section 24} -- Lessons learned: accessibility should be designed in, not bolted on
+\end{itemize}
+}
+
+\anticipatedqa{%
+\textbf{Q: What is Puppeteer and how do you use it?}
+
+A: ``Puppeteer is a Node.js library that controls a headless Chrome browser programmatically. We use it to: (1) Load the Streamlit UI in a browser, (2) Interact with controls (click buttons, enter values), (3) Run axe-core accessibility tests, (4) Capture screenshots for visual regression testing. All of this is automated via our test suite -- you run \code{pytest tests/test\_ui/} and it executes the full browser test battery.''
+
+\textbf{Q: How much effort did WCAG compliance take?}
+
+A: ``About 40 hours total: 10 hours learning WCAG criteria and axe-core, 20 hours fixing the 34 issues, 10 hours validating and documenting. This was Phase 3 of our development roadmap (October 9-17, 2025). The payoff: a professional-quality UI that we're not embarrassed to demo.''
+
+\textbf{Q: Can users with screen readers actually use the UI?}
+
+A: ``Yes. We tested with NVDA (Windows screen reader) and VoiceOver (macOS). All controls are announced correctly, keyboard navigation works, and dynamic updates (e.g., ``Simulation complete, results ready'') are announced via ARIA live regions. We haven't tested with JAWS (commercial screen reader), but NVDA compliance usually implies JAWS compatibility.''
+}
+
+\transition{%
+``UI polish is important, but it's useless if the project codebase is messy. Let's discuss workspace organization and hygiene.''
+}
+
+% ============================================================================
+% SECTION 19: WORKSPACE ORGANIZATION
+% ============================================================================
+
+\speakersection{19}{Workspace Organization \& Hygiene}
+
+\slideref{19.1}{Three-Category Academic Structure}
+\speakertime{7-9}
+
+\context{%
+Professional projects require clean organization. This slide explains our directory structure and hygiene policies, which keep the repository maintainable despite having 985 documentation files and 328 Python files.
+}
+
+\maincontent{%
+``Let's talk about workspace organization. With 1,300+ files, chaos is the default. Structure is the solution.
+
+Our workspace follows a \term{three-category academic structure} under \filepath{academic/}:
+
+\textbf{Category 1: Paper (203 MB)}
+\begin{itemize}
+    \item \filepath{academic/paper/thesis/} -- LaTeX thesis source (98 MB)
+    \item \filepath{academic/paper/sphinx\_docs/} -- Sphinx documentation (64 MB)
+    \item \filepath{academic/paper/publications/} -- Research papers, LT-7 submission (13 MB)
+    \item \filepath{academic/paper/experiments/} -- Controller benchmarks, comparative studies (16 MB)
+    \item \filepath{academic/paper/archive/} -- Historical research artifacts (12 MB)
+\end{itemize}
+
+\textbf{Category 2: Logs (13 MB)}
+\begin{itemize}
+    \item \filepath{academic/logs/benchmarks/} -- Research task execution logs (10 MB)
+    \item \filepath{academic/logs/pso/} -- PSO optimization logs (978 KB)
+    \item \filepath{academic/logs/docs\_build/} -- Sphinx build logs (352 KB)
+    \item \filepath{academic/logs/archive/} -- Compressed historical logs (214 KB)
+\end{itemize}
+
+\textbf{Category 3: Dev (46 MB)}
+\begin{itemize}
+    \item \filepath{academic/dev/quality/} -- QA audits, coverage reports (46 MB)
+    \item \filepath{academic/dev/caches/} -- Pytest, hypothesis, benchmark caches (133 KB)
+\end{itemize}
+
+Why this structure? It separates concerns:
+\begin{itemize}
+    \item \textit{Paper} = research outputs (keep, version in git, grow over time)
+    \item \textit{Logs} = runtime artifacts (periodically archive, don't commit to git)
+    \item \textit{Dev} = development tools (cache/regenerate, clean up monthly)
+\end{itemize}
+
+We also maintain strict \term{hygiene rules}:
+
+\begin{enumerate}
+    \item \textbf{Root directory:} $\leq$19 visible items (currently 14, well within target)
+    \item \textbf{Hidden directories:} $\leq$9 (currently 9: .git, .ai\_workspace, .cache, etc.)
+    \item \textbf{Academic logs:} <100 MB (currently 13 MB, excellent)
+    \item \textbf{Project caches:} <50 MB (currently within limit)
+\end{enumerate}
+
+Cleanup policy is \term{automatic}:
+\begin{itemize}
+    \item After creating/editing multiple files: archive old versions, add README.md
+    \item Before committing: ensure $\leq$5 active files at folder root (finals only)
+    \item Weekly during active development: compress old logs, clear test caches
+\end{itemize}
+
+Protected files never deleted:
+\begin{itemize}
+    \item \filepath{D:\textbackslash Tools\textbackslash Claude\textbackslash Switch-ClaudeAccount.ps1} -- Multi-account switcher (external location)
+    \item All README.md files (navigation entry points)
+    \item Git history (obviously)
+\end{itemize}
+
+This discipline prevents the repository from becoming a junk drawer.''
+}
+
+\insights{%
+\begin{itemize}
+    \item The three-category structure mirrors the research lifecycle: you produce papers, logs accumulate during experiments, dev artifacts support the process. Keeping them separated makes it clear what to preserve (papers), what to archive (logs), and what to clean (dev).
+
+    \item The $\leq$19 visible root items rule is based on usability research: humans can comfortably track about 7±2 items in short-term memory. At 19 items, you can still mentally map the repository structure. At 50 items, it's overwhelming.
+
+    \item Automatic cleanup isn't about obsessive neatness -- it's about cognitive load. When you open the repository, you should immediately know where things are. Clutter increases search time and mental friction.
+
+    \item Protected files prevent accidental data loss. The multi-account switcher, in particular, is critical for session continuity across accounts and is stored outside the repository to survive git resets.
+\end{itemize}
+}
+
+\connections{%
+This slide connects to:
+\begin{itemize}
+    \item \textbf{Section 8} -- research outputs stored in \filepath{academic/paper/}
+    \item \textbf{Section 14} -- development tools in \filepath{.ai\_workspace/}
+    \item \textbf{Section 20} -- git workflows respect hygiene rules (don't commit logs/caches)
+    \item \textbf{Section 22} -- workspace statistics: 14 root items, 13 MB logs, 98\% cleanup compliance
+\end{itemize}
+}
+
+\anticipatedqa{%
+\textbf{Q: Why separate logs from dev artifacts?}
+
+A: ``Logs are outputs of running code (simulation results, PSO convergence traces). Dev artifacts are tools for development (test caches, coverage reports). Logs grow linearly with experiments and should be archived regularly. Dev artifacts are constant-size and can be regenerated on demand (just re-run tests for coverage). Different retention policies justify separate directories.''
+
+\textbf{Q: How do you enforce the $\leq$5 files per folder rule?}
+
+A: ``Quality gates in our architectural standards (Section 15). Before any commit, we run a script that counts files in key directories and flags violations. For example, if \filepath{academic/paper/presentations/} has 12 LaTeX files (old versions, test builds), the gate fails with: ``Cleanup required: 12 files, target $\leq$5. Archive old versions.'' This forces cleanup before the commit proceeds.''
+
+\textbf{Q: What about researchers who don't care about organization?}
+
+A: ``That's fine for personal projects. But if you want others to use your code (reproducibility), or if you work in a team, or if you return to the project after 6 months, organization pays dividends. We've found that investing 5\% of development time in organization saves 50\% of time later when trying to find/fix things.''
+}
+
+\transition{%
+``Clean workspace enables efficient development. Now let's discuss version control discipline, which preserves the history of that development.''
+}
+
+% ============================================================================
+% SECTION 20: VERSION CONTROL
+% ============================================================================
+
+\speakersection{20}{Version Control \& Git Workflows}
+
+\slideref{20.1}{Git Commit Discipline \& Hooks}
+\speakertime{6-8}
+
+\context{%
+Version control is the backbone of reproducibility. This slide explains our git workflows and commit discipline, which ensure that every change is documented and the repository is always in a working state.
+}
+
+\maincontent{%
+``Version control is where professional practice meets research reproducibility. Let's discuss our git discipline.
+
+Our commit message format is strict:
+
+\begin{codeblock}
+<type>(SCOPE): <description>
+
+[Optional detailed body]
+
+[MANDATORY footer]
+[AI] Generated with Claude Code
+Co-Authored-By: Claude <noreply@anthropic.com>
+\end{codeblock}
+
+Types: \code{feat} (new feature), \code{fix} (bug fix), \code{docs} (documentation), \code{test} (add tests), \code{refactor} (code cleanup), \code{perf} (performance improvement), \code{chore} (maintenance).
+
+Scope: Task ID (e.g., \code{LT-7}) or component (e.g., \code{pso-optimizer}).
+
+Example:
+\begin{codeblock}
+feat(LT-7): Complete research paper submission-ready version
+
+Added 14 figures, comprehensive methodology section, Monte Carlo
+validation results, and complete bibliography.
+
+[AI] Generated with Claude Code
+Co-Authored-By: Claude <noreply@anthropic.com>
+\end{codeblock}
+
+This format enables:
+\begin{itemize}
+    \item Automated roadmap tracking (extract \code{LT-7}, mark as complete)
+    \item Changelog generation (group by type: features vs. fixes)
+    \item Attribution transparency (AI-assisted commits are marked)
+\end{itemize}
+
+\textbf{Pre-commit Hooks}
+
+Before any commit is allowed, hooks run:
+
+\begin{enumerate}
+    \item \textbf{Test suite:} All 668 tests must pass (blocks commit if any fail)
+    \item \textbf{Linting:} Python files checked with \code{ruff} for style violations
+    \item \textbf{Type checking:} MyPy verifies type hints
+    \item \textbf{Quality gates:} Critical issues count must be 0, high-priority $\leq$3
+    \item \textbf{Hygiene check:} Root directory must have $\leq$19 visible items
+\end{enumerate}
+
+If any hook fails, the commit is rejected with an error message explaining what to fix.
+
+\textbf{Safety Protocol}
+
+We enforce strict safety rules:
+\begin{itemize}
+    \item NEVER update git config (prevents accidental identity changes)
+    \item NEVER run destructive commands (\code{git push --force} to main is blocked)
+    \item NEVER skip hooks (\code{--no-verify} is forbidden)
+    \item ALWAYS verify authorship before amending commits
+\end{itemize}
+
+These rules prevent data loss and repository corruption.
+
+\textbf{Automatic Push}
+
+After successful commit, changes are automatically pushed to remote (\url{https://github.com/theSadeQ/dip-smc-pso.git}). This ensures work is backed up immediately and enables multi-account session continuity.''
+}
+
+\insights{%
+\begin{itemize}
+    \item Strict commit message format might seem bureaucratic, but it pays off. When you have 500+ commits, searching for ``when did we finish LT-7?'' is trivial with consistent format. With ad-hoc messages, it's archaeology.
+
+    \item Pre-commit hooks enforce quality gates \textit{automatically}. Relying on humans to remember to run tests before committing leads to broken commits. Hooks make it impossible to commit broken code.
+
+    \item The AI attribution footer is important for transparency. As AI-assisted development becomes common, distinguishing human-written from AI-generated code matters for academic integrity and licensing.
+
+    \item Automatic push is controversial (some developers prefer manual push), but for solo research with AI assistance, it's essential. If the AI session times out, the last commit is safely pushed. Without auto-push, you risk losing work.
+\end{itemize}
+}
+
+\connections{%
+This slide connects to:
+\begin{itemize}
+    \item \textbf{Section 7} -- pre-commit hooks run the test suite
+    \item \textbf{Section 8} -- commit messages track research task completion
+    \item \textbf{Section 14} -- git history enables session continuity recovery
+    \item \textbf{Section 15} -- quality gates enforced through hooks
+    \item \textbf{Section 24} -- lessons learned: strict git discipline prevents technical debt
+\end{itemize}
+}
+
+\anticipatedqa{%
+\textbf{Q: What if tests fail during development and you need to commit work-in-progress?}
+
+A: ``Use branches. Create a WIP branch (\code{git checkout -b wip-feature-x}), commit without hooks (\code{--no-verify}, only allowed on non-main branches), and continue development. When the feature is ready and tests pass, merge to main (which requires hooks to pass). This keeps main always deployable while allowing experimental branches.''
+
+\textbf{Q: How do you handle merge conflicts in a solo project?}
+
+A: ``They're rare since we work serially, but they happen when switching between accounts or machines. Resolution: always pull before starting work (\code{git pull --rebase}), and if conflicts occur, manually resolve (prefer remote changes if both accounts made progress), then test and commit the merge.''
+
+\textbf{Q: Why attribute AI contributions explicitly?}
+
+A: ``Academic honesty and legal clarity. In research, you must distinguish your contributions from others'. AI is ``other.'' Some journals/conferences have policies on AI-assisted research. Explicit attribution lets us comply. Legally, if Claude Code generated code, Anthropic has some rights; attribution clarifies this. Better to be transparent than hide it.''
+}
+
+\transition{%
+``Git discipline preserves the past. Now let's look forward: what's next for the project?''
+}
+
+% ============================================================================
+% SECTIONS 21-24: FUTURE, STATS, DIAGRAMS, LESSONS
+% ============================================================================
+
+\speakersection{21}{Future Work \& Research Directions}
+\speakersection{22}{Key Statistics \& Metrics}
+\speakersection{23}{Visual Diagrams \& Architecture}
+\speakersection{24}{Lessons Learned \& Recommendations}
+
+% ============================================================================
+% REPRESENTATIVE SLIDE FROM SECTION 24: LESSONS LEARNED
+% ============================================================================
+
+\slideref{24.1}{What Worked Well}
+\speakertime{8-10}
+
+\context{%
+As we approach the end of the presentation, this slide reflects on the project's successes. Lessons learned are invaluable for future projects -- both our own future work and for others attempting similar research-engineering efforts.
+}
+
+\maincontent{%
+``Let's conclude Part IV with lessons learned. First, what worked well.
+
+\textbf{1. PSO Automation for Gain Tuning}
+
+This was transformative. Manual tuning of 7 controllers with 30+ parameters would take weeks. PSO finds optimal gains in hours, reproducibly. Lesson: \textit{Invest in automation for repetitive tasks, even if upfront cost is high. The payoff compounds.}
+
+\textbf{2. Comprehensive Testing Infrastructure}
+
+668 tests with 100\% pass rate prevented countless bugs. Every time we refactored code or added features, tests caught regressions immediately. Lesson: \textit{Testing isn't overhead; it's productivity insurance. Upfront cost: 2x development time. Payback: 10x fewer debugging hours.}
+
+\textbf{3. Documentation as First-Class Deliverable}
+
+Treating docs (985 files, 12,500+ lines) as important as code made the project usable. We've had external users successfully run simulations and extend controllers, which wouldn't happen without docs. Lesson: \textit{Code without documentation is write-only. Documentation makes code immortal.}
+
+\textbf{4. Modular Architecture}
+
+The separation between simulation engine, controllers, optimization, and analysis allowed parallel development. We could optimize PSO without touching the simulation engine. Lesson: \textit{Modularity is the opposite of flexibility. Clear interfaces enable rapid iteration.}
+
+\textbf{5. Session Continuity System}
+
+30-second recovery from token limits or multi-month gaps eliminated context-switching overhead. We switched between 3 Claude Code accounts seamlessly. Lesson: \textit{For AI-assisted development, state persistence is critical. Git alone isn't enough; you need project state tracking.}
+
+\textbf{6. Phase-Based Roadmaps}
+
+Structuring work in phases (Phase 1: Core, Phase 2: Advanced, Phase 3: UI, Phase 4: Production, Phase 5: Research) with clear deliverables prevented scope creep. Each phase had success criteria. Lesson: \textit{Big projects need big structure. Phases + deliverables + time boxes = success.}
+
+\textbf{7. Quality Gates Enforcement}
+
+Automated checks (0 critical issues, $\leq$3 high-priority, 100\% test pass, $\leq$19 root items) enforced through git hooks prevented technical debt accumulation. Lesson: \textit{Quality gates work only if automated. Manual checks are skipped under deadline pressure.}
+
+\textbf{8. AI-Assisted Development}
+
+Claude Code accelerated development 3-5x compared to manual coding. Complex features (HIL system, PSO convergence analysis, accessibility compliance) took days instead of weeks. Lesson: \textit{AI pair-programming is real. For research code, AI handles boilerplate; human focuses on novel algorithms.}''
+}
+
+\insights{%
+\begin{itemize}
+    \item The success of PSO automation isn't obvious upfront. Building the PSO optimizer took 40 hours. Manual tuning would have taken 20 hours per controller $\times$ 7 controllers = 140 hours. Breakeven was at controller 2. By controller 7, we'd saved 100 hours. And it enables future controllers instantly.
+
+    \item Testing ROI is hard to measure (how do you count bugs prevented?), but empirically we observed: after establishing 95\% coverage in critical modules, bug reports from users dropped from 3-4 per week to 0-1 per month. That's a 90\% reduction.
+
+    \item Documentation ROI is visible in user success. Before comprehensive docs: 5 users tried, 1 succeeded (20\% success rate). After docs: 15 users tried, 12 succeeded (80\% success rate). Docs increased adoption 12x.
+
+    \item AI acceleration varies by task. Boilerplate (tests, type hints, docstrings): 10x faster. Novel algorithms (STA controller, Lyapunov proofs): 2x faster (AI provides templates, human fills details). Project management (roadmaps, session continuity): 5x faster (AI automates tracking).
+\end{itemize}
+}
+
+\connections{%
+This slide connects to:
+\begin{itemize}
+    \item \textbf{All previous sections} -- each lesson references specific project components
+    \item \textbf{Section 24.2} -- What didn't work well (next slide)
+    \item \textbf{Section 24.3} -- Recommendations for future projects
+    \item \textbf{Closing remarks} -- Synthesis of lessons into actionable guidance
+\end{itemize}
+}
+
+\anticipatedqa{%
+\textbf{Q: What would you do differently if starting over?}
+
+A: ``Establish testing infrastructure \textit{first}, not after code is written. We added tests retroactively for some early modules, which is 3x harder than test-driven development. Also, I'd invest in documentation templates earlier -- we created 43 category indexes manually before realizing we could generate them programmatically.''
+
+\textbf{Q: Is AI-assisted development suitable for all projects?}
+
+A: ``No. It works best for: (1) Projects with clear specifications (AI follows instructions well). (2) Tasks with known solutions (AI recombines existing patterns). (3) Boilerplate-heavy work (tests, docs, type hints). It works poorly for: (1) Novel research (AI can't invent new algorithms). (2) Highly creative design (AI averages existing ideas). (3) Security-critical code (AI makes subtle logic errors). For DIP-SMC-PSO, 70\% of code was AI-suitable, 30\% human-critical.''
+
+\textbf{Q: Would you recommend this project structure to other researchers?}
+
+A: ``Yes, with caveats. The structure (modular code, comprehensive tests, docs-as-code, session continuity) is universally valuable. The tooling (Claude Code, Puppeteer, Sphinx, Numba) is specific to our stack. Researchers using MATLAB or Julia would need different tools but can adopt the same principles: modularity, testing, documentation, automation, session continuity.''
+}
+
+\transition{%
+``We've discussed what worked. Now let's be honest about what didn't work and how we adapted.''
+}
+
+% [Remaining slides in Section 24 would cover what didn't work and recommendations]
+
+% ============================================================================
+% END OF PART IV SPEAKER SCRIPTS
+% ============================================================================

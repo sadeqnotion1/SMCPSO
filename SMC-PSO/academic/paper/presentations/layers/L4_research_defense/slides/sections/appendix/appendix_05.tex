@@ -1,0 +1,362 @@
+% ============================================================================
+% SECTION 24: LESSONS LEARNED
+% ============================================================================
+\section{Lessons Learned}
+
+\begin{frame}{What Worked Well}
+    \textbf{Successful Strategies \& Practices:}
+
+    \vspace{0.3cm}
+
+    \begin{enumerate}
+        \item \textbf{Configuration-First Philosophy}
+        \begin{itemize}
+            \item Define all parameters in \texttt{config.yaml} before coding
+            \item Prevented scattered magic numbers
+            \item Enabled rapid experimentation
+        \end{itemize}
+
+        \item \textbf{Automated Checkpoint System}
+        \begin{itemize}
+            \item Survived 100\% of token limit interruptions
+            \item Zero loss of agent work during Phase 5 research
+            \item Recovery time: <30 seconds
+        \end{itemize}
+
+        \item \textbf{Multi-Agent Orchestration}
+        \begin{itemize}
+            \item 6-agent system completed complex tasks efficiently
+            \item Clear role separation (integration, control, PSO, docs, beautification)
+            \item Quality gates enforced systematically
+        \end{itemize}
+
+        \item \textbf{Comprehensive Documentation}
+        \begin{itemize}
+            \item 985 files ensured no knowledge loss
+            \item Multiple navigation systems accommodated different user needs
+            \item Beginner roadmap (125-150 hrs) democratized access
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{Technical Challenges Overcome}
+    \textbf{Problem-Solving Highlights:}
+
+    \vspace{0.3cm}
+
+    \begin{enumerate}
+        \item \textbf{MT-6: Boundary Layer Optimization}
+        \begin{itemize}
+            \item \textbf{Challenge:} Initial claims of 66.5\% chattering reduction
+            \item \textbf{Discovery:} Biased "combined\_legacy" metric penalized $d\epsilon/dt$
+            \item \textbf{Resolution:} Deep dive validation with unbiased frequency-domain metrics
+            \item \textbf{Result:} 3.7\% actual improvement → Fixed boundary layer is near-optimal
+            \item \textbf{Value:} Negative result prevents future wasted effort
+        \end{itemize}
+
+        \item \textbf{Coverage Measurement Breakage}
+        \begin{itemize}
+            \item \textbf{Challenge:} Coverage tools stopped working mid-project
+            \item \textbf{Impact:} Quality gates 1/8 passing
+            \item \textbf{Mitigation:} Thread safety tests (11/11), browser tests (17/17) maintained
+            \item \textbf{Status:} Research-ready despite coverage issue
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{Organizational Lessons}
+    \textbf{Workspace \& Process Improvements:}
+
+    \vspace{0.3cm}
+
+    \begin{enumerate}
+        \item \textbf{Three-Category Structure (Dec 2025)}
+        \begin{itemize}
+            \item \texttt{academic/paper/} (research outputs)
+            \item \texttt{academic/logs/} (runtime logs)
+            \item \texttt{academic/dev/} (development artifacts)
+            \item \textbf{Impact:} Root directory clutter eliminated (73\% reduction)
+        \end{itemize}
+
+        \item \textbf{Centralized Log Paths}
+        \begin{itemize}
+            \item Single source of truth: \texttt{src/utils/logging/paths.py}
+            \item NEVER hardcode "logs/" paths
+            \item \textbf{Impact:} Zero scattered log files at root
+        \end{itemize}
+
+        \item \textbf{Automated Tracking via Git Hooks}
+        \begin{itemize}
+            \item Pre-commit hooks detect task IDs (QW-*, MT-*, LT-*)
+            \item Auto-update project state JSON
+            \item \textbf{Impact:} Zero manual status updates, 100\% accuracy
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{Critical Discoveries}
+    \textbf{Unexpected Insights That Shaped The Project:}
+
+    \vspace{0.3cm}
+
+    \begin{enumerate}
+        \item \textbf{Negative Results Are Valuable}
+        \begin{itemize}
+            \item MT-6 boundary layer optimization revealed marginal benefit (3.7\%)
+            \item Fixed boundary layer ($\epsilon = 0.02$) is near-optimal
+            \item \textbf{Lesson:} Publish negative results to prevent redundant research
+        \end{itemize}
+
+        \item \textbf{Checkpoint System Reliability}
+        \begin{itemize}
+            \item Git commits (10/10), project state (9/10), agent checkpoints (9/10)
+            \item Background bash processes (0/10) → expected, not critical
+            \item \textbf{Lesson:} Git-based persistence is bulletproof for recovery
+        \end{itemize}
+
+        \item \textbf{Documentation Navigation is Critical}
+        \begin{itemize}
+            \item 985 files require multiple entry points (11 navigation systems)
+            \item Persona-based ("I'm a student...") beats category-based
+            \item \textbf{Lesson:} Users need intent-driven navigation, not just hierarchical
+        \end{itemize}
+
+        \item \textbf{Automation Prevents Errors}
+        \begin{itemize}
+            \item Git hooks for task tracking: 100\% accuracy vs. manual updates
+            \item Automated cleanup policies prevent root clutter
+            \item \textbf{Lesson:} If humans can forget it, automate it
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{Recommendations for Future Projects}
+    \textbf{Best Practices Distilled:}
+
+    \vspace{0.3cm}
+
+    \begin{enumerate}
+        \item \textbf{Start with Recovery Infrastructure}
+        \begin{itemize}
+            \item Implement checkpoints from day 1
+            \item Don't wait until first token limit crash
+        \end{itemize}
+
+        \item \textbf{Configuration Before Code}
+        \begin{itemize}
+            \item Define all parameters in YAML/JSON first
+            \item Validate with Pydantic before implementation
+        \end{itemize}
+
+        \item \textbf{Automate Tracking \& Status}
+        \begin{itemize}
+            \item Git hooks for task detection
+            \item Pre-commit checks for quality gates
+            \item Never rely on manual status updates
+        \end{itemize}
+
+        \item \textbf{Document for Multiple Audiences}
+        \begin{itemize}
+            \item Beginners (Path 0), quick starters (Path 1), researchers (Path 4)
+            \item Provide multiple navigation styles (persona, intent, category)
+        \end{itemize}
+
+        \item \textbf{Embrace Negative Results}
+        \begin{itemize}
+            \item MT-6 taught us fixed boundary layer is optimal
+            \item Publish to prevent redundant research
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+% ============================================================================
+% APPENDIX
+% ============================================================================
+\appendix
+
+\begin{frame}[fragile]{Quick Reference: Essential Commands}
+    \textbf{Most Common Operations:}
+
+    \vspace{0.3cm}
+
+    \textbf{Simulation:}
+    \begin{lstlisting}[language=bash]
+python simulate.py --ctrl classical_smc --plot
+python simulate.py --ctrl sta_smc --run-pso --save gains.json
+python simulate.py --load tuned_gains.json --plot
+    \end{lstlisting}
+
+    \vspace{0.3cm}
+
+    \textbf{Testing:}
+    \begin{lstlisting}[language=bash]
+python run_tests.py
+python -m pytest tests/ -v --cov=src --cov-report=html
+    \end{lstlisting}
+
+    \vspace{0.3cm}
+
+    \textbf{Web UI:}
+    \begin{lstlisting}[language=bash]
+streamlit run streamlit_app.py
+    \end{lstlisting}
+
+    \vspace{0.3cm}
+
+    \textbf{Recovery:}
+    \begin{lstlisting}[language=bash]
+# Windows
+.ai_workspace\tools\recovery\quick_recovery.bat
+
+# Linux/Mac
+bash .ai_workspace/tools/recovery/recover_project.sh
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}{Quick Reference: Key Files}
+    \textbf{Essential Project Files:}
+
+    \vspace{0.3cm}
+
+    \begin{tabular}{ll}
+        \toprule
+        \textbf{File/Directory} & \textbf{Purpose} \\
+        \midrule
+        \texttt{simulate.py} & Main CLI entry point \\
+        \texttt{streamlit\_app.py} & Web UI entry point \\
+        \texttt{config.yaml} & Central configuration \\
+        \texttt{requirements.txt} & Python dependencies \\
+        \midrule
+        \texttt{src/controllers/} & 7 SMC controller variants \\
+        \texttt{src/core/} & Dynamics, simulation engine \\
+        \texttt{src/optimizer/} & PSO tuner \\
+        \texttt{src/utils/} & Validation, monitoring, viz \\
+        \midrule
+        \texttt{tests/} & 85 test files (pytest) \\
+        \texttt{docs/} & 814 documentation files \\
+        \texttt{scripts/} & 173 automation scripts \\
+        \midrule
+        \texttt{.ai\_workspace/} & AI configs, tools, guides \\
+        \texttt{academic/} & Research outputs (paper, logs, dev) \\
+        \bottomrule
+    \end{tabular}
+\end{frame}
+
+\begin{frame}{Bibliography Overview}
+    \textbf{39 Academic References Organized by Topic:}
+
+    \vspace{0.3cm}
+
+    \textbf{Foundational SMC (8 refs):}
+    \begin{itemize}
+        \item Utkin (1977, 1992), Slotine \& Li (1991), Edwards \& Spurgeon (1998)
+    \end{itemize}
+
+    \vspace{0.3cm}
+
+    \textbf{Higher-Order SMC (6 refs):}
+    \begin{itemize}
+        \item Levant (1993, 2005, 2007), Moreno \& Osorio (2008)
+    \end{itemize}
+
+    \vspace{0.3cm}
+
+    \textbf{Adaptive SMC (5 refs):}
+    \begin{itemize}
+        \item Slotine \& Coetsee (1986), Plestan et al. (2010)
+    \end{itemize}
+
+    \vspace{0.3cm}
+
+    \textbf{PSO Optimization (7 refs):}
+    \begin{itemize}
+        \item Kennedy \& Eberhart (1995), Shi \& Eberhart (1998), Clerc \& Kennedy (2002)
+    \end{itemize}
+
+    \vspace{0.3cm}
+
+    \textbf{Inverted Pendulum Control (13 refs):}
+    \begin{itemize}
+        \item Bogdanov (2004), Graichen et al. (2007), Zhang et al. (2015)
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Repository Structure (Condensed)}
+    \textbf{Top-Level Organization:}
+
+    \vspace{0.3cm}
+
+    \begin{lstlisting}[basicstyle=\ttfamily\tiny]
+dip-smc-pso/
+|-- src/                    # Production code (15,000 lines)
+|   |-- controllers/        # 7 SMC variants
+|   |-- core/               # Dynamics, simulation
+|   |-- optimizer/          # PSO tuner
+|   |-- utils/              # Validation, monitoring, viz
+|   `-- hil/                # Hardware-in-the-loop
+|-- tests/                  # 85 test files (8,000 lines)
+|-- docs/                   # 814 documentation files
+|-- scripts/                # 173 automation scripts
+|-- academic/               # Research outputs (262 MB)
+|   |-- paper/              # Papers, thesis, experiments (203 MB)
+|   |-- logs/               # Runtime logs (13 MB)
+|   `-- dev/                # QA audits, coverage (46 MB)
+|-- .ai_workspace/          # AI configs, tools, guides (HIDDEN)
+|-- simulate.py             # CLI entry point
+|-- streamlit_app.py        # Web UI entry point
+|-- config.yaml             # Central configuration
+`-- requirements.txt        # Python dependencies
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}{Contact \& Resources}
+    \textbf{Project Information:}
+
+    \vspace{0.3cm}
+
+    \begin{itemize}
+        \item \textbf{Author:} Sadegh Naderi
+        \item \textbf{Repository:} \url{https://github.com/theSadeQ/dip-smc-pso.git}
+        \item \textbf{License:} MIT (open for academic \& commercial use)
+    \end{itemize}
+
+    \vspace{0.3cm}
+
+    \textbf{Documentation Entry Points:}
+    \begin{itemize}
+        \item \textbf{Getting Started:} \texttt{docs/guides/getting-started.md}
+        \item \textbf{Beginner Roadmap:} \texttt{.ai\_workspace/edu/beginner-roadmap.md}
+        \item \textbf{Navigation Hub:} \texttt{docs/NAVIGATION.md}
+        \item \textbf{Research Completion:} \texttt{.ai\_workspace/planning/research/RESEARCH\_COMPLETION\_SUMMARY.md}
+    \end{itemize}
+
+    \vspace{0.3cm}
+
+    \textbf{Key Documentation Files:}
+    \begin{itemize}
+        \item \texttt{CLAUDE.md} -- Project instructions for Claude Code
+        \item \texttt{README.md} -- Project overview
+        \item \texttt{CHANGELOG.md} -- Version history
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[plain]
+    \begin{center}
+        \vspace{2cm}
+        {\Huge Thank You!}
+
+        \vspace{1cm}
+
+        {\large Questions \& Discussion}
+
+        \vspace{2cm}
+
+        \textbf{Repository:} \\
+        \url{https://github.com/theSadeQ/dip-smc-pso.git}
+
+        \vspace{1cm}
+
+        \textit{Double-Inverted Pendulum Sliding Mode Control \\
+        with PSO Optimization}
+    \end{center}
+\end{frame}

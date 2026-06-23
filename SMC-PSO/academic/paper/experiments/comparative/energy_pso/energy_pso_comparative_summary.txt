@@ -1,0 +1,24 @@
+====================================================================================================
+Phase 4: Energy PSO Comparative Analysis
+====================================================================================================
+
+             Controller  Energy Before  Energy After  Energy Reduction (%)  RMSE Before  RMSE After  RMSE Change (%)  Fitness Before  Fitness After  Fitness Improvement (%)  Optimization Time (s)
+          Classical Smc       4.367949      2.058934             52.862687     9.364697    4.535857       -51.564291        5.866973       2.802011                52.240948            1111.907121
+           Adaptive Smc       0.000000      0.000000              0.000000     8.513831    8.513831         0.000000        2.554149       2.554149                 0.000000            1796.818039
+Hybrid Adaptive Sta Smc       0.000000      0.000000              0.000000     8.513831    8.513831         0.000000        2.554149       2.554149                 0.000000            2116.615924
+
+====================================================================================================
+KEY FINDINGS
+====================================================================================================
+
+1. Best Energy Reduction: Classical Smc
+   - Reduction: 52.86%
+   - From: 4.3679 -> 2.0589
+
+2. Best Overall Fitness Improvement: Classical Smc
+   - Improvement: 52.24%
+
+3. Baseline Energy Performance:
+   - Classical Smc: 4.3679
+   - Adaptive Smc: 0.0000
+   - Hybrid Adaptive Sta Smc: 0.0000

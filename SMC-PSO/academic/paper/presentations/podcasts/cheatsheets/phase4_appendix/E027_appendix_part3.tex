@@ -1,0 +1,47 @@
+% Episode 027: Appendix Reference Part 3
+\input{../templates/master_template.tex}
+\title{\textbf{E027: Appendix Part 3}}
+\def\episodenumber{027}
+\def\episodetitle{Appendix Reference - Testing \& Benchmarking}
+\def\episodecategory{Appendix \& Reference}
+\def\difficulty{Reference}
+\begin{document}
+\makeepisodetitle{E027: Appendix Part 3}{Testing \& Benchmarking Reference}{Appendix}{5-7 minutes}
+
+\section{Overview}
+Quick reference for testing workflows and benchmark results.
+
+\section{Test Commands}
+\begin{lstlisting}[style=bashstyle]
+# Run all tests
+python -m pytest tests/ -v
+
+# Coverage report
+python -m pytest --cov=src --cov-report=html
+
+# Benchmarks
+python -m pytest tests/test_benchmarks/ --benchmark-only
+\end{lstlisting}
+\section{Test Statistics}
+\begin{itemize}
+\item Total: 4,563 tests (257 files)
+\item Unit: 81\% (3,678 tests)
+\item Integration: 15\% (681 tests)
+\item System: 4\% (182 tests)
+\item Runtime: 45 seconds (100\% pass rate)
+\end{itemize}
+\section{Benchmark Results}
+\begin{center}
+\begin{tabular}{lc}
+\toprule
+\textbf{Controller} & \textbf{Time ($\mu$s)} \\
+\midrule
+Classical SMC & 23 \\
+Super-Twisting & 31 \\
+Adaptive SMC & 45 \\
+Hybrid Adaptive STA & 62 \\
+\bottomrule
+\end{tabular}
+\end{center}
+\section*{Next: E028 Documentation Reference}
+\end{document}

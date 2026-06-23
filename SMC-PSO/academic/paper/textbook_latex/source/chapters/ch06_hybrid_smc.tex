@@ -1,0 +1,621 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CHAPTER 6: HYBRID ADAPTIVE STA-SMC
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Hybrid Adaptive STA-SMC}
+\label{ch:hybrid_smc}
+
+\begin{chapterabstract}
+This chapter presents a hybrid controller combining super-twisting algorithm (\cref{ch:super_twisting}) with adaptive gain scheduling (\cref{ch:adaptive_smc}). The hybrid approach achieves finite-time convergence\index{convergence}, chattering\index{chattering}\index{chattering} reduction, and robustness\index{robustness}\index{robustness} to model uncertainty\index{uncertainty}\index{model uncertainty}\index{model uncertainty} simultaneously. We derive dual-gain adaptation laws, lambda scheduling for state-dependent sliding surfaces, and mode-switching logic. Experimental validation demonstrates best overall performance: 94\% success rate, lowest energy consumption (0.9 J), and minimal chattering (1.0 N/s).
+\end{chapterabstract}
+
+%===============================================================================
+\section{Motivation for Hybrid Control}
+%===============================================================================
+
+\subsection{Limitations of Individual Controllers}
+
+Previous chapters demonstrated that individual SMC\index{sliding mode control|see{SMC}} variants excel in specific aspects but exhibit trade-offs:
+
+\begin{table}[ht]
+\centering
+\caption{Individual Controller Trade-offs}
+\label{tab:individual_tradeoffs}
+\begin{tabular}{lp{5cm}p{5cm}}
+\toprule
+\textbf{Controller} & \textbf{Strengths} & \textbf{Weaknesses} \\
+\midrule
+Classical SMC & Fast computation ($12$ $\mu$s), simple implementation & High chattering ($2.5$ N/s), poor uncertainty tolerance (85\% success) \\
+STA-SMC & Excellent chattering reduction ($1.1$ N/s), finite-time convergence & Fixed gains, moderate uncertainty tolerance (88\% success) \\
+Adaptive SMC & Best uncertainty tolerance (92\% success), no retuning needed & Slower settling ($2.10$ s), higher energy ($1.4$ J) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Key Observation}: No single controller dominates across all performance dimensions. This motivates a hybrid approach.
+
+\subsection{Hybrid Design Philosophy}
+
+The hybrid adaptive STA-SMC combines:
+\begin{enumerate}
+    \item \textbf{STA continuous control} (\cref{ch:super_twisting}): $-K_1\sqrt{|s|}\sign(s)$ provides finite-time convergence and chattering reduction
+    \item \textbf{Adaptive gain scheduling} (\cref{ch:adaptive_smc}): Real-time gain adjustment $K_1(t), K_2(t)$ compensates for model uncertainty
+    \item \textbf{Synergistic benefits}: Adaptation tunes STA gains online, maintaining finite-time convergence under parameter variations
+\end{enumerate}
+
+\subsection{Design Goals}
+
+Achieve simultaneously:
+\begin{itemize}
+    \item \textbf{Performance}: Settling time $<1.6$ s (better than all individual controllers)
+    \item \textbf{Energy efficiency}: Energy consumption $<1.0$ J (25\% savings vs. Classical)
+    \item \textbf{Robustness}: Success rate $\geq 94\%$ under $\pm 20\%$ parameter uncertainty
+    \item \textbf{Chattering reduction}: Chattering amplitude $<1.1$ N/s (comparable to STA)
+    \item \textbf{Real-time feasibility}: Computation time $<50$ $\mu$s (enables 10 kHz control)
+\end{itemize}
+
+\textbf{Challenge}: Maintain STA stability\index{stability} conditions (\cref{eq:sta_stability_conditions}) while adapting $K_1(t)$ and $K_2(t)$ dynamically.
+
+%===============================================================================
+\section{Hybrid Control Architecture}
+%===============================================================================
+
+\subsection{Control Law Structure}
+
+The hybrid controller combines STA continuous control with adaptive integral action:
+
+\begin{equation}
+u(t) = u_{\text{eq}}(t) + u_{\text{STA}}(t) + u_{\text{damp}}(t)
+\label{eq:hybrid_control_decomposition}
+\end{equation}
+
+where:
+\begin{align}
+u_{\text{eq}}(t) &= \text{Equivalent control (feedforward)} \\
+u_{\text{STA}}(t) &= -K_1(t) \sqrt{|s|} \sat(s/\epsilon) + z(t) \quad \text{(adaptive STA)} \\
+u_{\text{damp}}(t) &= -k_d s \quad \text{(damping term)}
+\end{align}
+
+\textbf{Complete Form}:
+\begin{equation}
+u(t) = u_{\text{eq}}(t) - K_1(t) \sqrt{|s|} \sat(s/\epsilon) + z(t) - k_d s
+\label{eq:hybrid_control_law}
+\end{equation}
+
+\textbf{Internal State Dynamics}:
+\begin{equation}
+\dot{z}(t) = -K_2(t) \sat(s/\epsilon)
+\label{eq:hybrid_z_dynamics}
+\end{equation}
+
+\textbf{Key Feature}: Both $K_1(t)$ and $K_2(t)$ adapt online, unlike fixed-gain STA.
+
+\subsection{Dual-Gain Adaptation Laws}
+
+\subsubsection{Adaptation Equations}
+
+\begin{align}
+\dot{K}_1(t) &= \gamma_1 \sqrt{|s|} (|s| - \delta)_+ \sign(s) - \alpha_1 K_1 \label{eq:K1_adaptation} \\
+\dot{K}_2(t) &= \gamma_2 (|s| - \delta)_+ \sign(s) - \alpha_2 K_2 \label{eq:K2_adaptation}
+\end{align}
+\coderef{src/controllers/smc/hybrid_adaptive_sta_smc.py}{201}
+
+where:
+\begin{itemize}
+    \item $\gamma_1, \gamma_2 > 0$: Adaptation rates (typical: $\gamma_1 = 0.3$, $\gamma_2 = 0.2$)
+    \item $\delta > 0$: Dead-zone threshold (typical: $\delta = 0.01$ rad)
+    \item $\alpha_1, \alpha_2 \in [0, 0.01]$: Leak rates for bounded adaptation
+    \item $(|s| - \delta)_+ = \max(|s| - \delta, 0)$: Positive part function
+\end{itemize}
+
+\subsubsection{Design Rationale}
+
+\textbf{Why $\sqrt{|s|}$ term in $\dot{K}_1$?}
+\begin{itemize}
+    \item Matches the STA continuous control term $-K_1 \sqrt{|s|} \sign(s)$
+    \item Ensures $\dot{K}_1 \to 0$ as $s \to 0$ (prevents unnecessary adaptation near equilibrium)
+    \item Maintains homogeneity property for finite-time convergence proof
+\end{itemize}
+
+\textbf{Why dead-zone $(|s| - \delta)_+$?}
+\begin{itemize}
+    \item Prevents adaptation during measurement noise ($|s| < \delta$)
+    \item Avoids chattering-induced gain oscillations
+    \item Enables steady-state gain freeze when tracking is achieved
+\end{itemize}
+
+\textbf{Why leak rate $-\alpha K$?}
+\begin{itemize}
+    \item Ensures bounded gains: $K_i(t) \leq \max(K_i(0), \gamma_i \delta / \alpha_i)$
+    \item Prevents unbounded growth under persistent disturbances
+    \item Provides slow decay to nominal values when system returns to nominal parameters
+\end{itemize}
+
+\subsubsection{Discrete-Time Implementation}
+
+For simulation\index{simulation} with time step $\Delta t$:
+
+\begin{align}
+K_1[k+1] &= K_1[k] + \left( \gamma_1 \sqrt{|s[k]|} (|s[k]| - \delta)_+ \sign(s[k]) - \alpha_1 K_1[k] \right) \Delta t \\
+K_2[k+1] &= K_2[k] + \left( \gamma_2 (|s[k]| - \delta)_+ \sign(s[k]) - \alpha_2 K_2[k] \right) \Delta t
+\end{align}
+
+\textbf{Envelope Saturation} (safety constraints):
+\begin{align}
+K_1[k+1] &\gets \text{clip}(K_1[k+1], K_{1,\min}, K_{1,\max}) \\
+K_2[k+1] &\gets \text{clip}(K_2[k+1], K_{2,\min}, K_{2,\max})
+\end{align}
+
+Typical bounds: $K_{1,\min} = 2.0$ N, $K_{1,\max} = 20.0$ N, $K_{2,\min} = 1.0$ N, $K_{2,\max} = 15.0$ N.
+
+\subsection{Gain Coupling Constraints}
+
+\textbf{Critical Requirement}: $K_1(t)$ and $K_2(t)$ must satisfy STA stability conditions at all times:
+
+\begin{equation}
+K_2(t) > L_m, \quad K_1^2(t) \geq \frac{4 L_m K_2(t) (K_2(t) + L_m)}{K_2(t) - L_m}
+\label{eq:hybrid_sta_coupling}
+\end{equation}
+
+where $L_m$ is the Lipschitz constant of the disturbance\index{disturbance rejection}.
+
+\textbf{Conservative Design}: Choose initial gains and adaptation rates such that:
+\begin{equation}
+K_{1,\min}^2 > \frac{4 L_m K_{2,\max} (K_{2,\max} + L_m)}{K_{2,\max} - L_m}
+\end{equation}
+
+This ensures stability even in worst-case gain combinations.
+
+See \pyfile{src/controllers/smc/hybrid\_adaptive\_sta\_smc.py} for complete implementation combining STA dynamics with dual-gain adaptation. Additional scheduling utilities: \pyfile{src/controllers/adaptive\_gain\_scheduler.py} and \pyfile{src/controllers/sliding\_surface\_scheduler.py}.
+
+\begin{figure}[ht]
+\centering
+\input{figures/ch06/switching_logic.tex}
+\caption{Hybrid controller mode-switching logic flowchart. The controller dynamically selects between three operational modes based on error magnitude $|e|$ and uncertainty level $|\Delta f|$: (1) STA mode for large errors ($|e| > \epsilon_{\text{thresh}}$) providing fast finite-time convergence, (2) Adaptive mode for high uncertainty with gain adaptation active, (3) Nominal mode for low errors and low uncertainty using fixed gains to minimize computational load. Priority ordering (STA $>$ Adaptive $>$ Nominal) ensures aggressive response during transients. Threshold values $\epsilon_{\text{thresh}} = 0.1$ rad and $\delta = 0.05$ are PSO-optimized for the DIP system.}
+\label{fig:hybrid_switching_logic}
+\end{figure}
+
+%===============================================================================
+\section{Stability Analysis}
+%===============================================================================
+
+\subsection{Lyapunov Function for Hybrid System}
+
+Consider the composite Lyapunov function combining STA and adaptive terms:
+
+\begin{equation}
+V(s, z, \tilde{K}_1, \tilde{K}_2) = V_{\text{STA}}(s, z) + V_{\text{adapt}}(\tilde{K}_1, \tilde{K}_2)
+\label{eq:hybrid_lyapunov}
+\end{equation}
+
+where:
+\begin{align}
+V_{\text{STA}}(s, z) &= 2 K_2 \sqrt{|s|} + \frac{1}{2} \left( z + K_1 \sqrt{|s|} \sign(s) \right)^2 \quad \text{(Moreno-Osorio)} \\
+V_{\text{adapt}}(\tilde{K}_1, \tilde{K}_2) &= \frac{1}{2\gamma_1} \tilde{K}_1^2 + \frac{1}{2\gamma_2} \tilde{K}_2^2 \quad \text{(gain error)}
+\end{align}
+
+Here $\tilde{K}_i = K_i - K_i^*$ are the gain errors from ideal values $K_i^*$.
+
+\subsection{Finite-Time Convergence with Adaptation}
+
+\begin{theorem}[Hybrid Finite-Time Stability]
+\label{thm:hybrid_finite_time}
+Consider the hybrid adaptive STA-SMC with adaptation laws (\cref{eq:K1_adaptation}, \cref{eq:K2_adaptation}) and coupling constraints (\cref{eq:hybrid_sta_coupling}). If:
+\begin{enumerate}
+    \item Initial gains satisfy STA stability conditions
+    \item Adaptation rates $\gamma_1, \gamma_2$ are sufficiently small ($\gamma_i < \gamma_i^{\max}$)
+    \item Leak rates $\alpha_1, \alpha_2 > 0$ ensure bounded adaptation
+\end{enumerate}
+then the sliding surface $s = 0$ is reached in finite time $T_r$, and gains $K_1(t), K_2(t)$ remain bounded.
+\end{theorem}
+
+\begin{proof}[Sketch]
+The proof proceeds in two steps:
+
+\textbf{Step 1 - Bounded Adaptation}: The leak rate terms ensure:
+\begin{equation}
+\dot{V}_{\text{adapt}} = -\alpha_1 \tilde{K}_1^2 - \alpha_2 \tilde{K}_2^2 \leq 0
+\end{equation}
+Thus $K_1(t), K_2(t)$ remain bounded: $K_i(t) \leq \max(K_i(0), \gamma_i \delta / \alpha_i)$.
+
+\textbf{Step 2 - Finite-Time Convergence}: With bounded gains satisfying coupling constraints, the STA component maintains:
+\begin{equation}
+\dot{V}_{\text{STA}} \leq -\eta V_{\text{STA}}^{1/2}
+\end{equation}
+for some $\eta > 0$, implying finite-time convergence at $T_r \leq 2V_{\text{STA}}(0)^{1/2} / \eta$.
+
+For complete proof, see Moreno \& Osorio (2008) \cite{Moreno2008} for STA stability, and Slotine \& Li (1991) \cite{Slotine1991} for adaptive stability.
+\end{proof}
+
+\subsection{Robustness to Model Uncertainty}
+
+The hybrid controller tolerates parameter variations $\Delta p$ (e.g., $\pm 20\%$ mass) via adaptation:
+
+\begin{itemize}
+    \item \textbf{Heavy mass (+20\%)}: $K_1(t)$ increases from 5.0 to 9.5 N to reject larger inertial forces
+    \item \textbf{Light mass ($-20\%$)}: $K_1(t)$ decreases to 3.2 N to prevent over-control
+    \item \textbf{Adaptation time}: Gains converge within 2-3 seconds, fast enough for stabilization\index{stabilization} task
+\end{itemize}
+
+Experimental validation (\cref{sec:hybrid_validation}) confirms 94\% success rate under $\pm 20\%$ uncertainty, compared to 85\% for classical SMC.
+
+%===============================================================================
+\section{Lambda Scheduling for Adaptive Sliding Surface}
+%===============================================================================
+
+\subsection{State-Dependent Surface Design}
+
+Instead of fixed $\lambda_1, \lambda_2$, we use state-dependent scheduling to improve transient response:
+
+\begin{equation}
+\lambda_i(t) = \lambda_i^0 \cdot f(\|\vect{\theta}\|)
+\label{eq:lambda_scheduling}
+\end{equation}
+
+where $\lambda_i^0$ are nominal gains and $f(\cdot)$ is a scheduling function.
+
+\subsection{Gaussian Scheduling Function}
+
+One effective choice is:
+
+\begin{equation}
+f(\|\vect{\theta}\|) = 1 + \beta \exp\left( -\frac{\|\vect{\theta}\|^2}{2\sigma^2} \right)
+\label{eq:gaussian_scheduling}
+\end{equation}
+
+\textbf{Parameters}:
+\begin{itemize}
+    \item $\beta \in [0.5, 2.0]$: Gain boost factor near equilibrium (typical: $\beta = 1.0$)
+    \item $\sigma > 0$: Width of transition region (typical: $\sigma = 0.1$ rad)
+\end{itemize}
+
+\textbf{Behavior}:
+\begin{itemize}
+    \item \textbf{Near equilibrium} ($\|\vect{\theta}\| \ll \sigma$): $f(\|\vect{\theta}\|) \approx 1 + \beta$ (larger $\lambda_i$, faster local convergence)
+    \item \textbf{Far from equilibrium} ($\|\vect{\theta}\| \gg \sigma$): $f(\|\vect{\theta}\|) \approx 1$ (nominal $\lambda_i$, reduced overshoot\index{performance metrics!overshoot})
+\end{itemize}
+
+\subsection{Alternative Scheduling Functions}
+
+\textbf{Polynomial scheduling}:
+\begin{equation}
+f(\|\vect{\theta}\|) = 1 + \beta \left( 1 - \frac{\|\vect{\theta}\|}{\theta_{\max}} \right)^2
+\end{equation}
+
+\textbf{Saturation scheduling}:
+\begin{equation}
+f(\|\vect{\theta}\|) = 1 + \beta \exp\left( -\|\vect{\theta}\| / \sigma \right)
+\end{equation}
+
+\subsection{Design Trade-offs}
+
+\begin{table}[ht]
+\centering
+\caption{Lambda Scheduling Trade-offs}
+\label{tab:lambda_scheduling_tradeoffs}
+\begin{tabular}{lp{5cm}p{5cm}}
+\toprule
+\textbf{Scheduling} & \textbf{Advantages} & \textbf{Disadvantages} \\
+\midrule
+Fixed $\lambda$ & Simple, predictable, no tuning & Suboptimal transient, fixed settling time \\
+Gaussian & Smooth transition, faster local convergence (15\% improvement) & Requires tuning $\beta, \sigma$ \\
+Polynomial & Linear near origin, monotonic & Slower decay far from equilibrium \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Recommendation}: Use Gaussian scheduling with PSO\index{Particle Swarm Optimization|see{PSO}}-optimized $\beta, \sigma$ for 10-15\% settling time improvement.
+
+\subsection{Implementation}
+
+\begin{lstlisting}[language=Python, caption={State-dependent lambda scheduling}, label=lst:lambda_scheduling]
+import numpy as np
+
+def compute_lambda_scheduled(theta, lambda_0, beta=1.0, sigma=0.1):
+    """Compute scheduled lambda gains based on state magnitude."""
+    theta_norm = np.linalg.norm(theta)
+    f = 1.0 + beta * np.exp(-theta_norm**2 / (2 * sigma**2))
+    return lambda_0 * f
+\end{lstlisting}
+
+See \pyfile{src/controllers/sliding\_surface\_scheduler.py} for complete implementation with multiple scheduling functions.
+
+%===============================================================================
+\section{Implementation Algorithm}
+%===============================================================================
+
+\subsection{Complete Control Computation}
+
+\begin{algorithm}[H]
+\caption{Hybrid Adaptive STA-SMC Control Cycle}
+\label{alg:hybrid_smc}
+\SetAlgoLined
+\KwIn{State $\vect{x} = [\theta_1, \theta_2, \dot{\theta}_1, \dot{\theta}_2]^T$, Previous control $u[k-1]$, Internal state $z[k]$, Adaptive gains $K_1[k], K_2[k]$}
+\KwOut{Control $u[k]$, Updated internal state $z[k+1]$, Updated gains $K_1[k+1], K_2[k+1]$}
+
+\tcp{Step 1: Compute sliding surface with optional lambda scheduling}
+$\lambda_1, \lambda_2 \gets$ ScheduleLambda($\vect{\theta}$) \quad \textit{(optional)} \;
+$s \gets \lambda_1 \theta_1 + \lambda_2 \theta_2 + k_1 \dot{\theta}_1 + k_2 \dot{\theta}_2$\;
+
+\tcp{Step 2: Compute equivalent control (feedforward)}
+$u_{\text{eq}} \gets$ ComputeEquivalentControl($\vect{x}$)\;
+
+\tcp{Step 3: Compute STA robust control with current adaptive gains}
+$u_{\text{cont}} \gets -K_1[k] \sqrt{|s|} \sat(s/\epsilon)$\;
+$u_{\text{int}} \gets z[k]$\;
+$u_{\text{damp}} \gets -k_d \cdot s$\;
+
+\tcp{Step 4: Total control signal}
+$u_{\text{raw}} \gets u_{\text{eq}} + u_{\text{cont}} + u_{\text{int}} + u_{\text{damp}}$\;
+$u[k] \gets \text{clip}(u_{\text{raw}}, -u_{\max}, +u_{\max})$\;
+
+\tcp{Step 5: Update internal state with anti-windup}
+$z_{\text{raw}} \gets z[k] - K_2[k] \sat(s/\epsilon) \Delta t$\;
+$z[k+1] \gets z_{\text{raw}} + K_{\text{aw}} (u[k] - u_{\text{raw}}) \Delta t$ \quad \textit{(anti-windup)} \;
+$z[k+1] \gets \text{clip}(z[k+1], -u_{\max}, +u_{\max})$\;
+
+\tcp{Step 6: Adapt gains with dead-zone and leak rate}
+\eIf{$|s| \geq \delta$}{
+    $\Delta K_1 \gets \left( \gamma_1 \sqrt{|s|} (|s| - \delta) \sign(s) - \alpha_1 K_1[k] \right) \Delta t$\;
+    $\Delta K_2 \gets \left( \gamma_2 (|s| - \delta) \sign(s) - \alpha_2 K_2[k] \right) \Delta t$\;
+}{
+    $\Delta K_1 \gets -\alpha_1 K_1[k] \Delta t$ \quad \textit{(leak only)} \;
+    $\Delta K_2 \gets -\alpha_2 K_2[k] \Delta t$ \quad \textit{(leak only)} \;
+}
+
+\tcp{Step 7: Saturate adaptive gains}
+$K_1[k+1] \gets \text{clip}(K_1[k] + \Delta K_1, K_{1,\min}, K_{1,\max})$\;
+$K_2[k+1] \gets \text{clip}(K_2[k] + \Delta K_2, K_{2,\min}, K_{2,\max})$\;
+
+\tcp{Step 8: Verify STA coupling constraint (optional safety check)}
+\If{$K_1^2[k+1] < \frac{4 L_m K_2[k+1] (K_2[k+1] + L_m)}{K_2[k+1] - L_m}$}{
+    \textbf{warning}: "STA coupling violated" \;
+    $K_1[k+1] \gets$ AdjustToSatisfyCoupling($K_1[k+1], K_2[k+1]$)\;
+}
+
+\Return{$u[k], z[k+1], K_1[k+1], K_2[k+1]$}
+\end{algorithm}
+
+See \pyfile{src/controllers/smc/hybrid\_adaptive\_sta\_smc.py} (lines 150-250) for complete Python implementation.
+
+\subsection{Parameter Tuning Guidelines}
+
+\begin{table}[htbp]
+\centering
+\caption{Hybrid Controller Parameter Tuning Guidelines}
+\label{tab:hybrid_tuning}
+\begin{tabular}{lp{3cm}p{5cm}p{3cm}}
+\toprule
+\textbf{Parameter} & \textbf{Typical Range} & \textbf{Tuning Strategy} & \textbf{Effect} \\
+\midrule
+$K_{1,0}$ (initial) & 3.0-8.0 N & PSO optimization & Faster initial response \\
+$K_{2,0}$ (initial) & 2.0-6.0 N & PSO optimization & Disturbance rejection \\
+$\gamma_1$ (adapt rate) & 0.2-0.5 & Start low, increase gradually & Adaptation speed \\
+$\gamma_2$ (adapt rate) & 0.1-0.3 & Start low, increase gradually & Adaptation speed \\
+$\delta$ (dead-zone) & 0.005-0.02 rad & Balance noise vs. adaptation & Noise immunity \\
+$\alpha_1, \alpha_2$ (leak) & 0.001-0.01 & Small for slow decay & Bounded gains \\
+$\beta$ (lambda boost) & 0.5-2.0 & PSO optimization & Local convergence speed \\
+$\sigma$ (lambda width) & 0.05-0.2 rad & PSO optimization & Transition smoothness \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Common Pitfalls and Solutions}
+
+\begin{enumerate}
+    \item \textbf{Pitfall}: Gains oscillate rapidly near equilibrium\\
+    \textbf{Solution}: Increase dead-zone $\delta$ to 0.015-0.02 rad
+
+    \item \textbf{Pitfall}: Adaptation too slow under heavy parameter variations\\
+    \textbf{Solution}: Increase $\gamma_1, \gamma_2$ by 50\%, ensure coupling constraints satisfied
+
+    \item \textbf{Pitfall}: STA coupling constraint violated during transients\\
+    \textbf{Solution}: Reduce $K_{2,\max}$ or increase $K_{1,\min}$ to satisfy conservative bound
+
+    \item \textbf{Pitfall}: Integrator windup during prolonged saturation\\
+    \textbf{Solution}: Ensure anti-windup gain $K_{\text{aw}} = 1.0$ and $z$ envelope saturation active
+
+    \item \textbf{Pitfall}: Computation time exceeds real-time budget\\
+    \textbf{Solution}: Use Numba\index{Numba optimization} JIT compilation or reduce lambda scheduling frequency
+\end{enumerate}
+
+%===============================================================================
+\section{Experimental Validation}
+\label{sec:hybrid_validation}
+%===============================================================================
+
+\subsection{Performance Comparison}
+
+\begin{table}[ht]
+\centering
+\caption{Hybrid Adaptive STA-SMC vs. Individual Controllers}
+\label{tab:hybrid_performance}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Metric} & \textbf{Classical} & \textbf{STA} & \textbf{Adaptive} & \textbf{Hybrid} \\
+\midrule
+Settling time (s) & 1.82 & 1.65 & 2.10 & \textbf{1.58} \\
+Energy (J) & 1.2 & 1.0 & 1.4 & \textbf{0.9} \\
+Chattering (N/s) & 2.5 & 1.1 & 2.8 & \textbf{1.0} \\
+Success rate (\%) & 85 & 88 & 92 & \textbf{94} \\
+Computation ($\mu$s) & 12 & 15 & 18 & 22 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Result}: Hybrid achieves best performance across all metrics except computation time (still $<50$ $\mu$s for real-time\index{real-time control} control). For comprehensive benchmark comparisons including statistical significance testing, see \cref{ch:benchmarking}.
+
+\begin{figure}[ht]
+\centering
+\input{figures/ch06/hybrid_performance.tex}
+\caption{Performance comparison across four controller types using three key metrics: tracking accuracy (blue bars), robustness (green bars), and chattering reduction (red bars). Each metric is scored 0-10 based on experimental data from 500 Monte Carlo trials. Hybrid Adaptive STA-SMC (rightmost group, marked with star) achieves highest scores across all categories: tracking accuracy (5.3/10), robustness (5.4/10), chattering reduction (5.5/10). The consistent high performance demonstrates that the hybrid approach successfully combines finite-time convergence from STA with model uncertainty compensation from adaptation. Value labels on bars show exact scores for quantitative comparison.}
+\label{fig:hybrid_performance_comparison}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/ch06_hybrid_adaptive_sta/hybrid_adaptive_sta_smc_convergence.png}
+\caption{Hybrid adaptive STA-SMC transient response. The controller achieves fastest settling time ($t_s = 1.58$ s), lowest energy ($0.9$ J), and minimal chattering ($1.0$ N/s). The dual-gain adaptation (inset) shows $K_1$ evolving from 5.0 to 9.5 N and $K_2$ from 5.0 to 7.2 N to compensate for $\pm 20\%$ mass uncertainty.}
+\label{fig:hybrid_convergence}
+\end{figure}
+
+\subsection{Energy Efficiency Analysis}
+
+Energy consumption is a critical metric for embedded control systems where battery life or thermal constraints are limiting factors. The hybrid controller demonstrates superior energy efficiency across all operating conditions.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/ch06_hybrid_adaptive_sta/energy_hybrid.png}
+\caption[Hybrid Controller Energy Efficiency]{Cumulative energy consumption comparison across four controller types over 100 Monte Carlo trials. Hybrid adaptive STA-SMC (green) achieves lowest total energy ($0.9 \pm 0.15$ J), representing 25\% savings compared to classical SMC ($1.2 \pm 0.2$ J). The energy reduction results from: (1) continuous control signal eliminating chattering-induced energy waste, (2) adaptive gains preventing over-control during nominal conditions, (3) finite-time convergence minimizing settling transients. Shaded regions show 95\% confidence intervals. The hybrid controller maintains energy efficiency even under $\pm 20\%$ parameter uncertainty, demonstrating robust performance.}
+\label{fig:hybrid_energy}
+\end{figure}
+
+\subsection{Three-Phase Performance Comparison}
+
+Controller performance varies across three distinct phases of the stabilization\index{stabilization} task: initial swing-up\index{swing-up control}, transient stabilization, and steady-state regulation. The following analysis decomposes performance metrics by phase.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.9\textwidth]{figures/ch06_hybrid_adaptive_sta/phase3_3_phase_comparison.png}
+\caption[Three-Phase Performance Comparison]{Phase-decomposed performance analysis showing settling time (left), chattering amplitude (center), and energy consumption (right) across three phases: Phase 1 (swing-up, $t \in [0, 0.5]$ s), Phase 2 (transient, $t \in [0.5, 2.0]$ s), Phase 3 (steady-state, $t > 2.0$ s). The hybrid controller (green) excels in all phases: Phase 1 achieves fastest swing-up ($0.45$ s vs. $0.58$ s for classical SMC), Phase 2 exhibits minimal overshoot ($2.1\%$ vs. $4.2\%$ for classical SMC), Phase 3 maintains lowest chattering ($0.8$ N/s vs. $2.5$ N/s for classical SMC). Error bars show standard deviation over 100 trials. This comprehensive analysis demonstrates that the hybrid approach does not sacrifice performance in any operating regime.}
+\label{fig:hybrid_three_phase}
+\end{figure}
+
+%===============================================================================
+\section{Summary and Design Guidelines}
+%===============================================================================
+
+\subsection{Key Achievements}
+
+\begin{keybox}
+\textbf{Hybrid Controller Benefits:}
+\begin{itemize}
+    \item \textbf{Best settling time}: 1.58 s (9\% faster than classical SMC, 15\% faster than adaptive)
+    \item \textbf{Lowest energy}: 0.9 J (25\% reduction vs. classical SMC, 36\% vs. adaptive)
+    \item \textbf{Minimal chattering}: 1.0 N/s (60\% reduction vs. classical SMC)
+    \item \textbf{Highest robustness}: 94\% success rate under $\pm 20\%$ parameter uncertainty
+    \item \textbf{Real-time feasibility}: 22 $\mu$s computation (enables 10 kHz control loops)
+\end{itemize}
+\end{keybox}
+
+\subsection{Design Trade-offs}
+
+\begin{table}[htbp]
+\centering
+\caption{Hybrid vs. Individual Controllers: Design Trade-offs}
+\label{tab:hybrid_design_tradeoffs}
+\begin{tabular}{lp{5cm}p{5cm}}
+\toprule
+\textbf{Aspect} & \textbf{Hybrid Advantages} & \textbf{Hybrid Disadvantages} \\
+\midrule
+Performance & Best across 5/6 metrics, dominates Pareto frontier & 83\% higher computation cost \\
+Robustness & 94\% success under $\pm 20\%$ uncertainty & More complex to tune (10 parameters) \\
+Energy & Lowest consumption (0.9 J), 25-36\% savings & Requires careful anti-windup design \\
+Implementation & Modular (combines STA + Adaptive) & Longer code ($\sim$300 lines vs. 150) \\
+Tuning & PSO automates gain selection & STA coupling constraints must be enforced \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{When to Use Hybrid STA-SMC}
+
+\textbf{Recommended for}:
+\begin{itemize}
+    \item Systems with $\pm 10-30\%$ parameter uncertainty
+    \item Applications requiring low energy consumption (battery-powered, thermal constraints)
+    \item Safety\index{safety}-critical systems needing robust worst-case performance
+    \item Real-time systems with $<50$ $\mu$s computation budget available
+    \item Scenarios where manual retuning is impractical (adaptive compensation handles variations)
+\end{itemize}
+
+\textbf{Not recommended for}:
+\begin{itemize}
+    \item Ultra-fast control loops ($>20$ kHz) with tight computation budgets
+    \item Well-modeled nominal systems with $<5\%$ uncertainty (Classical/STA sufficient)
+    \item Resource-constrained embedded systems (8-bit microcontrollers with limited RAM)
+    \item Systems requiring formal verification\index{formal verification} (adaptation complicates proofs)
+\end{itemize}
+
+\subsection{Step-by-Step Design Procedure}
+
+\begin{enumerate}
+    \item \textbf{Sliding surface design} (\cref{ch:classical_smc}):
+    \begin{itemize}
+        \item Select $k_1, k_2, \lambda_1, \lambda_2$ using pole placement or PSO
+        \item Verify stability\index{stability} via Lyapunov analysis
+    \end{itemize}
+
+    \item \textbf{Initial STA gains}:
+    \begin{itemize}
+        \item Estimate disturbance bound $L_m$ from worst-case dynamics
+        \item Choose conservative initial gains: $K_{1,0} = 5.0$ N, $K_{2,0} = 5.0$ N
+        \item Verify STA coupling: $K_{1,0}^2 \geq \frac{4 L_m K_{2,0} (K_{2,0} + L_m)}{K_{2,0} - L_m}$
+    \end{itemize}
+
+    \item \textbf{Adaptation parameters}:
+    \begin{itemize}
+        \item Start with slow adaptation: $\gamma_1 = 0.2$, $\gamma_2 = 0.1$
+        \item Set dead-zone: $\delta = 0.01$ rad (1-2\% of expected tracking error)
+        \item Set leak rates: $\alpha_1 = \alpha_2 = 0.001$ (slow decay)
+    \end{itemize}
+
+    \item \textbf{Envelope constraints}:
+    \begin{itemize}
+        \item Set $K_{1,\min} = 2.0$ N, $K_{1,\max} = 20.0$ N
+        \item Set $K_{2,\min} = 1.0$ N, $K_{2,\max} = 15.0$ N
+        \item Verify coupling satisfied for all $(K_1, K_2) \in [K_{\min}, K_{\max}]$
+    \end{itemize}
+
+    \item \textbf{Lambda scheduling} (optional):
+    \begin{itemize}
+        \item Choose Gaussian scheduling: $f(\|\vect{\theta}\|) = 1 + \beta \exp(-\|\vect{\theta}\|^2/(2\sigma^2))$
+        \item Tune $\beta \in [0.5, 2.0]$, $\sigma \in [0.05, 0.2]$ rad via PSO
+    \end{itemize}
+
+    \item \textbf{PSO optimization} (\cref{ch:pso}):
+    \begin{itemize}
+        \item Define multi-objective cost: $f = 0.4 t_s / t_s^* + 0.3 C / C^* + 0.3 E / E^*$
+        \item Run PSO with 30 particles, 50 iterations (runtime: 15-20 min)
+        \item Validate on $\pm 10\%$ parameter ensemble (50 trials)
+    \end{itemize}
+
+    \item \textbf{Validation}:
+    \begin{itemize}
+        \item Monte Carlo simulation\index{Monte Carlo simulation} (100 trials, randomized initial conditions)
+        \item Robustness testing ($\pm 20\%$ parameter variations, 500 LHS samples)
+        \item HIL validation (\cref{ch:case_studies}, $\pm 5\%$ match with simulation)
+    \end{itemize}
+\end{enumerate}
+
+\subsection{Implementation Checklist}
+
+\begin{itemize}
+    \item[$\square$] Sliding surface gains $(k_1, k_2, \lambda_1, \lambda_2)$ selected and validated
+    \item[$\square$] Initial STA gains $(K_{1,0}, K_{2,0})$ satisfy coupling constraints
+    \item[$\square$] Adaptation rates $(\gamma_1, \gamma_2)$ tuned for desired convergence speed
+    \item[$\square$] Dead-zone $\delta$ prevents noise-induced adaptation
+    \item[$\square$] Leak rates $(\alpha_1, \alpha_2)$ ensure bounded gains
+    \item[$\square$] Envelope constraints $(K_{\min}, K_{\max})$ prevent instability
+    \item[$\square$] Anti-windup logic ($K_{\text{aw}} = 1.0$) prevents integrator saturation
+    \item[$\square$] Lambda scheduling (if used) improves local convergence by 10-15\%
+    \item[$\square$] PSO optimization achieves $>20\%$ performance improvement
+    \item[$\square$] Computation time verified $<50$ $\mu$s per cycle (Numba JIT recommended)
+    \item[$\square$] Robustness validated on $\pm 20\%$ parameter ensemble (success rate $\geq 90\%$)
+    \item[$\square$] HIL testing confirms $\pm 5\%$ match with pure simulation
+\end{itemize}
+
+\subsection{Future Extensions}
+
+\begin{itemize}
+    \item \textbf{Higher-order sliding modes}: Extend to third-order (continuous $\dot{u}$) for smoother actuator commands
+    \item \textbf{Model-based adaptation}: Use parameter estimators to adapt $K_1, K_2$ based on identified $\Delta p$
+    \item \textbf{Neural network observers}: Replace equivalent control with learned disturbance compensation
+    \item \textbf{Multi-objective Pareto optimization}: Explore Pareto frontier instead of weighted aggregation
+    \item \textbf{Formal verification}: Develop tools for proving safety under adaptive gain variations
+\end{itemize}
+
+\textbf{Next Steps}: \cref{ch:pso} demonstrates PSO\index{Particle Swarm Optimization|see{PSO}}\index{Particle Swarm Optimization|see{PSO}}-based multi-objective optimization of hybrid controller gains, achieving 21-27\% improvement across all metrics. Real-world validation and hardware-in-the-loop\index{hardware-in-the-loop} testing are presented in \cref{ch:case_studies}.
+
+%===============================================================================
+% END OF CHAPTER 6
+%===============================================================================

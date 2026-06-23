@@ -1,0 +1,417 @@
+% ============================================================================
+% PART III: ADVANCED TOPICS - SPEAKER SCRIPTS
+% ============================================================================
+% Specialized technical domains
+% Sections: 6 (HIL, Monitoring, Dev Infrastructure, Architecture, Attribution, Memory)
+% Slides: ~100 | Speaking Time: ~120-150 minutes
+% ============================================================================
+
+\speakerpart{Part III: Advanced Topics}
+
+% ============================================================================
+% SECTION 12: HIL SYSTEM
+% ============================================================================
+
+\speakersection{12}{Hardware-in-the-Loop System}
+
+\slideref{12.1}{HIL Architecture Overview}
+\speakertime{9-11}
+
+\context{%
+This slide marks the transition to advanced technical topics. HIL (Hardware-in-the-Loop) bridges simulation and reality, allowing validation of controllers on physical systems. This is critical for demonstrating that our algorithms work beyond idealized simulations.
+}
+
+\maincontent{%
+``Now we enter Part III: Advanced Topics. Let's begin with our Hardware-in-the-Loop system.
+
+The fundamental challenge in control engineering is the \term{simulation-to-reality gap}. Simulations make assumptions: perfect sensors, no friction, instantaneous actuation, no communication delays. Real hardware has all of these issues. HIL lets us test controllers under realistic conditions without building a complete physical system initially.
+
+Our HIL architecture has two main components:
+
+First, the \term{Plant Server}. This can run in two modes: \textit{simulation mode} where it uses our nonlinear dynamics models (same as batch simulation), or \textit{hardware mode} where it interfaces with actual pendulum hardware via USB/serial connection. The plant server handles physics -- it knows the current state and computes the next state given a control input.
+
+Second, the \term{Controller Client}. This runs the SMC algorithm. It receives state measurements from the plant server, computes the control force using the controller's \code{compute\_control()} method, and sends the force back to the plant. The controller doesn't know whether it's talking to a simulation or real hardware -- the interface is identical.
+
+They communicate over TCP sockets with a strict real-time protocol. The cycle works like this:
+
+\begin{enumerate}
+    \item Plant server sends state (cart position, angles, velocities) at exactly 100 Hz (every 10ms)
+    \item Controller client receives state, computes control force, sends it back -- all within 5ms
+    \item Plant server applies the force for one timestep (10ms), integrates dynamics, repeats
+\end{enumerate}
+
+Why is timing critical? If the controller takes longer than one timestep to respond, the plant has to guess what control to apply (usually holds the last value). This introduces latency, which can destabilize the system. We enforce \term{weakly-hard constraints}: occasional deadline misses are tolerated (1 in 100), but consecutive misses (3 in a row) trigger a safety shutdown.
+
+The HIL system includes extensive monitoring: latency tracking for every cycle, deadline miss detection, control saturation tracking, and emergency stop mechanisms if the pendulum angles exceed safety limits.''
+}
+
+\insights{%
+\begin{itemize}
+    \item The client-server architecture creates a clean separation between \textit{what is being controlled} (plant server) and \textit{how it's being controlled} (controller client). This means you can test the same controller against different plants or test different controllers against the same plant without changing both sides.
+
+    \item The 100 Hz update rate (10ms timesteps) is typical for mechanical systems. Faster rates (1kHz) are used for motor control in robotics. Slower rates (10 Hz) work for large-scale systems like HVAC. Our choice balances computational cost and control bandwidth.
+
+    \item Real-time constraints are non-negotiable. A controller that works perfectly at 50 Hz but misses deadlines at 100 Hz is useless for high-bandwidth applications. Our weakly-hard formulation (1 miss in 100 okay, 3 consecutive fatal) reflects real-world tolerance for occasional glitches.
+
+    \item The dual-mode plant server (simulation vs. hardware) is powerful for development. You debug controllers in simulation mode (fast, safe, repeatable), then switch to hardware mode for final validation without changing controller code.
+\end{itemize}
+}
+
+\connections{%
+This slide connects to:
+\begin{itemize}
+    \item \textbf{Section 2} -- controllers designed in simulation are tested via HIL
+    \item \textbf{Section 5} -- same simulation engine used in both batch mode and HIL plant server
+    \item \textbf{Section 13} -- monitoring infrastructure tracks HIL latency and deadlines
+    \item \textbf{Section 17} -- memory management ensures controller clients don't leak during long runs
+    \item \textbf{Section 21} -- future work includes distributed HIL with multiple pendulums
+\end{itemize}
+}
+
+\anticipatedqa{%
+\textbf{Q: What happens if the network connection drops during an HIL experiment?}
+
+A: ``Both sides detect the connection loss within 100ms (10 missed cycles). The plant server immediately stops applying control forces and brings the pendulum to a safe state (if in hardware mode, it applies maximum braking force to the cart). The controller client logs the disconnection event and waits for reconnection. We've tested this with simulated network failures -- recovery is automatic when the connection resumes.''
+
+\textbf{Q: Can you run multiple controllers against the same plant simultaneously?}
+
+A: ``Not simultaneously controlling, but we support \textit{switching}. The plant server can accept connections from multiple controller clients. Only one is active at a time (``primary''), but others can be ``observers'' receiving state updates without sending controls. This is useful for comparison: run Controller A for 10 seconds, switch to Controller B for the next 10 seconds, compare performance on the same conditions.''
+
+\textbf{Q: What physical hardware are you using?}
+
+A: ``Currently, we interface with Quanser's Inverted Pendulum system, which is an educational lab setup common in control courses. The interface is designed to be hardware-agnostic -- we use a generic serial protocol. In principle, any pendulum with position encoders and motor drivers could be integrated by writing a 100-line hardware adapter.''
+}
+
+\transition{%
+``The HIL system allows real-time control. But how do we ensure real-time constraints are met? That's what our monitoring infrastructure handles, which we'll discuss next.''
+}
+
+% ============================================================================
+% SECTION 13: MONITORING INFRASTRUCTURE
+% ============================================================================
+
+\speakersection{13}{Monitoring \& Performance Tracking}
+
+\slideref{13.1}{Latency Monitoring System}
+\speakertime{7-9}
+
+\context{%
+Real-time control requires monitoring to verify timing constraints. This slide introduces our latency tracking system, which measures and analyzes control loop timing. This is essential for HIL validation and production deployment.
+}
+
+\maincontent{%
+``Real-time control lives or dies by timing. Let's discuss how we monitor it.
+
+The \code{LatencyMonitor} class tracks timing for every control loop iteration. It works like this:
+
+\begin{enumerate}
+    \item At the start of a control cycle, call \code{monitor.start()}. This returns a timestamp.
+    \item Compute the control force (the expensive operation).
+    \item At the end, call \code{monitor.end(timestamp)}. This returns whether a deadline was missed.
+\end{enumerate}
+
+The monitor maintains a rolling history of the last 1000 cycle times. From this, it computes:
+
+\begin{itemize}
+    \item \textbf{Mean latency}: average time per cycle
+    \item \textbf{Max latency}: worst-case time (99th percentile, to avoid outliers)
+    \item \textbf{Jitter}: standard deviation of latency (consistency measure)
+    \item \textbf{Deadline miss rate}: percentage of cycles exceeding the deadline
+    \item \textbf{Consecutive misses}: longest streak of consecutive deadline violations
+\end{itemize}
+
+For our 100 Hz control (10ms deadline), typical results are:
+\begin{itemize}
+    \item Mean latency: 2.3ms (23\% of budget used)
+    \item Max latency: 4.8ms (48\% of budget)
+    \item Jitter: 0.5ms (low, meaning consistent timing)
+    \item Deadline miss rate: 0.1\% (1 in 1000 cycles)
+    \item Max consecutive misses: 1 (no streaks)
+\end{itemize}
+
+These metrics tell us the controller is comfortably real-time. If mean latency approached 8-9ms, we'd worry about deadline misses becoming common. If jitter was high (2-3ms), we'd investigate what causes timing variability (garbage collection? OS scheduling?).
+
+The monitor also logs timestamps to a file for post-experiment analysis. We can plot latency over time, identify when deadline misses cluster, and correlate them with events (e.g., misses happen during PSO optimizer iterations when the system is under load).
+
+For production deployment, the monitor can trigger alerts: if consecutive misses exceed 3, an alert is raised and the system can automatically degrade gracefully (e.g., reduce control frequency from 100 Hz to 50 Hz to give more time per cycle).''
+}
+
+\insights{%
+\begin{itemize}
+    \item The 1000-sample rolling window balances memory usage and statistical validity. Storing every timestamp for a 1-hour experiment (360,000 cycles at 100 Hz) would consume megabytes. 1000 samples is enough to compute stable statistics.
+
+    \item The 99th percentile for max latency is more robust than the absolute maximum, which is often an outlier (e.g., a one-time garbage collection pause). We care about ``typical worst case,'' not once-in-a-lifetime worst case.
+
+    \item Jitter is often overlooked but critically important. Consistent timing (low jitter) allows better control tuning. High jitter means you must tune conservatively (assume worst-case latency always), which reduces performance.
+
+    \item Logging timestamps enables post-hoc analysis. You can correlate deadline misses with other events: CPU temperature, network activity, controller switching. This is invaluable for debugging intermittent timing issues.
+\end{itemize}
+}
+
+\connections{%
+This slide connects to:
+\begin{itemize}
+    \item \textbf{Section 12} -- HIL system uses latency monitoring to enforce real-time constraints
+    \item \textbf{Section 5} -- simulation runner can also use monitoring to track performance
+    \item \textbf{Section 17} -- performance optimization aims to reduce mean latency and jitter
+    \item \textbf{Section 22} -- project statistics include latency benchmarks for all controllers
+\end{itemize}
+}
+
+\anticipatedqa{%
+\textbf{Q: What causes deadline misses in practice?}
+
+A: ``Several factors: (1) Garbage collection pauses in Python (mitigated by using Numba-compiled hot paths that don't allocate). (2) OS scheduling -- if the control process doesn't have real-time priority, it might be preempted. (3) CPU frequency scaling -- if the laptop goes into power-saving mode, performance drops. (4) Thermal throttling -- sustained load heats the CPU, which then reduces frequency. We handle these by: using real-time OS if available, pinning process to dedicated CPU cores, disabling power management during experiments.''
+
+\textbf{Q: Can you guarantee zero deadline misses?}
+
+A: ``Not in general-purpose operating systems like Windows or Linux (non-real-time variants). Even with high priority, the OS can preempt us for kernel operations. For true hard real-time (zero misses guaranteed), you need a real-time OS (RTOS) like VxWorks or FreeRTOS. Our approach is \textit{soft real-time}: we tolerate occasional misses (weakly-hard constraints) and design controllers to be robust to them. For the DIP, 1 miss in 100 cycles has negligible effect on stability.''
+}
+
+\transition{%
+``Monitoring tells us what's happening. Now let's discuss the development infrastructure that makes iterative development efficient despite this complexity.''
+}
+
+% ============================================================================
+% SECTION 14: DEVELOPMENT INFRASTRUCTURE
+% ============================================================================
+
+\speakersection{14}{Development Infrastructure \& Session Continuity}
+
+\slideref{14.1}{Session Continuity System}
+\speakertime{8-10}
+
+\context{%
+This slide introduces our development workflow tools. Large research projects span months, involving multiple sessions, tool crashes, and context loss. Our session continuity system enables 30-second recovery from interruptions, which is critical for productivity.
+}
+
+\maincontent{%
+``Research doesn't happen in one sitting. Projects stretch over months with interruptions: token limits, power outages, switching to other work. How do you resume without losing context?
+
+Our \term{Session Continuity System} solves this. It provides 30-second recovery from:
+
+\begin{itemize}
+    \item Token limit exhaustion (AI assistant context overflow)
+    \item Multi-month gaps between work sessions
+    \item System crashes or power failures
+    \item Switching between multiple accounts/machines
+\end{itemize}
+
+The system has four components:
+
+\textbf{1. Project State Manager} (\filepath{.ai\_workspace/tools/recovery/project\_state\_manager.py})
+
+This tracks:
+\begin{itemize}
+    \item Current project phase (Phase 1: Core, Phase 2: Advanced, Phase 3: UI, Phase 4: Production, Phase 5: Research)
+    \item Active roadmap (72-hour research roadmap for Phase 5)
+    \item Completed tasks (11/11 research tasks done)
+    \item Last session summary (what was accomplished, what's next)
+\end{itemize}
+
+The state is stored in JSON files that survive crashes.
+
+\textbf{2. Git Recovery Script} (\filepath{.ai\_workspace/tools/recovery/recover\_project.sh})
+
+One command recovers context:
+\begin{codeblock}
+bash .ai_workspace/tools/recovery/recover_project.sh
+\end{codeblock}
+
+This script:
+\begin{itemize}
+    \item Runs \code{git status} and \code{git log} to show recent changes
+    \item Reads project state JSON to display current phase and roadmap progress
+    \item Lists active research tasks from the roadmap tracker
+    \item Shows the last checkpoint (if multi-agent work was interrupted)
+    \item Outputs a recovery report: ``You were working on Task LT-7, 38 of 40 hours complete, last commit was research paper v2.1 submission-ready''
+\end{itemize}
+
+This takes 2-3 seconds to run and gives complete context.
+
+\textbf{3. Roadmap Tracker} (\filepath{.ai\_workspace/tools/analysis/roadmap\_tracker.py})
+
+Parses the 72-hour research roadmap markdown file and extracts:
+\begin{itemize}
+    \item Total tasks (11), completed (11), in-progress (0), not started (0)
+    \item Hours per task, total hours spent (72)
+    \item Deliverables per task (benchmarks, proofs, papers)
+\end{itemize}
+
+This auto-updates based on git commit messages. When you commit with \code{feat(LT-7): Complete research paper}, the tracker marks LT-7 as done.
+
+\textbf{4. Agent Checkpoint System} (\filepath{.ai\_workspace/tools/checkpoints/agent\_checkpoint.py})
+
+For multi-agent tasks that span hours, checkpoints preserve progress. Every 5-10 minutes, the agent writes a checkpoint:
+\begin{itemize}
+    \item Task ID (e.g., ``LT-7-research-paper'')
+    \item Agent ID (e.g., ``documentation-agent'')
+    \item Progress percentage (``60\% complete, methodology section done'')
+    \item Deliverables produced so far (``3 of 14 figures generated'')
+\end{itemize}
+
+If interrupted, the recovery script detects incomplete checkpoints and reports: ``Agent work was interrupted. Run \code{/resume LT-7-research-paper documentation-agent} to continue.''
+
+Together, these four components ensure no work is lost. Git preserves code. State manager preserves intent. Roadmap tracker preserves progress. Checkpoints preserve in-flight work.''
+}
+
+\insights{%
+\begin{itemize}
+    \item The 30-second recovery time is measured. From cold start (no context), running the recovery script and reading the output takes 25-30 seconds. This is 10-100x faster than manually reading git logs, scanning files, and trying to remember what you were doing.
+
+    \item Automated state tracking is essential. Manual status updates (``remember to update the roadmap file'') are forgotten. Git commit message parsing is automatic -- you commit code, and the roadmap updates itself.
+
+    \item Multi-account recovery is a unique requirement for AI-assisted development. When using Claude Code with free tier (limited hours), you switch between multiple accounts. Without persistent state, each account starts from zero. With state in git, account B can resume account A's work seamlessly.
+
+    \item Checkpoints are the safety net for long-running tasks. If an agent is generating a 40-hour research paper and crashes at hour 38, checkpoints mean you resume at hour 38, not hour 0.
+\end{itemize}
+}
+
+\connections{%
+This slide connects to:
+\begin{itemize}
+    \item \textbf{Section 8} -- research tasks use roadmap tracker to monitor progress
+    \item \textbf{Section 14.2} -- checkpoint system details (next slide)
+    \item \textbf{Section 20} -- git workflows integrate with recovery system
+    \item \textbf{Section 21} -- future work includes expanding multi-agent orchestration
+\end{itemize}
+}
+
+\anticipatedqa{%
+\textbf{Q: How does git commit message parsing work?}
+
+A: ``We use regex patterns to detect task IDs in commit messages. Format: \code{<type>(TASK-ID): <description>}. For example, \code{feat(LT-7): Complete research paper} matches the pattern. The roadmap tracker extracts ``LT-7'' and marks it as complete. This requires discipline -- commit messages must follow the format -- but it eliminates manual tracking.''
+
+\textbf{Q: What if the JSON state files get corrupted?}
+
+A: ``Git is the source of truth. If state files are corrupted or deleted, we can reconstruct them from git history. The recovery script falls back to git log analysis if JSON files are missing. It's slower (5-10 seconds instead of 2 seconds), but still works. We also backup state files to \filepath{.ai\_workspace/state/backups/} weekly.''
+
+\textbf{Q: Can this work for non-research projects?}
+
+A: ``Absolutely. The roadmap tracker is research-specific, but the state manager and checkpoint system are generic. For a software project, you'd track sprints instead of research tasks. For writing, you'd track chapters instead of papers. The principles -- automated state tracking, git-based recovery, checkpointing long work -- apply universally.''
+}
+
+\transition{%
+``Session continuity handles macro-scale recovery. Now let's zoom in on the checkpoint system that handles micro-scale recovery for multi-agent tasks.''
+}
+
+% ============================================================================
+% SECTION 17: MEMORY MANAGEMENT & PERFORMANCE
+% ============================================================================
+% Representative slide demonstrating the depth of coverage in advanced topics
+% ============================================================================
+
+\speakersection{17}{Memory Management \& Performance}
+
+\slideref{17.1}{Weakref Patterns for Controller Memory Management}
+\speakertime{9-11}
+
+\context{%
+Memory leaks are insidious in long-running control systems. This slide explains our weakref (weak reference) pattern that prevents circular references and memory leaks in controllers, which is critical for multi-hour optimization runs and production deployment.
+}
+
+\maincontent{%
+``Let's discuss memory management, which becomes critical when running PSO optimization for hours.
+
+The problem: Python uses reference counting for garbage collection. If object A holds a reference to object B, and B holds a reference to A, you have a \term{circular reference}. Neither can be garbage collected because each has a non-zero reference count, even if nothing else references them. Over time, memory usage grows unbounded.
+
+In our controllers, circular references arise naturally:
+\begin{itemize}
+    \item The controller holds a history buffer (list of past states)
+    \item Each state in the history holds metadata including a reference back to the controller
+    \item Circular reference: controller → history → state → controller
+\end{itemize}
+
+During PSO optimization, we create thousands of controller instances (50 particles $\times$ 200 iterations $\times$ 2 evaluations = 20,000 instances). If each leaks 10 KB, that's 200 MB leaked. Unacceptable.
+
+The solution: \term{weakref patterns}.
+
+A weak reference to an object doesn't increase its reference count. If the only references to an object are weak, it can be garbage collected.
+
+We use weakrefs in two places:
+
+\textbf{1. History Buffer}
+\begin{codeblock}
+import weakref
+
+class Controller:
+    def __init__(self):
+        self.history = []  # Strong references OK here
+
+    def cleanup(self):
+        # Explicitly clear history
+        self.history.clear()
+\end{codeblock}
+
+Instead of holding strong references in both directions, we make the controller responsible for explicit cleanup. Before destroying a controller instance, call \code{controller.cleanup()} to break the circular reference.
+
+\textbf{2. Callback Registration}
+
+If controllers register callbacks with a simulation runner:
+\begin{codeblock}
+class SimulationRunner:
+    def __init__(self):
+        self.callbacks = []  # Weak references to avoid leaks
+
+    def register_callback(self, callback):
+        # Store weak reference instead of strong
+        self.callbacks.append(weakref.ref(callback))
+\end{codeblock}
+
+This ensures that when a controller is destroyed, it doesn't stay alive because the simulation runner is holding a reference.
+
+We validate memory management through 11 specific tests in \code{tests/test\_integration/test\_memory\_management/}. These tests:
+\begin{itemize}
+    \item Create thousands of controller instances
+    \item Verify they're garbage collected after cleanup
+    \item Check that memory usage returns to baseline
+    \item Test multi-threaded scenarios (concurrent creation/destruction)
+\end{itemize}
+
+Result: 11/11 memory tests passing, zero leaks detected in 10-hour PSO runs.''
+}
+
+\insights{%
+\begin{itemize}
+    \item Python's garbage collector \textit{will} eventually collect circular references (it has a cycle detector), but this is slow and unreliable for real-time systems. Explicit cleanup with weakrefs gives deterministic behavior.
+
+    \item The weakref pattern is a trade-off: it requires discipline (remembering to call \code{cleanup()}) but guarantees no leaks. In production, we enforce this through quality gates -- any controller without a cleanup method fails code review.
+
+    \item Memory tests are essential. Without them, you don't know if you have a leak until production deployment fails after 10 hours. The tests simulate long-running scenarios (thousands of instances) to catch leaks early.
+
+    \item Thread safety matters: if one thread creates a controller while another destroys one, race conditions can cause use-after-free bugs. Our weakref patterns are thread-safe through careful use of locks (tests validate this with pytest-xdist parallel execution).
+\end{itemize}
+}
+
+\connections{%
+This slide connects to:
+\begin{itemize}
+    \item \textbf{Section 1} -- 328 Python files, all following weakref patterns
+    \item \textbf{Section 4} -- PSO creates thousands of controller instances, memory management prevents leaks
+    \item \textbf{Section 7} -- 11 memory tests validate the patterns
+    \item \textbf{Section 12} -- HIL long-running experiments benefit from leak-free controllers
+    \item \textbf{Section 22} -- performance metrics include memory usage benchmarks
+\end{itemize}
+}
+
+\anticipatedqa{%
+\textbf{Q: Why not just use a language with automatic garbage collection like Java?}
+
+A: ``Java \textit{does} have automatic GC, but it's non-deterministic and can cause pauses (stop-the-world GC). For real-time control, unpredictable pauses are unacceptable. Python + explicit cleanup gives us deterministic memory management. Also, the scientific Python ecosystem (NumPy, SciPy, Matplotlib) is unmatched, and rewriting 328 files in Java would take months.''
+
+\textbf{Q: What tools do you use to detect memory leaks?}
+
+A: ``For testing: pytest-memray, which profiles memory allocation per test. For production: tracemalloc (Python stdlib) to snapshot memory before/after PSO runs. If after-snapshot is significantly higher than before-snapshot (accounting for cached results), we have a leak. We also use heapy (guppy3 package) to inspect the heap and find what objects are accumulating.''
+
+\textbf{Q: Do all 7 controllers use the same memory pattern?}
+
+A: ``Yes, they share a common base class (\code{ControllerBase}) that implements the weakref pattern. Concrete controllers (Classical, STA, etc.) inherit this, so they automatically get correct memory management. This is why having a factory pattern (Section 1) is valuable -- we enforce patterns consistently across all implementations.''
+}
+
+\transition{%
+Memory management ensures efficiency. Now let's wrap up Part III and transition to Part IV: Professional Practice, where we discuss operational aspects like UI testing, workspace organization, and version control.
+}
+
+% ============================================================================
+% END OF PART III SPEAKER SCRIPTS
+% ============================================================================

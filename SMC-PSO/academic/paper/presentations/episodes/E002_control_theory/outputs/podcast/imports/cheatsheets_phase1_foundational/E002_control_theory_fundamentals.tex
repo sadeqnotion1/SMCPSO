@@ -1,0 +1,495 @@
+% ==============================================================================
+% EPISODE 002: CONTROL THEORY FUNDAMENTALS
+% ==============================================================================
+\input{../templates/master_template.tex}
+\input{../templates/tikz_components.tex}
+
+% Episode-specific title
+\renewcommand{\episodetitle}{E002: Control Theory Fundamentals}
+
+\begin{document}
+
+% ==============================================================================
+% TITLE PAGE
+% ==============================================================================
+\makeepisodetitle{E002: Control Theory Fundamentals}{Mathematics Behind Control Systems}{1}{30-35 minutes}
+
+% ==============================================================================
+% PAGE 1: CONTROL FUNDAMENTALS
+% ==============================================================================
+\learningobjective{Understand state-space representation, Lyapunov stability, and the fundamental principles of sliding mode control}
+
+\section*{What is Control?}
+
+\begin{keypoint}
+\textbf{Control Problem:} Make a system's output track a desired reference, despite:
+\begin{itemize}
+    \item \iconWarning\ Disturbances (external forces, noise)
+    \item \iconWarning\ Uncertainties (model errors, parameter variations)
+    \item \iconWarning\ Constraints (actuator limits, safety bounds)
+\end{itemize}
+\end{keypoint}
+
+\subsection*{Open-Loop vs. Closed-Loop}
+
+\begin{multicols}{2}
+
+\textbf{Open-Loop (No Feedback):}
+\begin{itemize}
+    \item Execute predetermined commands
+    \item No correction for errors
+    \item \iconWarning\ IMPOSSIBLE for DIP (unstable!)
+\end{itemize}
+
+\begin{example}
+Microwave timer - no temperature feedback, just time
+\end{example}
+
+\columnbreak
+
+\textbf{Closed-Loop (Feedback):}
+\begin{itemize}
+    \item Measure output, compare to reference
+    \item Automatically corrects disturbances
+    \item \iconKey\ REQUIRED for DIP stability
+\end{itemize}
+
+\begin{example}
+Thermostat - measures temperature, adjusts heating
+\end{example}
+
+\end{multicols}
+
+\subsection*{State-Space Representation}
+
+\begin{tcolorbox}[colback=primary!5, colframe=primary, title=\faCode\ General Form]
+\textbf{Continuous-Time:}
+\begin{align*}
+\dot{x}(t) &= f(x(t), u(t), t) \quad \text{(State dynamics)} \\
+y(t) &= h(x(t), u(t), t) \quad \text{(Output equation)}
+\end{align*}
+
+Where:
+\begin{itemize}
+    \item $x(t)$ = state vector (internal system variables)
+    \item $u(t)$ = control input (force on cart)
+    \item $y(t)$ = measured output
+    \item $f(\cdot)$ = dynamics function, $h(\cdot)$ = measurement function
+\end{itemize}
+\end{tcolorbox}
+
+\subsection*{DIP State-Space: The Dashboard}
+
+\begin{multicols}{2}
+
+\textbf{Six State Variables:}
+\begin{itemize}
+    \item \textbf{1.} Cart position ($x$)
+    \item \textbf{2.} First pendulum angle ($\theta_1$)
+    \item \textbf{3.} Second pendulum angle ($\theta_2$)
+    \item \textbf{4.} Cart velocity ($\dot{x}$)
+    \item \textbf{5.} First pendulum velocity ($\dot{\theta}_1$)
+    \item \textbf{6.} Second pendulum velocity ($\dot{\theta}_2$)
+\end{itemize}
+
+\columnbreak
+
+\textbf{Single Control Input:}
+\begin{itemize}
+    \item Horizontal force on cart ($u$)
+    \item Measured in Newtons
+    \item \iconWarning\ \textbf{Underactuated:} 1 input controls 3 outputs
+\end{itemize}
+
+\begin{tip}
+If you know these 6 numbers at any instant, you know EVERYTHING about the system's state!
+\end{tip}
+
+\end{multicols}
+
+\subsection*{How DIP Dynamics Work (Plain English)}
+
+\begin{summary}
+\textbf{Physics Workflow:}
+\begin{itemize}
+    \item \textbf{1.} \textbf{Mass matrix}: How heavy everything is, how mass is distributed
+    \item \textbf{2.} \textbf{Coriolis \& centrifugal}: How rotation causes forces
+    \item \textbf{3.} \textbf{Gravity terms}: How gravity pulls pendulums down
+    \item \textbf{4.} \textbf{Control input}: The push force we apply
+\end{itemize}
+
+\textbf{Equation says:} "Mass $\times$ acceleration + rotation effects + gravity = applied force"
+
+It's just $F = ma$, but for multiple connected bodies!
+\end{summary}
+
+% ==============================================================================
+% PAGE 2: LYAPUNOV STABILITY & SMC
+% ==============================================================================
+\newpage
+
+\section*{Lyapunov Stability: The Ball in a Bowl}
+
+\begin{multicols}{2}
+
+\subsection*{The Physical Picture}
+
+\begin{keypoint}
+Imagine a marble in a smooth bowl:
+\begin{itemize}
+    \item \textbf{1.} \textbf{Nudge it}: Marble rolls to the side
+    \item \textbf{2.} \textbf{Gravity pulls down}: Rolls toward bottom
+    \item \textbf{3.} \textbf{Overshoots}: Has momentum, goes up other side
+    \item \textbf{4.} \textbf{Friction slows}: Each oscillation loses energy
+    \item \textbf{5.} \textbf{Settles}: Eventually MUST stop at bottom
+\end{itemize}
+\end{keypoint}
+
+\columnbreak
+
+\subsection*{Lyapunov's Brilliant Insight}
+
+\textbf{Question:} What if we could prove our control system has the same bowl-and-friction property WITHOUT solving differential equations?
+
+\textbf{Answer:} Find an "energy-like" function $V(x)$:
+\begin{itemize}
+    \item At equilibrium: $V = 0$ (bottom of bowl)
+    \item Away from equilibrium: $V > 0$ (higher up bowl)
+    \item Over time: $\dot{V} < 0$ (energy decreases)
+\end{itemize}
+
+\end{multicols}
+
+\begin{example}
+\textbf{SpaceX Rocket:} Control engineers design a mathematical "bowl" where vertical upright is the bottom. Control law acts as "friction" dissipating energy. As long as the bowl exists and friction works, the rocket WILL stabilize!
+\end{example}
+
+\subsection*{Mathematical Definition}
+
+\begin{tcolorbox}[colback=accent!5, colframe=accent]
+\textbf{Asymptotic Stability:} An equilibrium $x^*$ is asymptotically stable if:
+\begin{itemize}
+    \item \textbf{1.} Small deviations stay small (stable)
+    \item \textbf{2.} Deviations actually go to zero over time (asymptotic)
+\end{itemize}
+
+\textbf{Lyapunov Function:} $V(x)$ such that:
+\begin{itemize}
+    \item $V(x^*) = 0$ and $V(x) > 0$ for $x \neq x^*$
+    \item $\dot{V}(x) < 0$ for all $x \neq x^*$
+\end{itemize}
+\end{tcolorbox}
+
+\section*{Sliding Mode Control: The Guardrail Analogy}
+
+\begin{center}
+\phaseportrait
+\end{center}
+
+\subsection*{The Mountain Hiking Story}
+
+\begin{multicols}{2}
+
+\textbf{Scenario:} Foggy mountain, wind gusts, trying to reach cabin at bottom. Someone built a guardrail path.
+
+\textbf{Strategy:}
+\begin{itemize}
+    \item \textbf{1.} \textbf{Reaching Phase}: Get TO the guardrail path (don't care about efficiency, just reach it fast)
+    \item \textbf{2.} \textbf{Sliding Mode}: Follow the path - guardrail geometry guides you safely to bottom
+\end{itemize}
+
+\columnbreak
+
+\begin{keypoint}
+\textbf{Magic Property:} Once on the sliding surface, the system is \textbf{insensitive to matched uncertainties}!
+
+When wind hits you (disturbance), you just press harder against the guardrail to compensate. The path geometry naturally rejects disturbances.
+\end{keypoint}
+
+\end{multicols}
+
+\subsection*{Two-Phase Design}
+
+\begin{tcolorbox}[colback=secondary!10, colframe=secondary, title=\faWrench\ Phase 1: Design the Path (Sliding Surface)]
+Define sliding surface $s(x) = 0$ such that staying on it $\Rightarrow$ exponential convergence to equilibrium
+
+For DIP: Combine angles and velocities in specific relationship
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=accent!10, colframe=accent, title=\faWrench\ Phase 2: Design the Push (Reaching Law)]
+Control law that drives system TO surface and keeps it there:
+\begin{itemize}
+    \item \textbf{Reaching term}: Strong push toward surface (sign function provides direction)
+    \item \textbf{Damping term}: Prevents overshoot (slows down as you approach)
+\end{itemize}
+\end{tcolorbox}
+
+% ==============================================================================
+% PAGE 3: CHATTERING & SUPER-TWISTING
+% ==============================================================================
+\newpage
+
+\section*{The Chattering Problem}
+
+\begin{multicols}{2}
+
+\subsection*{What is Chattering?}
+
+\begin{warning}
+Imagine balancing on a tightrope with instant corrections: lean left, lean right, left, right - infinitely fast.
+
+In practice: Muscles have response time, measurements have noise, sampling is finite.
+
+\textbf{Result:} Rapid oscillations (buzzing sound like cicada or dot-matrix printer)
+
+\textbf{Bad for:} Actuator wear, energy waste, can excite unmodeled dynamics
+\end{warning}
+
+\columnbreak
+
+\subsection*{Boundary Layer Fix}
+
+Instead of hard switching, use smooth approximation near surface.
+
+\begin{tip}
+\textbf{Trade-off:}
+\begin{itemize}
+    \item \textbf{Wider layer}: Smoother, less chattering, slightly less accurate
+    \item \textbf{Narrower layer}: More aggressive, better tracking, more chattering
+\end{itemize}
+
+DIP typical: $\phi = 0.3$ to $0.5$
+\end{tip}
+
+\end{multicols}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.9]
+    % Sliding surface
+    \draw[thick, color=secondary, dashed] (0,0) -- (8,0);
+    \node[color=secondary] at (8.5,0) {$s=0$};
+
+    % Boundary layer
+    \fill[color=accent!20] (0,-0.8) rectangle (8,0.8);
+    \draw[thick, color=accent, dashed] (0,0.8) -- (8,0.8);
+    \draw[thick, color=accent, dashed] (0,-0.8) -- (8,-0.8);
+    \node[color=accent] at (1,1.1) {\small Boundary Layer $\phi$};
+
+    % Control behavior
+    \draw[thick, color=primary, ->] (1,2) -- (1,1.2);
+    \node[color=primary] at (1,2.3) {\small Hard Switch};
+
+    \draw[thick, color=secondary, ->] (4,0.5) -- (5,0);
+    \node[color=secondary] at (3.5,0.8) {\small Smooth Transition};
+\end{tikzpicture}
+\end{center}
+
+\section*{Super-Twisting: The Smooth Operator}
+
+\begin{keypoint}
+\textbf{Problem with Classical SMC:} Sliding surface $s \to 0$, but derivative $\dot{s}$ still has discontinuity $\Rightarrow$ chattering persists
+
+\textbf{Super-Twisting Solution:} Make BOTH $s$ and $\dot{s}$ go to zero simultaneously $\Rightarrow$ truly continuous control
+\end{keypoint}
+
+\subsection*{Three Big Advantages}
+
+\begin{multicols}{2}
+
+\begin{itemize}
+    \item \textbf{1.} \textbf{Dramatically reduced chattering}: Control signal is continuous (no buzzing!)
+    \item \textbf{2.} \textbf{Finite-time convergence}: Still reaches surface in finite time
+    \item \textbf{3.} \textbf{Robust to smooth disturbances}: Handles Lipschitz disturbances
+\end{itemize}
+
+\columnbreak
+
+\begin{example}
+\textbf{Tightrope analogy:}
+
+Classical SMC: Oscillate left-right-left-right rapidly
+
+Super-Twisting: Smoothly glide to center and stop - no oscillation!
+\end{example}
+
+\end{multicols}
+
+\subsection*{The Fractional Power Trick}
+
+\begin{tcolorbox}[colback=primary!5, colframe=primary, title=\faCode\ Control Law]
+\textbf{Two components:}
+\begin{itemize}
+    \item \textbf{1.} \textbf{Integral term}: Gradually builds force from accumulated error
+    \item \textbf{2.} \textbf{Proportional term with $\sqrt{|s|}$}: Square root provides automatic gain scheduling
+\end{itemize}
+
+\textbf{Why square root?}
+\begin{itemize}
+    \item Far from surface (large $s$): $\sqrt{s}$ still significant $\Rightarrow$ strong control
+    \item Close to surface (small $s$): $\sqrt{s}$ makes error even smaller $\Rightarrow$ gentle control
+\end{itemize}
+
+Result: ABS brakes - smooth, continuous corrections without harsh on-off behavior
+\end{tcolorbox}
+
+\subsection*{Code is Remarkably Simple}
+
+\begin{summary}
+\begin{itemize}
+    \item \textbf{1.} Compute proportional term: $K_2 \cdot \text{sign}(s) \cdot \sqrt{|s|}$
+    \item \textbf{2.} Update integral term: Accumulate signed error over time, scaled by $K_1$
+    \item \textbf{3.} Sum them: $u = u_{\text{integral}} + u_{\text{proportional}}$
+\end{itemize}
+
+No if-statements, no hard switches - just smooth mathematical functions!
+\end{summary}
+
+% ==============================================================================
+% PAGE 4: ADAPTIVE SMC & ROBUSTNESS
+% ==============================================================================
+\newpage
+
+\section*{Adaptive SMC: The Smart Learner}
+
+\begin{multicols}{2}
+
+\subsection*{Problem with Fixed Gains}
+
+\begin{warning}
+Delivery truck example:
+\begin{itemize}
+    \item Empty truck: Gains too stiff
+    \item Loaded truck: Gains too soft
+\end{itemize}
+
+Must tune for worst-case $\Rightarrow$ wasting energy during normal operation
+\end{warning}
+
+\columnbreak
+
+\subsection*{Adaptive Solution}
+
+\begin{keypoint}
+Controller adjusts its own gains in real-time:
+\begin{itemize}
+    \item Large error: "Increase gain!"
+    \item Small error: "Ease off gains"
+\end{itemize}
+
+\textbf{Dead zone:} Don't adapt to noise (only genuine large errors)
+\end{keypoint}
+
+\end{multicols}
+
+\subsection*{Lyapunov-Based Adaptation}
+
+\begin{tcolorbox}[colback=accent!10, colframe=accent, title=\faLightbulb\ Theoretical Justification]
+Construct Lyapunov function including:
+\begin{itemize}
+    \item Sliding surface error
+    \item Gain error (difference between current and ideal)
+\end{itemize}
+
+Adaptation law designed so combined "energy" always decreases $\Rightarrow$ mathematically proven stability
+
+\textbf{Beautiful part:} Even without knowing ideal gain, math drives gains toward stable value automatically!
+\end{tcolorbox}
+
+\subsection*{Implementation Features}
+
+\begin{summary}
+\begin{itemize}
+    \item \textbf{1.} \textbf{Dead Zone}: If $|s| < $ threshold, don't adapt (ignore noise)
+    \item \textbf{2.} \textbf{Gain Leak}: Slowly decrease gains in dead zone (prevents ratcheting)
+    \item \textbf{3.} \textbf{Bounded Adaptation}: Enforce min/max limits (don't go to zero or infinity)
+\end{itemize}
+
+\textbf{Update rule:} Large error $\Rightarrow$ increase gains proportionally. Small error $\Rightarrow$ gently leak gains down. Always stay within bounds.
+\end{summary}
+
+\section*{Robustness Properties}
+
+\begin{multicols}{2}
+
+\subsection*{Matched Uncertainties}
+
+\begin{keypoint}
+Disturbances in control channel:
+$$\dot{x} = f(x) + (B_0 + \Delta B)u + Bd$$
+
+\textbf{SMC Property:} Complete rejection once on sliding surface!
+
+\textbf{Why:} On $s = 0$, disturbance $d$ cancels out in $\dot{s} = 0$ equation
+\end{keypoint}
+
+\columnbreak
+
+\subsection*{Unmatched Uncertainties}
+
+\begin{warning}
+Disturbances NOT in control channel:
+$$\dot{x} = f(x) + d_{\text{unmatched}} + Bu$$
+
+SMC \textbf{cannot} perfectly reject these, but can attenuate them
+\end{warning}
+
+\end{multicols}
+
+\section*{Quick Reference: Key Equations}
+
+\quickref{Sliding Surface}{
+\begin{equation*}
+s = C \cdot e + \dot{e}
+\end{equation*}
+Where $e = x - x_{\text{desired}}$ (tracking error), $C$ = convergence rate
+}
+
+\quickref{Classical SMC Control Law}{
+\begin{equation*}
+u = u_{\text{eq}} + u_{\text{sw}}
+\end{equation*}
+$u_{\text{eq}}$ = equivalent control (feedforward), $u_{\text{sw}}$ = switching control (feedback)
+}
+
+\quickref{Super-Twisting Control Law}{
+\begin{align*}
+u &= -K_1 \cdot \text{sign}(s) \cdot |s|^{1/2} + u_{\text{int}} \\
+\dot{u}_{\text{int}} &= -K_2 \cdot \text{sign}(s)
+\end{align*}
+}
+
+\quickref{Adaptive Gain Update}{
+\begin{equation*}
+\dot{K} = \begin{cases}
+\gamma \cdot |s| & \text{if } |s| > \epsilon \\
+-\lambda K & \text{if } |s| \leq \epsilon
+\end{cases}
+\end{equation*}
+$\gamma$ = adaptation rate, $\lambda$ = leak rate, $\epsilon$ = dead zone
+}
+
+\subsection*{Controller Comparison}
+
+\begin{tcolorbox}[colback=background, colframe=codeblock, title=\faChartBar\ Performance Trade-offs]
+\begin{tabular}{lll}
+\toprule
+\textbf{Controller} & \textbf{Pros} & \textbf{Cons} \\
+\midrule
+Classical SMC & Simple, robust, proven & Chattering \\
+STA-SMC & Smooth, low chattering & More complex tuning \\
+Adaptive SMC & Self-tuning, efficient & Slower transients \\
+\bottomrule
+\end{tabular}
+\end{tcolorbox}
+
+\subsection*{What's Next?}
+
+\begin{keypoint}
+\textbf{E003: Plant Models \& Dynamics} - Lagrangian mechanics, Coriolis forces, complete DIP physics
+
+\textbf{E004: PSO Optimization} - How to automatically tune all these gains
+
+\textbf{Remember:} Theory is beautiful, but PSO gives us the practical gains that make it work on real hardware!
+\end{keypoint}
+
+\end{document}

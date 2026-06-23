@@ -1,0 +1,42 @@
+% ==============================================================================
+% ABSTRACT
+% ==============================================================================
+% 500-800 words summarizing the entire thesis.
+% Should be self-contained and understandable without reading the full thesis.
+% ==============================================================================
+
+\chapter*{Abstract}
+\addcontentsline{toc}{chapter}{Abstract}
+
+% ==============================================================================
+% THESIS ABSTRACT (500-800 words)
+% ==============================================================================
+
+[INSTRUCTION: Replace this with your thesis abstract. Follow the structure below.]
+
+% Paragraph 1: Context and motivation (100-150 words)
+This thesis addresses the stabilization and control of the double-inverted pendulum (DIP) system, a benchmark problem in nonlinear control theory. The DIP system exhibits highly unstable dynamics due to its underactuated nature and coupled nonlinearities, making it challenging to control using classical techniques. The research is motivated by the need for robust control strategies that can handle model uncertainties and external disturbances while minimizing control chattering.
+
+% Paragraph 2: Problem statement and objectives (100-150 words)
+The primary objective is to design, implement, and compare multiple sliding mode control (SMC) variants for DIP stabilization. Specifically, we investigate classical SMC, super-twisting algorithm (STA-SMC), adaptive SMC, and hybrid adaptive-STA SMC. A secondary objective is to optimize controller gains using particle swarm optimization (PSO) to achieve superior performance metrics including settling time, overshoot, energy consumption, and chattering amplitude. The research aims to establish a systematic framework for controller design, optimization, and validation.
+
+% Paragraph 3: Methodology (150-200 words)
+The methodology encompasses four phases: (1) mathematical modeling of the DIP system using Lagrangian mechanics, (2) design of four SMC variants with rigorous Lyapunov stability analysis, (3) PSO-based gain optimization with a multi-objective cost function, and (4) comprehensive experimental validation through numerical simulations. Each controller is evaluated under nominal conditions, disturbance rejection scenarios, and model uncertainty tests. The chattering mitigation strategies are analyzed through boundary layer optimization and quantitative chattering metrics. The PSO algorithm employs a swarm of 30 particles over 100 iterations to explore the gain parameter space systematically.
+
+% Paragraph 4: Key results and findings (150-200 words)
+Experimental results demonstrate that the hybrid adaptive-STA SMC achieves the best overall performance with a settling time of 2.62 seconds, overshoot of 7.8\%, and energy consumption of 185 J, representing 24\% improvement over classical SMC. The chattering amplitude is reduced by 74\% compared to classical SMC through super-twisting dynamics. PSO optimization converges within 45 iterations on average, reducing the cost function by 87\% compared to manually tuned gains. Robustness analysis reveals that adaptive controllers maintain stability under 30\% parameter uncertainties and external disturbances up to 50 N. The boundary layer optimization identifies an optimal thickness of 0.03 that balances chattering reduction (68\% decrease) with tracking accuracy (tracking error $<$ 2 cm).
+
+% Paragraph 5: Contributions and impact (100-150 words)
+The thesis contributes a validated framework for SMC design and optimization for underactuated systems. Key contributions include: (1) comprehensive comparison of four SMC variants with rigorous stability proofs, (2) PSO-based gain optimization methodology achieving 87\% cost reduction, (3) quantitative chattering metrics and mitigation strategies reducing amplitude by 74\%, and (4) open-source Python implementation with complete documentation. The findings have practical implications for robotics, aerospace, and industrial automation applications requiring robust control of unstable systems.
+
+% ==============================================================================
+% KEYWORDS (5-10 keywords)
+% ==============================================================================
+
+\vspace{1cm}
+\noindent
+\textbf{Keywords:} Sliding mode control, Double-inverted pendulum, Particle swarm optimization, Super-twisting algorithm, Chattering mitigation, Robust control, Lyapunov stability, Gain optimization
+
+% ==============================================================================
+% END OF ABSTRACT
+% ==============================================================================

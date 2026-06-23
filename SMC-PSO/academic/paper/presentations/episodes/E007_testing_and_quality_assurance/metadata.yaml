@@ -1,0 +1,16 @@
+﻿episode_id: E007
+slug: testing_and_quality_assurance
+title: Testing And Quality Assurance
+status: migrated_auto
+last_updated: 2026-02-24
+languages:
+  - en
+  - fa
+channels:
+  - podcast
+source_file_count: 7
+source_buckets:
+  - archive_part1_foundations
+  - cheatsheets_phase2_technical
+  - episodes_markdown
+  - episodes_pdf

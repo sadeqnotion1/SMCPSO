@@ -1,0 +1,172 @@
+% ============================================================================
+% SECTION 10: DOCUMENTATION SYSTEM
+% ============================================================================
+\section{Documentation System}
+
+\begin{frame}{Documentation Scale \& Organization}
+    \textbf{Documentation Statistics:}
+
+    \vspace{0.3cm}
+
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \textbf{Total Files:}
+            \begin{itemize}
+                \item \textbf{985 files} total
+                \item 814 in \texttt{docs/}
+                \item 171 in \texttt{.ai\_workspace/}
+            \end{itemize}
+
+            \vspace{0.3cm}
+
+            \textbf{Navigation Systems:}
+            \begin{itemize}
+                \item 11 navigation hubs
+                \item 43 category indexes
+                \item 6 visual sitemaps
+                \item 2 interactive demos
+            \end{itemize}
+        \end{column}
+
+        \begin{column}{0.5\textwidth}
+            \textbf{Content Categories:}
+            \begin{itemize}
+                \item Theory \& algorithms
+                \item API reference (auto-generated)
+                \item Tutorials \& guides
+                \item Development workflows
+                \item Research methodology
+                \item System architecture
+            \end{itemize}
+        \end{column}
+    \end{columns}
+
+    \vspace{0.3cm}
+
+    \begin{block}{Master Navigation Hub}
+        \texttt{docs/NAVIGATION.md} connects all 11 navigation systems \\
+        Persona-based entry points, "I Want To..." quick navigation
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Sphinx Documentation Build System}
+    \textbf{Professional Documentation Pipeline:}
+
+    \vspace{0.3cm}
+
+    \textbf{Build Process:}
+    \begin{enumerate}
+        \item Source files: \texttt{docs/*.md}, \texttt{docs/**/*.rst}
+        \item Static assets: \texttt{docs/\_static/*.css}, \texttt{docs/\_static/*.js}
+        \item Configuration: \texttt{docs/conf.py}
+        \item Build output: \texttt{docs/\_build/html/}
+    \end{enumerate}
+
+    \vspace{0.3cm}
+
+    \textbf{Rebuild Workflow:}
+    \begin{lstlisting}[language=bash]
+# 1. Make changes to docs
+# 2. Rebuild Sphinx
+sphinx-build -M html docs docs/_build -W --keep-going
+
+# 3. Verify changes copied
+stat docs/_static/custom.css docs/_build/html/_static/custom.css
+
+# 4. Test locally (requires hard refresh: Ctrl+Shift+R)
+curl -s "http://localhost:9000/_static/custom.css" | grep "YOUR_CHANGE"
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}{Documentation Categories}
+    \textbf{Organized by Purpose \& Audience:}
+
+    \vspace{0.3cm}
+
+    \begin{tabular}{lll}
+        \toprule
+        \textbf{Category} & \textbf{Files} & \textbf{Audience} \\
+        \midrule
+        Getting Started & 12 & Beginners \\
+        Tutorials & 18 & All levels \\
+        Theory \& Algorithms & 45 & Advanced \\
+        API Reference & 120 & Developers \\
+        Research Workflows & 28 & Researchers \\
+        Development Guides & 32 & Contributors \\
+        System Architecture & 15 & Advanced developers \\
+        AI Workspace & 171 & Claude Code \\
+        \bottomrule
+    \end{tabular}
+
+    \vspace{0.3cm}
+
+    \begin{exampleblock}{Auto-Generated Content}
+        API reference auto-generated from docstrings using Sphinx autodoc \\
+        Ensures documentation stays synchronized with code
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Navigation Philosophy}
+    \textbf{Three Entry Points for Different User Needs:}
+
+    \vspace{0.3cm}
+
+    \begin{enumerate}
+        \item \textbf{Persona-Based Navigation}
+        \begin{itemize}
+            \item \textit{"I'm a student learning control theory"}
+            \item \textit{"I'm a researcher validating algorithms"}
+            \item \textit{"I'm a developer contributing code"}
+            \item \textit{"I'm an instructor teaching SMC"}
+        \end{itemize}
+
+        \item \textbf{Intent-Based Navigation ("I Want To...")}
+        \begin{itemize}
+            \item \textit{"I want to run my first simulation"}
+            \item \textit{"I want to tune controller gains"}
+            \item \textit{"I want to understand the theory"}
+            \item \textit{"I want to add a new controller"}
+        \end{itemize}
+
+        \item \textbf{Category-Based Navigation}
+        \begin{itemize}
+            \item Browse by topic (Theory, Tutorials, API)
+            \item 43 category index files
+            \item Visual sitemaps for overview
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Documentation Quality Standards}
+    \textbf{Professional Writing Guidelines:}
+
+    \vspace{0.3cm}
+
+    \begin{alertblock}{Anti-Patterns (Avoid)}
+        \begin{itemize}
+            \item Conversational tone (\textit{"Let's explore..."})
+            \item Generic claims (\textit{"comprehensive"} without metrics)
+            \item Marketing language (\textit{"cutting-edge"}, \textit{"revolutionary"})
+            \item Vague descriptions (\textit{"robust"}, \textit{"powerful"})
+        \end{itemize}
+    \end{alertblock}
+
+    \vspace{0.3cm}
+
+    \begin{exampleblock}{Best Practices (Follow)}
+        \begin{itemize}
+            \item Direct, technical tone
+            \item Specific metrics (\textit{"985 documentation files"})
+            \item Factual descriptions (\textit{"7 controller variants"})
+            \item Concrete examples with expected outputs
+        \end{itemize}
+    \end{exampleblock}
+
+    \vspace{0.3cm}
+
+    \textbf{Validation Tool:}
+    \begin{lstlisting}[language=bash]
+python scripts/docs/detect_ai_patterns.py --file <file.md>
+# Target: <5 AI-ish patterns per file
+    \end{lstlisting}
+\end{frame}

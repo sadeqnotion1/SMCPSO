@@ -1,0 +1,66 @@
+{
+  "type": "bar",
+  "data": {
+    "labels": [
+      "Inertia Weight",
+      "Cognitive Parameter",
+      "Social Parameter",
+      "Population Size"
+    ],
+    "datasets": [
+      {
+        "label": "Sensitivity Level",
+        "data": [
+          2,
+          1,
+          1,
+          2
+        ],
+        "backgroundColor": [
+          "rgba(255, 206, 86, 0.6)",
+          "rgba(54, 162, 235, 0.6)",
+          "rgba(54, 162, 235, 0.6)",
+          "rgba(255, 206, 86, 0.6)"
+        ],
+        "borderColor": [
+          "rgb(255, 206, 86)",
+          "rgb(54, 162, 235)",
+          "rgb(54, 162, 235)",
+          "rgb(255, 206, 86)"
+        ],
+        "borderWidth": 2
+      }
+    ]
+  },
+  "options": {
+    "responsive": true,
+    "plugins": {
+      "title": {
+        "display": true,
+        "text": "PSO Parameter Sensitivity (1=Low, 2=Medium, 3=High)"
+      },
+      "legend": {
+        "display": false
+      }
+    },
+    "scales": {
+      "y": {
+        "beginAtZero": true,
+        "max": 3,
+        "ticks": {
+          "stepSize": 1
+        },
+        "title": {
+          "display": true,
+          "text": "Sensitivity Level (1=Low, 2=Medium, 3=High)"
+        }
+      },
+      "x": {
+        "title": {
+          "display": true,
+          "text": "PSO Parameters"
+        }
+      }
+    }
+  }
+}

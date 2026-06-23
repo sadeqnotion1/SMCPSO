@@ -1,0 +1,172 @@
+{
+  "test_parameters": {
+    "trials": 10,
+    "seed": 42,
+    "ic_range": 0.05,
+    "robust_gains": [
+      10.149,
+      12.839,
+      6.815,
+      2.75
+    ]
+  },
+  "rng_test": {
+    "rng_working": true,
+    "same_seed_identical": true,
+    "different_seeds_different": true,
+    "distribution_stats": {
+      "mean": -0.0005840442315700333,
+      "std": 0.028761574466111082
+    }
+  },
+  "ic_variation_test": {
+    "has_variation": true,
+    "theta1_std": 0.021039259743375924,
+    "theta2_std": 0.025564857890163297,
+    "sample_states": [
+      {
+        "trial": 0,
+        "theta1": -0.010572818431323018,
+        "theta2": 0.03819180344984035,
+        "full_state": [
+          0.0046398788362281024,
+          -0.010572818431323018,
+          0.03819180344984035,
+          -0.006880109593275947,
+          -0.00883832775663601,
+          0.007323522915498705
+        ]
+      },
+      {
+        "trial": 1,
+        "theta1": 0.019509698217560767,
+        "theta2": 0.02745611059561298,
+        "full_state": [
+          -0.009588310114083952,
+          0.019509698217560767,
+          0.02745611059561298,
+          -0.005753217786434477,
+          -0.006363500655857988,
+          -0.006331909802931324
+        ]
+      },
+      {
+        "trial": 2,
+        "theta1": -0.02375119290008539,
+        "theta2": 0.004712701057671371,
+        "full_state": [
+          -0.0013610996271576845,
+          -0.02375119290008539,
+          0.004712701057671371,
+          -0.007210122786959164,
+          -0.004157107029295637,
+          -0.0026727631341261658
+        ]
+      },
+      {
+        "trial": 3,
+        "theta1": -0.004108312810024172,
+        "theta2": 0.03036588751654222,
+        "full_state": [
+          -0.0060065243568328056,
+          -0.004108312810024172,
+          0.03036588751654222,
+          -0.009070991745600046,
+          0.002150897038028768,
+          -0.00658951752625417
+        ]
+      },
+      {
+        "trial": 4,
+        "theta1": -0.03732689373914283,
+        "theta2": 0.04098082910880074,
+        "full_state": [
+          0.009312640661491187,
+          -0.03732689373914283,
+          0.04098082910880074,
+          -0.008046557719872323,
+          0.0036846605302431387,
+          -0.0011969501252079746
+        ]
+      }
+    ]
+  },
+  "trajectory_uniqueness_test": {
+    "all_identical": true,
+    "uniqueness_scores": [
+      {
+        "pair": "Trial 0 vs Trial 1",
+        "max_diff": 0.0,
+        "mean_diff": 0.0,
+        "identical": true
+      },
+      {
+        "pair": "Trial 0 vs Trial 2",
+        "max_diff": 0.0,
+        "mean_diff": 0.0,
+        "identical": true
+      },
+      {
+        "pair": "Trial 0 vs Trial 3",
+        "max_diff": 0.0,
+        "mean_diff": 0.0,
+        "identical": true
+      },
+      {
+        "pair": "Trial 0 vs Trial 4",
+        "max_diff": 0.0,
+        "mean_diff": 0.0,
+        "identical": true
+      },
+      {
+        "pair": "Trial 1 vs Trial 2",
+        "max_diff": 0.0,
+        "mean_diff": 0.0,
+        "identical": true
+      },
+      {
+        "pair": "Trial 1 vs Trial 3",
+        "max_diff": 0.0,
+        "mean_diff": 0.0,
+        "identical": true
+      },
+      {
+        "pair": "Trial 1 vs Trial 4",
+        "max_diff": 0.0,
+        "mean_diff": 0.0,
+        "identical": true
+      },
+      {
+        "pair": "Trial 2 vs Trial 3",
+        "max_diff": 0.0,
+        "mean_diff": 0.0,
+        "identical": true
+      },
+      {
+        "pair": "Trial 2 vs Trial 4",
+        "max_diff": 0.0,
+        "mean_diff": 0.0,
+        "identical": true
+      },
+      {
+        "pair": "Trial 3 vs Trial 4",
+        "max_diff": 0.0,
+        "mean_diff": 0.0,
+        "identical": true
+      }
+    ]
+  },
+  "noise_injection_test": {
+    "clean_std": 0.0,
+    "noisy_std": 497096.1672502043,
+    "deterministic": false
+  },
+  "statistics": {
+    "chattering_mean": 1037009.1072567763,
+    "chattering_std": 1.1641532182693481e-10,
+    "mean_s_mean": 65.25285628474367,
+    "mean_s_std": 0.0
+  },
+  "diagnosis": "UNCLEAR_NEEDS_INVESTIGATION",
+  "all_tests_passed": true
+}

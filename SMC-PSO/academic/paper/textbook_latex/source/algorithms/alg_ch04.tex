@@ -1,0 +1,145 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CHAPTER 4: Super-Twisting SMC Algorithms
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{algorithm}[H]
+\caption{Super-Twisting SMC Control Law (Discrete-Time)}
+\label{alg:sta_smc_control}
+\KwIn{State $\vect{x} = [x, \theta_1, \theta_2, \dot{x}, \dot{\theta}_1, \dot{\theta}_2]^T$}
+\KwIn{Algorithmic gains $K_1, K_2 > 0$ (with $K_1 > K_2$ for stability)}
+\KwIn{Sliding surface gains $k_1, k_2, \lambda_1, \lambda_2 > 0$}
+\KwIn{Integrator state $z$ (from previous timestep), timestep $\Delta t$}
+\KwIn{Boundary layer $\epsilon > 0$, damping gain $d \geq 0$, max force $u_{\max}$}
+\KwOut{Control $u_{\text{sat}}$, updated state $z^+$, sliding surface $\sigma$}
+\BlankLine
+\tcp{Compute sliding surface}
+$\sigma \leftarrow k_1(\dot{\theta}_1 + \lambda_1 \theta_1) + k_2(\dot{\theta}_2 + \lambda_2 \theta_2)$\;
+\BlankLine
+\tcp{Saturated sign for boundary layer (Algorithm 4.2)}
+\eIf{$|\sigma| > \epsilon$}{
+    $\text{sgn}_{\sigma} \leftarrow \sign(\sigma)$ \tcp*{Full authority outside}
+}{
+    $\text{sgn}_{\sigma} \leftarrow \sigma / \epsilon$ \tcp*{Linear inside}
+}
+\BlankLine
+\tcp{Super-twisting continuous term (square-root term)}
+$u_{\text{cont}} \leftarrow -K_1 \sqrt{|\sigma|} \cdot \text{sgn}_{\sigma}$\;
+\BlankLine
+\tcp{Disturbance-like integral term (uses PREVIOUS z)}
+$u_{\text{dis}} \leftarrow z$\;
+\BlankLine
+\tcp{Optional equivalent control (model-based)}
+\eIf{dynamics available}{
+    $u_{\text{eq}} \leftarrow \text{ComputeEquivalentControl}(\vect{x})$ \tcp*{See Algorithm 3.2}
+}{
+    $u_{\text{eq}} \leftarrow 0$
+}
+\BlankLine
+\tcp{Total unsaturated control}
+$u_{\text{raw}} \leftarrow u_{\text{eq}} + u_{\text{cont}} + u_{\text{dis}} - d \sigma$\;
+\BlankLine
+\tcp{Saturation}
+$u_{\text{sat}} \leftarrow \text{clip}(u_{\text{raw}}, -u_{\max}, u_{\max})$\;
+\BlankLine
+\tcp{Anti-windup back-calculation (optional)}
+\eIf{anti-windup enabled ($K_{aw} > 0$)}{
+    $z^+ \leftarrow z - K_2 \text{sgn}_{\sigma} \Delta t + K_{aw}(u_{\text{sat}} - u_{\text{raw}}) \Delta t$\;
+}{
+    $z^+ \leftarrow z - K_2 \text{sgn}_{\sigma} \Delta t$
+}
+\BlankLine
+\tcp{Saturate integrator state}
+$z^+ \leftarrow \text{clip}(z^+, -u_{\max}, u_{\max})$\;
+\BlankLine
+\Return{$(u_{\text{sat}}, z^+, \sigma)$}
+\end{algorithm}
+
+\textbf{Complexity}: $O(1)$ time (constant operations, square root is hardware-accelerated), $O(1)$ space. \textbf{Numba-accelerated} for batch PSO optimization (Python).
+
+\vspace{1em}
+
+\begin{algorithm}[H]
+\caption{Super-Twisting Core (Numba-Optimized)}
+\label{alg:sta_smc_numba_core}
+\KwIn{Pre-computed $\sigma, \text{sgn}_{\sigma}$, gains $K_1, K_2, d$, state $z$}
+\KwIn{Timestep $\Delta t$, max force $u_{\max}$, anti-windup gain $K_{aw}$}
+\KwOut{$(u_{\text{sat}}, z^+, \sigma)$}
+\BlankLine
+\tcp{Compute control components}
+$u_{\text{cont}} \leftarrow -K_1 \sqrt{|\sigma|} \cdot \text{sgn}_{\sigma}$\;
+$u_{\text{dis}} \leftarrow z$\;
+$u_{\text{raw}} \leftarrow u_{\text{eq}} + u_{\text{cont}} + u_{\text{dis}} - d \sigma$\;
+\BlankLine
+\tcp{Saturation (use explicit branching for Numba compatibility)}
+\eIf{$u_{\text{raw}} > u_{\max}$}{
+    $u_{\text{sat}} \leftarrow u_{\max}$
+}{\eIf{$u_{\text{raw}} < -u_{\max}$}{
+    $u_{\text{sat}} \leftarrow -u_{\max}$
+}{
+    $u_{\text{sat}} \leftarrow u_{\text{raw}}$
+}}
+\BlankLine
+\tcp{Anti-windup back-calculation}
+$z^+ \leftarrow z - K_2 \text{sgn}_{\sigma} \Delta t + K_{aw}(u_{\text{sat}} - u_{\text{raw}}) \Delta t$\;
+\BlankLine
+\tcp{Integrator saturation}
+\eIf{$z^+ > u_{\max}$}{
+    $z^+ \leftarrow u_{\max}$
+}{\eIf{$z^+ < -u_{\max}$}{
+    $z^+ \leftarrow -u_{\max}$
+}{
+    $z^+ \leftarrow z^+$
+}}
+\BlankLine
+\Return{$(u_{\text{sat}}, z^+, \sigma)$}
+\end{algorithm}
+
+\textbf{Complexity}: $O(1)$ time, $O(1)$ space. \textbf{Purpose}: Batch simulation with Numba JIT compilation achieves $\sim$10x speedup for PSO.
+
+\vspace{1em}
+
+\begin{algorithm}[H]
+\caption{Super-Twisting Gain Validation}
+\label{alg:sta_smc_gain_validation}
+\KwIn{Gain matrix $G \in \Real^{B \times D}$ ($B$ particles, $D$ dimensions)}
+\KwOut{Validity mask $\vect{v} \in \{0,1\}^B$ (1 = valid, 0 = invalid)}
+\BlankLine
+\tcp{Algorithmic gains must satisfy $K_1, K_2 > 0$ and $K_1 > K_2$ (Theorem 4.1)}
+$\vect{valid} \leftarrow (G[:,0] > 0) \land (G[:,1] > 0) \land (G[:,0] > G[:,1])$\;
+\BlankLine
+\tcp{If surface gains provided (6-element vectors), validate them}
+\If{$D \geq 6$}{
+    $\vect{valid} \leftarrow \vect{valid} \land (G[:,2] > 0) \land (G[:,3] > 0) \land (G[:,4] > 0) \land (G[:,5] > 0)$
+}
+\BlankLine
+\Return{$\vect{valid}$}
+\end{algorithm}
+
+\textbf{Complexity}: $O(B \cdot D)$ time for vectorized validation (where $B$ = swarm size, typically 20-30), $O(B)$ space.
+
+\vspace{1em}
+
+\begin{algorithm}[H]
+\caption{Super-Twisting Gain Tuning Guidelines}
+\label{alg:sta_smc_gain_tuning}
+\KwIn{System uncertainty bound $\rho > 0$, Lipschitz constant $L > 0$}
+\KwOut{Recommended gains $K_1, K_2$ ensuring finite-time convergence}
+\BlankLine
+\tcp{Sufficient conditions from Moreno \& Osorio (2008)}
+\tcp{Choose $K_1$ to dominate worst-case disturbance derivative}
+$K_1 \leftarrow 2 \sqrt{\rho L}$ \tcp*{Conservative lower bound}
+\BlankLine
+\tcp{Choose $K_2$ to ensure sliding surface attractivity}
+$K_2 \leftarrow 1.5 \rho$ \tcp*{Must satisfy $K_1 > K_2$}
+\BlankLine
+\tcp{Verify stability condition (Theorem 4.2)}
+\If{$K_1 \leq K_2$}{
+    \textbf{Warning}: ``Insufficient gain ratio, increase $K_1$ or decrease $K_2$''
+}
+\BlankLine
+\Return{$(K_1, K_2)$}
+\end{algorithm}
+
+\textbf{Complexity}: $O(1)$ time, $O(1)$ space. \textbf{Note}: In practice, PSO optimization finds better gains than these conservative bounds.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -1,0 +1,44 @@
+\documentclass[12pt,a4paper]{article}
+
+% ============================================================
+% COMPATIBILITY SHIMS
+% MiKTeX admin base (2023-11) is missing commands used by
+% user-installed bidi 2026 and fontspec 2.9g.
+% These shims fill the gaps.
+% ============================================================
+\makeatletter
+% bidi 2026 uses \IfClassLoadedT (LaTeX2e 2022+ single-branch variant)
+\providecommand\IfClassLoadedT[2]{\@ifclassloaded{#1}{#2}{}}
+\providecommand\IfClassLoadedF[2]{\@ifclassloaded{#1}{}{#2}}
+% bidi 2026 uses \IfPackageLoadedT etc.
+\providecommand\IfPackageLoadedT[2]{\@ifpackageloaded{#1}{#2}{}}
+\providecommand\IfPackageLoadedF[2]{\@ifpackageloaded{#1}{}{#2}}
+% bidi 2026 uses \IfFileLoadedTF (LaTeX2e 2023+ file-load check)
+% Best-effort: use \@ifpackageloaded for packages, always-false for .def files
+\providecommand\IfFileLoadedTF[3]{\@ifpackageloaded{#1}{#2}{#3}}
+\providecommand\IfFileLoadedT[2]{\@ifpackageloaded{#1}{#2}{}}
+\providecommand\IfFileLoadedF[2]{\@ifpackageloaded{#1}{}{#2}}
+\makeatother
+
+% fontspec 2.9g uses \prop_gput_if_not_in:Nnn (added to l3kernel ~2024-10)
+% but installed l3kernel is 2024-01-04 -- define it as a shim
+\usepackage{expl3}
+\ExplSyntaxOn
+\cs_if_exist:NF \prop_gput_if_not_in:Nnn
+  {
+    \cs_new:Npn \prop_gput_if_not_in:Nnn #1#2#3
+      { \prop_if_in:NnF #1 {#2} { \prop_gput:Nnn #1 {#2} {#3} } }
+  }
+\ExplSyntaxOff
+% ============================================================
+
+\usepackage{amsmath}
+% xepersian MUST be loaded last
+\usepackage{xepersian}
+\settextfont{B Nazanin}
+\setlatintextfont{Times New Roman}
+\begin{document}
+\noindent سلام دنيا. اين يک آزمايش است.
+
+\noindent $\mathbf{M}(q)\ddot{q} + \mathbf{C}(q,\dot{q})\dot{q} = \mathbf{B}u$
+\end{document}

@@ -1,0 +1,106 @@
+{
+  "metadata": {
+    "description": "MT-8 Robust PSO Optimized Gains - Production Backup",
+    "source": "config.yaml controllers section (lines 74-142)",
+    "backup_date": "2025-12-15",
+    "original_optimization_date": "2025-11-08",
+    "purpose": "Backup of MT-8 robust gains before reproducibility test",
+    "restoration_note": "Use this file to restore production gains after reproducibility testing"
+  },
+  "mt8_robust_gains": {
+    "classical_smc": {
+      "controller_type": "classical_smc",
+      "gains": [23.07, 12.85, 5.51, 3.49, 2.23, 0.15],
+      "gain_labels": ["k1", "k2", "k3", "k4", "k5", "k6"],
+      "optimization": {
+        "method": "MT-8 Robust PSO",
+        "original_fitness": 9.145,
+        "optimized_fitness": 8.948,
+        "improvement": "2.15%"
+      },
+      "additional_params": {
+        "max_force": 150.0,
+        "boundary_layer": 0.02,
+        "dt": 0.01
+      }
+    },
+    "sta_smc": {
+      "controller_type": "sta_smc",
+      "gains": [2.02, 6.67, 5.62, 3.75, 4.36, 2.05],
+      "gain_labels": ["K1", "K2", "k1", "k2", "lambda1", "lambda2"],
+      "optimization": {
+        "method": "MT-8 Robust PSO",
+        "original_fitness": 9.070,
+        "optimized_fitness": 8.945,
+        "improvement": "1.38%"
+      },
+      "additional_params": {
+        "damping_gain": 0.0,
+        "max_force": 150.0,
+        "boundary_layer": 0.05,
+        "dt": 0.01
+      }
+    },
+    "adaptive_smc": {
+      "controller_type": "adaptive_smc",
+      "gains": [2.14, 3.36, 7.20, 0.34, 0.29],
+      "gain_labels": ["k1", "k2", "k3", "k4", "k5"],
+      "optimization": {
+        "method": "MT-8 Robust PSO",
+        "original_fitness": 9.068,
+        "optimized_fitness": 9.025,
+        "improvement": "0.47%"
+      },
+      "additional_params": {
+        "max_force": 150.0,
+        "leak_rate": 0.01,
+        "dead_zone": 0.05,
+        "adapt_rate_limit": 10.0,
+        "K_min": 0.1,
+        "K_max": 100.0,
+        "dt": 0.01,
+        "smooth_switch": true,
+        "boundary_layer": 0.1
+      }
+    },
+    "hybrid_adaptive_sta_smc": {
+      "controller_type": "hybrid_adaptive_sta_smc",
+      "gains": [10.15, 12.84, 6.82, 2.75],
+      "gain_labels": ["c1", "lambda1", "c2", "lambda2"],
+      "optimization": {
+        "method": "MT-8 Robust PSO",
+        "original_fitness": 11.489,
+        "optimized_fitness": 9.031,
+        "improvement": "21.39%"
+      },
+      "note": "Best performer in MT-8 robust PSO optimization"
+    }
+  },
+  "optimization_summary": {
+    "date": "2025-11-08",
+    "configuration": {
+      "algorithm": "PySwarms GlobalBestPSO",
+      "particles": 30,
+      "iterations": 50,
+      "evaluations_per_controller": 4500
+    },
+    "fitness_function": "50% nominal + 50% disturbed scenarios",
+    "disturbances": {
+      "step": "10.0 N at t=2.0s",
+      "impulse": "30.0 N pulse at t=2.0s (0.1s duration)"
+    },
+    "results": {
+      "average_improvement": "6.35%",
+      "runtime": "~70 minutes (all 4 controllers)",
+      "convergence_rate": "100%"
+    },
+    "documentation": "benchmarks/MT8_COMPLETE_REPORT.md",
+    "result_files": {
+      "classical": "optimization_results/mt8_robust_classical_smc.json",
+      "sta": "optimization_results/mt8_robust_sta_smc.json",
+      "adaptive": "optimization_results/mt8_robust_adaptive_smc.json",
+      "hybrid": "optimization_results/mt8_robust_hybrid_adaptive_sta_smc.json",
+      "summary": "optimization_results/mt8_robust_pso_summary.json"
+    }
+  }
+}

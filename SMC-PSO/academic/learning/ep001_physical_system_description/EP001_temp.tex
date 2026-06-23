@@ -1,0 +1,464 @@
+%===========================================================================================\\
+%============================ EP001_physics_system.tex ====================================\\
+%===========================================================================================\\
+% EP001: Physical System Description - Unified Learning Module
+% Consolidated from: LT-7 Paper + E003 Slides + Thesis
+%===========================================================================================\\
+
+\documentclass[11pt,a4paper]{article}
+
+% Packages (hyperref must be last)
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm,amsfonts}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{enumerate}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{titlesec}
+\usepackage{tikz}
+\usetikzlibrary{arrows,calc,positioning}
+
+% Page geometry
+\geometry{
+    left=2.5cm,
+    right=2.5cm,
+    top=2.5cm,
+    bottom=2.5cm,
+    headheight=15pt
+}
+
+% Color definitions
+\definecolor{moduleblue}{RGB}{0, 102, 153}
+\definecolor{highlightgreen}{RGB}{0, 128, 0}
+\definecolor{noteblue}{RGB}{0, 153, 204}
+\definecolor{lightblue}{RGB}{230, 240, 255}
+
+% Hyperref setup (with compatibility)
+\usepackage[hypertexnames=false, colorlinks=true, linkcolor=moduleblue, filecolor=magenta, urlcolor=moduleblue, pdftitle={EP001: Physical System Description}, pdfauthor={Double-Inverted Pendulum Learning Module}]{hyperref}
+
+% Header/footer setup
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{EP001: Physical System Description}
+\fancyhead[R]{Learning Module}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% Section formatting
+\titleformat{\section}{\normalfont\Large\bfseries\color{moduleblue}}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalfont\bfseries\color{moduleblue}}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}{\normalfont\normalsize\bfseries}{\thesubsubsection}{1em}{}
+
+% Custom environments
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{definition}{Definition}[section]
+\newtheorem{proposition}{Proposition}[section]
+\newtheorem{lemma}{Lemma}[section]
+
+\newenvironment{note}[1][Note]{%
+  \par\noindent\textcolor{noteblue}{\textbf{#1:}}\quad
+}{\par}
+
+\newenvironment{example}[1][Example]{%
+  \par\noindent\textcolor{highlightgreen}{\textbf{#1:}}\quad
+}{\par}
+
+\lstset{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny,
+    numbersep=5pt,
+    backgroundcolor=\color{lightblue},
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2,
+    captionpos=b
+}
+
+\begin{document}
+
+% Title page
+\title{\textbf{\Large EP001: Physical System Description}\\[1em]
+\large Double-Inverted Pendulum (DIP) System Model\\[1em]
+\large Unified Learning Module\\[2em]
+\small Consolidated from LT-7 Paper + E003 Slides + Thesis\\[1em]
+\textbf{\large Learning Module}\\[3em]
+Episode ID: EP001 \\
+Difficulty: Intermediate (Advanced Undergraduate) \\
+Duration: 2 hours \\
+Status: Complete
+}
+
+\author{Double-Inverted Pendulum Control Project\\
+Academic Learning Series}
+
+\date{April 2026\\
+\small Version 1.0 | Compiled: \today}
+
+\maketitle
+\thispagestyle{empty}
+\newpage
+
+% Table of Contents
+\tableofcontents
+\newpage
+
+%===========================================================================================\\
+% SECTION 1: INTRODUCTION
+%===========================================================================================\\
+
+\section{Introduction}
+
+\subsection{Overview}
+
+The \textbf{double-inverted pendulum (DIP)} represents one of the most challenging classical control problems in modern control theory. This nonlinear, underactuated mechanical system serves as a benchmark for testing advanced control strategies including:
+
+\begin{itemize}
+    \item Sliding Mode Control (SMC)
+    \item Model Predictive Control (MPC)
+    \item Reinforcement Learning approaches
+    \item Adaptive and robust control methods
+\end{itemize}
+
+\subsection{System Characteristics}
+
+The DIP system exhibits several challenging properties:
+
+\begin{enumerate}
+    \item \textbf{Nonlinearity}: Coupled, nonlinear differential equations of motion
+    \item \textbf{Underactuation}: 2 degrees of freedom, 1 control input
+    \item \textbf{Unstable equilibrium}: Open-loop unstable at upright position
+    \item \textbf{Non-minimum phase}: Zero dynamics exhibit unstable behavior
+    \item \textbf{Strong coupling}: Significant nonlinear coupling between links
+\end{enumerate}
+
+\begin{note}
+The DIP system is commonly used in academic research and education to demonstrate advanced control concepts and compare different control strategies.
+\end{note}
+
+%===========================================================================================\\
+% SECTION 2: PHYSICAL SYSTEM DESCRIPTION
+%===========================================================================================\\
+
+\section{Physical System Description}
+
+\subsection{System Configuration}
+
+The double-inverted pendulum consists of:
+
+\begin{description}
+    \item[Cart:] Moves along a 1D horizontal track with $\pm 1$ meter travel limit
+    \item[Pendulum 1:] Rigid link pivoting at cart position, free to rotate $360^\circ$ ($\pm\pi$ rad)
+    \item[Pendulum 2:] Rigid link pivoting at end of pendulum 1, free to rotate $360^\circ$
+    \item[Actuation:] Single horizontal force $u$ applied to cart (motor-driven)
+    \item[Sensing:] Encoders measure cart position $x$ and angles $\theta_1, \theta_2$; velocities estimated via differentiation
+\end{description}
+
+\subsection{Physical Constraints}
+
+\begin{itemize}
+    \item \textbf{Mass distribution:} $m_0 > m_1 > m_2$ (cart heaviest, tip lightest)
+    \item \textbf{Length ratio:} $L_1 > L_2$ (longer base link provides larger control authority)
+    \item \textbf{Inertia moments:} $I_1 > I_2$ (proportional to $m \cdot L^2$)
+\end{itemize}
+
+%===========================================================================================\\
+% SECTION 3: MATHEMATICAL MODEL
+%===========================================================================================\\
+
+\section{Mathematical Model}
+
+\subsection{State Vector Definition}
+
+The state vector for the DIP system is defined as:
+
+\begin{equation}
+    \mathbf{x} = [x, \theta_1, \theta_2, \dot{x}, \dot{\theta}_1, \dot{\theta}_2]^T \in \mathbb{R}^6
+\end{equation}
+
+where:
+\begin{itemize}
+    \item $x$ -- cart position (m)
+    \item $\theta_1$ -- angle of first pendulum from upright (rad)
+    \item $\theta_2$ -- angle of second pendulum from upright (rad)
+    \item $\dot{x}, \dot{\theta}_1, \dot{\theta}_2$ -- corresponding velocities
+\end{itemize}
+
+\subsection{Equations of Motion}
+
+The nonlinear dynamics are derived using the \textbf{Euler-Lagrange method}, yielding:
+
+\begin{equation}
+    \mathbf{M}(\mathbf{q})\ddot{\mathbf{q}} + \mathbf{C}(\mathbf{q}, \dot{\mathbf{q}})\dot{\mathbf{q}} + \mathbf{G}(\mathbf{q}) + \mathbf{F}_{\text{friction}}\dot{\mathbf{q}} = \mathbf{B}u + \mathbf{d}(t)
+\end{equation}
+
+where $\mathbf{q} = [x, \theta_1, \theta_2]^T$ (generalized coordinates).
+
+\subsection{Inertia Matrix}
+
+The inertia matrix $\mathbf{M}(\mathbf{q}) \in \mathbb{R}^{3 \times 3}$ is symmetric and positive definite:
+
+\begin{equation}
+    \mathbf{M} = \begin{bmatrix}
+        M_{11} & M_{12} & M_{13} \\
+        M_{21} & M_{22} & M_{23} \\
+        M_{31} & M_{32} & M_{33}
+    \end{bmatrix}
+\end{equation}
+
+with elements:
+\begin{align}
+    M_{11} &= m_0 + m_1 + m_2 \\
+    M_{12} &= M_{21} = (m_1 r_1 + m_2 L_1)\cos\theta_1 + m_2 r_2 \cos\theta_2 \\
+    M_{13} &= M_{31} = m_2 r_2 \cos\theta_2 \\
+    M_{22} &= m_1 r_1^2 + m_2 L_1^2 + I_1 \\
+    M_{23} &= M_{32} = m_2 L_1 r_2 \cos(\theta_1 - \theta_2) + I_2 \\
+    M_{33} &= m_2 r_2^2 + I_2
+\end{align}
+
+where $r_i$ = distance to center of mass, $I_i$ = moment of inertia.
+
+\subsection{Coriolis and Centrifugal Matrix}
+
+The matrix $\mathbf{C}(\mathbf{q}, \dot{\mathbf{q}}) \in \mathbb{R}^{3 \times 3}$ captures velocity-dependent forces, including:
+\begin{itemize}
+    \item \textbf{Centrifugal terms} $\propto \dot{\theta}_i^2$
+    \item \textbf{Coriolis terms} $\propto \dot{\theta}_i \dot{\theta}_j$
+\end{itemize}
+
+\subsection{Gravity and Friction Terms}
+
+\begin{equation}
+    \mathbf{G}(\mathbf{q}) = \begin{bmatrix}
+        0 \\
+        (m_1 r_1 + m_2 L_1)g \cos\theta_1 \\
+        m_2 r_2 g \cos\theta_2
+    \end{bmatrix}, \quad
+    \mathbf{F}_{\text{friction}} = \begin{bmatrix}
+        b_0 & 0 & 0 \\
+        0 & b_1 & 0 \\
+        0 & 0 & b_2
+    \end{bmatrix}
+\end{equation}
+
+%===========================================================================================\\
+% SECTION 4: NONLINEARITY ANALYSIS
+%===========================================================================================\\
+
+\section{Nonlinearity Analysis}
+
+\subsection{Configuration-Dependent Inertia}
+
+The inertia matrix exhibits \textbf{strong configuration dependence}:
+
+\begin{itemize}
+    \item $M_{12}$ varies by up to \textbf{40\%} as $\theta_1$ changes from 0 to $\pi/4$ (for $m_1=0.2$kg, $L_1=0.4$m)
+    \item $M_{23}$ varies by up to \textbf{35\%} as $\theta_1-\theta_2$ changes
+    \item This creates \textbf{state-dependent effective mass}
+\end{itemize}
+
+\begin{theorem}[Inertia Matrix Properties]
+The inertia matrix $\mathbf{M}(\mathbf{q})$ for the DIP system satisfies:
+\begin{enumerate}
+    \item $\mathbf{M}(\mathbf{q}) = \mathbf{M}^T(\mathbf{q})$ (symmetric)
+    \item $\mathbf{M}(\mathbf{q}) > 0$ (positive definite)
+    \item $\dot{\mathbf{M}}(\mathbf{q}) - 2\mathbf{C}(\mathbf{q}, \dot{\mathbf{q}})$ is skew-symmetric
+\end{enumerate}
+\end{theorem}
+
+\subsection{Trigonometric Nonlinearity}
+
+Gravity terms exhibit \textbf{trigonometric nonlinearity}:
+\begin{itemize}
+    \item $\cos(\theta)$ terms in $\mathbf{G}(\mathbf{q})$
+    \item Nonlinear coupling in Coriolis matrix
+    \item Small-angle linearization invalid for large disturbances
+\end{itemize}
+
+\begin{example}[Small-Angle Linearization]
+For small angles ($|\theta_i| < 0.1$ rad), the system can be approximated as:
+\begin{equation}
+    \mathbf{M}_0\ddot{\mathbf{q}} + \mathbf{C}_0\dot{\mathbf{q}} + \mathbf{G}_0\mathbf{q} = \mathbf{B}u
+\end{equation}
+where $\mathbf{M}_0 = \mathbf{M}(\mathbf{0})$, $\mathbf{G}_0 = \left.\frac{\partial \mathbf{G}}{\partial \mathbf{q}}\right|_{\mathbf{q}=0}$
+
+\textbf{Warning:} Linearization fails for:
+\begin{itemize}
+    \item Large initial angles ($> \pm 0.3$ rad)
+    \item Strong disturbances
+    \item Swing-up maneuvers
+\end{itemize}
+\end{example}
+
+%===========================================================================================\\
+% SECTION 5: SYSTEM PARAMETERS
+%===========================================================================================\\
+
+\section{System Parameters}
+
+\subsection{Nominal Parameter Values}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{c c l}
+\toprule
+\textbf{Parameter} & \textbf{Symbol} & \textbf{Value} \\
+\midrule
+Cart mass & $m_0$ & 1.0 kg \\
+Pendulum 1 mass & $m_1$ & 0.2 kg \\
+Pendulum 2 mass & $m_2$ & 0.1 kg \\
+Pendulum 1 length & $L_1$ & 0.4 m \\
+Pendulum 2 length & $L_2$ & 0.3 m \\
+Center of mass 1 & $r_1$ & 0.2 m \\
+Center of mass 2 & $r_2$ & 0.15 m \\
+Inertia 1 & $I_1$ & 0.0133 kg·m$^2$ \\
+Inertia 2 & $I_2$ & 0.00375 kg·m$^2$ \\
+Cart friction & $b_0$ & 0.1 Ns/m \\
+Joint friction 1 & $b_1$ & 0.05 Nms/rad \\
+Joint friction 2 & $b_2$ & 0.03 Nms/rad \\
+Gravity & $g$ & 9.81 m/s$^2$ \\
+\bottomrule
+\end{tabular}
+\caption{Nominal DIP System Parameters}
+\label{tab:nominal_parameters}
+\end{table}
+
+\subsection{Parameter Uncertainty}
+
+Real systems exhibit parameter variations:
+\begin{itemize}
+    \item \textbf{Tolerance:} $\pm 10\%$ on masses and lengths
+    \item \textbf{Friction:} $\pm 50\%$ uncertainty
+    \item \textbf{Inertia:} $\pm 20\%$ uncertainty
+\end{itemize}
+
+\begin{note}
+Robust control designs must account for these uncertainties to maintain stability and performance.
+\end{note}
+
+%===========================================================================================\\
+% SECTION 6: LINEARIZED MODEL
+%===========================================================================================\\
+
+\section{Linearized Model}
+
+\subsection{Equilibrium Points}
+
+The DIP has \textbf{three equilibrium points}:
+
+\begin{enumerate}
+    \item \textbf{Upright-Upright:} $(\theta_1, \theta_2) = (0, 0)$ -- unstable, control objective
+    \item \textbf{Upright-Down:} $(\theta_1, \theta_2) = (0, \pi)$ -- saddle point
+    \item \textbf{Down-Down:} $(\theta_1, \theta_2) = (\pi, \pi)$ -- stable equilibrium
+\end{enumerate}
+
+\subsection{Linearized State-Space Representation}
+
+Linearizing around the upright position $(\theta_1, \theta_2) = (0, 0)$:
+
+\begin{equation}
+    \dot{\mathbf{x}} = \mathbf{A}\mathbf{x} + \mathbf{B}u
+\end{equation}
+
+where:
+\begin{align}
+    \mathbf{A} &= \begin{bmatrix}
+        \mathbf{0}_{3\times3} & \mathbf{I}_3 \\
+        \mathbf{M}_0^{-1}\mathbf{G}_0 & \mathbf{M}_0^{-1}(\mathbf{C}_0 - \mathbf{F}_{\text{friction}})
+    \end{bmatrix}, \\
+    \mathbf{B} &= \begin{bmatrix} \mathbf{0}_{3\times1} \\ \mathbf{M}_0^{-1}\mathbf{B}_{\text{input}} \end{bmatrix}
+\end{align}
+
+\begin{proposition}[Controllability]
+The linearized system $(\mathbf{A}, \mathbf{B})$ is \textbf{controllable}, meaning any state can be reached from any other state using appropriate control input.
+\end{proposition}
+
+%===========================================================================================\\
+% SECTION 7: NUMERICAL PROPERTIES
+%===========================================================================================\\
+
+\section{Numerical Properties}
+
+\subsection{State Scaling}
+
+For numerical stability, states should be scaled:
+\begin{itemize}
+    \item Angles: radians (range $[-\pi, \pi]$)
+    \item Positions: meters (range $[-1, 1]$)
+    \item Velocities: rad/s or m/s (range $[-10, 10]$ typically)
+\end{itemize}
+
+\subsection{Time Scaling}
+
+\begin{itemize}
+    \item \textbf{Simulation step:} $\Delta t = 0.01$ s (100 Hz)
+    \item \textbf{Control frequency:} 100--500 Hz
+    \item \textbf{Real-time requirement:} Control computation $< 1$ ms
+\end{itemize}
+
+\begin{lemma}[Stiffness]
+The DIP system exhibits \textbf{stiff behavior} near the upright position, requiring:
+\begin{itemize}
+    \item Small integration steps for accurate simulation
+    \item Careful tuning of control gains
+    \item Consideration of actuator bandwidth limits
+\end{itemize}
+\end{lemma}
+
+%===========================================================================================\\
+% SECTION 8: SUMMARY AND KEY TAKEAWAYS
+%===========================================================================================\\
+
+\section{Summary and Key Takeaways}
+
+\subsection{System Overview}
+
+The double-inverted pendulum is a:
+\begin{itemize}
+    \item \textbf{6-dimensional} state-space system
+    \item \textbf{Nonlinear} dynamics with trigonometric terms
+    \item \textbf{Underactuated} (1 input, 2 outputs)
+    \item \textbf{Unstable} open-loop equilibrium
+\end{itemize}
+
+\subsection{Key Challenges}
+
+\begin{enumerate}
+    \item \textbf{Nonlinear coupling} between pendulum links
+    \item \textbf{Parameter uncertainty} in mass and friction
+    \item \textbf{Actuator constraints} (force limits, bandwidth)
+    \item \textbf{Disturbance rejection} requirements
+\end{enumerate}
+
+\subsection{Control Implications}
+
+\begin{itemize}
+    \item Linear control methods require careful gain scheduling
+    \item Nonlinear control (SMC, MPC) can handle larger operating ranges
+    \item Robust designs must account for parameter variations
+    \item Adaptive methods can compensate for uncertainties
+\end{itemize}
+
+\begin{theorem}[Control Design Trade-offs]
+Control design for the DIP involves trade-offs between:
+\begin{enumerate}
+    \item Performance vs. robustness
+    \item Complexity vs. implementability
+    \item Linear vs. nonlinear approaches
+    \item Model-based vs. data-driven methods
+\end{enumerate}
+\end{theorem}
+
+%===========================================================================================\\
+% END OF EP001
+%===========================================================================================\\
+
+\end{document}

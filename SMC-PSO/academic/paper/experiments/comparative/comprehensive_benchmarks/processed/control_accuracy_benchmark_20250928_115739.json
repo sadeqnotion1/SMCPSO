@@ -1,0 +1,136 @@
+{
+  "timestamp": "2025-09-28T11:57:39.872973",
+  "simulation_parameters": {
+    "dt": 0.001,
+    "sim_time": 10.0,
+    "time_steps": 10000
+  },
+  "test_scenarios": {
+    "step_response": {
+      "description": "Step reference tracking",
+      "target_angles": [
+        0.1,
+        -0.1,
+        0.05,
+        -0.05
+      ],
+      "target_position": 0.0
+    },
+    "disturbance_rejection": {
+      "description": "External disturbance rejection",
+      "disturbance_magnitude": 10.0,
+      "disturbance_start_time": 2.0,
+      "disturbance_duration": 1.0
+    },
+    "multi_target": {
+      "description": "Multiple setpoint tracking",
+      "targets": [
+        {
+          "time": 0.0,
+          "theta1": 0.05,
+          "theta2": 0.03
+        },
+        {
+          "time": 3.0,
+          "theta1": -0.05,
+          "theta2": -0.03
+        },
+        {
+          "time": 6.0,
+          "theta1": 0.08,
+          "theta2": -0.05
+        },
+        {
+          "time": 9.0,
+          "theta1": 0.0,
+          "theta2": 0.0
+        }
+      ]
+    }
+  },
+  "controller_accuracy": {
+    "classical_smc": {
+      "step_response": {
+        "error": "Controller/dynamics creation failed: SimplifiedDIPDynamics.__init__() missing 1 required positional argument: 'config'"
+      },
+      "disturbance_rejection": {
+        "error": "Controller/dynamics creation failed: SimplifiedDIPDynamics.__init__() missing 1 required positional argument: 'config'"
+      },
+      "multi_target_tracking": {
+        "error": "Controller/dynamics creation failed: SimplifiedDIPDynamics.__init__() missing 1 required positional argument: 'config'"
+      },
+      "overall_accuracy_score": 0.0
+    },
+    "sta_smc": {
+      "step_response": {
+        "error": "Controller/dynamics creation failed: SimplifiedDIPDynamics.__init__() missing 1 required positional argument: 'config'"
+      },
+      "disturbance_rejection": {
+        "error": "Controller/dynamics creation failed: SimplifiedDIPDynamics.__init__() missing 1 required positional argument: 'config'"
+      },
+      "multi_target_tracking": {
+        "error": "Controller/dynamics creation failed: SimplifiedDIPDynamics.__init__() missing 1 required positional argument: 'config'"
+      },
+      "overall_accuracy_score": 0.0
+    },
+    "adaptive_smc": {
+      "step_response": {
+        "error": "Controller/dynamics creation failed: SimplifiedDIPDynamics.__init__() missing 1 required positional argument: 'config'"
+      },
+      "disturbance_rejection": {
+        "error": "Controller/dynamics creation failed: SimplifiedDIPDynamics.__init__() missing 1 required positional argument: 'config'"
+      },
+      "multi_target_tracking": {
+        "error": "Controller/dynamics creation failed: SimplifiedDIPDynamics.__init__() missing 1 required positional argument: 'config'"
+      },
+      "overall_accuracy_score": 0.0
+    },
+    "hybrid_adaptive_sta_smc": {
+      "step_response": {
+        "error": "Controller/dynamics creation failed: SimplifiedDIPDynamics.__init__() missing 1 required positional argument: 'config'"
+      },
+      "disturbance_rejection": {
+        "error": "Controller/dynamics creation failed: SimplifiedDIPDynamics.__init__() missing 1 required positional argument: 'config'"
+      },
+      "multi_target_tracking": {
+        "error": "Controller/dynamics creation failed: SimplifiedDIPDynamics.__init__() missing 1 required positional argument: 'config'"
+      },
+      "overall_accuracy_score": 0.0
+    }
+  },
+  "comparative_analysis": {
+    "ranking": [
+      [
+        "classical_smc",
+        0.0
+      ],
+      [
+        "sta_smc",
+        0.0
+      ],
+      [
+        "adaptive_smc",
+        0.0
+      ],
+      [
+        "hybrid_adaptive_sta_smc",
+        0.0
+      ]
+    ],
+    "best_performers": {
+      "step_response": null,
+      "disturbance_rejection": null,
+      "multi_target_tracking": null
+    },
+    "performance_gaps": {}
+  },
+  "optimization_insights": [
+    "Best performing controller: classical_smc (0.0/100)",
+    "Lowest performing controller: classical_smc (0.0/100)",
+    "Controllers show similar performance - fine-tuning may yield marginal gains",
+    "classical_smc: Below target accuracy - requires optimization",
+    "sta_smc: Below target accuracy - requires optimization",
+    "adaptive_smc: Below target accuracy - requires optimization",
+    "hybrid_adaptive_sta_smc: Below target accuracy - requires optimization"
+  ]
+}

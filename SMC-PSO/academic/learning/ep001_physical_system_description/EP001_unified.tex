@@ -1,0 +1,452 @@
+% EP001: Physical System Description -- Unified Learning Module
+% Source: LT-7 Paper + E003 Slides + Thesis
+%==============================================================================
+
+\documentclass[11pt,a4paper]{article}
+
+% --- Core packages -----------------------------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm,amsfonts}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{fancyhdr}
+% hyperref loaded LAST to avoid numbering conflicts (no titlesec used)
+% \usepackage[hypertexnames=false,
+%             colorlinks=true,
+%             linkcolor=blue,
+%             filecolor=magenta,
+%             urlcolor=blue,
+%             pdftitle={EP001 Physical System Description},
+%             pdfauthor={Double-Inverted Pendulum Learning Module}]{hyperref}
+
+% --- Page geometry -----------------------------------------------------------
+\geometry{left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm,headheight=14pt}
+
+% --- Headers / footers -------------------------------------------------------
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{EP001: Physical System Description}
+\fancyhead[R]{Learning Module}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% --- Theorem environments (no optional title arguments) ----------------------
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{remark}{Remark}[section]
+
+% --- Document metadata -------------------------------------------------------
+\title{\textbf{EP001: Physical System Description}\\[0.5em]
+       \large\textit{Double-Inverted Pendulum Control Theory}\\[0.5em]
+       \normalsize Episode ID: EP001 \quad Difficulty: Intermediate \quad Duration: 2 h}
+\author{Double-Inverted Pendulum Learning Module}
+\date{\today}
+
+%==============================================================================
+\begin{document}
+%==============================================================================
+
+\maketitle
+\tableofcontents
+\newpage
+
+%------------------------------------------------------------------------------
+\section{Introduction}
+%------------------------------------------------------------------------------
+
+\subsection{Overview}
+
+The \textbf{double-inverted pendulum (DIP)} is one of the canonical benchmarks
+in nonlinear control theory.  A single horizontal force drives a cart along a
+track; two rigid links are hinged in series at the cart and must be balanced
+upright using that single actuator.
+
+\begin{itemize}
+    \item The upright equilibrium is open-loop unstable.
+    \item The system is \emph{underactuated}: two rotational degrees of freedom,
+          one control input.
+    \item Strong nonlinear coupling exists between the two pendulum links.
+    \item The system is a standard testbed for sliding mode control (SMC),
+          model predictive control (MPC), and reinforcement learning.
+\end{itemize}
+
+\subsection{System Characteristics}
+
+\begin{definition}
+A mechanical system is \emph{underactuated} if the number of independent
+control inputs is strictly less than the number of degrees of freedom.
+\end{definition}
+
+The DIP satisfies this definition with three degrees of freedom (cart position,
+link-1 angle, link-2 angle) and one control input (cart force).  Key dynamical
+properties are listed below.
+
+\begin{enumerate}
+    \item \textbf{Nonlinear coupling}: the inertia matrix depends on joint
+          angles, creating state-dependent effective mass.
+    \item \textbf{Unstable equilibrium}: small perturbations cause the
+          pendulums to fall without active feedback.
+    \item \textbf{Non-minimum phase tendencies}: zero dynamics near upright may
+          exhibit unstable behavior depending on output choice.
+    \item \textbf{Disturbance sensitivity}: external impulses propagate rapidly
+          through the kinematic chain.
+\end{enumerate}
+
+%------------------------------------------------------------------------------
+\section{Physical System Description}
+%------------------------------------------------------------------------------
+
+\subsection{System Configuration}
+
+The DIP hardware consists of the following components.
+
+\begin{itemize}
+    \item \textbf{Cart} (mass $m_0$): moves along a horizontal track;
+          travel limited to $\pm 1\,\mathrm{m}$ in simulation.
+    \item \textbf{Link 1} (mass $m_1$, length $l_1$): rigid rod, hinged at the
+          cart top; angle $\theta_1$ measured from the upright vertical.
+    \item \textbf{Link 2} (mass $m_2$, length $l_2$): rigid rod, hinged at the
+          tip of Link 1; angle $\theta_2$ measured from the upright vertical.
+    \item \textbf{Actuator}: motor applies horizontal force $u$ to the cart.
+    \item \textbf{Sensing}: optical encoders measure $x$, $\theta_1$, $\theta_2$;
+          velocities are estimated by finite differences.
+\end{itemize}
+
+\begin{remark}
+Angles are measured from the upright position (counterclockwise positive),
+consistent with the Euler-Lagrange derivation in
+Section~\ref{sec:model}.
+\end{remark}
+
+\begin{center}
+\begin{verbatim}
+      [m2, l2]   Link 2
+          |  theta_2
+     [m1, l1]   Link 1
+          |  theta_1
+  ========================  Track
+       [ m0 ]   Cart
+        <--- u (control force)
+\end{verbatim}
+\end{center}
+
+\subsection{Physical Constraints}
+
+Operating bounds that any controller must respect:
+
+\begin{enumerate}
+    \item Cart position: $x \in [-1,\, 1]\,\mathrm{m}$
+    \item Control force magnitude: $|u| \leq u_{\max} = 50\,\mathrm{N}$
+    \item Link angles: unconstrained in simulation; hardware stops near
+          $\theta_i = \pm\pi$
+\end{enumerate}
+
+The mass ordering $m_0 > m_1 > m_2$ ensures the heavier cart provides the
+necessary reaction force for upright balance.  The length ordering $l_1 > l_2$
+gives the base link greater control authority.
+
+%------------------------------------------------------------------------------
+\section{Mathematical Model}
+\label{sec:model}
+%------------------------------------------------------------------------------
+
+\subsection{State Vector Definition}
+
+\begin{definition}
+The system state vector is
+\begin{equation}
+    \mathbf{x} =
+    \bigl[x,\;\theta_1,\;\theta_2,\;\dot{x},\;\dot{\theta}_1,\;
+    \dot{\theta}_2\bigr]^{T} \in \mathbb{R}^{6},
+\end{equation}
+where $x$ is the cart position (m), $\theta_i$ are link angles (rad) from the
+upright, and dots denote time derivatives.
+\end{definition}
+
+The generalized coordinate vector is $\mathbf{q} = [x,\,\theta_1,\,\theta_2]^T$.
+
+\subsection{Equations of Motion}
+
+The equations of motion are derived via the \textbf{Euler-Lagrange method}.
+Let $L = T - V$ denote the Lagrangian.  Applying
+\begin{equation}
+    \frac{d}{dt}\!\left(\frac{\partial L}{\partial \dot{q}_i}\right)
+    - \frac{\partial L}{\partial q_i} = Q_i, \quad i = 1, 2, 3,
+\end{equation}
+where the generalized forces are $Q_1 = u$, $Q_2 = Q_3 = 0$, yields the
+standard manipulator form
+\begin{equation}
+\label{eq:eom}
+    \mathbf{M}(\mathbf{q})\,\ddot{\mathbf{q}}
+    + \mathbf{C}(\mathbf{q},\dot{\mathbf{q}})\,\dot{\mathbf{q}}
+    + \mathbf{G}(\mathbf{q})
+    + \mathbf{F}\,\dot{\mathbf{q}}
+    = \mathbf{B}\,u + \mathbf{d}(t),
+\end{equation}
+where $\mathbf{F} = \mathrm{diag}(b_0,b_1,b_2)$ is the viscous friction
+matrix, $\mathbf{B} = [1,0,0]^T$, and $\mathbf{d}(t)$ represents bounded
+external disturbances.
+
+\subsection{Inertia Matrix}
+
+The inertia matrix $\mathbf{M}(\mathbf{q}) \in \mathbb{R}^{3\times3}$ is
+symmetric and configuration-dependent:
+\begin{equation}
+    \mathbf{M}(\mathbf{q}) =
+    \begin{bmatrix}
+        M_{11} & M_{12} & M_{13} \\
+        M_{12} & M_{22} & M_{23} \\
+        M_{13} & M_{23} & M_{33}
+    \end{bmatrix},
+\end{equation}
+with elements derived from the kinetic energy:
+\begin{align}
+    M_{11} &= m_0 + m_1 + m_2, \\
+    M_{12} &= (m_1 r_1 + m_2 l_1)\cos\theta_1 + m_2 r_2\cos\theta_2, \\
+    M_{13} &= m_2 r_2\cos\theta_2, \\
+    M_{22} &= m_1 r_1^2 + m_2 l_1^2 + I_1, \\
+    M_{23} &= m_2 l_1 r_2\cos(\theta_1 - \theta_2) + I_2, \\
+    M_{33} &= m_2 r_2^2 + I_2,
+\end{align}
+where $r_i$ is the distance from joint $i$ to the center of mass of link $i$.
+
+\begin{theorem}
+The inertia matrix $\mathbf{M}(\mathbf{q})$ is positive definite for all
+physically admissible configurations, i.e., $\mathbf{M}(\mathbf{q}) \succ 0$.
+\end{theorem}
+
+\subsection{Coriolis and Centrifugal Matrix}
+
+$\mathbf{C}(\mathbf{q},\dot{\mathbf{q}})$ is computed from Christoffel symbols:
+\begin{equation}
+    C_{ij} = \sum_{k=1}^{3}\Gamma_{ijk}\,\dot{q}_k, \qquad
+    \Gamma_{ijk} = \frac{1}{2}\!\left(
+        \frac{\partial M_{ij}}{\partial q_k}
+      + \frac{\partial M_{ik}}{\partial q_j}
+      - \frac{\partial M_{jk}}{\partial q_i}\right).
+\end{equation}
+This construction ensures $\dot{\mathbf{M}} - 2\mathbf{C}$ is skew-symmetric,
+a property used in passivity-based stability proofs.
+
+\subsection{Gravity and Friction Terms}
+
+The gravity vector follows from potential energy
+$V = m_1 g r_1\cos\theta_1 + m_2 g(l_1\cos\theta_1 + r_2\cos\theta_2)$:
+\begin{equation}
+    G_1 = 0, \qquad
+    G_2 = -(m_1 r_1 + m_2 l_1)g\sin\theta_1, \qquad
+    G_3 = -m_2 r_2 g\sin\theta_2.
+\end{equation}
+
+%------------------------------------------------------------------------------
+\section{Nonlinearity Analysis}
+%------------------------------------------------------------------------------
+
+\subsection{Configuration-Dependent Inertia}
+
+The off-diagonal elements $M_{12}$, $M_{13}$, $M_{23}$ depend on trigonometric
+functions of the joint angles:
+
+\begin{enumerate}
+    \item $M_{12}$ varies by up to 40\% as $\theta_1$ sweeps from $0$ to
+          $\pi/4$\,rad (nominal parameters).
+    \item $M_{23}$ varies by up to 35\% as $(\theta_1 - \theta_2)$ changes,
+          representing coupling between the two links.
+    \item Near collinear configurations the condition number of
+          $\mathbf{M}(\mathbf{q})$ increases, potentially causing ill-conditioning
+          in the numerical inversion required to compute $\ddot{\mathbf{q}}$.
+\end{enumerate}
+
+Gains tuned at the upright equilibrium $\mathbf{q} = \mathbf{0}$ may therefore
+be suboptimal at large angles, motivating gain scheduling or robust designs.
+
+\subsection{Trigonometric Nonlinearity}
+
+\begin{theorem}
+The gravity vector $\mathbf{G}(\mathbf{q})$ is globally bounded:
+$\|\mathbf{G}(\mathbf{q})\| \leq G_{\max}$ for all $\mathbf{q}$, where
+$G_{\max}$ depends only on system masses, link lengths, and $g$.
+\end{theorem}
+
+Dominant nonlinear terms are $\sin\theta_i$ in $\mathbf{G}$ and
+$\cos(\theta_1 - \theta_2)$ in $M_{23}$.  For small angles
+($|\theta_i| \leq 0.3\,\mathrm{rad}$) the approximations
+$\sin\theta_i \approx \theta_i$ and $\cos\theta_i \approx 1$ reduce the
+system to a linear time-invariant plant suitable for LQR or pole-placement
+design.
+
+%------------------------------------------------------------------------------
+\section{System Parameters}
+%------------------------------------------------------------------------------
+
+\subsection{Nominal Parameter Values}
+
+Table~\ref{tab:params} lists the nominal parameters used throughout this
+learning module and in the accompanying simulation code.
+
+\begin{table}[htbp]
+\centering
+\caption{Nominal DIP System Parameters}
+\label{tab:params}
+\begin{tabular}{@{}llcc@{}}
+\toprule
+Parameter                  & Symbol      & Value  & Unit              \\
+\midrule
+Cart mass                  & $m_0$       & 1.50   & kg                \\
+Link 1 mass                & $m_1$       & 0.20   & kg                \\
+Link 2 mass                & $m_2$       & 0.15   & kg                \\
+Link 1 length              & $l_1$       & 0.40   & m                 \\
+Link 2 length              & $l_2$       & 0.30   & m                 \\
+Link 1 COM distance        & $r_1$       & 0.20   & m                 \\
+Link 2 COM distance        & $r_2$       & 0.15   & m                 \\
+Link 1 moment of inertia   & $I_1$       & 0.0081 & kg\,m$^2$         \\
+Link 2 moment of inertia   & $I_2$       & 0.0034 & kg\,m$^2$         \\
+Gravitational acceleration & $g$         & 9.81   & m\,s$^{-2}$       \\
+Maximum control force      & $u_{\max}$  & 50     & N                 \\
+Sampling period            & $\Delta t$  & 0.01   & s                 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The inertia values satisfy the parallel-axis theorem constraint
+$I_i \geq m_i r_i^2$ (equality for uniform rods).
+
+\subsection{Parameter Uncertainty}
+
+Real hardware deviates from nominal values due to:
+
+\begin{itemize}
+    \item Manufacturing tolerances in link lengths ($\pm 2\,\mathrm{mm}$ typical).
+    \item Mass variation with attached payload or wear.
+    \item Friction coefficients that change with temperature and lubrication state.
+    \item Encoder resolution limiting velocity-estimation accuracy.
+\end{itemize}
+
+Robust SMC designs must guarantee stability across the uncertainty polytope
+$\mathcal{P} = \{\,p \mid p_{\min} \leq p \leq p_{\max}\,\}$ defined by
+worst-case parameter deviations.
+
+%------------------------------------------------------------------------------
+\section{Linearized Model}
+%------------------------------------------------------------------------------
+
+\subsection{Equilibrium Points}
+
+\begin{definition}
+A state $\mathbf{x}_e$ is an \emph{equilibrium} of~(\ref{eq:eom}) if
+$\dot{\mathbf{q}}_e = \mathbf{0}$, $\ddot{\mathbf{q}}_e = \mathbf{0}$,
+and $u_e = 0$.
+\end{definition}
+
+Two equilibria are of practical interest:
+
+\begin{enumerate}
+    \item \textbf{Upright (unstable)}: $\mathbf{x}_e = \mathbf{0}$ --
+          the control objective of this module.
+    \item \textbf{Downward (stable)}: $\theta_1 = \theta_2 = \pi$ --
+          natural rest position; swing-up controllers target this as a
+          starting condition before handing off to the balancing controller.
+\end{enumerate}
+
+\subsection{Linearized State-Space Representation}
+
+Linearizing~(\ref{eq:eom}) about $\mathbf{x}_e = \mathbf{0}$ via a
+first-order Taylor expansion gives
+\begin{equation}
+    \dot{\mathbf{x}} = \mathbf{A}\,\mathbf{x} + \mathbf{b}\,u,
+\end{equation}
+where $\mathbf{A} \in \mathbb{R}^{6\times6}$ and $\mathbf{b} \in \mathbb{R}^{6}$
+are constant matrices evaluated at $\mathbf{q} = \mathbf{0}$.
+
+Numerical analysis with the nominal parameters of Table~\ref{tab:params} gives:
+
+\begin{itemize}
+    \item Two open-loop eigenvalues with positive real parts (unstable pendulum
+          modes).
+    \item Four eigenvalues with negative real parts (stable cart and damped
+          oscillatory modes).
+    \item Controllability matrix rank equal to 6, confirming full controllability.
+\end{itemize}
+
+%------------------------------------------------------------------------------
+\section{Numerical Properties}
+%------------------------------------------------------------------------------
+
+\subsection{State Scaling}
+
+Raw state units span several orders of magnitude: position in metres, angles in
+radians, velocities up to $\sim\!10\,\mathrm{rad/s}$ during aggressive
+manoeuvres.  Normalized coordinates
+\begin{equation}
+    \tilde{x} = \frac{x}{x_{\max}}, \quad
+    \tilde{\theta}_i = \frac{\theta_i}{\theta_{\max}}, \quad
+    \tilde{\dot{x}} = \frac{\dot{x}}{\dot{x}_{\max}},
+\end{equation}
+improve the conditioning of PSO cost functions and observer design.
+
+\subsection{Time Scaling}
+
+\begin{enumerate}
+    \item The highest linearized natural frequency sets the Nyquist requirement;
+          $\Delta t = 0.01\,\mathrm{s}$ (100\,Hz) provides adequate margin for
+          nominal parameters.
+    \item Fixed-step Runge-Kutta 4 integration with this timestep yields
+          energy-conservation error below 0.1\% over 10\,s with zero friction
+          and zero control input.
+    \item Variable-step integrators should use absolute and relative tolerances
+          of $10^{-6}$ to resolve fast pendulum modes correctly.
+\end{enumerate}
+
+%------------------------------------------------------------------------------
+\section{Summary and Key Takeaways}
+%------------------------------------------------------------------------------
+
+\subsection{System Overview}
+
+The DIP is a 6-state, 1-input nonlinear plant.  Its equations of motion have
+the standard manipulator form
+$\mathbf{M}\ddot{\mathbf{q}} + \mathbf{C}\dot{\mathbf{q}}
++ \mathbf{G} = \mathbf{B}u$, which is directly exploited by energy-based and
+sliding-mode controllers.  The system is controllable, unstable in open loop,
+and well-suited as a benchmark for advanced control algorithms.
+
+\subsection{Key Challenges}
+
+\begin{enumerate}
+    \item \textbf{Nonlinearity}: inertia and gravity terms are angle-dependent;
+          linear designs lose validity beyond $\pm 0.3\,\mathrm{rad}$.
+    \item \textbf{Coupling}: cart motion excites both links; second-link motion
+          back-drives the first through $M_{23}$.
+    \item \textbf{Underactuation}: one force must simultaneously regulate three
+          coordinates, requiring exploitation of internal dynamics.
+    \item \textbf{Parameter uncertainty}: friction and mass vary in hardware;
+          robust designs must cover the full uncertainty polytope.
+\end{enumerate}
+
+\subsection{Control Implications}
+
+\begin{theorem}
+For system~(\ref{eq:eom}) with $\mathbf{M}(\mathbf{q}) \succ 0$ and bounded
+disturbance $\|\mathbf{d}(t)\| \leq D$, a sliding-mode controller
+$u = -\eta\,\mathrm{sgn}(\sigma)$ with gain $\eta > D / \lambda_{\min}(\mathbf{M})$
+drives the sliding variable $\sigma$ to zero in finite time.
+\end{theorem}
+
+\begin{itemize}
+    \item Linear controllers (LQR, PID) are effective near the upright
+          equilibrium but require gain scheduling for large-angle operation.
+    \item Sliding-mode and adaptive controllers provide robustness to parameter
+          uncertainty and bounded disturbances.
+    \item PSO-tuned gains consistently improve ISE, IAE, and chattering index
+          over manually tuned baselines.
+    \item Hardware implementations require constraint-aware tuning to respect
+          force limits and cart travel bounds.
+\end{itemize}
+
+%==============================================================================
+\end{document}
+%==============================================================================

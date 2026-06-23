@@ -1,0 +1,101 @@
+\section{Conclusion and Future Work}
+\label{sec:conclusion}
+
+\subsection{Summary}
+This report presented a comprehensive study of sliding mode control for double-inverted pendulum stabilization with PSO optimization. Key findings:
+
+\begin{itemize}
+\item Classical SMC provides baseline performance with high chattering
+\item STA-SMC reduces chattering by 70\% with minimal performance loss
+\item Adaptive SMC handles model uncertainty effectively
+\item Hybrid Adaptive STA-SMC achieves best overall performance
+\item PSO optimization reduces manual tuning effort from hours to minutes
+\end{itemize}
+
+\subsection{Contributions}
+\begin{enumerate}
+\item Implemented and benchmarked 7 SMC variants
+\item Developed PSO-based automatic gain tuning framework
+\item Validated robustness under realistic uncertainty conditions
+\item Provided open-source implementation for reproducibility
+\end{enumerate}
+
+\subsection{Limitations}
+While this study provides comprehensive simulation-based analysis, several limitations should be acknowledged:
+
+\textbf{Simulation-Only Validation:}
+All results are based on mathematical models. Real-world systems introduce unmodeled dynamics (friction, actuator saturation, sensor noise) that may affect performance. The simplified and full nonlinear models used in this study assume perfect knowledge of system parameters, which is rarely the case in practice.
+
+\textbf{Computational Constraints:}
+PSO optimization was limited to 100 iterations with 30 particles due to computational cost. More exhaustive search (e.g., 500 iterations, 100 particles) might yield better gains but would increase tuning time from 30 minutes to several hours.
+
+\textbf{Disturbance Model:}
+External disturbances were modeled as bounded deterministic functions. Real-world disturbances (wind gusts, vibrations) exhibit stochastic behavior that may challenge controller robustness beyond the tested scenarios.
+
+\textbf{Single System Focus:}
+The study focused exclusively on the double-inverted pendulum. Generalization to other underactuated systems (triple pendulum, acrobot, pendubot) remains untested.
+
+\subsection{Practical Considerations}
+For practitioners implementing these controllers, several practical aspects warrant attention:
+
+\textbf{Real-Time Implementation:}
+All controllers demonstrated compute times $<1$ms per step, making them suitable for real-time implementation at 100Hz control frequency. However, embedded systems with limited floating-point performance may require fixed-point arithmetic optimizations.
+
+\textbf{Sensor Requirements:}
+The controllers assume full-state feedback (cart position, pendulum angles, and velocities). Practical implementation requires either:
+\begin{itemize}
+\item High-quality encoders for angle measurements (resolution $\geq 0.01$ rad)
+\item Observers or Kalman filters for velocity estimation from position measurements
+\item Accelerometers/gyroscopes for direct velocity sensing (with noise filtering)
+\end{itemize}
+
+\textbf{Actuator Constraints:}
+Force saturation at $\pm 50$N was enforced in simulation. Physical systems must account for actuator bandwidth (motor response time $\sim 10$-$50$ms) and voltage/current limits.
+
+\textbf{Safety Considerations:}
+Physical implementation requires:
+\begin{itemize}
+\item Mechanical stops to prevent cart derailment
+\item Emergency shutdown on large angle deviations ($|\theta_i| > 45^\circ$)
+\item Software watchdogs to detect controller failures
+\end{itemize}
+
+\subsection{Future Work}
+Several promising research directions emerge from this work:
+
+\textbf{Hardware-in-the-Loop (HIL) Validation:}
+Transition from pure simulation to HIL testing using physical DIP hardware interfaced with the software controllers. This intermediate step would reveal implementation challenges before full deployment.
+
+\textbf{Advanced MPC Formulations:}
+The current MPC implementation uses linear time-invariant models. Nonlinear MPC (NMPC) with direct collocation methods could improve large-angle performance. Comparison with tube-based MPC for robust control under uncertainty is warranted.
+
+\textbf{Machine Learning Integration:}
+Explore deep reinforcement learning (DRL) for gain scheduling or policy learning. Meta-learning approaches could enable rapid adaptation to system parameter changes.
+
+\textbf{Multi-Objective Optimization:}
+Extend PSO to explicitly handle Pareto-optimal tradeoffs between competing objectives (settling time vs. energy, tracking vs. chattering). Evolutionary algorithms like NSGA-II \cite{Deb2002} could provide diverse controller Pareto fronts.
+
+\textbf{Experimental Validation:}
+Ultimate validation requires testing on physical DIP hardware with realistic disturbances, sensor noise, and actuator dynamics. Comparison with industrial controllers from Quanser \cite{Quanser2020} and ECP \cite{ECP2020} would benchmark performance against established solutions.
+
+\textbf{Adaptive Sampling Strategies:}
+Investigate variable-rate sampling based on system state (faster sampling during transients, slower during steady-state) to reduce computational load while maintaining performance.
+
+\subsection{Code and Data Availability}
+All source code, simulation data, and experimental results presented in this report are publicly available under the MIT License at:
+
+\begin{center}
+\url{https://github.com/theSadeQ/dip-smc-pso}
+\end{center}
+
+The repository includes:
+\begin{itemize}
+\item Complete implementation of all controllers (Classical, STA, Adaptive, Hybrid SMC)
+\item PSO optimization framework with tuned gain configurations
+\item Simulation scripts for reproducing all benchmark results
+\item Figure generation scripts (\texttt{thesis/scripts/generate\_figures.py})
+\item Raw data files for all tables and figures in Section \ref{sec:results}
+\item Installation instructions and software dependencies
+\end{itemize}
+
+Detailed code structure and usage instructions are provided in Appendix \ref{app:code}. All results are fully reproducible using the provided scripts and configuration files.

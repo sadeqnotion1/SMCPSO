@@ -1,0 +1,1397 @@
+{
+  "analysis_metadata": {
+    "timestamp": "20251006_175404",
+    "mcp_server": "mcp-analyzer",
+    "total_duration_seconds": 7.2677998542785645
+  },
+  "scope": {
+    "total_files": 89,
+    "total_phases": 1
+  },
+  "ruff_summary": {
+    "total_issues": 56,
+    "fixable_issues": 51,
+    "severity_distribution": {
+      "F": 1
+    }
+  },
+  "vulture_summary": {
+    "total_items": 15,
+    "high_confidence": 15,
+    "medium_confidence": 0,
+    "low_confidence": 0
+  },
+  "phase_results": [
+    {
+      "phase_number": 1,
+      "phase_name": "Critical Controllers & Core",
+      "files_analyzed": 89,
+      "ruff_total_issues": 56,
+      "vulture_total_items": 15,
+      "duration_seconds": 7.2677998542785645,
+      "file_results": [
+        {
+          "file_path": "src\\controllers\\__init__.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.06358051300048828,
+          "success": false,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\controllers\\adaptive_smc.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.04832196235656738,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\controllers\\base\\__init__.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.05324268341064453,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\controllers\\base\\control_primitives.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.04529523849487305,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\controllers\\base\\controller_interface.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\src\\controllers\\base\\controller_interface.py",
+              "line": 8,
+              "column": 42,
+              "code": "F401",
+              "message": "`typing.Union` imported but unused",
+              "severity": "F",
+              "fixable": true
+            }
+          ],
+          "vulture_items": [],
+          "analysis_time": 0.08215045928955078,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\controllers\\classic_smc.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.04683661460876465,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\controllers\\factory\\__init__.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\src\\controllers\\factory\\__init__.py",
+              "line": 81,
+              "column": 25,
+              "code": "F841",
+              "message": "Local variable `e` is assigned to but never used",
+              "severity": "F",
+              "fixable": true
+            }
+          ],
+          "vulture_items": [],
+          "analysis_time": 0.05135822296142578,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\controllers\\factory\\core\\__init__.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.04700827598571777,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\controllers\\factory\\core\\protocols.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.04800868034362793,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\controllers\\factory\\core\\registry.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\src\\controllers\\factory\\core\\registry.py",
+              "line": 12,
+              "column": 37,
+              "code": "F401",
+              "message": "`typing.Optional` imported but unused",
+              "severity": "F",
+              "fixable": true
+            }
+          ],
+          "vulture_items": [],
+          "analysis_time": 0.048581600189208984,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\controllers\\factory\\core\\threading.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\src\\controllers\\factory\\core\\threading.py",
+              "line": 15,
+              "column": 20,
+              "code": "F401",
+              "message": "`typing.Any` imported but unused",
+              "severity": "F",
+              "fixable": true
+            }
+          ],
+          "vulture_items": [],
+          "analysis_time": 0.05381655693054199,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\controllers\\factory\\core\\validation.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\src\\controllers\\factory\\core\\validation.py",
+              "line": 13,
+              "column": 37,
+              "code": "F401",
+              "message": "`typing.Optional` imported but unused",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\src\\controllers\\factory\\core\\validation.py",
+              "line": 17,
+              "column": 36,
+              "code": "F401",
+              "message": "`.protocols.ConfigDict` imported but unused",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\src\\controllers\\factory\\core\\validation.py",
+              "line": 18,
+              "column": 44,
+              "code": "F401",
+              "message": "`.registry.CONTROLLER_REGISTRY` imported but unused",
+              "severity": "F",
+              "fixable": true
+            }
+          ],
+          "vulture_items": [],
+          "analysis_time": 0.05439281463623047,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\controllers\\factory\\deprecation.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\src\\controllers\\factory\\deprecation.py",
+              "line": 14,
+              "column": 47,
+              "code": "F401",
+              "message": "`typing.Union` imported but unused",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\src\\controllers\\factory\\deprecation.py",
+              "line": 228,
+              "column": 61,
+              "code": "F541",
+              "message": "f-string without any placeholders",
+              "severity": "F",
+              "fixable": true
+            }
+          ],
+          "vulture_items": [],
+          "analysis_time": 0.05062079429626465,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\controllers\\factory\\fallback_configs.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.05272030830383301,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\controllers\\factory\\legacy_factory.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.05440711975097656,
+          "success": false,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\controllers\\factory\\optimization.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\src\\controllers\\factory\\optimization.py",
+              "line": 17,
+              "column": 41,
+              "code": "F401",
+              "message": "`typing.Type` imported but unused",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\src\\controllers\\factory\\optimization.py",
+              "line": 22,
+              "column": 51,
+              "code": "F401",
+              "message": "`..smc.algorithms.classical.controller.ModularClassicalSMC` imported but unused",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\src\\controllers\\factory\\optimization.py",
+              "line": 23,
+              "column": 56,
+              "code": "F401",
+              "message": "`..smc.algorithms.super_twisting.controller.ModularSuperTwistingSMC` imported but unused",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\src\\controllers\\factory\\optimization.py",
+              "line": 24,
+              "column": 50,
+              "code": "F401",
+              "message": "`..smc.algorithms.adaptive.controller.ModularAdaptiveSMC` imported but unused",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\src\\controllers\\factory\\optimization.py",
+              "line": 25,
+              "column": 48,
+              "code": "F401",
+              "message": "`..smc.algorithms.hybrid.controller.ModularHybridSMC` imported but unused",
+              "severity": "F",
+              "fixable": true
+            }
+          ],
+          "vulture_items": [
+            {
+              "file_path": "src\\controllers\\factory\\optimization.py",
+              "line": 35,
+              "item_type": "variable",
+              "name": "config_hash",
+              "confidence": 100
+            }
+          ],
+          "analysis_time": 0.05709218978881836,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\controllers\\factory\\pso_integration.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.05348658561706543,
+          "success": false,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\controllers\\factory\\smc_factory.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\src\\controllers\\factory\\smc_factory.py",
+              "line": 26,
+              "column": 53,
+              "code": "F401",
+              "message": "`typing.Type` imported but unused",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\src\\controllers\\factory\\smc_factory.py",
+              "line": 26,
+              "column": 70,
+              "code": "F401",
+              "message": "`typing.Tuple` imported but unused",
+              "severity": "F",
+              "fixable": true
+            }
+          ],
+          "vulture_items": [],
+          "analysis_time": 0.05708146095275879,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\controllers\\factory\\thread_safety.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\src\\controllers\\factory\\thread_safety.py",
+              "line": 17,
+              "column": 41,
+              "code": "F401",
+              "message": "`typing.Callable` imported but unused",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\src\\controllers\\factory\\thread_safety.py",
+              "line": 20,
+              "column": 8,
+              "code": "F401",
+              "message": "`weakref` imported but unused",
+              "severity": "F",
+              "fixable": true
+            }
+          ],
+          "vulture_items": [
+            {
+              "file_path": "src\\controllers\\factory\\thread_safety.py",
+              "line": 223,
+              "item_type": "variable",
+              "name": "operation_id",
+              "confidence": 100
+            }
+          ],
+          "analysis_time": 0.061708927154541016,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\controllers\\factory.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.05714678764343262,
+          "success": false,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\controllers\\mpc\\__init__.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.046289920806884766,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\controllers\\mpc\\mpc_controller.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.04892611503601074,
+          "success": false,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\controllers\\mpc_controller.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.04744219779968262,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\controllers\\smc\\__init__.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.04728531837463379,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\controllers\\smc\\adaptive_smc.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\src\\controllers\\smc\\adaptive_smc.py",
+              "line": 64,
+              "column": 8,
+              "code": "F401",
+              "message": "`weakref` imported but unused",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\src\\controllers\\smc\\adaptive_smc.py",
+              "line": 65,
+              "column": 33,
+              "code": "F401",
+              "message": "`typing.Optional` imported but unused",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\src\\controllers\\smc\\adaptive_smc.py",
+              "line": 346,
+              "column": 17,
+              "code": "F841",
+              "message": "Local variable `last_u` is assigned to but never used",
+              "severity": "F",
+              "fixable": false
+            }
+          ],
+          "vulture_items": [],
+          "analysis_time": 0.053320884704589844,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\controllers\\smc\\algorithms\\__init__.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.047420501708984375,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\controllers\\smc\\algorithms\\adaptive\\__init__.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.049013376235961914,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\controllers\\smc\\algorithms\\adaptive\\adaptation_law.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.050968170166015625,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\controllers\\smc\\algorithms\\adaptive\\config.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\src\\controllers\\smc\\algorithms\\adaptive\\config.py",
+              "line": 12,
+              "column": 26,
+              "code": "F401",
+              "message": "`typing.Optional` imported but unused",
+              "severity": "F",
+              "fixable": true
+            }
+          ],
+          "vulture_items": [],
+          "analysis_time": 0.05580306053161621,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\controllers\\smc\\algorithms\\adaptive\\controller.py",
+          "ruff_issues": [],
+          "vulture_items": [
+            {
+              "file_path": "src\\controllers\\smc\\algorithms\\adaptive\\controller.py",
+              "line": 39,
+              "item_type": "variable",
+              "name": "dynamics",
+              "confidence": 100
+            }
+          ],
+          "analysis_time": 0.0581212043762207,
+          "success": false,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\controllers\\smc\\algorithms\\adaptive\\parameter_estimation.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\src\\controllers\\smc\\algorithms\\adaptive\\parameter_estimation.py",
+              "line": 17,
+              "column": 20,
+              "code": "F401",
+              "message": "`typing.List` imported but unused",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\src\\controllers\\smc\\algorithms\\adaptive\\parameter_estimation.py",
+              "line": 17,
+              "column": 26,
+              "code": "F401",
+              "message": "`typing.Optional` imported but unused",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\src\\controllers\\smc\\algorithms\\adaptive\\parameter_estimation.py",
+              "line": 17,
+              "column": 36,
+              "code": "F401",
+              "message": "`typing.Union` imported but unused",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\src\\controllers\\smc\\algorithms\\adaptive\\parameter_estimation.py",
+              "line": 17,
+              "column": 43,
+              "code": "F401",
+              "message": "`typing.Dict` imported but unused",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\src\\controllers\\smc\\algorithms\\adaptive\\parameter_estimation.py",
+              "line": 17,
+              "column": 49,
+              "code": "F401",
+              "message": "`typing.Any` imported but unused",
+              "severity": "F",
+              "fixable": true
+            }
+          ],
+          "vulture_items": [],
+          "analysis_time": 0.05899333953857422,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\controllers\\smc\\algorithms\\classical\\__init__.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.05910325050354004,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\controllers\\smc\\algorithms\\classical\\boundary_layer.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\src\\controllers\\smc\\algorithms\\classical\\boundary_layer.py",
+              "line": 18,
+              "column": 27,
+              "code": "F401",
+              "message": "`typing.Callable` imported but unused",
+              "severity": "F",
+              "fixable": true
+            }
+          ],
+          "vulture_items": [],
+          "analysis_time": 0.0695180892944336,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\controllers\\smc\\algorithms\\classical\\config.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\src\\controllers\\smc\\algorithms\\classical\\config.py",
+              "line": 14,
+              "column": 22,
+              "code": "F401",
+              "message": "`pydantic.BaseModel` imported but unused",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\src\\controllers\\smc\\algorithms\\classical\\config.py",
+              "line": 14,
+              "column": 33,
+              "code": "F401",
+              "message": "`pydantic.Field` imported but unused",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\src\\controllers\\smc\\algorithms\\classical\\config.py",
+              "line": 14,
+              "column": 40,
+              "code": "F401",
+              "message": "`pydantic.validator` imported but unused",
+              "severity": "F",
+              "fixable": true
+            }
+          ],
+          "vulture_items": [
+            {
+              "file_path": "src\\controllers\\smc\\algorithms\\classical\\config.py",
+              "line": 14,
+              "item_type": "unknown",
+              "name": "BaseModel",
+              "confidence": 90
+            },
+            {
+              "file_path": "src\\controllers\\smc\\algorithms\\classical\\config.py",
+              "line": 14,
+              "item_type": "unknown",
+              "name": "Field",
+              "confidence": 90
+            }
+          ],
+          "analysis_time": 0.06426334381103516,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\controllers\\smc\\algorithms\\classical\\controller.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.059560537338256836,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\controllers\\smc\\algorithms\\hybrid\\__init__.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.0591428279876709,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\controllers\\smc\\algorithms\\hybrid\\config.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.05648231506347656,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\controllers\\smc\\algorithms\\hybrid\\controller.py",
+          "ruff_issues": [],
+          "vulture_items": [
+            {
+              "file_path": "src\\controllers\\smc\\algorithms\\hybrid\\controller.py",
+              "line": 77,
+              "item_type": "variable",
+              "name": "dynamics",
+              "confidence": 100
+            },
+            {
+              "file_path": "src\\controllers\\smc\\algorithms\\hybrid\\controller.py",
+              "line": 590,
+              "item_type": "variable",
+              "name": "controller_configs",
+              "confidence": 100
+            }
+          ],
+          "analysis_time": 0.06902146339416504,
+          "success": false,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\controllers\\smc\\algorithms\\hybrid\\switching_logic.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\src\\controllers\\smc\\algorithms\\hybrid\\switching_logic.py",
+              "line": 20,
+              "column": 26,
+              "code": "F401",
+              "message": "`typing.List` imported but unused",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\src\\controllers\\smc\\algorithms\\hybrid\\switching_logic.py",
+              "line": 20,
+              "column": 47,
+              "code": "F401",
+              "message": "`typing.Tuple` imported but unused",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\src\\controllers\\smc\\algorithms\\hybrid\\switching_logic.py",
+              "line": 166,
+              "column": 9,
+              "code": "F841",
+              "message": "Local variable `previous_controller` is assigned to but never used",
+              "severity": "F",
+              "fixable": false
+            }
+          ],
+          "vulture_items": [],
+          "analysis_time": 0.07615518569946289,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\controllers\\smc\\algorithms\\super_twisting\\__init__.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.05554962158203125,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\controllers\\smc\\algorithms\\super_twisting\\config.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.06186699867248535,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\controllers\\smc\\algorithms\\super_twisting\\controller.py",
+          "ruff_issues": [],
+          "vulture_items": [
+            {
+              "file_path": "src\\controllers\\smc\\algorithms\\super_twisting\\controller.py",
+              "line": 42,
+              "item_type": "variable",
+              "name": "dynamics",
+              "confidence": 100
+            }
+          ],
+          "analysis_time": 0.06420660018920898,
+          "success": false,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\controllers\\smc\\algorithms\\super_twisting\\twisting_algorithm.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.06114673614501953,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\controllers\\smc\\classic_smc.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\src\\controllers\\smc\\classic_smc.py",
+              "line": 14,
+              "column": 41,
+              "code": "F401",
+              "message": "`typing.Tuple` imported but unused",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\src\\controllers\\smc\\classic_smc.py",
+              "line": 14,
+              "column": 48,
+              "code": "F401",
+              "message": "`typing.Dict` imported but unused",
+              "severity": "F",
+              "fixable": true
+            }
+          ],
+          "vulture_items": [],
+          "analysis_time": 0.06387186050415039,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\controllers\\smc\\core\\__init__.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.055130720138549805,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\controllers\\smc\\core\\equivalent_control.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\src\\controllers\\smc\\core\\equivalent_control.py",
+              "line": 21,
+              "column": 17,
+              "code": "F401",
+              "message": "`abc.ABC` imported but unused",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\src\\controllers\\smc\\core\\equivalent_control.py",
+              "line": 21,
+              "column": 22,
+              "code": "F401",
+              "message": "`abc.abstractmethod` imported but unused",
+              "severity": "F",
+              "fixable": true
+            }
+          ],
+          "vulture_items": [],
+          "analysis_time": 0.06827974319458008,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\controllers\\smc\\core\\gain_validation.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\src\\controllers\\smc\\core\\gain_validation.py",
+              "line": 18,
+              "column": 39,
+              "code": "F401",
+              "message": "`typing.Optional` imported but unused",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\src\\controllers\\smc\\core\\gain_validation.py",
+              "line": 18,
+              "column": 49,
+              "code": "F401",
+              "message": "`typing.Sequence` imported but unused",
+              "severity": "F",
+              "fixable": true
+            }
+          ],
+          "vulture_items": [],
+          "analysis_time": 0.06367254257202148,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\controllers\\smc\\core\\sliding_surface.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\src\\controllers\\smc\\core\\sliding_surface.py",
+              "line": 18,
+              "column": 26,
+              "code": "F401",
+              "message": "`typing.Optional` imported but unused",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\src\\controllers\\smc\\core\\sliding_surface.py",
+              "line": 18,
+              "column": 43,
+              "code": "F401",
+              "message": "`typing.Sequence` imported but unused",
+              "severity": "F",
+              "fixable": true
+            }
+          ],
+          "vulture_items": [],
+          "analysis_time": 0.060189247131347656,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\controllers\\smc\\core\\switching_functions.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.06117558479309082,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\controllers\\smc\\hybrid_adaptive_sta_smc.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.05125927925109863,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\controllers\\smc\\sta_smc.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.05640745162963867,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\controllers\\specialized\\__init__.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.05566048622131348,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\controllers\\specialized\\swing_up_smc.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.05677652359008789,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\controllers\\sta_smc.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.053627729415893555,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\controllers\\swing_up_smc.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.05317068099975586,
+          "success": false,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\core\\__init__.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.05711507797241211,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\core\\dynamics.py",
+          "ruff_issues": [],
+          "vulture_items": [
+            {
+              "file_path": "src\\core\\dynamics.py",
+              "line": 22,
+              "item_type": "variable",
+              "name": "args",
+              "confidence": 100
+            }
+          ],
+          "analysis_time": 0.05935406684875488,
+          "success": false,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\core\\dynamics_full.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.05944538116455078,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\core\\safety_guards.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.05841374397277832,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\core\\simulation_context.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.06215047836303711,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\core\\simulation_runner.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.059354543685913086,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\core\\vector_sim.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.053638458251953125,
+          "success": false,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\plant\\__init__.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.06225991249084473,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\plant\\configurations\\__init__.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.05945706367492676,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\plant\\configurations\\base_config.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.05747532844543457,
+          "success": false,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\plant\\configurations\\unified_config.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.05963277816772461,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\plant\\configurations\\validation.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.057525634765625,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\plant\\core\\__init__.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.05757498741149902,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\plant\\core\\dynamics.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.062422752380371094,
+          "success": false,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\plant\\core\\numerical_stability.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\src\\plant\\core\\numerical_stability.py",
+              "line": 18,
+              "column": 20,
+              "code": "F401",
+              "message": "`typing.Tuple` imported but unused",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\src\\plant\\core\\numerical_stability.py",
+              "line": 328,
+              "column": 5,
+              "code": "F841",
+              "message": "Local variable `trace` is assigned to but never used",
+              "severity": "F",
+              "fixable": false
+            }
+          ],
+          "vulture_items": [
+            {
+              "file_path": "src\\plant\\core\\numerical_stability.py",
+              "line": 25,
+              "item_type": "variable",
+              "name": "args",
+              "confidence": 100
+            }
+          ],
+          "analysis_time": 0.06672477722167969,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\plant\\core\\physics_matrices.py",
+          "ruff_issues": [],
+          "vulture_items": [
+            {
+              "file_path": "src\\plant\\core\\physics_matrices.py",
+              "line": 23,
+              "item_type": "variable",
+              "name": "args",
+              "confidence": 100
+            }
+          ],
+          "analysis_time": 0.05477714538574219,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\plant\\core\\state_validation.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.05606269836425781,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\plant\\models\\__init__.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.055756568908691406,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\plant\\models\\base\\__init__.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.05494379997253418,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\plant\\models\\base\\dynamics_interface.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\src\\plant\\models\\base\\dynamics_interface.py",
+              "line": 13,
+              "column": 37,
+              "code": "F401",
+              "message": "`typing.Optional` imported but unused",
+              "severity": "F",
+              "fixable": true
+            }
+          ],
+          "vulture_items": [],
+          "analysis_time": 0.051313161849975586,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\plant\\models\\dynamics.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.04402494430541992,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\plant\\models\\full\\__init__.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.04498767852783203,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\plant\\models\\full\\config.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.050492048263549805,
+          "success": false,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\plant\\models\\full\\dynamics.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\src\\plant\\models\\full\\dynamics.py",
+              "line": 14,
+              "column": 27,
+              "code": "F401",
+              "message": "`typing.Optional` imported but unused",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\src\\plant\\models\\full\\dynamics.py",
+              "line": 22,
+              "column": 5,
+              "code": "F401",
+              "message": "`...core.NumericalStabilityMonitor` imported but unused",
+              "severity": "F",
+              "fixable": true
+            }
+          ],
+          "vulture_items": [
+            {
+              "file_path": "src\\plant\\models\\full\\dynamics.py",
+              "line": 518,
+              "item_type": "variable",
+              "name": "error_msg",
+              "confidence": 100
+            },
+            {
+              "file_path": "src\\plant\\models\\full\\dynamics.py",
+              "line": 554,
+              "item_type": "variable",
+              "name": "error_msg",
+              "confidence": 100
+            }
+          ],
+          "analysis_time": 0.046536922454833984,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\plant\\models\\full\\physics.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\src\\plant\\models\\full\\physics.py",
+              "line": 14,
+              "column": 20,
+              "code": "F401",
+              "message": "`typing.Tuple` imported but unused",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\src\\plant\\models\\full\\physics.py",
+              "line": 14,
+              "column": 27,
+              "code": "F401",
+              "message": "`typing.Any` imported but unused",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\src\\plant\\models\\full\\physics.py",
+              "line": 94,
+              "column": 9,
+              "code": "F841",
+              "message": "Local variable `position` is assigned to but never used",
+              "severity": "F",
+              "fixable": false
+            }
+          ],
+          "vulture_items": [
+            {
+              "file_path": "src\\plant\\models\\full\\physics.py",
+              "line": 20,
+              "item_type": "variable",
+              "name": "args",
+              "confidence": 100
+            }
+          ],
+          "analysis_time": 0.05820178985595703,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\plant\\models\\lowrank\\__init__.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.047560691833496094,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\plant\\models\\lowrank\\config.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\src\\plant\\models\\lowrank\\config.py",
+              "line": 14,
+              "column": 36,
+              "code": "F401",
+              "message": "`dataclasses.field` imported but unused",
+              "severity": "F",
+              "fixable": true
+            }
+          ],
+          "vulture_items": [],
+          "analysis_time": 0.05371284484863281,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\plant\\models\\lowrank\\dynamics.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\src\\plant\\models\\lowrank\\dynamics.py",
+              "line": 22,
+              "column": 5,
+              "code": "F401",
+              "message": "`...core.NumericalStabilityMonitor` imported but unused",
+              "severity": "F",
+              "fixable": true
+            }
+          ],
+          "vulture_items": [],
+          "analysis_time": 0.055223703384399414,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\plant\\models\\lowrank\\physics.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\src\\plant\\models\\lowrank\\physics.py",
+              "line": 14,
+              "column": 20,
+              "code": "F401",
+              "message": "`typing.Optional` imported but unused",
+              "severity": "F",
+              "fixable": true
+            }
+          ],
+          "vulture_items": [],
+          "analysis_time": 0.05018281936645508,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\plant\\models\\simplified\\__init__.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.045356035232543945,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\plant\\models\\simplified\\config.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\src\\plant\\models\\simplified\\config.py",
+              "line": 14,
+              "column": 20,
+              "code": "F401",
+              "message": "`typing.Optional` imported but unused",
+              "severity": "F",
+              "fixable": true
+            }
+          ],
+          "vulture_items": [],
+          "analysis_time": 0.0664525032043457,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\plant\\models\\simplified\\dynamics.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.07195210456848145,
+          "success": false,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\plant\\models\\simplified\\physics.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\src\\plant\\models\\simplified\\physics.py",
+              "line": 14,
+              "column": 27,
+              "code": "F401",
+              "message": "`typing.Any` imported but unused",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\src\\plant\\models\\simplified\\physics.py",
+              "line": 93,
+              "column": 9,
+              "code": "F841",
+              "message": "Local variable `position` is assigned to but never used",
+              "severity": "F",
+              "fixable": false
+            }
+          ],
+          "vulture_items": [
+            {
+              "file_path": "src\\plant\\models\\simplified\\physics.py",
+              "line": 20,
+              "item_type": "variable",
+              "name": "args",
+              "confidence": 100
+            }
+          ],
+          "analysis_time": 0.05740857124328613,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\plant\\parameters\\__init__.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.04402780532836914,
+          "success": true,
+          "error_message": null
+        }
+      ]
+    }
+  ]
+}

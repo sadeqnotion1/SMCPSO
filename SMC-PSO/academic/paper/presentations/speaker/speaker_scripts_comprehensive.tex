@@ -1,0 +1,191 @@
+% ============================================================================
+% DIP-SMC-PSO Comprehensive Speaker Scripts
+% ============================================================================
+% Academic lecture-style speaker scripts for the comprehensive presentation
+% Provides 5-10 minutes of detailed narrative for each slide
+%
+% Target: 150-200 pages for ~400 slides
+% Format: Context + Content + Insights + Connections + Q&A + Transitions
+% ============================================================================
+
+\documentclass[11pt,a4paper]{article}
+
+% Load configuration (packages, custom commands, formatting)
+\input{speaker_config.tex}
+
+% Title information
+\title{%
+    \Huge\textbf{Speaker Scripts} \\[0.5em]
+    \Large DIP-SMC-PSO Comprehensive Presentation \\[1em]
+    \large Academic Lecture-Style Narratives for 400+ Slides
+}
+\author{%
+    Double-Inverted Pendulum \\
+    Sliding Mode Control with PSO Optimization
+}
+\date{\today}
+
+\begin{document}
+
+% ============================================================================
+% TITLE PAGE & TABLE OF CONTENTS
+% ============================================================================
+
+\maketitle
+\thispagestyle{empty}
+
+\newpage
+\tableofcontents
+\newpage
+
+% ============================================================================
+% INTRODUCTION
+% ============================================================================
+
+\speakerpart{Introduction}
+
+\section*{About These Speaker Scripts}
+
+These comprehensive speaker scripts provide detailed academic lecture-style narratives for each slide in the DIP-SMC-PSO presentation. Each script is designed to deliver 5-10 minutes of engaging, informative content that explains the technical material, provides context, and connects concepts across the project.
+
+\subsection*{How to Use These Scripts}
+
+\textbf{Structure:} Each slide script contains six sections:
+
+\begin{enumerate}
+    \item \textbf{Context} (1 min) - Why this slide matters, connection to previous content
+    \item \textbf{Main Content} (3-5 min) - Detailed explanation of slide material
+    \item \textbf{Key Insights} (1-2 min) - Deep theoretical or practical understanding
+    \item \textbf{Connections} (1 min) - Links to other parts of the project
+    \item \textbf{Anticipated Q\&A} (optional) - Common questions and answers
+    \item \textbf{Transition} (30 sec) - Bridge to the next slide
+\end{enumerate}
+
+\textbf{Customization:} These scripts are templates. Adapt the depth, pace, and examples based on your audience's background and the time available.
+
+\textbf{Navigation:} Scripts are organized by presentation parts (I-IV + Appendix) to match the modular presentation structure. Use the table of contents to jump to specific sections.
+
+\subsection*{Presentation Overview}
+
+\begin{itemize}
+    \item \textbf{Part I: Foundations} (80 slides) - Control theory, plant models, PSO, simulation
+    \item \textbf{Part II: Infrastructure} (80 slides) - Analysis, testing, research, documentation, education
+    \item \textbf{Part III: Advanced Topics} (100 slides) - HIL, monitoring, dev tools, architecture, memory
+    \item \textbf{Part IV: Professional Practice} (80 slides) - Browser automation, workspace, git, future work
+    \item \textbf{Appendix} (40 slides) - Quick reference, bibliography, repository structure
+\end{itemize}
+
+\textbf{Total Duration:} 6-8 hours for complete presentation with all scripts
+
+\subsection*{Target Audience}
+
+These scripts are designed for:
+\begin{itemize}
+    \item PhD defense presentations
+    \item Academic conference talks (with subset selection)
+    \item Technical workshops and tutorials
+    \item Thesis committee presentations
+    \item Graduate-level course lectures
+\end{itemize}
+
+\newpage
+
+% ============================================================================
+% PART I: FOUNDATIONS
+% ============================================================================
+% Theoretical and computational foundations
+% Slides: ~80 | Time: ~90-120 minutes | Pages: ~40-50
+% ============================================================================
+
+\input{speaker_scripts/part1_foundations.tex}
+
+% ============================================================================
+% PART II: INFRASTRUCTURE
+% ============================================================================
+% Software engineering and research infrastructure
+% Slides: ~80 | Time: ~120-150 minutes | Pages: ~35-40
+% ============================================================================
+
+\input{speaker_scripts/part2_infrastructure.tex}
+
+% ============================================================================
+% PART III: ADVANCED TOPICS
+% ============================================================================
+% Specialized technical domains
+% Slides: ~100 | Time: ~120-150 minutes | Pages: ~45-50
+% ============================================================================
+
+\input{speaker_scripts/part3_advanced.tex}
+
+% ============================================================================
+% PART IV: PROFESSIONAL PRACTICE
+% ============================================================================
+% Operational aspects and lessons learned
+% Slides: ~80 | Time: ~90-120 minutes | Pages: ~30-35
+% ============================================================================
+
+\input{speaker_scripts/part4_professional.tex}
+
+% ============================================================================
+% APPENDIX
+% ============================================================================
+% Quick reference, bibliography, repository structure
+% Slides: ~40 | Time: ~30-45 minutes | Pages: ~10-15
+% ============================================================================
+
+\input{speaker_scripts/appendix.tex}
+
+% ============================================================================
+% CLOSING REMARKS
+% ============================================================================
+
+\newpage
+\speakerpart{Closing Remarks}
+
+\section*{Presentation Summary}
+
+As you conclude this comprehensive presentation, emphasize these key takeaways:
+
+\begin{enumerate}
+    \item \textbf{Comprehensive Framework} - DIP-SMC-PSO provides a complete framework for sliding mode control research, from theory to production-ready implementation.
+
+    \item \textbf{PSO Automation} - Particle Swarm Optimization successfully eliminates manual gain tuning for 7 different controller types, with validated convergence and robustness.
+
+    \item \textbf{Validated Controllers} - All 7 controllers (Classical SMC, STA, Adaptive, Hybrid, Swing-up, MPC, Factory) have been validated with Lyapunov proofs and Monte Carlo analysis.
+
+    \item \textbf{Research Outputs} - Phase 5 research complete (11/11 tasks), with submission-ready LT-7 paper, comprehensive benchmarks, and educational materials.
+
+    \item \textbf{Production-Ready Code} - 85\%+ test coverage, thread safety validated (11/11 tests), comprehensive documentation (985 files), and professional infrastructure.
+
+    \item \textbf{Educational Impact} - Complete learning paths from absolute beginners (Path 0: 125-150 hrs) to advanced researchers (Path 4), with 44 NotebookLM podcast episodes.
+\end{enumerate}
+
+\section*{Final Slide: Questions \& Discussion}
+
+\textbf{Script for closing slide:}
+
+\begin{quote}
+Thank you for your attention throughout this comprehensive presentation. We've covered the complete journey of the DIP-SMC-PSO project, from foundational control theory to production infrastructure and research outputs.
+
+I'm now happy to take your questions on any aspect of the project. Whether you're interested in the theoretical foundations of sliding mode control, the PSO optimization methodology, the software engineering practices, or the research validation process, I'm here to discuss.
+
+For those interested in exploring the codebase or educational materials, the complete repository is available at \url{https://github.com/theSadeQ/dip-smc-pso.git}, and I encourage you to check out the documentation system and learning paths we've developed.
+
+What questions do you have?
+\end{quote}
+
+\vfill
+
+\begin{center}
+\textbf{Repository:} \url{https://github.com/theSadeQ/dip-smc-pso.git}
+
+\textbf{Documentation:} See NAVIGATION.md for complete navigation system
+
+\textbf{Learning Paths:} From beginner (125-150 hrs) to advanced research workflows
+\end{center}
+
+\end{document}
+
+% ============================================================================
+% END OF SPEAKER SCRIPTS
+% ============================================================================

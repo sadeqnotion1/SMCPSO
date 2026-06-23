@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PSO Parameter Sensitivity - DIP SMC PSO</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        .chart-card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .description {
+            color: #666;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 500px;
+            margin-top: 20px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="chart-card">
+            <h1>🔧 PSO Parameter Sensitivity</h1>
+            <p class="description">
+                Sensitivity analysis of PSO hyperparameters on optimization performance. Higher values indicate greater
+                impact on convergence quality and speed. Swarm size shows the highest sensitivity, followed by cognitive
+                and social coefficients (c1, c2). Inertia weight demonstrates moderate influence on convergence behavior.
+            </p>
+            <div class="chart-container">
+                <canvas id="psoSensitivityChart"></canvas>
+            </div>
+            <a href="interactive_dashboard.html" class="back-link">← Back to Dashboard</a>
+        </div>
+    </div>
+
+    <script>
+        async function loadData() {
+            try {
+                const response = await fetch('./performance_charts/pso_sensitivity_heatmap.json');
+                return await response.json();
+            } catch (error) {
+                console.error('Error loading data:', error);
+                return null;
+            }
+        }
+
+        async function initChart() {
+            const data = await loadData();
+
+            if (data) {
+                new Chart(document.getElementById('psoSensitivityChart'), {
+                    type: 'bar',
+                    data: data.data,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        indexAxis: 'y',
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'PSO Hyperparameter Sensitivity',
+                                font: { size: 16 }
+                            },
+                            legend: { display: false }
+                        },
+                        scales: {
+                            x: {
+                                beginAtZero: true,
+                                title: { display: true, text: 'Sensitivity Level' },
+                                ticks: { stepSize: 1 }
+                            },
+                            y: {
+                                title: { display: true, text: 'Parameter' }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', initChart);
+    </script>
+</body>
+</html>

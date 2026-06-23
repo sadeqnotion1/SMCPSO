@@ -1,0 +1,5 @@
+controller,nominal_settling_s,perturbed_settling_s,settling_degradation_%,nominal_convergence_%,perturbed_convergence_%,convergence_degradation_%,robustness_score
+classical_smc,10.0,10.0,0.0,0.0,0.0,100.0,30.0
+sta_smc,10.0,10.0,0.0,0.0,0.0,100.0,30.0
+adaptive_smc,10.0,10.0,0.0,0.0,0.0,100.0,30.0
+hybrid_adaptive_sta_smc,10.0,10.0,0.0,0.0,0.0,100.0,30.0

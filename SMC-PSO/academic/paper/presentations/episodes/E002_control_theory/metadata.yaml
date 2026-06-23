@@ -1,0 +1,19 @@
+﻿episode_id: E002
+slug: control_theory
+title: Control Theory
+status: migrated_auto
+last_updated: 2026-02-24
+languages:
+  - en
+  - fa
+channels:
+  - beautiful_ai
+  - podcast
+source_file_count: 13
+source_buckets:
+  - archive_part1_foundations
+  - cheatsheets_phase1_foundational
+  - episodes_markdown
+  - episodes_pdf
+  - episodes_specialized_advisor_report
+  - phase1_foundations

@@ -1,0 +1,551 @@
+pdflatex: security risk: running with elevated privileges
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex.fmt)
+ restricted \write18 enabled.
+entering extended mode
+(EP001_clean_template.tex
+LaTeX2e <2023-11-01> patch level 1
+L3 programming layer <2024-01-04>
+(C:\Program Files\MiKTeX\tex/latex/base\article.cls
+Document Class: article 2023/05/17 v1.4n Standard LaTeX document class
+(C:\Program Files\MiKTeX\tex/latex/base\size11.clo))
+(C:\Program Files\MiKTeX\tex/latex/base\inputenc.sty)
+(C:\Program Files\MiKTeX\tex/latex/base\fontenc.sty)
+(C:\Program Files\MiKTeX\tex/latex/amsmath\amsmath.sty
+For additional information on amsmath, use the `?' option.
+(C:\Program Files\MiKTeX\tex/latex/amsmath\amstext.sty
+(C:\Program Files\MiKTeX\tex/latex/amsmath\amsgen.sty))
+(C:\Program Files\MiKTeX\tex/latex/amsmath\amsbsy.sty)
+(C:\Program Files\MiKTeX\tex/latex/amsmath\amsopn.sty))
+(C:\Program Files\MiKTeX\tex/latex/amsfonts\amssymb.sty
+(C:\Program Files\MiKTeX\tex/latex/amsfonts\amsfonts.sty))
+(C:\Users\SadeQ\AppData\Roaming\MiKTeX\tex/latex/amscls\amsthm.sty)
+(C:\Users\SadeQ\AppData\Roaming\MiKTeX\tex/latex/geometry\geometry.sty
+(C:\Program Files\MiKTeX\tex/latex/graphics\keyval.sty)
+(C:\Program Files\MiKTeX\tex/generic/iftex\ifvtex.sty
+(C:\Program Files\MiKTeX\tex/generic/iftex\iftex.sty))
+(C:\Users\SadeQ\AppData\Roaming\MiKTeX\tex/latex/geometry\geometry.cfg))
+(C:\Program Files\MiKTeX\tex/latex/graphics\graphicx.sty
+(C:\Program Files\MiKTeX\tex/latex/graphics\graphics.sty
+(C:\Program Files\MiKTeX\tex/latex/graphics\trig.sty)
+(C:\Program Files\MiKTeX\tex/latex/graphics-cfg\graphics.cfg)
+(C:\Program Files\MiKTeX\tex/latex/graphics-def\pdftex.def)))
+(C:\Users\SadeQ\AppData\Roaming\MiKTeX\tex/latex/booktabs\booktabs.sty)
+(C:\Program Files\MiKTeX\tex/latex/tools\array.sty)
+(C:\Users\SadeQ\AppData\Roaming\MiKTeX\tex/latex/fancyhdr\fancyhdr.sty)
+(C:\Program Files\MiKTeX\tex/latex/hyperref\hyperref.sty
+! Undefined control sequence.
+l.108 \IfFormatAtLeastT
+                       {2025-11-01}
+
+! LaTeX Error: Missing \begin{document}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.108 \IfFormatAtLeastT{2
+                         025-11-01}
+! Undefined control sequence.
+l.110    \IfDocumentMetadataT
+                             
+(C:\Users\SadeQ\AppData\Roaming\MiKTeX\tex/latex/kvsetkeys\kvsetkeys.sty)
+(C:\Users\SadeQ\AppData\Roaming\MiKTeX\tex/generic/kvdefinekeys\kvdefinekeys.st
+y) (C:\Users\SadeQ\AppData\Roaming\MiKTeX\tex/generic/pdfescape\pdfescape.sty
+(C:\Users\SadeQ\AppData\Roaming\MiKTeX\tex/generic/ltxcmds\ltxcmds.sty)
+(C:\Program Files\MiKTeX\tex/generic/pdftexcmds\pdftexcmds.sty
+(C:\Users\SadeQ\AppData\Roaming\MiKTeX\tex/generic/infwarerr\infwarerr.sty)))
+(C:\Users\SadeQ\AppData\Roaming\MiKTeX\tex/latex/hycolor\hycolor.sty)
+(C:\Program Files\MiKTeX\tex/latex/hyperref\nameref.sty
+(C:\Users\SadeQ\AppData\Roaming\MiKTeX\tex/latex/refcount\refcount.sty)
+(C:\Users\SadeQ\AppData\Roaming\MiKTeX\tex/generic/gettitlestring\gettitlestrin
+g.sty (C:\Users\SadeQ\AppData\Roaming\MiKTeX\tex/latex/kvoptions\kvoptions.sty
+Overfull \hbox (320.48134pt too wide) in paragraph at lines 108--45
+[]\T1/cmr/m/n/10.95 2025-11-01                                                 
+                                                                               
+                                                                               
+                                               
+))) (C:\Program Files\MiKTeX\tex/latex/etoolbox\etoolbox.sty)
+(C:\Users\SadeQ\AppData\Roaming\MiKTeX\tex/generic/stringenc\stringenc.sty)
+(C:\Program Files\MiKTeX\tex/latex/hyperref\pd1enc.def)
+(C:\Users\SadeQ\AppData\Roaming\MiKTeX\tex/generic/intcalc\intcalc.sty)
+(C:\Program Files\MiKTeX\tex/latex/hyperref\puenc.def)
+! Undefined control sequence.
+l.4109 \IfDocumentMetadataT
+                           
+(C:\Program Files\MiKTeX\tex/latex/url\url.sty)
+(C:\Users\SadeQ\AppData\Roaming\MiKTeX\tex/generic/bitset\bitset.sty
+(C:\Users\SadeQ\AppData\Roaming\MiKTeX\tex/generic/bigintcalc\bigintcalc.sty)))
+(C:\Program Files\MiKTeX\tex/latex/hyperref\hpdftex.def
+(C:\Users\SadeQ\AppData\Roaming\MiKTeX\tex/latex/rerunfilecheck\rerunfilecheck.
+sty
+(C:\Users\SadeQ\AppData\Roaming\MiKTeX\tex/generic/uniquecounter\uniquecounter.
+sty))) (C:\Program Files\MiKTeX\tex/latex/l3backend\l3backend-pdftex.def)
+(EP001_clean_template.aux)
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+(C:\Program Files\MiKTeX\tex/context/base/mkii\supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+) (C:\Program Files\MiKTeX\tex/latex/epstopdf-pkg\epstopdf-base.sty
+(C:\Program Files\MiKTeX\tex/latex/00miktex\epstopdf-sys.cfg))
+(C:\Program Files\MiKTeX\tex/latex/graphics\color.sty
+(C:\Program Files\MiKTeX\tex/latex/graphics-cfg\color.cfg)
+(C:\Program Files\MiKTeX\tex/latex/graphics\mathcolor.ltx))
+(EP001_clean_template.out) (EP001_clean_template.out)
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[1{C:/Users/SadeQ/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}]
+(C:\Program Files\MiKTeX\tex/latex/amsfonts\umsa.fd)
+(C:\Program Files\MiKTeX\tex/latex/amsfonts\umsb.fd)
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {section}\bool_lazy_and:nnT {\l__hyp_target_cre...
+l.35 \section{Introduction}
+                           
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {subsection}\bool_lazy_and:nnT {\l__hyp_target_...
+l.37 \subsection{Overview}
+                          
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {subsection}\bool_lazy_and:nnT {\l__hyp_target_...
+l.45 \subsection{System Characteristics}
+                                        
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {\@listctr }\bool_lazy_and:nnT {\l__hyp_target_...
+l.48     \item N
+                on-minimum phase behavior can appear near upright equilibrium.
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {\@listctr }\bool_lazy_and:nnT {\l__hyp_target_...
+l.49     \item F
+                ull state feedback improves achievable robustness margins.
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {\@listctr }\bool_lazy_and:nnT {\l__hyp_target_...
+l.50     \item D
+                isturbances strongly affect transient response.
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {section}\bool_lazy_and:nnT {\l__hyp_target_cre...
+l.53 \section{Physical System Description}
+                                          
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {subsection}\bool_lazy_and:nnT {\l__hyp_target_...
+l.55 \subsection{System Configuration}
+                                      
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {subsection}\bool_lazy_and:nnT {\l__hyp_target_...
+l.63 \subsection{Physical Constraints}
+                                      
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {\@listctr }\bool_lazy_and:nnT {\l__hyp_target_...
+l.65     \item C
+                art travel: $x \in [x_{\min}, x_{\max}]$
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {\@listctr }\bool_lazy_and:nnT {\l__hyp_target_...
+l.66     \item F
+                orce bounds: $u \in [u_{\min},u_{\max}]$
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {\@listctr }\bool_lazy_and:nnT {\l__hyp_target_...
+l.67     \item J
+                oint limits near safe mechanical stops if present
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {section}\bool_lazy_and:nnT {\l__hyp_target_cre...
+l.70 \section{Mathematical Model}
+                                 
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {subsection}\bool_lazy_and:nnT {\l__hyp_target_...
+l.72 \subsection{State Vector Definition}
+                                         
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {equation}\bool_lazy_and:nnT {\l__hyp_target_cr...
+l.74 \begin{equation}
+                     
+[2]
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {subsection}\bool_lazy_and:nnT {\l__hyp_target_...
+l.78 \subsection{Equations of Motion}
+                                     
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {equation}\bool_lazy_and:nnT {\l__hyp_target_cr...
+l.80 \begin{equation}
+                     
+! Undefined control sequence.
+\Hy@theorem@refstepcounter #1->\H@refstepcounter 
+                                                 {#1}\hyper@makecurrent {#1}...
+l.84 \begin{definition}
+                       
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.85 T
+      he equation is valid under rigid-link and rigid-joint assumptions.
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.85 T
+      he equation is valid under rigid-link and rigid-joint assumptions.
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.85 T
+      he equation is valid under rigid-link and rigid-joint assumptions.
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.86 \end{definition}
+                     
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {subsection}\bool_lazy_and:nnT {\l__hyp_target_...
+l.88 \subsection{Inertia Matrix}
+                                
+! Undefined control sequence.
+<argument> ...ref }}\group_end: \UseTaggingSocket 
+                                                  {recordtarget}
+l.88 \subsection{Inertia Matrix}
+                                
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {equation}\bool_lazy_and:nnT {\l__hyp_target_cr...
+l.90 \begin{equation}
+                     
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {subsection}\bool_lazy_and:nnT {\l__hyp_target_...
+l.98 \subsection{Coriolis and Centrifugal Matrix}
+                                                 
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {equation}\bool_lazy_and:nnT {\l__hyp_target_cr...
+l.100 \begin{equation}
+                      
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {section}\bool_lazy_and:nnT {\l__hyp_target_cre...
+l.104 \section{Nonlinearity Analysis}
+                                     
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {subsection}\bool_lazy_and:nnT {\l__hyp_target_...
+l.106 \subsection{Configuration-Dependent Inertia}
+                                                  
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {\@listctr }\bool_lazy_and:nnT {\l__hyp_target_...
+l.109     \item D
+                 ependence on $\cos\theta_1$, $\cos\theta_2$, and $\cos(\the...
+
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {\@listctr }\bool_lazy_and:nnT {\l__hyp_target_...
+l.110     \item D
+                 eterminant and condition number vary with $q$
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {\@listctr }\bool_lazy_and:nnT {\l__hyp_target_...
+l.111     \item I
+                 ll-conditioning near singular alignment may occur
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {subsection}\bool_lazy_and:nnT {\l__hyp_target_...
+l.114 \subsection{Trigonometric Nonlinearity}
+                                             
+! Undefined control sequence.
+\Hy@theorem@refstepcounter #1->\H@refstepcounter 
+                                                 {#1}\hyper@makecurrent {#1}...
+l.115 \begin{theorem}
+                     
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.116 G
+       ravity and coupling create trigonometrical nonlinearities.
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.116 G
+       ravity and coupling create trigonometrical nonlinearities.
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.116 G
+       ravity and coupling create trigonometrical nonlinearities.
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.117 \end{theorem}
+                   
+! Undefined control sequence.
+<argument> ...ref }}\group_end: \UseTaggingSocket 
+                                                  {recordtarget}
+l.118 T
+       he dominant terms include $\sin\theta_i$ and $\cos\theta_i$.
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {section}\bool_lazy_and:nnT {\l__hyp_target_cre...
+l.120 \section{System Parameters}
+                                 
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {subsection}\bool_lazy_and:nnT {\l__hyp_target_...
+l.122 \subsection{Nominal Parameter Values}
+                                           
+! Undefined control sequence.
+\caption ...fter \@gobble \else \H@refstepcounter 
+                                                  \@captype \let \Hy@tempa \...
+l.125 \caption
+              {Nominal DIP System Parameters}
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {subsection}\bool_lazy_and:nnT {\l__hyp_target_...
+l.141 \subsection{Parameter Uncertainty}
+                                        
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {section}\bool_lazy_and:nnT {\l__hyp_target_cre...
+l.148 \section{Linearized Model}
+                                
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {subsection}\bool_lazy_and:nnT {\l__hyp_target_...
+l.150 \subsection{Equilibrium Points}
+                                     
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {equation}\bool_lazy_and:nnT {\l__hyp_target_cr...
+l.152 \begin{equation}
+                      
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[3]
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {subsection}\bool_lazy_and:nnT {\l__hyp_target_...
+l.157 ...on{Linearized State-Space Representation}
+                                                  
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {equation}\bool_lazy_and:nnT {\l__hyp_target_cr...
+l.159 \begin{equation}
+                      
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {section}\bool_lazy_and:nnT {\l__hyp_target_cre...
+l.167 \section{Numerical Properties}
+                                    
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {subsection}\bool_lazy_and:nnT {\l__hyp_target_...
+l.169 \subsection{State Scaling}
+                                
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {\@listctr }\bool_lazy_and:nnT {\l__hyp_target_...
+l.171     \item A
+                 ngles are typically in radians.
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {\@listctr }\bool_lazy_and:nnT {\l__hyp_target_...
+l.172     \item V
+                 elocities are in rad/s.
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {\@listctr }\bool_lazy_and:nnT {\l__hyp_target_...
+l.173     \item S
+                 caling improves optimization conditioning.
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {subsection}\bool_lazy_and:nnT {\l__hyp_target_...
+l.176 \subsection{Time Scaling}
+                               
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {\@listctr }\bool_lazy_and:nnT {\l__hyp_target_...
+l.179     \item C
+                 hoose step size based on highest mode frequency.
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {\@listctr }\bool_lazy_and:nnT {\l__hyp_target_...
+l.180     \item E
+                 nsure numerical integrator accuracy near impact events.
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {\@listctr }\bool_lazy_and:nnT {\l__hyp_target_...
+l.181     \item U
+                 se fixed-step simulation for reproducibility.
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {section}\bool_lazy_and:nnT {\l__hyp_target_cre...
+l.184 \section{Summary and Key Takeaways}
+                                         
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {subsection}\bool_lazy_and:nnT {\l__hyp_target_...
+l.186 \subsection{System Overview}
+                                  
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {subsection}\bool_lazy_and:nnT {\l__hyp_target_...
+l.189 \subsection{Key Challenges}
+                                 
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {\@listctr }\bool_lazy_and:nnT {\l__hyp_target_...
+l.191     \item N
+                 onlinearity dominates wide operating ranges.
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {\@listctr }\bool_lazy_and:nnT {\l__hyp_target_...
+l.192     \item S
+                 trong coupling changes control authority with configuration.
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[4]
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {\@listctr }\bool_lazy_and:nnT {\l__hyp_target_...
+l.193     \item U
+                 nmodeled disturbances degrade near-boundary stability.
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {subsection}\bool_lazy_and:nnT {\l__hyp_target_...
+l.196 \subsection{Control Implications}
+                                       
+! Undefined control sequence.
+\Hy@theorem@refstepcounter #1->\H@refstepcounter 
+                                                 {#1}\hyper@makecurrent {#1}...
+l.197 \begin{theorem}
+                     
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.198 C
+       ontrol design requires balanced trade-offs between competing objectives.
+
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.198 C
+       ontrol design requires balanced trade-offs between competing objectives.
+
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.198 C
+       ontrol design requires balanced trade-offs between competing objectives.
+
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.199 \end{theorem}
+                   
+! Undefined control sequence.
+<argument> ...ref }}\group_end: \UseTaggingSocket 
+                                                  {recordtarget}
+l.201     \item L
+                 inear designs simplify synthesis.
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[5] (EP001_clean_template.aux) )
+(see the transcript file for additional information) <C:\Users\SadeQ\AppData\Lo
+cal\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecti1095.pk> <C:\Users\SadeQ\AppD
+ata\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm1095.pk> <C:\Users\Sade
+Q\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1200.pk> <C:\User
+s\SadeQ\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1440.pk> <C
+:\Users\SadeQ\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1200.
+pk> <C:\Users\SadeQ\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ect
+i1728.pk> <C:\Users\SadeQ\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi6
+00\ecbx1728.pk> <C:\Users\SadeQ\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/e
+c/dpi600\ecrm1095.pk><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cm
+ex10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:
+/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Program File
+s/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Program Files/MiKTeX/font
+s/type1/public/amsfonts/cm/cmr8.pfb><C:/Program Files/MiKTeX/fonts/type1/public
+/amsfonts/cm/cmsy10.pfb>
+Output written on EP001_clean_template.pdf (5 pages, 172597 bytes).
+Transcript written on EP001_clean_template.log.
+pdflatex: major issue: User/administrator updates are out-of-sync.

@@ -1,0 +1,92 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% PROJECT REPORT (20-30 pages)
+% Sliding Mode Control of Double-Inverted Pendulum with PSO Optimization
+%
+% Author: [Your Name]
+% Course: [Course Name/Number]
+% Date: December 2025
+%
+% NOTE: Full thesis backup saved in main_thesis_backup.tex
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% DOCUMENT CLASS %%%
+\documentclass[12pt, a4paper]{article}  % article for reports (not report class)
+
+%%% LOAD PREAMBLE (packages, custom commands) %%%
+\input{preamble}
+
+%%% METADATA (title, author, etc.) %%%
+\input{metadata}
+
+%%% BEGIN DOCUMENT %%%
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% TITLE & ABSTRACT
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% TITLE PAGE %%%
+\maketitle
+\thispagestyle{empty}
+\clearpage
+
+%%% ABSTRACT %%%
+\input{source/front/abstract_report}
+\clearpage
+
+%%% TABLE OF CONTENTS %%%
+\tableofcontents
+\clearpage
+
+%%% LIST OF FIGURES %%%
+\listoffigures
+\clearpage
+
+%%% LIST OF TABLES %%%
+\listoftables
+\clearpage
+
+%%% NOMENCLATURE (OPTIONAL - comment out if not needed) %%%
+%\input{source/front/nomenclature}
+%\clearpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% MAIN CONTENT (6 sections for 20-30 page report)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% SECTION 1: INTRODUCTION %%%
+\input{source/report/section1_introduction}
+
+%%% SECTION 2: SYSTEM MODEL & PROBLEM FORMULATION %%%
+\input{source/report/section2_system_model}
+
+%%% SECTION 3: CONTROLLER DESIGN %%%
+\input{source/report/section3_controllers}
+
+%%% SECTION 4: PSO OPTIMIZATION %%%
+\input{source/report/section4_pso}
+
+%%% SECTION 5: SIMULATION RESULTS %%%
+\input{source/report/section5_results}
+
+%%% SECTION 6: CONCLUSION %%%
+\input{source/report/section6_conclusion}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% REFERENCES
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\bibliographystyle{IEEEtran}
+\bibliography{bibliography/main}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% APPENDICES (optional, brief)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\appendix
+
+\input{source/report/appendix_code}
+\input{source/report/appendix_b_lyapunov}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

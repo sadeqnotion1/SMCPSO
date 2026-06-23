@@ -1,0 +1,1430 @@
+{
+  "analysis_metadata": {
+    "timestamp": "20251006_191744",
+    "mcp_server": "mcp-analyzer",
+    "total_duration_seconds": 27.694175243377686
+  },
+  "scope": {
+    "total_files": 69,
+    "total_phases": 1
+  },
+  "ruff_summary": {
+    "total_issues": 76,
+    "fixable_issues": 68,
+    "severity_distribution": {
+      "F": 1,
+      "E": 1
+    }
+  },
+  "vulture_summary": {
+    "total_items": 16,
+    "high_confidence": 16,
+    "medium_confidence": 0,
+    "low_confidence": 0
+  },
+  "phase_results": [
+    {
+      "phase_number": 4,
+      "phase_name": "Scripts & Utilities",
+      "files_analyzed": 69,
+      "ruff_total_issues": 76,
+      "vulture_total_items": 16,
+      "duration_seconds": 27.694175243377686,
+      "file_results": [
+        {
+          "file_path": "scripts\\analysis\\accessibility_audit.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\analysis\\accessibility_audit.py",
+              "line": 140,
+              "column": 19,
+              "code": "F541",
+              "message": "f-string without any placeholders",
+              "severity": "F",
+              "fixable": true
+            }
+          ],
+          "vulture_items": [],
+          "analysis_time": 0.1905653476715088,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\analysis\\fdi_threshold_calibration.py",
+          "ruff_issues": [],
+          "vulture_items": [
+            {
+              "file_path": "scripts\\analysis\\fdi_threshold_calibration.py",
+              "line": 31,
+              "item_type": "variable",
+              "name": "dt",
+              "confidence": 100
+            },
+            {
+              "file_path": "scripts\\analysis\\fdi_threshold_calibration.py",
+              "line": 31,
+              "item_type": "variable",
+              "name": "u",
+              "confidence": 100
+            }
+          ],
+          "analysis_time": 0.1315450668334961,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\analysis\\fix_screenshot_timeouts.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\analysis\\fix_screenshot_timeouts.py",
+              "line": 38,
+              "column": 15,
+              "code": "F541",
+              "message": "f-string without any placeholders",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\analysis\\fix_screenshot_timeouts.py",
+              "line": 58,
+              "column": 19,
+              "code": "F541",
+              "message": "f-string without any placeholders",
+              "severity": "F",
+              "fixable": true
+            }
+          ],
+          "vulture_items": [],
+          "analysis_time": 0.09251189231872559,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\analysis\\performance_audit.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\analysis\\performance_audit.py",
+              "line": 218,
+              "column": 19,
+              "code": "F541",
+              "message": "f-string without any placeholders",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\analysis\\performance_audit.py",
+              "line": 321,
+              "column": 15,
+              "code": "F541",
+              "message": "f-string without any placeholders",
+              "severity": "F",
+              "fixable": true
+            }
+          ],
+          "vulture_items": [],
+          "analysis_time": 0.13452935218811035,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\analysis\\screenshot_docs.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.09572887420654297,
+          "success": false,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\analysis\\verify_back_to_top.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\analysis\\verify_back_to_top.py",
+              "line": 91,
+              "column": 19,
+              "code": "F541",
+              "message": "f-string without any placeholders",
+              "severity": "F",
+              "fixable": true
+            }
+          ],
+          "vulture_items": [],
+          "analysis_time": 0.08333563804626465,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\archive_management\\compress_logs.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\archive_management\\compress_logs.py",
+              "line": 28,
+              "column": 32,
+              "code": "F401",
+              "message": "`typing.Tuple` imported but unused",
+              "severity": "F",
+              "fixable": true
+            }
+          ],
+          "vulture_items": [],
+          "analysis_time": 0.11954808235168457,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\coverage\\check_coverage.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.10597634315490723,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\coverage\\coverage_report.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\coverage\\coverage_report.py",
+              "line": 29,
+              "column": 26,
+              "code": "F401",
+              "message": "`typing.List` imported but unused",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\coverage\\coverage_report.py",
+              "line": 29,
+              "column": 42,
+              "code": "F401",
+              "message": "`typing.Tuple` imported but unused",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\coverage\\coverage_report.py",
+              "line": 31,
+              "column": 8,
+              "code": "F401",
+              "message": "`shutil` imported but unused",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\coverage\\coverage_report.py",
+              "line": 193,
+              "column": 17,
+              "code": "F841",
+              "message": "Local variable `color_code` is assigned to but never used",
+              "severity": "F",
+              "fixable": false
+            },
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\coverage\\coverage_report.py",
+              "line": 195,
+              "column": 19,
+              "code": "F541",
+              "message": "f-string without any placeholders",
+              "severity": "F",
+              "fixable": true
+            }
+          ],
+          "vulture_items": [
+            {
+              "file_path": "scripts\\coverage\\coverage_report.py",
+              "line": 31,
+              "item_type": "unknown",
+              "name": "shutil",
+              "confidence": 90
+            }
+          ],
+          "analysis_time": 0.23896050453186035,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\coverage\\identify_gaps.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\coverage\\identify_gaps.py",
+              "line": 26,
+              "column": 32,
+              "code": "F401",
+              "message": "`typing.Tuple` imported but unused",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\coverage\\identify_gaps.py",
+              "line": 296,
+              "column": 19,
+              "code": "F541",
+              "message": "f-string without any placeholders",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\coverage\\identify_gaps.py",
+              "line": 374,
+              "column": 15,
+              "code": "F541",
+              "message": "f-string without any placeholders",
+              "severity": "F",
+              "fixable": true
+            }
+          ],
+          "vulture_items": [],
+          "analysis_time": 0.16103482246398926,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\coverage\\quick_baseline.py",
+          "ruff_issues": [],
+          "vulture_items": [
+            {
+              "file_path": "scripts\\coverage\\quick_baseline.py",
+              "line": 6,
+              "item_type": "unknown",
+              "name": "defaultdict",
+              "confidence": 90
+            }
+          ],
+          "analysis_time": 0.25789785385131836,
+          "success": false,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\debug_pso_fitness.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\debug_pso_fitness.py",
+              "line": 13,
+              "column": 17,
+              "code": "F401",
+              "message": "`numpy` imported but unused",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\debug_pso_fitness.py",
+              "line": 43,
+              "column": 11,
+              "code": "F541",
+              "message": "f-string without any placeholders",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\debug_pso_fitness.py",
+              "line": 49,
+              "column": 11,
+              "code": "F541",
+              "message": "f-string without any placeholders",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\debug_pso_fitness.py",
+              "line": 75,
+              "column": 11,
+              "code": "F541",
+              "message": "f-string without any placeholders",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\debug_pso_fitness.py",
+              "line": 91,
+              "column": 11,
+              "code": "F541",
+              "message": "f-string without any placeholders",
+              "severity": "F",
+              "fixable": true
+            }
+          ],
+          "vulture_items": [],
+          "analysis_time": 0.1449434757232666,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\docs\\enhance_analysis_advanced_docs.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.20777630805969238,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\docs\\enhance_analysis_core_docs.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.08319878578186035,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\docs\\enhance_api_docs.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\docs\\enhance_api_docs.py",
+              "line": 26,
+              "column": 26,
+              "code": "F401",
+              "message": "`typing.List` imported but unused",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\docs\\enhance_api_docs.py",
+              "line": 26,
+              "column": 42,
+              "code": "F401",
+              "message": "`typing.Tuple` imported but unused",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\docs\\enhance_api_docs.py",
+              "line": 83,
+              "column": 23,
+              "code": "F541",
+              "message": "f-string without any placeholders",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\docs\\enhance_api_docs.py",
+              "line": 122,
+              "column": 23,
+              "code": "F541",
+              "message": "f-string without any placeholders",
+              "severity": "F",
+              "fixable": true
+            }
+          ],
+          "vulture_items": [
+            {
+              "file_path": "scripts\\docs\\enhance_api_docs.py",
+              "line": 26,
+              "item_type": "unknown",
+              "name": "Tuple",
+              "confidence": 90
+            }
+          ],
+          "analysis_time": 0.15969395637512207,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\docs\\enhance_controllers_algorithms_docs.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\docs\\enhance_controllers_algorithms_docs.py",
+              "line": 117,
+              "column": 23,
+              "code": "F541",
+              "message": "f-string without any placeholders",
+              "severity": "F",
+              "fixable": true
+            }
+          ],
+          "vulture_items": [],
+          "analysis_time": 0.11391782760620117,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\docs\\enhance_controllers_core_docs.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\docs\\enhance_controllers_core_docs.py",
+              "line": 112,
+              "column": 23,
+              "code": "F541",
+              "message": "f-string without any placeholders",
+              "severity": "F",
+              "fixable": true
+            }
+          ],
+          "vulture_items": [],
+          "analysis_time": 0.12971186637878418,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\docs\\enhance_hil_docs.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\docs\\enhance_hil_docs.py",
+              "line": 21,
+              "column": 20,
+              "code": "F401",
+              "message": "`typing.Dict` imported but unused",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\docs\\enhance_hil_docs.py",
+              "line": 86,
+              "column": 23,
+              "code": "F541",
+              "message": "f-string without any placeholders",
+              "severity": "F",
+              "fixable": true
+            }
+          ],
+          "vulture_items": [],
+          "analysis_time": 0.14681577682495117,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\docs\\enhance_optimization_advanced_docs.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.08652687072753906,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\docs\\enhance_optimization_core_docs.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.0748453140258789,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\docs\\enhance_orchestrators_results_docs.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\docs\\enhance_orchestrators_results_docs.py",
+              "line": 32,
+              "column": 20,
+              "code": "F401",
+              "message": "`typing.Dict` imported but unused",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\docs\\enhance_orchestrators_results_docs.py",
+              "line": 32,
+              "column": 26,
+              "code": "F401",
+              "message": "`typing.List` imported but unused",
+              "severity": "F",
+              "fixable": true
+            }
+          ],
+          "vulture_items": [],
+          "analysis_time": 0.09362196922302246,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\docs\\enhance_plant_docs.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\docs\\enhance_plant_docs.py",
+              "line": 115,
+              "column": 23,
+              "code": "F541",
+              "message": "f-string without any placeholders",
+              "severity": "F",
+              "fixable": true
+            }
+          ],
+          "vulture_items": [
+            {
+              "file_path": "scripts\\docs\\enhance_plant_docs.py",
+              "line": 200,
+              "item_type": "variable",
+              "name": "new_theory",
+              "confidence": 100
+            },
+            {
+              "file_path": "scripts\\docs\\enhance_plant_docs.py",
+              "line": 200,
+              "item_type": "variable",
+              "name": "new_theory",
+              "confidence": 100
+            }
+          ],
+          "analysis_time": 0.12315726280212402,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\docs\\enhance_simulation_advanced_docs.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\docs\\enhance_simulation_advanced_docs.py",
+              "line": 32,
+              "column": 20,
+              "code": "F401",
+              "message": "`typing.Dict` imported but unused",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\docs\\enhance_simulation_advanced_docs.py",
+              "line": 32,
+              "column": 26,
+              "code": "F401",
+              "message": "`typing.List` imported but unused",
+              "severity": "F",
+              "fixable": true
+            }
+          ],
+          "vulture_items": [],
+          "analysis_time": 0.08381152153015137,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\docs\\enhance_simulation_core_docs.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\docs\\enhance_simulation_core_docs.py",
+              "line": 26,
+              "column": 20,
+              "code": "F401",
+              "message": "`typing.Dict` imported but unused",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\docs\\enhance_simulation_core_docs.py",
+              "line": 26,
+              "column": 26,
+              "code": "F401",
+              "message": "`typing.List` imported but unused",
+              "severity": "F",
+              "fixable": true
+            }
+          ],
+          "vulture_items": [],
+          "analysis_time": 0.09091448783874512,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\docs\\enhance_simulation_docs.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\docs\\enhance_simulation_docs.py",
+              "line": 114,
+              "column": 23,
+              "code": "F541",
+              "message": "f-string without any placeholders",
+              "severity": "F",
+              "fixable": true
+            }
+          ],
+          "vulture_items": [],
+          "analysis_time": 0.1480107307434082,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\docs\\enhance_utils_core_docs.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\docs\\enhance_utils_core_docs.py",
+              "line": 33,
+              "column": 20,
+              "code": "F401",
+              "message": "`typing.Dict` imported but unused",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\docs\\enhance_utils_core_docs.py",
+              "line": 33,
+              "column": 26,
+              "code": "F401",
+              "message": "`typing.List` imported but unused",
+              "severity": "F",
+              "fixable": true
+            }
+          ],
+          "vulture_items": [],
+          "analysis_time": 0.10134148597717285,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\docs\\enhance_utils_extended_docs.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\docs\\enhance_utils_extended_docs.py",
+              "line": 9,
+              "column": 20,
+              "code": "F401",
+              "message": "`typing.List` imported but unused",
+              "severity": "F",
+              "fixable": true
+            }
+          ],
+          "vulture_items": [],
+          "analysis_time": 0.1053612232208252,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\docs\\generate_code_docs.py",
+          "ruff_issues": [],
+          "vulture_items": [
+            {
+              "file_path": "scripts\\docs\\generate_code_docs.py",
+              "line": 36,
+              "item_type": "unknown",
+              "name": "inspect",
+              "confidence": 90
+            },
+            {
+              "file_path": "scripts\\docs\\generate_code_docs.py",
+              "line": 39,
+              "item_type": "unknown",
+              "name": "Any",
+              "confidence": 90
+            },
+            {
+              "file_path": "scripts\\docs\\generate_code_docs.py",
+              "line": 39,
+              "item_type": "unknown",
+              "name": "Tuple",
+              "confidence": 90
+            },
+            {
+              "file_path": "scripts\\docs\\generate_code_docs.py",
+              "line": 36,
+              "item_type": "unknown",
+              "name": "inspect",
+              "confidence": 90
+            }
+          ],
+          "analysis_time": 0.10802793502807617,
+          "success": false,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\docs\\validate_code_docs.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\docs\\validate_code_docs.py",
+              "line": 20,
+              "column": 32,
+              "code": "F401",
+              "message": "`typing.Tuple` imported but unused",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\docs\\validate_code_docs.py",
+              "line": 20,
+              "column": 39,
+              "code": "F401",
+              "message": "`typing.Set` imported but unused",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\docs\\validate_code_docs.py",
+              "line": 273,
+              "column": 23,
+              "code": "F541",
+              "message": "f-string without any placeholders",
+              "severity": "F",
+              "fixable": true
+            }
+          ],
+          "vulture_items": [
+            {
+              "file_path": "scripts\\docs\\validate_code_docs.py",
+              "line": 20,
+              "item_type": "unknown",
+              "name": "Set",
+              "confidence": 90
+            },
+            {
+              "file_path": "scripts\\docs\\validate_code_docs.py",
+              "line": 20,
+              "item_type": "unknown",
+              "name": "Tuple",
+              "confidence": 90
+            }
+          ],
+          "analysis_time": 0.11124253273010254,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\docs_organization\\detect_redundancy.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\docs_organization\\detect_redundancy.py",
+              "line": 26,
+              "column": 39,
+              "code": "F401",
+              "message": "`typing.Set` imported but unused",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\docs_organization\\detect_redundancy.py",
+              "line": 27,
+              "column": 25,
+              "code": "F401",
+              "message": "`collections.defaultdict` imported but unused",
+              "severity": "F",
+              "fixable": true
+            }
+          ],
+          "vulture_items": [],
+          "analysis_time": 0.1702573299407959,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\docs_organization\\enforce_naming_conventions.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\docs_organization\\enforce_naming_conventions.py",
+              "line": 25,
+              "column": 32,
+              "code": "F401",
+              "message": "`typing.Tuple` imported but unused",
+              "severity": "F",
+              "fixable": true
+            }
+          ],
+          "vulture_items": [],
+          "analysis_time": 0.07759904861450195,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\docs_organization\\generate_structure_report.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\docs_organization\\generate_structure_report.py",
+              "line": 33,
+              "column": 26,
+              "code": "F401",
+              "message": "`typing.List` imported but unused",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\docs_organization\\generate_structure_report.py",
+              "line": 33,
+              "column": 32,
+              "code": "F401",
+              "message": "`typing.Tuple` imported but unused",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\docs_organization\\generate_structure_report.py",
+              "line": 33,
+              "column": 39,
+              "code": "F401",
+              "message": "`typing.Optional` imported but unused",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\docs_organization\\generate_structure_report.py",
+              "line": 125,
+              "column": 17,
+              "code": "F541",
+              "message": "f-string without any placeholders",
+              "severity": "F",
+              "fixable": true
+            }
+          ],
+          "vulture_items": [],
+          "analysis_time": 0.08266282081604004,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\docs_organization\\validate_ascii_headers.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\docs_organization\\validate_ascii_headers.py",
+              "line": 27,
+              "column": 8,
+              "code": "F401",
+              "message": "`os` imported but unused",
+              "severity": "F",
+              "fixable": true
+            }
+          ],
+          "vulture_items": [],
+          "analysis_time": 0.06972742080688477,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\docs_organization\\validate_links.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.0721592903137207,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\mcp_validation\\run_complete_code_quality_analysis.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\mcp_validation\\run_complete_code_quality_analysis.py",
+              "line": 40,
+              "column": 8,
+              "code": "F401",
+              "message": "`sys` imported but unused",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\mcp_validation\\run_complete_code_quality_analysis.py",
+              "line": 355,
+              "column": 48,
+              "code": "F841",
+              "message": "Local variable `e` is assigned to but never used",
+              "severity": "F",
+              "fixable": true
+            }
+          ],
+          "vulture_items": [],
+          "analysis_time": 0.05538749694824219,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\optimization\\analyze_pso_convergence.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.1544203758239746,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\optimization\\auto_complete_when_ready.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.07478833198547363,
+          "success": false,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\optimization\\check_pso_completion.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.06864356994628906,
+          "success": false,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\optimization\\complete_issue12_resolution.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.10364985466003418,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\optimization\\diagnose_classical_chattering.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.09482145309448242,
+          "success": false,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\optimization\\monitor_and_validate.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.0807046890258789,
+          "success": false,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\optimization\\monitor_pso.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.10308694839477539,
+          "success": false,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\optimization\\optimize_chattering_direct.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.07795286178588867,
+          "success": false,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\optimization\\optimize_chattering_focused.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.06974244117736816,
+          "success": false,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\optimization\\optimize_chattering_reduction.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\optimization\\optimize_chattering_reduction.py",
+              "line": 370,
+              "column": 17,
+              "code": "F541",
+              "message": "f-string without any placeholders",
+              "severity": "F",
+              "fixable": true
+            }
+          ],
+          "vulture_items": [],
+          "analysis_time": 0.08975958824157715,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\optimization\\optimize_hybrid_chattering.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.08926177024841309,
+          "success": false,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\optimization\\optimize_sta_lyapunov.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.11488819122314453,
+          "success": false,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\optimization\\run_pso_parallel.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\optimization\\run_pso_parallel.py",
+              "line": 21,
+              "column": 20,
+              "code": "F401",
+              "message": "`typing.List` imported but unused",
+              "severity": "F",
+              "fixable": true
+            }
+          ],
+          "vulture_items": [],
+          "analysis_time": 0.06853508949279785,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\optimization\\test_hybrid_emergency_reset.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.1097867488861084,
+          "success": false,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\optimization\\update_config_with_gains.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.06632471084594727,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\optimization\\validate_and_summarize.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.0892331600189209,
+          "success": false,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\optimization\\validate_optimized_gains.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\optimization\\validate_optimized_gains.py",
+              "line": 139,
+              "column": 11,
+              "code": "F541",
+              "message": "f-string without any placeholders",
+              "severity": "F",
+              "fixable": true
+            }
+          ],
+          "vulture_items": [],
+          "analysis_time": 0.09214210510253906,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\optimization\\visualize_optimization_results.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.08152484893798828,
+          "success": false,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\optimization\\watch_pso.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.09845852851867676,
+          "success": false,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\pytest_automation.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\pytest_automation.py",
+              "line": 20,
+              "column": 8,
+              "code": "F401",
+              "message": "`tempfile` imported but unused",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\pytest_automation.py",
+              "line": 21,
+              "column": 8,
+              "code": "F401",
+              "message": "`shutil` imported but unused",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\pytest_automation.py",
+              "line": 531,
+              "column": 19,
+              "code": "F541",
+              "message": "f-string without any placeholders",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\pytest_automation.py",
+              "line": 577,
+              "column": 15,
+              "code": "F541",
+              "message": "f-string without any placeholders",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\pytest_automation.py",
+              "line": 585,
+              "column": 19,
+              "code": "F541",
+              "message": "f-string without any placeholders",
+              "severity": "F",
+              "fixable": true
+            }
+          ],
+          "vulture_items": [
+            {
+              "file_path": "scripts\\pytest_automation.py",
+              "line": 20,
+              "item_type": "unknown",
+              "name": "tempfile",
+              "confidence": 90
+            },
+            {
+              "file_path": "scripts\\pytest_automation.py",
+              "line": 29,
+              "item_type": "unknown",
+              "name": "CoverageMetrics",
+              "confidence": 90
+            }
+          ],
+          "analysis_time": 0.14151287078857422,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\test_session_continuity.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\test_session_continuity.py",
+              "line": 28,
+              "column": 20,
+              "code": "F401",
+              "message": "`typing.Dict` imported but unused",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\test_session_continuity.py",
+              "line": 28,
+              "column": 26,
+              "code": "F401",
+              "message": "`typing.Any` imported but unused",
+              "severity": "F",
+              "fixable": true
+            }
+          ],
+          "vulture_items": [
+            {
+              "file_path": "scripts\\test_session_continuity.py",
+              "line": 343,
+              "item_type": "unreachable",
+              "name": "if",
+              "confidence": 100
+            }
+          ],
+          "analysis_time": 0.1159818172454834,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\validate_documentation.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\validate_documentation.py",
+              "line": 15,
+              "column": 20,
+              "code": "F401",
+              "message": "`typing.Dict` imported but unused",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\validate_documentation.py",
+              "line": 15,
+              "column": 32,
+              "code": "F401",
+              "message": "`typing.Tuple` imported but unused",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\validate_documentation.py",
+              "line": 15,
+              "column": 39,
+              "code": "F401",
+              "message": "`typing.Set` imported but unused",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\validate_documentation.py",
+              "line": 226,
+              "column": 9,
+              "code": "F841",
+              "message": "Local variable `tutorial_order` is assigned to but never used",
+              "severity": "F",
+              "fixable": false
+            }
+          ],
+          "vulture_items": [],
+          "analysis_time": 0.13152241706848145,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\validate_memory_optimization.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\validate_memory_optimization.py",
+              "line": 25,
+              "column": 5,
+              "code": "F841",
+              "message": "Local variable `state_dim` is assigned to but never used",
+              "severity": "F",
+              "fixable": false
+            },
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\validate_memory_optimization.py",
+              "line": 33,
+              "column": 5,
+              "code": "F841",
+              "message": "Local variable `baseline_start_mem` is assigned to but never used",
+              "severity": "F",
+              "fixable": false
+            },
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\validate_memory_optimization.py",
+              "line": 53,
+              "column": 5,
+              "code": "F841",
+              "message": "Local variable `optimized_start_mem` is assigned to but never used",
+              "severity": "F",
+              "fixable": false
+            },
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\validate_memory_optimization.py",
+              "line": 115,
+              "column": 5,
+              "code": "F841",
+              "message": "Local variable `state_dim` is assigned to but never used",
+              "severity": "F",
+              "fixable": false
+            },
+            {
+              "file_path": "D:\\Projects\\main\\scripts\\validate_memory_optimization.py",
+              "line": 130,
+              "column": 9,
+              "code": "F841",
+              "message": "Local variable `x_curr` is assigned to but never used",
+              "severity": "F",
+              "fixable": false
+            }
+          ],
+          "vulture_items": [],
+          "analysis_time": 0.1354382038116455,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "scripts\\validate_memory_pool.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.10405683517456055,
+          "success": false,
+          "error_message": null
+        },
+        {
+          "file_path": "simulate.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.10335493087768555,
+          "success": false,
+          "error_message": null
+        },
+        {
+          "file_path": "streamlit_app.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\streamlit_app.py",
+              "line": 38,
+              "column": 21,
+              "code": "F401",
+              "message": "`pathlib.Path` imported but unused",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\streamlit_app.py",
+              "line": 290,
+              "column": 13,
+              "code": "E731",
+              "message": "Do not assign a `lambda` expression, use a `def`",
+              "severity": "E",
+              "fixable": false
+            }
+          ],
+          "vulture_items": [],
+          "analysis_time": 0.10009288787841797,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "test_batch_sim_minimal.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\test_batch_sim_minimal.py",
+              "line": 43,
+              "column": 11,
+              "code": "F541",
+              "message": "f-string without any placeholders",
+              "severity": "F",
+              "fixable": true
+            }
+          ],
+          "vulture_items": [],
+          "analysis_time": 0.14919042587280273,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "test_compat_imports.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\test_compat_imports.py",
+              "line": 43,
+              "column": 11,
+              "code": "F541",
+              "message": "f-string without any placeholders",
+              "severity": "F",
+              "fixable": true
+            }
+          ],
+          "vulture_items": [],
+          "analysis_time": 0.07361698150634766,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "test_direct_import.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.09365463256835938,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "test_dynamics_property.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.09185552597045898,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "test_lyap_direct_run.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\test_lyap_direct_run.py",
+              "line": 43,
+              "column": 7,
+              "code": "F541",
+              "message": "f-string without any placeholders",
+              "severity": "F",
+              "fixable": true
+            }
+          ],
+          "vulture_items": [],
+          "analysis_time": 0.06486725807189941,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "test_lyap_fresh.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.07217264175415039,
+          "success": false,
+          "error_message": null
+        },
+        {
+          "file_path": "test_minimal_import.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.06870698928833008,
+          "success": false,
+          "error_message": null
+        },
+        {
+          "file_path": "test_step_scalar_debug.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.06992101669311523,
+          "success": true,
+          "error_message": null
+        }
+      ]
+    }
+  ]
+}

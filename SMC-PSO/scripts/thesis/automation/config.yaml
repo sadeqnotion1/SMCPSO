@@ -1,0 +1,97 @@
+# Automated Thesis Verification Configuration
+# Created: November 5, 2025
+
+# API Configuration
+api:
+  # Anthropic Claude API (for claims extraction, completeness, proof screening)
+  anthropic:
+    api_key_env: "ANTHROPIC_API_KEY"  # Set via: export ANTHROPIC_API_KEY="sk-ant-..."
+    model: "claude-3-5-sonnet-20241022"
+    max_tokens: 4000
+    temperature: 0.0  # Deterministic for validation tasks
+
+  # Budget limits
+  estimated_cost_usd: 20.0
+  max_api_calls: 50
+
+# Thesis Structure
+thesis:
+  base_path: "D:/Projects/main/docs/thesis/chapters"
+  chapters:
+    - "00_introduction.md"
+    - "01_problem_statement.md"
+    - "02_literature_review.md"
+    - "03_system_modeling.md"
+    - "04_sliding_mode_control.md"
+    - "05_chattering_mitigation.md"
+    - "06_pso_optimization.md"
+    - "07_simulation_setup.md"
+    - "08_results.md"
+    - "09_conclusion.md"
+
+  appendices:
+    - "appendix_a_proofs.md"
+
+# Code Structure
+code:
+  controllers_path: "src/controllers"
+  dynamics_path: "src/core"
+  pso_path: "src/optimizer"
+  utils_path: "src/utils"
+
+# Output Configuration
+output:
+  reports_path: ".artifacts/thesis/reports"
+  format: "markdown"  # Options: markdown, json, html
+  verbose: true
+  timestamp: true
+
+# Validation Thresholds
+thresholds:
+  cross_references:
+    max_broken_refs: 0
+    citation_format: "sphinx"  # {cite}`author2024`
+
+  statistics:
+    bonferroni_tests: 15  # Number of pairwise comparisons
+    alpha: 0.05
+    corrected_alpha: 0.00333  # 0.05/15
+    min_effect_size: 0.5  # Cohen's d
+
+  notation:
+    max_inconsistencies: 5
+    check_subscripts: true
+    check_superscripts: true
+
+  claims:
+    min_evidence_rate: 0.90  # 90% of claims must have evidence
+    sample_validation_rate: 0.30  # Manually validate 30% of extracted claims
+
+  equations:
+    symbolic_verification: true
+    dimensional_analysis: true
+    max_algebra_errors: 0
+
+  code_theory:
+    critical_implementations: 10
+    tolerance: 1e-6  # Numerical comparison tolerance
+
+  completeness:
+    research_questions: 5
+    min_coverage: 1.0  # All RQs must be addressed
+
+  proofs:
+    red_flag_threshold: 2  # Max concerning issues before expert review
+
+# Automation Settings
+automation:
+  parallel_execution: false  # Run scripts sequentially for now
+  auto_fix: false  # Do not auto-fix issues, only report
+  generate_summary: true
+  create_dashboard: true
+
+# Logging
+logging:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR
+  file: ".artifacts/thesis/automation.log"
+  console: true

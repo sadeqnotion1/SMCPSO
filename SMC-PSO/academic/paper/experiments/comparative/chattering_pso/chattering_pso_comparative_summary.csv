@@ -1,0 +1,4 @@
+Controller,Chattering Before,Chattering After,Chattering Reduction (%),RMSE Before,RMSE After,RMSE Change (%),Fitness Before,Fitness After,Fitness Improvement (%),Optimization Time (s)
+Classical Smc,49.3683,12.5047,74.6706,9.3647,10.7989,15.3150,37.3672,11.9930,67.9051,782.4349
+Adaptive Smc,0.0000,0.0000,0.0000,8.5138,8.5138,0.0000,2.5541,2.5541,0.0000,1665.8471
+Hybrid Adaptive Sta Smc,0.0000,0.0000,0.0000,8.5138,8.5138,0.0000,2.5541,2.5541,0.0000,1848.4488

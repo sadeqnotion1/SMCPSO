@@ -1,0 +1,161 @@
+╔══════════════════════════════════════════════════════════════════════════╗
+║         ALL 10 ENHANCED AUDIT PROMPTS REGENERATED & READY!               ║
+║              Maximum Mathematical Rigor Built-In                         ║
+╚══════════════════════════════════════════════════════════════════════════╝
+
+LOCATION: D:\Projects\main\.artifacts\research\papers\LT7_journal_paper\sections\audits\
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+WHAT'S NEW - ENHANCED RIGOR FEATURES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+After Section 4 audit found CRITICAL mathematical error (Theorem 4.3 β≠1 issue),
+ALL remaining prompts now include:
+
+✅ Dimensional Analysis - Check units on EVERY equation
+✅ Implicit Assumption Detection - Flag β=1, d=0 type assumptions
+✅ Numerical Claim Verification - Trace 50.4x, 90.2%, 1.82s to sources
+✅ Statistical Test Validation - Verify assumptions (normality, sample size)
+✅ Cross-Section Consistency - Check values match across sections
+✅ Severity Classification - CRITICAL/HIGH/MEDIUM impact levels
+✅ Verification Tables - Track every claim's source and verification status
+✅ Edge Case Analysis - What if β≠1? What if d≠0?
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ENHANCED PROMPTS (Priority Order)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+HIGH PRIORITY ⚠️ (Critical Sections)
+
+  [01] Lyapunov_Stability (37 KB)
+       ✅ AUDITED - CRITICAL ERROR FOUND (Theorem 4.3)
+       Score: 7/10 | Status: CONDITIONAL PASS
+       Action: Fix β cancellation error before submission
+
+  [02] Performance_Results (27 KB) ← AUDIT NEXT
+       Enhanced checks:
+       - Trace ALL numerical claims (50.4x, 90.2%, 1.82s)
+       - Verify Welch's t-test assumptions
+       - Check Bonferroni correction for 7×7 comparisons
+       - Confirm Cohen's d calculations
+       - Cross-reference with Section 4 theoretical predictions
+
+  [03] Robustness_Analysis (52 KB)
+       Enhanced checks:
+       - Verify PSO failure claims (50.4x, 90.2%)
+       - Trace degradation metrics to source
+       - Check if results depend on β=1 assumption
+       - Validate uncertainty/disturbance ranges
+
+MEDIUM PRIORITY
+
+  [04] Controller_Design (44 KB)
+       Enhanced: Dimensional analysis of ALL 7 controller equations
+
+  [05] Experimental_Setup (49 KB)
+       Enhanced: Verify statistical methodology assumptions
+
+  [06] Introduction (55 KB)
+       Enhanced: Verify literature survey statistics (68 citations)
+
+  [07] PSO_Methodology (61 KB)
+       Enhanced: Check algorithm correctness, parameter bounds
+
+  [08] System_Model (77 KB)
+       Enhanced: Dimensional analysis of DIP dynamics equations
+
+LOW PRIORITY
+
+  [09] Discussion (42 KB)
+       Enhanced: Check design guidelines match results
+
+  [10] Conclusion (26 KB)
+       Enhanced: Verify NO new claims, numerical accuracy
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+USAGE - SAME SIMPLE WORKFLOW
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+For each section (02-10):
+
+  1. Open prompt file (e.g., 02-PRIORITY-Performance_Results-Section_07_PROMPT.txt)
+  2. Copy all content (Ctrl+A, Ctrl+C)
+  3. Paste into Gemini CLI
+  4. Wait for enhanced audit report
+  5. Save response (e.g., 02-AUDIT-Section_07_Performance_Results.md)
+
+Enhanced rigor is AUTOMATICALLY included - no extra steps needed!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+EXPECTED AUDIT QUALITY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+BEFORE Enhanced Rigor:
+  - "Data looks consistent"
+  - "Claims appear reasonable"
+  - Generic issues flagged
+
+AFTER Enhanced Rigor:
+  - "Claim '50.4x degradation' traced to Table 8.3, calculated as..."
+  - "Welch's t-test assumes normality: check with Shapiro-Wilk test"
+  - "β=0.78 from Example 4.1 contradicts implicit β=1 in proof"
+  - SEVERITY 1 (CRITICAL): Invalidates result - must fix
+  - Verification table showing claim→source→verification status
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+FILE DETAILS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+01-PRIORITY-Lyapunov_Stability-Section_04_PROMPT.txt      37 KB  ✅ AUDITED
+02-PRIORITY-Performance_Results-Section_07_PROMPT.txt     27 KB  ← NEXT
+03-PRIORITY-Robustness_Analysis-Section_08_PROMPT.txt     52 KB
+04-Controller_Design-Section_03_PROMPT.txt                 44 KB
+05-Experimental_Setup-Section_06_PROMPT.txt                49 KB
+06-Introduction-Section_01_PROMPT.txt                      55 KB
+07-PSO_Methodology-Section_05_PROMPT.txt                   61 KB
+08-System_Model-Section_02_PROMPT.txt                      77 KB  (largest!)
+09-Discussion-Section_09_PROMPT.txt                        42 KB
+10-Conclusion-Section_10_PROMPT.txt                        26 KB
+
+Total: 470 KB of enhanced audit prompts (avg 47 KB each)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+AUDIT PROGRESS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+[✅] Section 01 (04) - Lyapunov Stability - CRITICAL ERROR FOUND
+[ ] Section 02 (07) - Performance Results - READY WITH ENHANCED RIGOR
+[ ] Section 03 (08) - Robustness Analysis - READY WITH ENHANCED RIGOR
+[ ] Section 04 (03) - Controller Design - READY WITH ENHANCED RIGOR
+[ ] Section 05 (06) - Experimental Setup - READY WITH ENHANCED RIGOR
+[ ] Section 06 (01) - Introduction - READY WITH ENHANCED RIGOR
+[ ] Section 07 (05) - PSO Methodology - READY WITH ENHANCED RIGOR
+[ ] Section 08 (02) - System Model - READY WITH ENHANCED RIGOR
+[ ] Section 09 (09) - Discussion - READY WITH ENHANCED RIGOR
+[ ] Section 10 (10) - Conclusion - READY WITH ENHANCED RIGOR
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TIME ESTIMATE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Per Section: 5-10 minutes (copy, paste, wait, save)
+High Priority (02-03): 30 minutes
+All Remaining (02-10): 1.5-2 hours
+
+Total Value: Catching critical errors BEFORE journal submission
+            = Saving weeks/months of revision cycles!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+READY TO CONTINUE?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Next: Open 02-PRIORITY-Performance_Results-Section_07_PROMPT.txt
+
+Enhanced rigor will automatically:
+  ✅ Verify every "50.4x degradation" claim
+  ✅ Check statistical test assumptions
+  ✅ Flag any β=1 type implicit assumptions
+  ✅ Provide verification tables
+  ✅ Classify issues by severity (CRITICAL/HIGH/MEDIUM)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

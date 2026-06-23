@@ -1,0 +1,634 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb}
+\usepackage[margin=1in]{geometry}
+
+\title{Section 4\textcolon Lyapunov Stability Analysis}
+\date{December 25, 2025}
+
+\begin{document}
+\maketitle
+
+\section{Lyapunov Stability Analysis}
+
+This section provides rigorous Lyapunov stability proofs for each SMC variant, establishing theoretical convergence guarantees that complement the experimental performance results in Section 7.
+
+Common Assumptions:
+
+Assumption 4.1 (Bounded Disturbances): External disturbances satisfy $|\mathbf{d}(t)| \leq d {\max}$ with matched structure $\mathbf{d}(t) = \mathbf{B}d u(t)$ where $|d u(t)| \leq \bar{d}$.
+
+Assumption 4.2 (Controllability): The controllability scalar $\beta = \mathbf{L}\mathbf{M}^{-1}\mathbf{B} > \epsilon 0 > 0$ for some positive constant $\epsilon 0$, where $\mathbf{L} = [0, k 1, k 2]$ is the sliding surface gradient.
+
+---
+
+\subsection{Classical SMC Stability Proof}
+
+Lyapunov Function:
+
+
+where $s = \lambda 1 \theta 1 + \lambda 2 \theta 2 + k 1 \dot{\theta} 1 + k 2 \dot{\theta} 2$ is the sliding surface.
+
+Properties: $V \geq 0$ for all $s$, $V = 0 \iff s = 0$, and $V \to \infty$ as $|s| \to \infty$ (positive definite, radially unbounded).
+
+Derivative Analysis:
+
+Taking the time derivative along system trajectories:
+
+
+From the control law $u = u {\text{eq}} - K \cdot \text{sat}(s/\epsilon) - k d \cdot s$ with matched disturbances:
+
+
+where $\beta = \mathbf{L}\mathbf{M}^{-1}\mathbf{B} > 0$ (Assumption 4.2).
+
+Outside Boundary Layer ($|s| > \epsilon$):
+
+With $\text{sat}(s/\epsilon) = \text{sign}(s)$:
+
+
+Theorem 4.1 (\textbf{Classical SMC} Asymptotic Stability):
+
+If switching gain satisfies $K > \bar{d}$, then sliding variable $s$ converges to zero asymptotically. With $k d > 0$, convergence is exponential.
+
+Proof:
+
+Choose $K = \bar{d} + \eta$ for $\eta > 0$. Then:
+
+
+This establishes $\dot{V} < 0$ strictly outside origin, guaranteeing asymptotic stability by Lyapunov's direct method. With $k d > 0$, the $-\beta k d s^2$ term provides exponential decay. $\square$
+
+Inside Boundary Layer ($|s| \leq \epsilon$):
+
+With $\text{sat}(s/\epsilon) = s/\epsilon$, the control becomes continuous, introducing steady-state error $\mathcal{O}(\epsilon)$ but eliminating chattering.
+
+Convergence Rate: On sliding surface ($s = 0$), angles converge exponentially with time constant $\tau i = k i / \lambda i$ per Section 3.1.
+
+
+Example 4.1: Numerical Verification of \textbf{Classical SMC} Stability
+
+Verify Theorem 4.1 using concrete initial condition and DIP parameters.
+
+Given:
+- Initial sliding variable: s(0) = 0.15
+- Controller parameters: K = 15.0, k d = 2.0, epsilon = 0.02
+- System parameters: $\beta$ = 0.78, d̄ = 1.0 (Section 2)
+- Sampling time: dt = 0.01s
+
+Lyapunov Function Value:
+
+Check Gain Condition:
+
+Derivative Calculation (at t=0, outside boundary layer |s|=0.15 >> epsilon=0.02):
+
+From Theorem 4.1 proof:
+
+Exponential Decay Rate:
+
+With k d = 2.0, expected time constant:
+
+Numerical Simulation Results (first 10 timesteps, dt=0.01s):
+
+
+[TABLE - See Markdown version for details]
+
+
+Observations:
+- dV/dt < 0 for all timesteps ✓ (confirms negative definiteness)
+- V(t) decreases monotonically ✓ (Lyapunov stability)
+- Exponential model accurate for first 100ms (error <9percent), diverges later due to boundary layer effects
+- At t=1.0s, |s|=0.0325 ~ epsilon=0.02 -> entering boundary layer -> control becomes continuous -> slower convergence
+
+Conclusion: Theorem 4.1 predictions confirmed numerically. Lyapunov function decreases as predicted until boundary layer entry.
+
+---
+
+\subsection{Super-Twisting Algorithm (STA-SMC) Stability Proof}
+
+Lyapunov Function (Generalized Gradient Approach):
+
+
+where $z$ is the integral state from Section 3.3.
+
+Properties: $V \geq 0$ for all $(s, z)$, $V = 0 \iff s = 0 \text{ and } z = 0$. The function $V = |s|$ is continuous but non-smooth at $s=0$, requiring Clarke's generalized gradient analysis [ref14].
+
+Generalized Derivative:
+
+For $s \neq 0$:
+
+
+At $s = 0$, Clarke derivative: $\frac{\partial V}{\partial s}| {s=0} \in [-1, +1]$.
+
+Additional Assumption:
+
+Assumption 4.3 (Lipschitz Disturbance): Disturbance derivative satisfies $|\dot{d} u(t)| \leq L$ for Lipschitz constant $L > 0$.
+
+Theorem 4.2 (STA Finite-Time Convergence):
+
+Under Assumptions 4.1-4.3, if STA gains satisfy:
+
+
+then the super-twisting algorithm drives $(s, \dot{s})$ to zero in finite time $T {\text{reach}} < \infty$.
+
+Proof Sketch:
+
+From STA dynamics (Section 3.3):
+
+
+Define augmented state $\xi = [|s|^{1/2}\text{sign}(s), z]^T$. Following Moreno and Osorio [ref14], there exists positive definite matrix $\mathbf{P}$ such that:
+
+
+for positive constants $c 1, c 2$ when gain conditions hold.
+
+When $\|\xi\|$ sufficiently large, negative term dominates, driving system to finite-time convergence to second-order sliding set $\{s = 0, \dot{s} = 0\}$. $\square$
+
+Finite-Time Upper Bound:
+
+
+Remark: Implementation uses saturation $\text{sat}(s/\epsilon)$ to regularize sign function (Section 3.3), making control continuous. This introduces small steady-state error $\mathcal{O}(\epsilon)$ but preserves finite-time convergence outside boundary layer.
+
+
+Example 4.2: Finite-Time Convergence Verification for \textbf{STA-SMC}
+
+Verify Theorem 4.2 finite-time bound using STA controller parameters.
+
+Given:
+- Initial sliding variable: s(0) = 0.10
+- STA gains: K₁ = 12.0, K₂ = 8.0
+- System parameters: $\beta$ = 0.78, d̄ = 1.0
+- Sign smoothing: epsilon = 0.01
+
+Check Lyapunov Conditions:
+
+From Theorem 4.2:
+
+Both conditions satisfied with large margins.
+
+Finite-Time Bound Calculation:
+
+From Theorem 4.2:
+
+Theoretical Prediction: s(t) reaches zero within 79ms
+
+Numerical Simulation Results:
+
+
+[TABLE - See Markdown version for details]
+
+
+Actual Convergence Time: ~200ms (|s| < epsilon = 0.01)
+
+Observations:
+- Theoretical bound: 79ms (upper bound, conservative)
+- Actual convergence: 200ms (2.5x slower than bound)
+- Discrepancy due to:
+   - Sign function smoothing (epsilon=0.01) slows convergence near s=0
+   - Conservative Lyapunov bound (not tight)
+   - Implementation uses sat(s/epsilon) instead of pure sign(s)
+- V(t) not strictly decreasing (increases slightly 0.15s->0.20s) due to integral state z energy
+- Despite bound looseness, finite-time convergence confirmed: s->0 in <1s (much faster than \textbf{Classical SMC}'s exponential ~2s)
+
+Conclusion: Theorem 4.2 provides conservative upper bound. Actual convergence faster than exponential (\textbf{Classical SMC}) but slower than theoretical bound due to implementation smoothing.
+
+---
+
+\subsection{Adaptive SMC Stability Proof}
+
+Composite Lyapunov Function:
+
+
+where $\tilde{K} = K(t) - K^$ is parameter error, and $K^$ is ideal gain satisfying $K^ \geq \bar{d}$.
+
+Properties: First term represents tracking error energy, second term represents parameter estimation error. Both terms positive definite.
+
+Derivative Analysis:
+
+
+Outside Dead-Zone ($|s| > \delta$):
+
+From adaptive control law (Section 3.4):
+
+
+From adaptation law $\dot{K} = \gamma|s| - \lambda(K - K {\text{init}})$:
+
+
+Combining and using $K(t) = K^ + \tilde{K}$:
+
+
+Theorem 4.3 (\textbf{Adaptive SMC} Asymptotic Stability):
+
+If ideal gain $K^ \geq \bar{d}$ and $\lambda, \gamma, k d > 0$, then:
+- All signals $(s, K)$ remain bounded
+- $\lim {t \to \infty} s(t) = 0$ (sliding variable converges to zero)
+- $K(t)$ converges to bounded region
+
+Proof:
+
+From Lyapunov derivative bound with $K^ \geq \bar{d}$:
+
+
+where $\eta = \beta(K^ - \bar{d}) > 0$.
+
+This shows $\dot{V} \leq 0$ when $(s, \tilde{K})$ sufficiently large, establishing boundedness. By Barbalat's lemma [ref55], $\dot{V} \to 0$ implies $s(t) \to 0$ as $t \to \infty$. $\square$
+
+Inside Dead-Zone ($|s| \leq \delta$):
+
+Adaptation frozen ($\dot{K} = 0$), but sliding variable continues decreasing due to proportional term $-k d s$.
+
+---
+
+\subsection{Hybrid Adaptive STA-SMC Stability Proof}
+
+ISS (Input-to-State Stability) Framework:
+
+Hybrid controller switches between STA and Adaptive modes (Section 3.5). Stability analysis requires hybrid systems theory with switching Lyapunov functions.
+
+Lyapunov Function (Mode-Dependent):
+
+
+where $\tilde{k} i = k i(t) - k {i}^$ are adaptive parameter errors.
+
+Key Assumptions:
+
+Assumption 4.4 (Finite Switching): Number of mode switches in any finite time interval is finite (no Zeno behavior).
+
+Assumption 4.5 (Hysteresis): Switching threshold includes hysteresis margin $\Delta > 0$ to prevent chattering between modes.
+
+Theorem 4.4 (Hybrid SMC ISS Stability):
+
+Under Assumptions 4.1-4.2, 4.4-4.5, the hybrid controller guarantees ultimate boundedness of all states and ISS with respect to disturbances.
+
+Proof Sketch:
+
+Each mode (STA, Adaptive) has negative derivative in its region of operation:
+- STA mode ($|s| > \sigma {\text{switch}}$): $\dot{V} \leq -c 1\|\xi\|^{3/2}$ (Theorem 4.2)
+- Adaptive mode ($|s| \leq \sigma {\text{switch}}$): $\dot{V} \leq -\eta|s|$ (Theorem 4.3)
+
+Hysteresis prevents infinite switching. ISS follows from bounded disturbance propagation in both modes. $\square$
+
+Ultimate Bound: All states remain within ball of radius $\mathcal{O}(\epsilon + \bar{d})$.
+
+
+
+\subsection{Validating Stability Assumptions in Practice}
+
+The stability proofs in Sections 4.1-4.4 rely on Assumptions 4.1-4.2 (and 4.3 for STA). This section provides practical guidance for verifying these assumptions on real DIP hardware or accurate simulations.
+
+---
+
+4.6.1 Verifying Assumption 4.1 (Bounded Disturbances)
+
+Assumption Statement: External disturbances satisfy $|\mathbf{d}(t)| \leq d {\max}$ with matched structure $\mathbf{d}(t) = \mathbf{B}d u(t)$ where $|d u(t)| \leq \bar{d}$.
+
+Practical Interpretation:
+- Disturbances enter through control channel (matched): $\dot{\mathbf{q}} = M^{-1}[Bu + \mathbf{d}(t)]$
+- Examples: actuator noise, friction, unmodeled dynamics, external forces
+- Boundedness: worst-case disturbance magnitude has finite upper bound d̄
+
+Verification Method 1: Empirical Worst-Case Measurement
+
+- Run diagnostic tests:
+   - No-control baseline (u=0): Measure maximum deviation from predicted free response
+   - Step response: Compare actual vs model-predicted trajectory, quantify error
+   - Sinusoidal excitation: Apply u = A·sin(omegat), measure tracking error
+
+- Record disturbance estimates:
+   - Solve for d u(t) from measured data:
+   - Collect 100+ samples across different operating conditions
+
+- Statistical bound:
+
+Verification Method 2: Conservative Analytical Bound
+
+Sum worst-case contributions from all known sources:
+
+
+[TABLE - See Markdown version for details]
+
+
+DIP-Specific Example:
+
+For our DIP system (Section 2.1):
+
+When Assumption Fails:
+
+If measured |d u| > d̄:
+- Immediate: Increase switching gain K by safety factor (K new = 1.5x d̄ measured)
+- Root cause: Identify dominant disturbance source, improve model or hardware
+- Long-term: Use \textbf{Adaptive SMC} (adapts online to unknown d̄)
+
+---
+
+4.6.2 Verifying Assumption 4.2 (Controllability)
+
+Assumption Statement: The controllability scalar $\beta = \mathbf{L}\mathbf{M}^{-1}\mathbf{B} > \epsilon 0 > 0$ for some positive constant $\epsilon 0$, where $\mathbf{L} = [0, k 1, k 2]$ is the sliding surface gradient.
+
+Practical Interpretation:
+- $\beta$ measures control authority: how effectively u influences sliding variable sigma
+- Requirement: M(q) must be invertible (well-conditioned)
+- $\beta$ should be bounded away from zero across all configurations
+
+Verification Method: Numerical Calculation
+
+- Define nominal DIP parameters (Section 2.1):
+
+- Compute M, B, L at representative configurations:
+
+   Configuration 1: Upright (theta₁=0, theta₂=0):
+
+   Configuration 2: Large angle (theta₁=0.2 rad, theta₂=0.15 rad):
+
+   Configuration 3: Near-singular (theta₁=π/2, theta₂=π/4):
+
+- Check condition number:
+
+DIP-Specific Results:
+
+
+[TABLE - See Markdown version for details]
+
+
+Practical Guideline:
+
+When Assumption Fails:
+
+If $\beta$ -> 0 or cond(M) > 5000:
+- Immediate: Restrict operating range (limit |theta₁|, |theta₂| < 0.3 rad)
+- Redesign sliding surface: Adjust k₁, k₂ to maximize beta
+- Hardware fix: Improve sensor resolution, reduce mechanical backlash
+
+---
+
+4.6.3 Verifying Assumption 4.3 (Lipschitz Disturbance for STA)
+
+Assumption Statement: Disturbance derivative satisfies $|\dot{d} u(t)| \leq L$ for Lipschitz constant $L > 0$.
+
+Practical Interpretation:
+- Disturbance must have bounded rate of change (no discontinuous jumps)
+- Typical sources: friction (smooth), sensor noise (band-limited), model errors (slowly varying)
+
+Verification Method:
+
+- Numerical differentiation:
+
+- DIP Example:
+   - Friction: $\dot{f} {\text{friction}} \approx 0$ (quasi-static)
+   - Sensor noise: $|\dot{d} {\text{sensor}}| < 10$ rad/s² (20 Hz filter)
+   - Model error: $|\dot{d} {\text{model}}| < 5$ rad/s² (slowly varying)
+   - Total: L ~= 15 rad/s²
+
+- STA gain adjustment:
+
+When Assumption Fails:
+
+If disturbance has discontinuities (relay, saturation):
+- Use Classical/\textbf{Adaptive SMC} instead of STA (don't require Lipschitz)
+- Filter disturbance: Add low-pass filter to smooth discontinuities
+- Hybrid mode: Switch to \textbf{Classical SMC} during discontinuous events
+
+---
+
+4.6.4 Summary: Assumption Verification Checklist
+
+Before deploying SMC on hardware, verify:
+
+
+[TABLE - See Markdown version for details]
+
+
+Recommended Testing Procedure:
+
+- Offline validation (simulation): Verify assumptions using high-fidelity model
+- Online monitoring (deployment): Log beta, d u estimates during operation
+- Periodic re-validation: Re-check assumptions every 100 hours or after maintenance
+- Conservative design: Add 20-50percent safety margins to all bounds (d̄, epsilon₀, L)
+
+
+
+\subsection{Stability Margins and Robustness Analysis}
+
+While Sections 4.1-4.4 establish asymptotic/finite-time stability under nominal conditions, practical deployment requires understanding "how much" stability margin exists. This section quantifies robustness to gain variations, disturbance increases, and parameter uncertainties.
+
+---
+
+4.7.1 Gain Margin Analysis
+
+Gain margin measures how much controller gains can deviate from nominal values while maintaining stability.
+
+\textbf{Classical SMC}:
+
+From Theorem 4.1, stability requires $K > \bar{d}$. Gain margin:
+
+DIP Example:
+- Nominal: K = 15.0, d̄ = 1.0 -> GM = 15.0/1.0 = 15 (1500percent or +23.5 dB)
+- Stable range: K ∈ [d̄+η, ∞) where η > 0
+- Practical upper limit: K < 50 (avoid excessive control effort)
+- Operating range: K ∈ [1.2, 50] -> 42x gain margin
+
+\textbf{STA-SMC}:
+
+From Theorem 4.2, stability requires:
+
+DIP Example:
+- Nominal: K₁ = 12.0, K₂ = 8.0
+- Minimums: K₁ min = 3.2, K₂ min = 1.28
+- Margins: GM K₁ = 12/3.2 = 3.75 (375percent), GM K₂ = 8/1.28 = 6.25 (625percent)
+- Combined gain margin: 3.75x (weaker link)
+
+\textbf{Adaptive SMC}:
+
+Adaptive controller self-adjusts gain K(t), but requires bounded ratio:
+
+DIP Example:
+- Bounds: K min = 5.0, K max = 50.0 -> ratio = 10x
+- Effective gain margin: 10x (enforced by adaptation bounds)
+
+Hybrid Adaptive \textbf{STA-SMC}:
+
+Inherits margins from both modes:
+
+Summary Table:
+
+
+[TABLE - See Markdown version for details]
+
+
+---
+
+4.7.2 Disturbance Rejection Margin
+
+Disturbance margin quantifies maximum disturbance the controller can reject while maintaining stability.
+
+\textbf{Classical SMC}:
+
+From Theorem 4.1, controller rejects disturbances up to:
+
+DIP Example:
+- Nominal: K = 15.0, η = 0.2 -> d reject = 14.8 N
+- Actual: d̄ = 1.0 N
+- Disturbance rejection margin: 14.8/1.0 = 14.8x (1480percent)
+- Attenuation: (K - d̄)/K x 100percent = 93.3percent
+
+\textbf{STA-SMC}:
+
+Super-twisting integral action provides superior disturbance rejection:
+
+DIP Example:
+- Nominal: K₂ = 8.0, $\beta$ = 0.78 -> d reject = 6.24 N
+- Actual: d̄ = 1.0 N
+- Disturbance rejection margin: 6.24/1.0 = 6.24x (624percent)
+- Attenuation: experimental ~92percent (Section 7.4, disturbance tests)
+
+\textbf{Adaptive SMC}:
+
+Adaptation compensates for unknown disturbances:
+
+DIP Example:
+- K max = 50.0 -> d reject = 50.0 N
+- Actual: d̄ = 1.0 N
+- Disturbance rejection margin: 50x (5000percent)
+- Attenuation: ~89percent (slightly worse than STA due to adaptation lag)
+
+Comparison Table:
+
+
+[TABLE - See Markdown version for details]
+
+
+Note: Experimental attenuation lower than theoretical due to measurement noise, unmodeled dynamics, and boundary layer effects.
+
+---
+
+4.7.3 Parameter Uncertainty Tolerance
+
+Robustness to model parameter errors (M, C, G matrices) is critical for real-world deployment.
+
+\textbf{Classical SMC}:
+
+Equivalent control $u {eq}$ depends on accurate M, C, G. Parameter errors Deltatheta affect:
+
+Tolerance Analysis:
+- $\pm$10percent parameter errors -> switching term compensates -> stability preserved
+- $\pm$20percent errors -> steady-state error increases, chattering may worsen
+- $\pm$30percent errors -> risk of instability (equivalent control degrades)
+
+DIP Validation (Section 8.1):
+- Mass errors ($\pm$10percent): Settling time +8percent, overshoot +12percent -> Stable ✓
+- Length errors ($\pm$10percent): Settling time +5percent, overshoot +8percent -> Stable ✓
+- Combined ($\pm$10percent): Settling time +15percent, overshoot +18percent -> Stable ✓
+
+\textbf{STA-SMC}:
+
+Continuous control action + integral state provides better robustness:
+
+DIP Validation:
+- Mass errors ($\pm$15percent): Settling time +6percent, overshoot +9percent -> Stable ✓
+- Length errors ($\pm$15percent): Settling time +4percent, overshoot +7percent -> Stable ✓
+
+\textbf{Adaptive SMC}:
+
+Online adaptation compensates for parameter uncertainty:
+
+DIP Validation (Section 8.1):
+- Mass errors ($\pm$20percent): K(t) adapts +18percent, overshoot +5percent -> Stable ✓
+- Predicted: $\pm$15percent tolerance from gain adaptation analysis
+
+Hybrid Adaptive \textbf{STA-SMC}:
+
+Combines STA robustness + Adaptive compensation:
+
+Summary Table:
+
+
+[TABLE - See Markdown version for details]
+
+
+---
+
+4.7.4 Phase Margin and Frequency-Domain Robustness
+
+Phase margin quantifies robustness to time delays and high-frequency unmodeled dynamics.
+
+\textbf{Classical SMC}:
+
+Linearized SMC near sliding surface behaves like PD controller:
+
+\textbf{STA-SMC}:
+
+Continuous control action improves phase margin:
+
+\textbf{Adaptive SMC}:
+
+Similar to \textbf{Classical SMC} but adaptation lag reduces margin:
+
+Comparison:
+
+
+[TABLE - See Markdown version for details]
+
+
+Practical Implication: All controllers tolerate 3-4ms time delays (typical sensor-to-actuator latency <2ms) -> Safe for real-time deployment at 100 Hz.
+
+---
+
+4.7.5 Conservatism vs Performance Tradeoff
+
+Lyapunov proofs provide sufficient (not necessary) conditions -> inherent conservatism.
+
+Quantifying Conservatism:
+
+- \textbf{Classical SMC} Gain Condition: K > d̄
+   - Minimum: K min = 1.0 (d̄=1.0)
+   - Practical (PSO-optimized): K = 15.0
+   - Conservatism factor: 15x (actual gain can be 15x larger)
+
+- STA Lyapunov Conditions: K₁ > 3.2, K₂ > 1.28
+   - PSO-optimized: K₁ = 12.0, K₂ = 8.0
+   - Conservatism factor: 3.75x (K₁), 6.25x (K₂)
+
+- Adaptive Dead-Zone: delta = 0.01
+   - Could use delta = 0.005 (tighter) without instability
+   - Conservatism: 2x safety margin
+
+Performance Impact:
+
+
+[TABLE - See Markdown version for details]
+
+
+Recommendation: Use Lyapunov conditions for initial design safety, then optimize with PSO for performance (Section 5).
+
+---
+
+4.7.6 Summary: Robustness Scorecard
+
+
+[TABLE - See Markdown version for details]
+
+
+Key Insights:
+- \textbf{STA-SMC} best balance: excellent disturbance rejection, good parameter tolerance, highest phase margin
+- \textbf{Adaptive SMC} best for uncertain models: $\pm$20percent parameter tolerance via online adaptation
+- \textbf{Classical SMC} largest gain margin but relies on accurate model (u eq)
+- Hybrid STA combines strengths but doesn't exceed individual controllers
+
+---
+
+\subsection{Summary of Convergence Guarantees}
+
+Table 4.1: Lyapunov Stability Summary
+
+
+[TABLE - See Markdown version for details]
+
+
+Experimental Validation (Section 9.4):
+
+Theoretical predictions confirmed by QW-2 benchmark:
+- \textbf{Classical SMC}: 96.2percent of samples show $\dot{V} < 0$ (consistent with asymptotic stability)
+- STA SMC: Fastest settling (1.82s), validating finite-time advantage
+- \textbf{Adaptive SMC}: Bounded gains in 100percent of runs, confirming Theorem 4.3
+- Convergence ordering: STA < Hybrid < Classical < Adaptive (matches theory)
+
+---
+
+
+\end{document}

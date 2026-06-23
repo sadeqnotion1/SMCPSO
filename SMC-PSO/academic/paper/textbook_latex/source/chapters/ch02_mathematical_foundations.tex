@@ -1,0 +1,742 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CHAPTER 2: MATHEMATICAL FOUNDATIONS
+% Sliding Mode Control for Underactuated Systems
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Mathematical Foundations}
+\label{ch:mathematical_foundations}
+
+This chapter develops the mathematical prerequisites for sliding mode controller design. We derive the complete equations of motion for the double-inverted pendulum\index{double-inverted pendulum}\index{double-inverted pendulum} using Lagrangian\index{Lagrangian mechanics}\index{Lagrangian mechanics} mechanics, introduce Lyapunov\index{Lyapunov stability}\index{Lyapunov stability} stability\index{stability} theory for analyzing convergence\index{convergence}, discuss controllability\index{controllability}\index{controllability} and observability concepts, and present numerical integration methods for simulation\index{simulation}. Readers already familiar with these topics may skip to \cref{ch:classical_smc}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Lagrangian Mechanics}
+\label{sec:math:lagrangian}
+
+\subsection{Principle of Least Action}
+
+The motion of mechanical systems is governed by Hamilton's Principle, which states that the actual trajectory taken between times $t_1$ and $t_2$ makes the \textit{action integral} stationary:
+
+\begin{equation}
+\label{eq:math:hamilton_principle}
+\delta \int_{t_1}^{t_2} L(q, \dot{q}, t) \, dt = 0
+\end{equation}
+
+where $L = T - V$ is the \textbf{Lagrangian}, the difference between kinetic energy $T$ and potential energy $V$.
+
+\begin{theorem}[Hamilton's Principle]
+Among all possible paths $q(t)$ connecting fixed endpoints $q(t_1)$ and $q(t_2)$, the physical trajectory is the one that renders the action integral stationary.
+\end{theorem}
+
+\begin{remark}
+Hamilton's Principle is equivalent to Newton's second law for mechanical systems, but provides a more elegant and general formulation. It applies to systems with constraints, non-Cartesian coordinates, and deformable bodies.
+\end{remark}
+
+\subsection{Euler-Lagrange Equations}
+
+Applying the calculus of variations to Hamilton's Principle yields the \textbf{Euler-Lagrange equations}:
+
+\begin{theorem}[Euler-Lagrange Equations]
+\label{thm:math:euler_lagrange}
+For each generalized coordinate $q_i$, the equation of motion is:
+\begin{equation}
+\label{eq:math:euler_lagrange}
+\frac{d}{dt}\left(\pdiff{L}{\dot{q}_i}\right) - \pdiff{L}{q_i} = Q_i
+\end{equation}
+where $Q_i$ are \textbf{generalized forces} (external forces not derivable from a potential).
+\end{theorem}
+
+\begin{proof}
+Consider a variation $\delta q_i(t)$ with $\delta q_i(t_1) = \delta q_i(t_2) = 0$. The variation of the action is:
+\begin{align}
+\delta S &= \int_{t_1}^{t_2} \left(\pdiff{L}{q_i} \delta q_i + \pdiff{L}{\dot{q}_i} \delta \dot{q}_i\right) dt \\
+&= \int_{t_1}^{t_2} \left(\pdiff{L}{q_i} \delta q_i + \pdiff{L}{\dot{q}_i} \frac{d}{dt}(\delta q_i)\right) dt
+\end{align}
+Integrating the second term by parts:
+\begin{equation}
+\int_{t_1}^{t_2} \pdiff{L}{\dot{q}_i} \frac{d}{dt}(\delta q_i) dt = \left[\pdiff{L}{\dot{q}_i} \delta q_i\right]_{t_1}^{t_2} - \int_{t_1}^{t_2} \frac{d}{dt}\left(\pdiff{L}{\dot{q}_i}\right) \delta q_i \, dt
+\end{equation}
+Since $\delta q_i(t_1) = \delta q_i(t_2) = 0$, the boundary term vanishes:
+\begin{equation}
+\delta S = \int_{t_1}^{t_2} \left[\pdiff{L}{q_i} - \frac{d}{dt}\left(\pdiff{L}{\dot{q}_i}\right)\right] \delta q_i \, dt
+\end{equation}
+For $\delta S = 0$ to hold for arbitrary $\delta q_i$, the integrand must vanish, yielding \cref{eq:math:euler_lagrange}.
+\end{proof}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Double-Inverted Pendulum Dynamics Derivation}
+\label{sec:math:dip_derivation}
+
+\subsection{System Configuration}
+
+The double-inverted pendulum consists of:
+\begin{itemize}
+    \item A cart of mass $M$ moving horizontally on a frictionless rail
+    \item Two pendula with masses $m_1, m_2$ and lengths $L_1, L_2$
+    \item Moments of inertia $I_1 = \frac{1}{3}m_1 L_1^2$ and $I_2 = \frac{1}{3}m_2 L_2^2$ (uniform rods)
+    \item Control force $u$ applied horizontally to the cart
+    \item Angles $\theta_1, \theta_2$ measured from the vertical (upright = 0)
+\end{itemize}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/ch02_foundations/NEW_free_body_diagram.png}
+\caption[DIP\index{double-inverted pendulum|see{DIP}}\index{double-inverted pendulum|see{DIP}} Free-Body Diagram]{Free-body diagram showing all forces and torques acting on the double-inverted pendulum system. The diagram illustrates gravitational forces $m_1g$ and $m_2g$ acting at the centers of mass, reaction forces at the pivot points, and the control force $u$ applied horizontally to the cart. This forms the basis for deriving the equations of motion using Lagrangian mechanics.}
+\label{fig:math:free_body}
+\end{figure}
+
+\subsection{Generalized Coordinates}
+
+The system has 3 degrees of freedom\index{degrees of freedom}\index{degrees of freedom} with generalized coordinates\index{generalized coordinates}\index{generalized coordinates}:
+\begin{equation}
+\vect{q} = \begin{bmatrix} x_{\text{cart}} \\ \theta_1 \\ \theta_2 \end{bmatrix} \in \Real^3
+\end{equation}
+
+The state-space representation uses $\vect{x} = [\vect{q}^T, \dot{\vect{q}}^T]^T \in \Real^6$.
+
+\subsection{Position Vectors}
+
+\textbf{Cart center of mass}:
+\begin{equation}
+\vect{r}_c = \begin{bmatrix} x_{\text{cart}} \\ 0 \\ 0 \end{bmatrix}
+\end{equation}
+
+\textbf{Link 1 center of mass}:
+\begin{equation}
+\vect{r}_1 = \begin{bmatrix} x_{\text{cart}} + \frac{L_1}{2}\sin\theta_1 \\ \frac{L_1}{2}\cos\theta_1 \\ 0 \end{bmatrix}
+\end{equation}
+
+\textbf{Link 2 center of mass}:
+\begin{equation}
+\vect{r}_2 = \begin{bmatrix} x_{\text{cart}} + L_1\sin\theta_1 + \frac{L_2}{2}\sin\theta_2 \\ L_1\cos\theta_1 + \frac{L_2}{2}\cos\theta_2 \\ 0 \end{bmatrix}
+\end{equation}
+
+\subsection{Kinetic Energy}
+
+\subsubsection{Cart Kinetic Energy}
+
+\begin{equation}
+T_c = \frac{1}{2} M \dot{x}_{\text{cart}}^2
+\end{equation}
+
+\subsubsection{Link 1 Kinetic Energy}
+
+Velocity of link 1 center of mass:
+\begin{equation}
+\dot{\vect{r}}_1 = \begin{bmatrix} \dot{x}_{\text{cart}} + \frac{L_1}{2}\dot{\theta}_1 \cos\theta_1 \\ -\frac{L_1}{2}\dot{\theta}_1 \sin\theta_1 \\ 0 \end{bmatrix}
+\end{equation}
+
+Squared velocity:
+\begin{equation}
+v_1^2 = \dot{x}_{\text{cart}}^2 + L_1\dot{x}_{\text{cart}}\dot{\theta}_1\cos\theta_1 + \frac{L_1^2}{4}\dot{\theta}_1^2
+\end{equation}
+
+Total kinetic energy (translational + rotational):
+\begin{equation}
+T_1 = \frac{1}{2}m_1 v_1^2 + \frac{1}{2}I_1 \dot{\theta}_1^2 = \frac{1}{2}m_1 v_1^2 + \frac{1}{2}\left(\frac{m_1 L_1^2}{3}\right)\dot{\theta}_1^2
+\end{equation}
+
+Simplifying:
+\begin{equation}
+T_1 = \frac{1}{2}m_1 \dot{x}_{\text{cart}}^2 + \frac{1}{2}m_1 L_1\dot{x}_{\text{cart}}\dot{\theta}_1\cos\theta_1 + \frac{1}{2}\left(\frac{m_1 L_1^2}{4} + I_1\right)\dot{\theta}_1^2
+\end{equation}
+
+\subsubsection{Link 2 Kinetic Energy}
+
+Velocity of link 2 center of mass:
+\begin{equation}
+\dot{\vect{r}}_2 = \begin{bmatrix} \dot{x}_{\text{cart}} + L_1\dot{\theta}_1\cos\theta_1 + \frac{L_2}{2}\dot{\theta}_2\cos\theta_2 \\ -L_1\dot{\theta}_1\sin\theta_1 - \frac{L_2}{2}\dot{\theta}_2\sin\theta_2 \\ 0 \end{bmatrix}
+\end{equation}
+
+Squared velocity (using trigonometric identity $\cos(\theta_1 - \theta_2) = \cos\theta_1\cos\theta_2 + \sin\theta_1\sin\theta_2$):
+\begin{multline}
+v_2^2 = \dot{x}_{\text{cart}}^2 + 2\dot{x}_{\text{cart}}\left(L_1\dot{\theta}_1\cos\theta_1 + \frac{L_2}{2}\dot{\theta}_2\cos\theta_2\right) \\
++ L_1^2\dot{\theta}_1^2 + \frac{L_2^2}{4}\dot{\theta}_2^2 + L_1 L_2 \dot{\theta}_1\dot{\theta}_2\cos(\theta_1 - \theta_2)
+\end{multline}
+
+Total kinetic energy:
+\begin{equation}
+T_2 = \frac{1}{2}m_2 v_2^2 + \frac{1}{2}I_2 \dot{\theta}_2^2
+\end{equation}
+
+\subsubsection{Total Kinetic Energy}
+
+\begin{equation}
+T = T_c + T_1 + T_2 = \frac{1}{2}\dot{\vect{q}}^T \mat{M}(\vect{q}) \dot{\vect{q}}
+\end{equation}
+
+where $\mat{M}(\vect{q}) \in \Real^{3 \times 3}$ is the configuration-dependent inertia matrix\index{inertia matrix}\index{inertia matrix} (explicit form in \cref{sec:math:mass_matrix}).
+
+\subsection{Potential Energy}
+
+Gravitational potential energy (taking cart level as zero):
+\begin{equation}
+V = m_1 g h_1 + m_2 g h_2
+\end{equation}
+
+where:
+\begin{align}
+h_1 &= \frac{L_1}{2}\cos\theta_1 \\
+h_2 &= L_1\cos\theta_1 + \frac{L_2}{2}\cos\theta_2
+\end{align}
+
+Total potential energy:
+\begin{equation}
+V = g\left[\left(\frac{m_1}{2} + m_2\right)L_1\cos\theta_1 + \frac{m_2 L_2}{2}\cos\theta_2\right]
+\end{equation}
+
+\begin{remark}
+At the upright equilibrium\index{equilibrium}\index{equilibrium} ($\theta_1 = \theta_2 = 0$), the potential energy is:
+\begin{equation}
+V_0 = g\left[\left(\frac{m_1}{2} + m_2\right)L_1 + \frac{m_2 L_2}{2}\right]
+\end{equation}
+This is a \textit{local maximum} (unstable equilibrium), which is why active control is required to stabilize the system.
+\end{remark}
+
+\subsection{Lagrangian}
+
+\begin{equation}
+L = T - V = \frac{1}{2}\dot{\vect{q}}^T \mat{M}(\vect{q}) \dot{\vect{q}} - V(\vect{q})
+\end{equation}
+
+\subsection{Equations of Motion}
+
+Applying the Euler-Lagrange equations (\cref{eq:math:euler_lagrange}) to each generalized coordinate:
+
+\begin{equation}
+\label{eq:math:dip_eom}
+\boxed{\mat{M}(\vect{q})\ddot{\vect{q}} + \mat{C}(\vect{q}, \dot{\vect{q}})\dot{\vect{q}} + \vect{G}(\vect{q}) + \vect{F}(\dot{\vect{q}}) = \mat{B} u}
+\end{equation}
+
+where:
+\begin{itemize}
+    \item $\mat{M}(\vect{q}) \in \Real^{3 \times 3}$: Inertia matrix (symmetric, positive definite)
+    \item $\mat{C}(\vect{q}, \dot{\vect{q}}) \in \Real^{3 \times 3}$: Coriolis\index{Coriolis forces}\index{Coriolis forces}/centrifugal matrix
+    \item $\vect{G}(\vect{q}) \in \Real^3$: Gravity vector
+    \item $\vect{F}(\dot{\vect{q}}) \in \Real^3$: Friction vector (viscous damping)
+    \item $\mat{B} = [1, 0, 0]^T$: Input distribution matrix (force acts on cart only)
+    \item $u \in \Real$: Control force
+\end{itemize}
+
+See \pyfile{src/plant/models/full/dynamics.py} and \pyfile{src/plant/core/physics\_matrices.py} for complete Python\index{Python implementation}\index{Python implementation} implementation of the dynamics equations.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Mass Matrix}
+\label{sec:math:mass_matrix}
+
+The inertia matrix $\mat{M}(\vect{q})$ is obtained by computing $\pdiff{^2 T}{\dot{q}_i \partial \dot{q}_j}$:
+
+\begin{equation}
+\label{eq:math:mass_matrix}
+\mat{M}(\vect{q}) = \begin{bmatrix}
+M_{11} & M_{12} & M_{13} \\
+M_{12} & M_{22} & M_{23} \\
+M_{13} & M_{23} & M_{33}
+\end{bmatrix}
+\end{equation}
+
+\textbf{Components}:
+\begin{align}
+M_{11} &= I_1 + m_1 \frac{L_1^2}{4} + m_2 L_1^2 + I_2 + m_2\frac{L_2^2}{4} + m_2 L_1 L_2 \cos(\theta_2 - \theta_1) \\
+M_{12} &= I_2 + m_2 \frac{L_2^2}{4} + \frac{m_2 L_1 L_2}{2} \cos(\theta_2 - \theta_1) \\
+M_{13} &= \left(\frac{m_1 L_1}{2} + m_2 L_1\right)\cos\theta_1 + \frac{m_2 L_2}{2}\cos\theta_2 \\
+M_{22} &= I_2 + m_2 \frac{L_2^2}{4} \\
+M_{23} &= \frac{m_2 L_2}{2}\cos\theta_2 \\
+M_{33} &= M + m_1 + m_2
+\end{align}
+
+\begin{theorem}[Properties of $\mat{M}(\vect{q})$]
+\label{thm:math:mass_matrix_properties}
+The inertia matrix satisfies:
+\begin{enumerate}
+    \item \textbf{Symmetry}: $\mat{M}^T = \mat{M}$
+    \item \textbf{Positive Definiteness}: $\vect{v}^T \mat{M}(\vect{q}) \vect{v} > 0$ for all $\vect{v} \neq \vect{0}$
+    \item \textbf{Boundedness}: $\exists \, m_{\min}, m_{\max} > 0$ such that $m_{\min} \mat{I} \preceq \mat{M}(\vect{q}) \preceq m_{\max} \mat{I}$ for all $\vect{q}$
+    \item \textbf{Skew-Symmetry Property}: $\dot{\mat{M}}(\vect{q}) - 2\mat{C}(\vect{q}, \dot{\vect{q}})$ is skew-symmetric
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}[Proof of Property 4 (Skew-Symmetry)]
+This property is fundamental for passivity\index{passivity-based control}-based control. Define $\mat{N} = \dot{\mat{M}} - 2\mat{C}$. For any vector $\vect{z} \in \Real^3$:
+\begin{equation}
+\vect{z}^T \mat{N} \vect{z} = \vect{z}^T \dot{\mat{M}} \vect{z} - 2\vect{z}^T \mat{C} \vect{z}
+\end{equation}
+From the definition of $\mat{C}$ via Christoffel symbols:
+\begin{equation}
+\vect{z}^T \mat{C} \vect{z} = \frac{1}{2} \vect{z}^T \dot{\mat{M}} \vect{z}
+\end{equation}
+Therefore $\vect{z}^T \mat{N} \vect{z} = 0$ for all $\vect{z}$, implying $\mat{N}$ is skew-symmetric.
+\end{proof}
+
+\subsection{Numerical Example}
+
+For typical parameter values ($M = 1.0$ kg, $m_1 = m_2 = 0.1$ kg, $L_1 = L_2 = 0.5$ m), the inertia matrix at upright equilibrium ($\theta_1 = \theta_2 = 0$) is:
+
+\begin{equation}
+\mat{M}(0, 0) \approx \begin{bmatrix}
+0.183 & 0.083 & 0.150 \\
+0.083 & 0.083 & 0.050 \\
+0.150 & 0.050 & 1.200
+\end{bmatrix}
+\end{equation}
+
+The condition number $\kappa(\mat{M}) \approx 14.5$, indicating a well-conditioned matrix suitable for direct inversion.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Coriolis and Centrifugal Terms}
+\label{sec:math:coriolis}
+
+The Coriolis/centrifugal matrix $\mat{C}(\vect{q}, \dot{\vect{q}})$ is computed using Christoffel symbols of the second kind:
+
+\begin{equation}
+\label{eq:math:christoffel}
+c_{ijk} = \frac{1}{2}\left(\pdiff{M_{ij}}{q_k} + \pdiff{M_{ik}}{q_j} - \pdiff{M_{jk}}{q_i}\right)
+\end{equation}
+
+The $(i,j)$ element of $\mat{C}$ is:
+\begin{equation}
+C_{ij} = \sum_{k=1}^3 c_{ijk} \dot{q}_k
+\end{equation}
+
+\textbf{Explicit form for DIP}:
+\begin{equation}
+\mat{C}(\vect{q}, \dot{\vect{q}}) = \begin{bmatrix}
+0 & c_{12} & c_{13} \\
+c_{21} & 0 & 0 \\
+c_{31} & 0 & 0
+\end{bmatrix}
+\end{equation}
+
+where:
+\begin{align}
+c_{12} &= -\frac{m_2 L_1 L_2}{2} \sin(\theta_2 - \theta_1) \dot{\theta}_2 \\
+c_{13} &= -\left(\frac{m_1 L_1}{2} + m_2 L_1\right)\sin\theta_1 \dot{\theta}_1 - \frac{m_2 L_2}{2}\sin\theta_2 \dot{\theta}_2 \\
+c_{21} &= \frac{m_2 L_1 L_2}{2} \sin(\theta_2 - \theta_1) \dot{\theta}_1 \\
+c_{31} &= \left(\frac{m_1 L_1}{2} + m_2 L_1\right)\sin\theta_1 \dot{\theta}_1 + \frac{m_2 L_2}{2}\sin\theta_2 \dot{\theta}_2
+\end{align}
+
+\begin{remark}[Physical Interpretation]
+The Coriolis terms represent the coupling between different velocities. For example, $c_{12} \dot{\theta}_2$ in the $\theta_1$ equation represents the effect of link 2's angular velocity on link 1's acceleration. The centrifugal terms (diagonal elements) vanish for planar systems.
+\end{remark}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Gravity Vector}
+\label{sec:math:gravity}
+
+The gravity vector is the gradient of potential energy:
+\begin{equation}
+\vect{G}(\vect{q}) = \pdiff{V}{\vect{q}} = \begin{bmatrix}
+\pdiff{V}{\theta_1} \\[0.5em]
+\pdiff{V}{\theta_2} \\[0.5em]
+\pdiff{V}{x_{\text{cart}}}
+\end{bmatrix}
+\end{equation}
+
+\textbf{Components}:
+\begin{align}
+G_1 &= -g\left(\frac{m_1 L_1}{2} + m_2 L_1\right)\sin\theta_1 \label{eq:math:G1} \\
+G_2 &= -g \frac{m_2 L_2}{2}\sin\theta_2 \label{eq:math:G2} \\
+G_3 &= 0 \label{eq:math:G3}
+\end{align}
+
+\begin{remark}[Negative Stiffness]
+The negative signs in \cref{eq:math:G1,eq:math:G2} indicate that gravity provides \textit{negative stiffness} at the upright equilibrium. Linearizing around $\theta_1 = \theta_2 = 0$ with $\sin\theta \approx \theta$:
+\begin{equation}
+\vect{G}(\vect{q}) \approx -\begin{bmatrix}
+g\left(\frac{m_1 L_1}{2} + m_2 L_1\right)\theta_1 \\
+g \frac{m_2 L_2}{2}\theta_2 \\
+0
+\end{bmatrix}
+\end{equation}
+This confirms that the upright position is unstable: a small positive deviation $\theta_1 > 0$ results in a negative restoring moment (pushing the pendulum further from vertical).
+\end{remark}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{State-Space Representation}
+\label{sec:math:state_space}
+
+The second-order system \cref{eq:math:dip_eom} is converted to first-order form by defining the state vector:
+\begin{equation}
+\vect{x} = \begin{bmatrix} \vect{q} \\ \dot{\vect{q}} \end{bmatrix} = \begin{bmatrix}
+x_{\text{cart}} \\ \theta_1 \\ \theta_2 \\ \dot{x}_{\text{cart}} \\ \dot{\theta}_1 \\ \dot{\theta}_2
+\end{bmatrix} \in \Real^6
+\end{equation}
+
+The state-space equations are:
+\begin{equation}
+\label{eq:math:state_space}
+\dot{\vect{x}} = \begin{bmatrix} \dot{\vect{q}} \\ \ddot{\vect{q}} \end{bmatrix} = \begin{bmatrix}
+\dot{\vect{q}} \\
+\mat{M}^{-1}(\vect{q})[\mat{B} u - \mat{C}(\vect{q}, \dot{\vect{q}})\dot{\vect{q}} - \vect{G}(\vect{q}) - \vect{F}(\dot{\vect{q}})]
+\end{bmatrix}
+\end{equation}
+
+This defines a nonlinear control-affine system:
+\begin{equation}
+\dot{\vect{x}} = \vect{f}(\vect{x}) + \vect{g}(\vect{x}) u
+\end{equation}
+
+where:
+\begin{align}
+\vect{f}(\vect{x}) &= \begin{bmatrix} \dot{\vect{q}} \\ -\mat{M}^{-1}(\vect{q})[\mat{C}(\vect{q}, \dot{\vect{q}})\dot{\vect{q}} + \vect{G}(\vect{q}) + \vect{F}(\dot{\vect{q}})] \end{bmatrix} \\
+\vect{g}(\vect{x}) &= \begin{bmatrix} \vect{0}_{3 \times 1} \\ \mat{M}^{-1}(\vect{q})\mat{B} \end{bmatrix}
+\end{equation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Lyapunov Stability Theory}
+\label{sec:math:lyapunov}
+
+\subsection{Stability Definitions}
+
+Consider an autonomous system $\dot{\vect{x}} = \vect{f}(\vect{x})$ with equilibrium point $\vect{x}_e$ (i.e., $\vect{f}(\vect{x}_e) = \vect{0}$).
+
+\begin{definition}[Stability in the Sense of Lyapunov]
+The equilibrium $\vect{x}_e$ is \textbf{stable} if for every $\epsilon > 0$, there exists $\delta > 0$ such that:
+\begin{equation}
+\norm{\vect{x}(0) - \vect{x}_e} < \delta \implies \norm{\vect{x}(t) - \vect{x}_e} < \epsilon \quad \forall t \geq 0
+\end{equation}
+Informally: trajectories starting near the equilibrium remain near it.
+\end{definition}
+
+\begin{definition}[Asymptotic Stability]
+The equilibrium $\vect{x}_e$ is \textbf{asymptotically stable} if it is stable and additionally:
+\begin{equation}
+\lim_{t \to \infty} \vect{x}(t) = \vect{x}_e
+\end{equation}
+for all initial conditions in some neighborhood of $\vect{x}_e$.
+\end{definition}
+
+\begin{definition}[Exponential Stability]
+The equilibrium $\vect{x}_e$ is \textbf{exponentially stable} if there exist constants $\alpha, \beta, \lambda > 0$ such that:
+\begin{equation}
+\norm{\vect{x}(0) - \vect{x}_e} < \alpha \implies \norm{\vect{x}(t) - \vect{x}_e} \leq \beta \norm{\vect{x}(0) - \vect{x}_e} e^{-\lambda t} \quad \forall t \geq 0
+\end{equation}
+Exponential convergence is stronger than asymptotic stability and guarantees a minimum convergence rate $\lambda$.
+\end{definition}
+
+\begin{definition}[Finite-Time Stability]
+The equilibrium $\vect{x}_e$ is \textbf{finite-time stable} if there exists a function $T : \Real^n \to \Real^+$ such that:
+\begin{equation}
+\vect{x}(t) = \vect{x}_e \quad \forall t \geq T(\vect{x}(0))
+\end{equation}
+Finite-time stability is the strongest form: the system reaches equilibrium \textit{exactly} in finite time.
+\end{definition}
+
+\begin{figure}[htbp]
+\centering
+\input{figures/ch02/phase_portrait.tex}
+\caption[Phase Portrait for Simple Pendulum]{Phase portrait of a simple pendulum system in the $(\theta, \dot{\theta})$ phase plane. The diagram illustrates three types of trajectories: \textcolor{blue}{libration} (closed orbits around stable equilibria at $\pm\pi$), \textcolor{green!70!black}{rotation} (unbounded motion), and the \textcolor{red}{separatrix} (homoclinic orbit) separating these behaviors. Equilibrium points are marked: \textcolor{blue}{stable} (at $\theta = \pm\pi$) and \textcolor{red}{unstable} (at $\theta = 0$). This visualization demonstrates fundamental concepts of stability and trajectory behavior that extend to the double-inverted pendulum system.}
+\label{fig:math:phase_portrait}
+\end{figure}
+
+\subsection{Lyapunov's Direct Method}
+
+\begin{theorem}[Lyapunov's Stability Theorem]
+\label{thm:math:lyapunov_stability}
+Let $V : \Real^n \to \Real$ be a continuously differentiable function satisfying:
+\begin{enumerate}
+    \item $V(\vect{x}_e) = 0$ and $V(\vect{x}) > 0$ for $\vect{x} \neq \vect{x}_e$ (positive definiteness)
+    \item $\dot{V}(\vect{x}) \leq 0$ for all $\vect{x}$ (negative semi-definiteness of derivative)
+\end{enumerate}
+Then $\vect{x}_e$ is stable. If additionally:
+\begin{enumerate}
+    \setcounter{enumi}{2}
+    \item $\dot{V}(\vect{x}) < 0$ for all $\vect{x} \neq \vect{x}_e$ (strict negative definiteness)
+\end{enumerate}
+Then $\vect{x}_e$ is asymptotically stable.
+\end{theorem}
+
+\begin{proof}[Proof Sketch]
+Suppose $V(\vect{x}) > 0$ and $\dot{V}(\vect{x}) \leq 0$. Then $V$ acts as an "energy-like" function that never increases. For any $\epsilon > 0$, define:
+\begin{equation}
+\alpha = \min_{\norm{\vect{x} - \vect{x}_e} = \epsilon} V(\vect{x}) > 0
+\end{equation}
+Choose $\delta$ such that $V(\vect{x}) < \alpha$ for $\norm{\vect{x} - \vect{x}_e} < \delta$. Then any trajectory starting in $\norm{\vect{x}(0) - \vect{x}_e} < \delta$ satisfies $V(\vect{x}(t)) < \alpha$ for all $t \geq 0$, implying $\norm{\vect{x}(t) - \vect{x}_e} < \epsilon$.
+
+For asymptotic stability, $\dot{V} < 0$ ensures $V(t) \to 0$, which (by positive definiteness) implies $\vect{x}(t) \to \vect{x}_e$.
+\end{proof}
+
+\begin{figure}[htbp]
+\centering
+\input{figures/ch02/lyapunov_contours.tex}
+\caption[Lyapunov Function Contours]{Lyapunov function level sets for a 2D system with quadratic $V(\vect{x}) = \vect{x}^T \mat{P} \vect{x}$. Contour lines represent constant values $V = c_i$ forming nested ellipses around the equilibrium $\vect{x}^* = \vect{0}$ (green point). Red arrows show the gradient $-\nabla V$, indicating that trajectories move inward toward regions of decreasing $V$ when $\dot{V} < 0$. The dashed outer ellipse marks the boundary of the region of attraction. This geometric interpretation demonstrates how Lyapunov functions provide "energy-like" measures that monotonically decrease along system trajectories, guaranteeing convergence.}
+\label{fig:math:lyapunov_contours}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.75\textwidth]{figures/ch02_foundations/NEW_energy_landscape.png}
+\caption[Lyapunov Function 3D Energy Landscape]{Lyapunov function $V(\vect{x})$ visualized as a 3D energy landscape for a 2D system. The equilibrium point $\vect{x}_e$ is at the global minimum where $V(\vect{x}_e) = 0$. Level sets (contour lines in the base) represent constant values of $V$. Trajectories (blue arrows) follow $\dot{\vect{x}}$ and always move toward lower $V$ values when $\dot{V} < 0$, guaranteeing convergence to $\vect{x}_e$. Compare with the 2D contour visualization in \cref{fig:math:lyapunov_contours}.}
+\label{fig:math:energy_landscape}
+\end{figure}
+
+\begin{remark}[Class $\mathcal{K}$ and $\mathcal{K}_\infty$ Functions]
+Rigorous Lyapunov theory uses comparison functions:
+\begin{itemize}
+    \item A function $\alpha : [0, a) \to [0, \infty)$ is class $\mathcal{K}$ if it is continuous, strictly increasing, and $\alpha(0) = 0$
+    \item If $a = \infty$ and $\alpha(r) \to \infty$ as $r \to \infty$, then $\alpha$ is class $\mathcal{K}_\infty$
+\end{itemize}
+Replacing "positive definiteness" with "$\alpha_1(\norm{\vect{x}}) \leq V(\vect{x}) \leq \alpha_2(\norm{\vect{x}})$" for $\alpha_1, \alpha_2 \in \mathcal{K}_\infty$ gives global results.
+\end{remark}
+
+\begin{figure}[htbp]
+\centering
+\input{figures/ch02/stability_region.tex}
+\caption[Region of Asymptotic Stability]{Stability regions for a nonlinear system in the $(\theta_1, \theta_2)$ state space. The blue ellipse represents the \textbf{region of asymptotic stability} where all trajectories converge to the equilibrium $(\theta_1, \theta_2) = (0, 0)$. The \textcolor{green!70!black}{converging trajectory} (inside the region) spirals toward equilibrium, while the \textcolor{red!70}{diverging trajectory} (outside) grows unboundedly. The stability boundary is determined by the largest level set $V(\vect{x}) = V_{\text{critical}}$ of the Lyapunov function that remains inside the basin of attraction. For the double-inverted pendulum, this region depends on controller gains and system parameters.}
+\label{fig:math:stability_regions}
+\end{figure}
+
+\subsection{Lyapunov Functions for SMC}
+
+For sliding mode control, a common Lyapunov function candidate is:
+\begin{equation}
+\label{eq:math:lyapunov_smc}
+V(\sigma) = \frac{1}{2}\sigma^2
+\end{equation}
+
+where $\sigma$ is the sliding surface value. This function satisfies:
+\begin{itemize}
+    \item $V(0) = 0$, $V(\sigma) > 0$ for $\sigma \neq 0$ (positive definite)
+    \item $V(\sigma) \to \infty$ as $|\sigma| \to \infty$ (radially unbounded)
+\end{itemize}
+
+The time derivative is:
+\begin{equation}
+\dot{V} = \sigma \dot{\sigma}
+\end{equation}
+
+For $\dot{V} < 0$ (asymptotic stability), we require the \textit{reaching condition}:
+\begin{equation}
+\label{eq:math:reaching_condition}
+\sigma \dot{\sigma} < 0 \quad \text{whenever } \sigma \neq 0
+\end{equation}
+
+This condition ensures that $\sigma$ acts as a Lyapunov function, driving the system toward the sliding surface $\sigma = 0$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Controllability and Observability}
+\label{sec:math:controllability}
+
+\subsection{Controllability}
+
+\begin{definition}[Controllability]
+A linear system $\dot{\vect{x}} = \mat{A}\vect{x} + \mat{B}u$ is \textbf{controllable} if any initial state $\vect{x}(0)$ can be driven to any final state $\vect{x}(T)$ in finite time $T$ by an appropriate control input $u(t)$.
+\end{definition}
+
+\begin{theorem}[Controllability Rank Condition]
+The linear system $\dot{\vect{x}} = \mat{A}\vect{x} + \mat{B}u$ is controllable if and only if the controllability matrix has full rank:
+\begin{equation}
+\rank\left(\begin{bmatrix} \mat{B} & \mat{A}\mat{B} & \mat{A}^2\mat{B} & \cdots & \mat{A}^{n-1}\mat{B} \end{bmatrix}\right) = n
+\end{equation}
+\end{theorem}
+
+For nonlinear systems, controllability is more complex. A necessary condition for local controllability is that the Lie algebra generated by $\vect{f}$ and $\vect{g}$ (in $\dot{\vect{x}} = \vect{f}(\vect{x}) + \vect{g}(\vect{x})u$) spans $\Real^n$.
+
+\subsection{Matched vs. Unmatched Disturbances}
+
+\begin{definition}[Matched Disturbance]
+A disturbance $\vect{d}(t)$ is \textbf{matched} if it enters through the control channel:
+\begin{equation}
+\dot{\vect{x}} = \vect{f}(\vect{x}) + \vect{g}(\vect{x})(u + d)
+\end{equation}
+where $d \in \Real$ is a scalar disturbance.
+\end{definition}
+
+\begin{definition}[Unmatched Disturbance]
+A disturbance is \textbf{unmatched} if it does not satisfy the matched condition:
+\begin{equation}
+\dot{\vect{x}} = \vect{f}(\vect{x}) + \vect{g}(\vect{x})u + \vect{d}(\vect{x}, t)
+\end{equation}
+where $\vect{d}(\vect{x}, t) \not\in \text{span}\{\vect{g}(\vect{x})\}$.
+\end{definition}
+
+\textbf{Significance for SMC}: Classical SMC can completely reject matched disturbances by choosing a sufficiently large switching gain $K > \norm{d}_\infty$. Unmatched disturbances cannot be fully rejected and require integral action or higher-order sliding modes.
+
+\subsection{Controllability Measure for DIP}
+
+For the DIP system, the controllability measure at a given state is:
+\begin{equation}
+\eta_c(\vect{q}) = \abs{\vect{L} \mat{M}^{-1}(\vect{q}) \mat{B}}
+\end{equation}
+
+where $\vect{L} = [\lambda_1, \lambda_2, k_1, k_2, 0, 0]$ is the sliding surface gradient. This scalar quantifies how effectively the control input $u$ can influence the sliding surface derivative $\dot{\sigma}$.
+
+\begin{remark}[Controllability Singularities]
+At certain configurations (e.g., when pendula are horizontal), $\eta_c$ can become very small, creating near-loss of controllability. Robust SMC design must account for this by monitoring $\eta_c$ and using bounded control when $\eta_c < \epsilon_{\text{threshold}}$.
+\end{remark}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Numerical Integration Methods}
+\label{sec:math:integration}
+
+Simulating the DIP system requires solving the ODE $\dot{\vect{x}} = \vect{f}(\vect{x}, u)$ numerically. This section presents three methods with different accuracy-speed trade-offs.
+
+\subsection{Euler Method}
+
+The simplest first-order method:
+\begin{equation}
+\label{eq:math:euler}
+\vect{x}_{n+1} = \vect{x}_n + h \vect{f}(\vect{x}_n, u_n)
+\end{equation}
+
+\textbf{Local Truncation Error}: $O(h^2)$
+
+\textbf{Global Error}: $O(h)$
+
+\textbf{Advantages}:
+\begin{itemize}
+    \item Extremely simple to implement
+    \item Minimal computational cost (1 function evaluation per step)
+    \item Suitable for PSO fitness evaluation where speed is critical
+\end{itemize}
+
+\textbf{Disadvantages}:
+\begin{itemize}
+    \item Low accuracy
+    \item Requires small timestep for stability ($h < 2/|\lambda_{\max}|$)
+    \item Accumulates error quickly
+\end{itemize}
+
+\subsection{Runge-Kutta 4th Order (RK4)}
+
+The classical fourth-order method:
+\begin{align}
+\vect{k}_1 &= \vect{f}(\vect{x}_n, u_n) \\
+\vect{k}_2 &= \vect{f}(\vect{x}_n + \frac{h}{2}\vect{k}_1, u_n) \\
+\vect{k}_3 &= \vect{f}(\vect{x}_n + \frac{h}{2}\vect{k}_2, u_n) \\
+\vect{k}_4 &= \vect{f}(\vect{x}_n + h\vect{k}_3, u_n) \\
+\vect{x}_{n+1} &= \vect{x}_n + \frac{h}{6}(\vect{k}_1 + 2\vect{k}_2 + 2\vect{k}_3 + \vect{k}_4)
+\end{align}
+
+\textbf{Local Truncation Error}: $O(h^5)$
+
+\textbf{Global Error}: $O(h^4)$
+
+\textbf{Advantages}:
+\begin{itemize}
+    \item High accuracy (16× error reduction when halving $h$)
+    \item Good balance of accuracy vs. computational cost
+    \item Widely used and well-understood
+\end{itemize}
+
+\textbf{Disadvantages}:
+\begin{itemize}
+    \item 4× more function evaluations than Euler
+    \item Fixed timestep (no adaptivity)
+\end{itemize}
+
+\begin{algorithm}[htbp]
+\caption[Runge-Kutta 4th Order Integration Step]{Runge-Kutta 4th Order (RK4) Integration Step: Four-stage explicit method for numerically solving ordinary differential equations with $\mathcal{O}(h^5)$ local truncation error. This algorithm evaluates the dynamics function $\vect{f}(\vect{x}, u)$ at four intermediate points within each timestep $h$ to achieve fourth-order accuracy, making it the standard choice for simulating\index{simulation} double-inverted pendulum\index{double-inverted pendulum|see{DIP}} controllers with typical timesteps of 0.01 seconds.}
+\label{alg:math:rk4}
+\SetKwInOut{Input}{Input}
+\SetKwInOut{Output}{Output}
+\Input{Current state $\vect{x}_n$, control input $u_n$, timestep $h$}
+\Output{Next state $\vect{x}_{n+1}$}
+\BlankLine
+$\vect{k}_1 \gets \vect{f}(\vect{x}_n, u_n)$ \;
+$\vect{k}_2 \gets \vect{f}(\vect{x}_n + \frac{h}{2}\vect{k}_1, u_n)$ \;
+$\vect{k}_3 \gets \vect{f}(\vect{x}_n + \frac{h}{2}\vect{k}_2, u_n)$ \;
+$\vect{k}_4 \gets \vect{f}(\vect{x}_n + h\vect{k}_3, u_n)$ \;
+$\vect{x}_{n+1} \gets \vect{x}_n + \frac{h}{6}(\vect{k}_1 + 2\vect{k}_2 + 2\vect{k}_3 + \vect{k}_4)$ \;
+\Return $\vect{x}_{n+1}$
+\end{algorithm}
+
+\subsection{Adaptive Runge-Kutta 45 (RK45)}
+
+An embedded method that provides automatic error control:
+\begin{itemize}
+    \item Computes both 4th-order and 5th-order solutions simultaneously
+    \item Error estimate: $\vect{e}_{n+1} = \norm{\vect{x}_{n+1}^{(5)} - \vect{x}_{n+1}^{(4)}}$
+    \item Adapts timestep: accept step if $\vect{e}_{n+1} < \text{tol}$, otherwise reduce $h$ and retry
+\end{itemize}
+
+\textbf{Advantages}:
+\begin{itemize}
+    \item Automatic error control (user specifies tolerance, not timestep)
+    \item Efficient: large steps when possible, small steps when needed
+    \item Industry standard (SciPy \texttt{solve\_ivp}, MATLAB \texttt{ode45})
+\end{itemize}
+
+\textbf{Disadvantages}:
+\begin{itemize}
+    \item Variable computational cost (unpredictable for real-time systems)
+    \item More complex implementation
+\end{itemize}
+
+\subsection{Method Comparison for DIP Simulation}
+
+\begin{table}[htbp]
+\centering
+\caption{Numerical Integration Method Comparison}
+\label{tab:math:integration_comparison}
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Method} & \textbf{Order} & \textbf{Evals/Step} & \textbf{Typical $h$} & \textbf{Use Case} \\
+\midrule
+Euler & 1 & 1 & 0.001--0.005 & PSO optimization \\
+RK4 & 4 & 4 & 0.01 & Development, standard sims \\
+RK45 & 4/5 & 6 (avg) & Adaptive & Production, research \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Exercises}
+\label{sec:math:exercises}
+
+\begin{exercise}[Lagrangian Derivation]
+Derive the kinetic energy $T_1$ for link 1 of the DIP from first principles, starting with the position vector $\vect{r}_1$. Verify that your result matches \cref{sec:math:dip_derivation}.
+\end{exercise}
+
+\begin{exercise}[Mass Matrix Symmetry]
+Prove that the inertia matrix $\mat{M}(\vect{q})$ is symmetric by showing $M_{12} = M_{21}$ and $M_{13} = M_{31}$ using the explicit expressions in \cref{eq:math:mass_matrix}.
+\end{exercise}
+
+\begin{exercise}[Gravity Linearization]
+Linearize the gravity vector $\vect{G}(\vect{q})$ around the upright equilibrium $\theta_1 = \theta_2 = 0$. Show that the linearized system has the form $\vect{G}_{\text{lin}} = -\mat{K}\vect{\theta}$ where $\mat{K}$ is a "negative stiffness" matrix.
+\end{exercise}
+
+\begin{exercise}[Lyapunov Function Verification]
+For the candidate Lyapunov function $V = \frac{1}{2}\sigma^2$, verify the following:
+\begin{enumerate}[label=(\alph*)]
+    \item $V$ is positive definite
+    \item $V$ is radially unbounded
+    \item If $\sigma \dot{\sigma} \leq -\eta|\sigma|$ for some $\eta > 0$, then $\dot{V} \leq -\eta \sqrt{2V}$
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Controllability Rank Condition]
+Linearize the DIP dynamics around the upright equilibrium to obtain $\dot{\vect{x}} = \mat{A}\vect{x} + \mat{B}u$. Compute the controllability matrix and verify that it has full rank (system is controllable).
+\end{exercise}
+
+\begin{exercise}[Matched Disturbance Rejection]
+Consider the system $\dot{x} = -x + u + d$ where $|d| \leq d_{\max} = 2$. Design a sliding mode control law $u = -K \sign(\sigma)$ where $\sigma = x$ such that $x \to 0$. What is the minimum value of $K$ required?
+\end{exercise}
+
+\begin{exercise}[Euler Method Stability]
+Analyze the stability of the Euler method for the test equation $\dot{x} = \lambda x$ with $\lambda < 0$. Derive the maximum timestep $h_{\max}$ such that the numerical solution remains bounded.
+\end{exercise}
+
+\begin{exercise}[RK4 Convergence]
+Run RK4 with $h$, $h/2$, and $h/4$ on a test problem with known analytical solution. Compute the global error at $t = 5$ for each case and verify that the error ratio is approximately $2^4 = 16$.
+\end{exercise}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Chapter Summary}
+\label{sec:math:summary}
+
+This chapter established the mathematical foundations for sliding mode controller design:
+
+\begin{itemize}
+    \item \textbf{Lagrangian mechanics} provides an elegant framework for deriving equations of motion, yielding the standard robot dynamics form $\mat{M}\ddot{\vect{q}} + \mat{C}\dot{\vect{q}} + \vect{G} = \mat{B}u$
+    \item The \textbf{double-inverted pendulum} equations were derived in detail, with explicit expressions for the inertia matrix, Coriolis terms, and gravity vector
+    \item \textbf{Lyapunov stability theory} gives conditions for proving asymptotic and exponential stability of closed-loop systems
+    \item The \textbf{reaching condition} $\sigma \dot{\sigma} < 0$ is the fundamental requirement for sliding mode control, ensuring convergence to the sliding surface
+    \item \textbf{Controllability} analysis distinguishes matched vs. unmatched disturbances, with SMC providing complete rejection of the former
+    \item \textbf{Numerical integration methods} (Euler, RK4, RK45) offer different accuracy-speed trade-offs for simulation
+\end{itemize}
+
+\textbf{Next Steps}: \cref{ch:classical_smc} applies these foundations to design the first controller: classical sliding mode control with boundary layer. The mathematical tools developed here are also essential for the Super-Twisting Algorithm\index{Super-Twisting Algorithm|see{STA}} (\cref{ch:sta_smc}), which uses higher-order sliding modes to eliminate chattering\index{chattering}, and Adaptive SMC\index{sliding mode control!adaptive} (\cref{ch:adaptive_smc}), which handles model uncertainty\index{model uncertainty} through online parameter estimation.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% End of Chapter 2
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

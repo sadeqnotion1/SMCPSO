@@ -1,0 +1,334 @@
+{
+  "classical_smc": {
+    "controller_type": "classical_smc",
+    "num_cycles": 1000,
+    "dt": 0.01,
+    "sim_time": 0.5,
+    "timestamp": "2025-11-11T07:45:40.682547",
+    "memory_snapshots": {
+      "0": {
+        "current": 0.00079345703125,
+        "peak": 0.00079345703125
+      },
+      "100": {
+        "current": 0.03677177429199219,
+        "peak": 0.06822967529296875
+      },
+      "500": {
+        "current": 0.03731346130371094,
+        "peak": 0.06822967529296875
+      },
+      "1000": {
+        "current": 0.03767967224121094,
+        "peak": 0.06822967529296875
+      }
+    },
+    "start_memory_mb": 0.00079345703125,
+    "end_memory_mb": 0.038794517517089844,
+    "peak_memory_mb": 0.06822967529296875,
+    "total_growth_mb": 0.038001060485839844,
+    "growth_per_cycle_kb": 0.0389130859375,
+    "top_allocations": [
+      {
+        "file": "C:\\Users\\SadeQ\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\linecache.py:142",
+        "size_diff_mb": 0.029956817626953125,
+        "count_diff": 334
+      },
+      {
+        "file": "D:\\Projects\\main\\src\\simulation\\engines\\simulation_runner.py:216",
+        "size_diff_mb": 0.0024261474609375,
+        "count_diff": 2
+      },
+      {
+        "file": "C:\\Users\\SadeQ\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\numpy\\core\\fromnumeric.py:59",
+        "size_diff_mb": 0.0008592605590820312,
+        "count_diff": 20
+      },
+      {
+        "file": "D:\\Projects\\main\\.artifacts\\qa_audits\\CA-02_MEMORY_MANAGEMENT_AUDIT\\detect_memory_leaks.py:115",
+        "size_diff_mb": 0.00058746337890625,
+        "count_diff": 8
+      },
+      {
+        "file": "D:\\Projects\\main\\src\\plant\\models\\lowrank\\dynamics.py:296",
+        "size_diff_mb": 0.000507354736328125,
+        "count_diff": 5
+      },
+      {
+        "file": "D:\\Projects\\main\\src\\simulation\\engines\\simulation_runner.py:215",
+        "size_diff_mb": 0.00048065185546875,
+        "count_diff": 2
+      },
+      {
+        "file": "D:\\Projects\\main\\src\\simulation\\engines\\simulation_runner.py:217",
+        "size_diff_mb": 0.0004730224609375,
+        "count_diff": 2
+      },
+      {
+        "file": "C:\\Users\\SadeQ\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\encodings\\cp1252.py:19",
+        "size_diff_mb": 0.00034427642822265625,
+        "count_diff": 6
+      },
+      {
+        "file": "C:\\Users\\SadeQ\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\numpy\\core\\_methods.py:99",
+        "size_diff_mb": 0.00030517578125,
+        "count_diff": 1
+      },
+      {
+        "file": "C:\\Users\\SadeQ\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\tracemalloc.py:560",
+        "size_diff_mb": 0.00029754638671875,
+        "count_diff": 2
+      }
+    ],
+    "verdict": "OK"
+  },
+  "sta_smc": {
+    "controller_type": "sta_smc",
+    "num_cycles": 1000,
+    "dt": 0.01,
+    "sim_time": 0.5,
+    "timestamp": "2025-11-11T07:45:58.356205",
+    "memory_snapshots": {
+      "0": {
+        "current": 0.000762939453125,
+        "peak": 0.000762939453125
+      },
+      "100": {
+        "current": 13.605055809020996,
+        "peak": 13.668798446655273
+      },
+      "500": {
+        "current": 13.605477333068848,
+        "peak": 13.668798446655273
+      },
+      "1000": {
+        "current": 13.60615062713623,
+        "peak": 13.668798446655273
+      }
+    },
+    "start_memory_mb": 0.000762939453125,
+    "end_memory_mb": 13.607236862182617,
+    "peak_memory_mb": 13.668798446655273,
+    "total_growth_mb": 13.606473922729492,
+    "growth_per_cycle_kb": 13.933029296875,
+    "top_allocations": [
+      {
+        "file": "<frozen importlib._bootstrap_external>:757",
+        "size_diff_mb": 3.7092971801757812,
+        "count_diff": 31600
+      },
+      {
+        "file": "<frozen abc>:106",
+        "size_diff_mb": 2.98199462890625,
+        "count_diff": 9181
+      },
+      {
+        "file": "C:\\Users\\SadeQ\\AppData\\Roaming\\Python\\Python312\\site-packages\\numba\\core\\typing\\templates.py:1183",
+        "size_diff_mb": 0.5402374267578125,
+        "count_diff": 1971
+      },
+      {
+        "file": "<frozen abc>:107",
+        "size_diff_mb": 0.38690185546875,
+        "count_diff": 2807
+      },
+      {
+        "file": "C:\\Users\\SadeQ\\AppData\\Roaming\\Python\\Python312\\site-packages\\numba\\core\\typing\\context.py:439",
+        "size_diff_mb": 0.3636016845703125,
+        "count_diff": 2444
+      },
+      {
+        "file": "C:\\Users\\SadeQ\\AppData\\Roaming\\Python\\Python312\\site-packages\\numba\\core\\typing\\templates.py:891",
+        "size_diff_mb": 0.28546905517578125,
+        "count_diff": 4971
+      },
+      {
+        "file": "<frozen abc>:123",
+        "size_diff_mb": 0.27921485900878906,
+        "count_diff": 3163
+      },
+      {
+        "file": "C:\\Users\\SadeQ\\AppData\\Roaming\\Python\\Python312\\site-packages\\numba\\core\\typing\\context.py:474",
+        "size_diff_mb": 0.26943206787109375,
+        "count_diff": 3027
+      },
+      {
+        "file": "C:\\Users\\SadeQ\\AppData\\Roaming\\Python\\Python312\\site-packages\\numba\\core\\typing\\templates.py:889",
+        "size_diff_mb": 0.26351165771484375,
+        "count_diff": 3710
+      },
+      {
+        "file": "C:\\Users\\SadeQ\\AppData\\Roaming\\Python\\Python312\\site-packages\\numba\\np\\npyimpl.py:465",
+        "size_diff_mb": 0.18434906005859375,
+        "count_diff": 774
+      }
+    ],
+    "verdict": "LEAK DETECTED"
+  },
+  "adaptive_smc": {
+    "controller_type": "adaptive_smc",
+    "num_cycles": 1000,
+    "dt": 0.01,
+    "sim_time": 0.5,
+    "timestamp": "2025-11-11T07:46:20.618869",
+    "memory_snapshots": {
+      "0": {
+        "current": 0.000732421875,
+        "peak": 0.000732421875
+      },
+      "100": {
+        "current": 0.004590034484863281,
+        "peak": 0.03114795684814453
+      },
+      "500": {
+        "current": 0.005497932434082031,
+        "peak": 0.03205585479736328
+      },
+      "1000": {
+        "current": 0.005864143371582031,
+        "peak": 0.03242206573486328
+      }
+    },
+    "start_memory_mb": 0.000732421875,
+    "end_memory_mb": 0.0069179534912109375,
+    "peak_memory_mb": 0.03242206573486328,
+    "total_growth_mb": 0.0061855316162109375,
+    "growth_per_cycle_kb": 0.006333984375,
+    "top_allocations": [
+      {
+        "file": "D:\\Projects\\main\\src\\simulation\\engines\\simulation_runner.py:216",
+        "size_diff_mb": 0.0024261474609375,
+        "count_diff": 2
+      },
+      {
+        "file": "D:\\Projects\\main\\.artifacts\\qa_audits\\CA-02_MEMORY_MANAGEMENT_AUDIT\\detect_memory_leaks.py:115",
+        "size_diff_mb": 0.00058746337890625,
+        "count_diff": 8
+      },
+      {
+        "file": "D:\\Projects\\main\\.artifacts\\qa_audits\\CA-02_MEMORY_MANAGEMENT_AUDIT\\detect_memory_leaks.py:119",
+        "size_diff_mb": 0.00048828125,
+        "count_diff": 1
+      },
+      {
+        "file": "D:\\Projects\\main\\src\\simulation\\engines\\simulation_runner.py:215",
+        "size_diff_mb": 0.00048065185546875,
+        "count_diff": 2
+      },
+      {
+        "file": "D:\\Projects\\main\\src\\simulation\\engines\\simulation_runner.py:217",
+        "size_diff_mb": 0.0004730224609375,
+        "count_diff": 2
+      },
+      {
+        "file": "C:\\Users\\SadeQ\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\encodings\\cp1252.py:19",
+        "size_diff_mb": 0.00034427642822265625,
+        "count_diff": 6
+      },
+      {
+        "file": "C:\\Users\\SadeQ\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\tracemalloc.py:560",
+        "size_diff_mb": 0.00026702880859375,
+        "count_diff": 2
+      },
+      {
+        "file": "C:\\Users\\SadeQ\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\tracemalloc.py:423",
+        "size_diff_mb": 0.00026702880859375,
+        "count_diff": 2
+      },
+      {
+        "file": "D:\\Projects\\main\\.artifacts\\qa_audits\\CA-02_MEMORY_MANAGEMENT_AUDIT\\detect_memory_leaks.py:83",
+        "size_diff_mb": 0.00022125244140625,
+        "count_diff": 4
+      },
+      {
+        "file": "D:\\Projects\\main\\.artifacts\\qa_audits\\CA-02_MEMORY_MANAGEMENT_AUDIT\\detect_memory_leaks.py:82",
+        "size_diff_mb": 0.000213623046875,
+        "count_diff": 2
+      }
+    ],
+    "verdict": "OK"
+  },
+  "hybrid_adaptive_sta_smc": {
+    "controller_type": "hybrid_adaptive_sta_smc",
+    "num_cycles": 1000,
+    "dt": 0.01,
+    "sim_time": 0.5,
+    "timestamp": "2025-11-11T07:47:25.901596",
+    "memory_snapshots": {
+      "0": {
+        "current": 0.000701904296875,
+        "peak": 0.000701904296875
+      },
+      "100": {
+        "current": 0.004712104797363281,
+        "peak": 0.03324604034423828
+      },
+      "500": {
+        "current": 0.005131721496582031,
+        "peak": 0.03366565704345703
+      },
+      "1000": {
+        "current": 0.006199836730957031,
+        "peak": 0.03473377227783203
+      }
+    },
+    "start_memory_mb": 0.000701904296875,
+    "end_memory_mb": 0.0072078704833984375,
+    "peak_memory_mb": 0.03473377227783203,
+    "total_growth_mb": 0.0065059661865234375,
+    "growth_per_cycle_kb": 0.006662109375,
+    "top_allocations": [
+      {
+        "file": "D:\\Projects\\main\\src\\simulation\\engines\\simulation_runner.py:216",
+        "size_diff_mb": 0.0024261474609375,
+        "count_diff": 2
+      },
+      {
+        "file": "D:\\Projects\\main\\.artifacts\\qa_audits\\CA-02_MEMORY_MANAGEMENT_AUDIT\\detect_memory_leaks.py:119",
+        "size_diff_mb": 0.000701904296875,
+        "count_diff": 1
+      },
+      {
+        "file": "D:\\Projects\\main\\.artifacts\\qa_audits\\CA-02_MEMORY_MANAGEMENT_AUDIT\\detect_memory_leaks.py:115",
+        "size_diff_mb": 0.00058746337890625,
+        "count_diff": 8
+      },
+      {
+        "file": "D:\\Projects\\main\\src\\simulation\\engines\\simulation_runner.py:215",
+        "size_diff_mb": 0.00048065185546875,
+        "count_diff": 2
+      },
+      {
+        "file": "D:\\Projects\\main\\src\\simulation\\engines\\simulation_runner.py:217",
+        "size_diff_mb": 0.0004730224609375,
+        "count_diff": 2
+      },
+      {
+        "file": "C:\\Users\\SadeQ\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\encodings\\cp1252.py:19",
+        "size_diff_mb": 0.00034427642822265625,
+        "count_diff": 6
+      },
+      {
+        "file": "C:\\Users\\SadeQ\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\tracemalloc.py:560",
+        "size_diff_mb": 0.00025177001953125,
+        "count_diff": 2
+      },
+      {
+        "file": "C:\\Users\\SadeQ\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\tracemalloc.py:423",
+        "size_diff_mb": 0.00025177001953125,
+        "count_diff": 2
+      },
+      {
+        "file": "D:\\Projects\\main\\.artifacts\\qa_audits\\CA-02_MEMORY_MANAGEMENT_AUDIT\\detect_memory_leaks.py:83",
+        "size_diff_mb": 0.00022125244140625,
+        "count_diff": 4
+      },
+      {
+        "file": "D:\\Projects\\main\\.artifacts\\qa_audits\\CA-02_MEMORY_MANAGEMENT_AUDIT\\detect_memory_leaks.py:82",
+        "size_diff_mb": 0.000213623046875,
+        "count_diff": 2
+      }
+    ],
+    "verdict": "OK"
+  }
+}

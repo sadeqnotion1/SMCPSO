@@ -1,0 +1,572 @@
+% ==============================================================================
+% EPISODE 005: SIMULATION ENGINE ARCHITECTURE
+% ==============================================================================
+\input{../templates/master_template.tex}
+\input{../templates/tikz_components.tex}
+
+% Episode-specific title
+\renewcommand{\episodetitle}{E005: Simulation Engine}
+
+\begin{document}
+
+% ==============================================================================
+% TITLE PAGE
+% ==============================================================================
+\makeepisodetitle{E005: Simulation Engine Architecture}{Making Python Fly with 50x Speedups}{1}{30-35 minutes}
+
+% ==============================================================================
+% PAGE 1: WHY SPEED MATTERS & ARCHITECTURE
+% ==============================================================================
+\learningobjective{Understand 3-layer architecture, integration methods, and performance optimizations (vectorization + Numba JIT) for 50-69x speedups}
+
+\section*{Why Speed Matters}
+
+\begin{keypoint}
+\textbf{PSO Challenge:} 30 particles $\times$ 50 iterations = \textbf{1,500 simulations}
+
+Each simulation: 10 seconds robot time at $dt=0.01$ = 1,000 time steps
+
+\textbf{Total:} 1.5 million time steps!
+\end{keypoint}
+
+\subsection*{Speed = Research Productivity}
+
+\begin{multicols}{2}
+
+\textbf{Slow Simulation} (10s wall time for 10s sim):
+\begin{itemize}
+    \item Test one controller: 10 seconds
+    \item PSO optimization: \textbf{4.2 hours}
+    \item Daily productivity: ~5 PSO runs
+\end{itemize}
+
+\iconWarning\ \textbf{MT-5 Benchmark:} 2,400 simulations = 6.7 hours
+
+\columnbreak
+
+\textbf{Fast Simulation} (0.2s wall time for 10s sim):
+\begin{itemize}
+    \item Test one controller: 0.2 seconds
+    \item PSO optimization: \textbf{5 minutes}
+    \item Daily productivity: 96 PSO runs
+\end{itemize}
+
+\iconKey\ \textbf{MT-5 Benchmark:} 2,400 simulations = 8 minutes
+
+\end{multicols}
+
+\begin{tip}
+\textbf{Our System:} PSO completes in 5 minutes = \textbf{50x faster than real-time!}
+
+The simulation engine is THE bottleneck for research productivity.
+\end{tip}
+
+\section*{Three-Layer Architecture: The Restaurant}
+
+\begin{center}
+\begin{tikzpicture}[node distance=2cm]
+    % Layer 1
+    \node[block, fill=primary!30, text width=8cm] (app) {\textbf{Layer 1: Application (Waiter)}\\CLI, Streamlit, Notebooks\\Takes orders, brings results};
+
+    % Layer 2
+    \node[block, fill=secondary!30, text width=8cm, below=1cm of app] (sim) {\textbf{Layer 2: Simulation (Head Chef)}\\SimulationRunner, VectorizedSimulator\\Coordinates components, runs time loop};
+
+    % Layer 3
+    \node[block, fill=accent!30, text width=8cm, below=1cm of sim] (core) {\textbf{Layer 3: Core (Line Cooks)}\\Controllers, Dynamics, Integrators\\Pure math, actual computation};
+
+    % Arrows
+    \draw[arrow] (app) -- (sim);
+    \draw[arrow] (sim) -- (core);
+\end{tikzpicture}
+\end{center}
+
+\subsection*{Restaurant Analogy Breakdown}
+
+\begin{tcolorbox}[colback=background, colframe=codeblock, title=\faUtensils\ Layer Responsibilities]
+\begin{tabular}{lll}
+\toprule
+\textbf{Layer} & \textbf{Restaurant} & \textbf{Simulation} \\
+\midrule
+\textbf{Application} & Waiter - Takes orders, serves food & CLI parses args, displays plots \\
+\midrule
+\textbf{Simulation} & Head Chef - Coordinates kitchen & SimulationRunner runs time loop \\
+\textbf{Core} & Line Cooks - Chop, cook, plate & Controllers/dynamics compute math \\
+\bottomrule
+\end{tabular}
+\end{tcolorbox}
+
+\subsection*{Separation of Concerns}
+
+\begin{example}
+\textbf{Application Layer (Waiter):} "Table 5 wants Classical SMC for 10 seconds"
+
+\textbf{Simulation Layer (Head Chef):} "I'll coordinate 1,000 time steps with $dt=0.01$"
+
+\textbf{Core Layer (Line Cooks):} "Calculating acceleration: $\ddot{\theta}_1=-0.83$, $\ddot{\theta}_2=1.24$..."
+\end{example}
+
+\subsection*{Benefits of Layered Architecture}
+
+\begin{multicols}{2}
+
+\iconKey\ \textbf{Modularity}: Swap controllers without touching integration
+
+\iconCode\ \textbf{Testability}: Unit test each layer independently
+
+\columnbreak
+
+\iconTarget\ \textbf{Optimization}: Vectorize Layer 2 without changing Layer 3
+
+\iconBook\ \textbf{Reusability}: Core works in simulation AND real hardware (HIL)
+
+\end{multicols}
+
+% ==============================================================================
+% PAGE 2: SIMULATION LOOP & INTEGRATION
+% ==============================================================================
+\newpage
+
+\section*{SimulationRunner: The Time-Stepping Loop}
+
+\begin{center}
+\controllooptiming
+\end{center}
+
+\subsection*{Six Steps Per Time Step}
+
+\begin{tcolorbox}[colback=primary!5, colframe=primary, title=\faCode\ Main Loop Workflow]
+\begin{itemize}
+    \item \textbf{1.} \textbf{Compute control}: $u = \text{controller.compute}(\text{state}, \text{last\_u}, \text{history})$
+    \item \textbf{2.} \textbf{Actuator saturation}: $u = \text{clip}(u, -50, +50)$ (real motors have limits!)
+    \item \textbf{3.} \textbf{Compute dynamics}: $\dot{x} = \text{plant.compute\_dynamics}(\text{state}, u)$
+    \item \textbf{4.} \textbf{Integration}: $\text{state}_{\text{new}} = \text{integrator.step}(\text{state}, \dot{x}, dt)$
+    \item \textbf{5.} \textbf{Instability check}: If $|\theta_1| > 45°$ or $|\theta_2| > 45°$ $\Rightarrow$ early exit
+    \item \textbf{6.} \textbf{Logging}: Store $t$, state, $u$ in pre-allocated arrays
+\end{itemize}
+\end{tcolorbox}
+
+\subsection*{Performance Trick: Pre-allocation vs Append}
+
+\begin{multicols}{2}
+
+\textbf{Slow (list append):}
+\begin{lstlisting}[style=python, numbers=none]
+times = []
+states = []
+while t < duration:
+    times.append(t)
+    states.append(state.copy())
+# Time: 180ms for 1000 steps
+\end{lstlisting}
+
+\columnbreak
+
+\textbf{Fast (pre-allocated array):}
+\begin{lstlisting}[style=python, numbers=none]
+times = np.zeros(n_steps)
+states = np.zeros((n_steps, 6))
+step = 0
+while t < duration:
+    times[step] = t
+    states[step, :] = state
+    step += 1
+# Time: 90ms for 1000 steps
+\end{lstlisting}
+
+\end{multicols}
+
+\begin{tip}
+\textbf{Why 2x faster?} Python lists dynamically resize (allocate new memory, copy old data). NumPy arrays allocated once!
+\end{tip}
+
+\section*{Integration Methods: Time-Stepping Algorithms}
+
+\begin{keypoint}
+\textbf{Challenge:} We have derivatives $\dot{x} = [\dot{\theta}_1, \ddot{\theta}_1, \dot{\theta}_2, \ddot{\theta}_2, \dot{x}_c, \ddot{x}_c]$
+
+Need to advance time: $x(t) \to x(t+dt)$
+
+\textbf{Three methods:} Euler (simple, inaccurate), RK4 (balanced), RK45 (adaptive, accurate)
+\end{keypoint}
+
+\subsection*{Method 1: Euler (1st Order)}
+
+\begin{tcolorbox}[colback=warning!10, colframe=warning, title=\faExclamationTriangle\ Euler Integration]
+\textbf{Formula:}
+\begin{equation*}
+x(t+dt) = x(t) + dt \cdot \dot{x}(t)
+\end{equation*}
+
+\textbf{Interpretation:} Move in direction of derivative for time $dt$ (straight line approximation)
+
+\textbf{Error:}
+\begin{itemize}
+    \item Local (per step): $O(dt^2)$
+    \item Global (accumulated): $O(dt)$ - error decreases linearly with $dt$
+\end{itemize}
+
+\textbf{Example:}
+\begin{itemize}
+    \item True: $\theta_1(t=1s) = 0.050$ rad
+    \item Euler ($dt=0.01$): $\theta_1 = 0.053$ rad (6\% error)
+    \item Euler ($dt=0.001$): $\theta_1 = 0.0503$ rad (0.6\% error)
+\end{itemize}
+
+\textbf{When to use:} Educational only - NOT for research!
+\end{tcolorbox}
+
+\subsection*{Method 2: RK4 (4th Order)}
+
+\begin{tcolorbox}[colback=secondary!10, colframe=secondary, title=\faCheckCircle\ RK4 - The Workhorse]
+\textbf{Algorithm:} Four slope evaluations per step
+\begin{align*}
+k_1 &= f(x, u) \\
+k_2 &= f(x + 0.5 \cdot dt \cdot k_1, u) \\
+k_3 &= f(x + 0.5 \cdot dt \cdot k_2, u) \\
+k_4 &= f(x + dt \cdot k_3, u) \\
+x_{\text{new}} &= x + \frac{dt}{6}(k_1 + 2k_2 + 2k_3 + k_4)
+\end{align*}
+
+\textbf{Interpretation:} Weighted average of 4 slopes (start, midpoint twice, endpoint)
+
+\textbf{Error:}
+\begin{itemize}
+    \item Local: $O(dt^5)$ - extremely accurate per step!
+    \item Global: $O(dt^4)$ - error decreases as $dt^4$
+\end{itemize}
+
+\textbf{Speedup:} Halve $dt$ $\Rightarrow$ 16x more accurate (but 2x slower)
+
+\textbf{When to use:} Standard choice for research ($dt=0.001$ s typical)
+\end{tcolorbox}
+
+\subsection*{Method 3: RK45 (Adaptive)}
+
+\begin{multicols}{2}
+
+\textbf{Algorithm:} SciPy's \texttt{solve\_ivp} with automatic step sizing
+
+\textbf{Error Control:}
+\begin{itemize}
+    \item \texttt{rtol=1e-6} (relative tolerance)
+    \item \texttt{atol=1e-9} (absolute tolerance)
+\end{itemize}
+
+\textbf{Adaptive Behavior:}
+\begin{itemize}
+    \item Easy regions: Large steps (fast)
+    \item Complex regions: Small steps (accurate)
+\end{itemize}
+
+\columnbreak
+
+\textbf{Example:}
+\begin{itemize}
+    \item Upright (smooth): $dt \approx 0.01$ s
+    \item Swing-up (chaotic): $dt \approx 0.0001$ s
+\end{itemize}
+
+\textbf{When to use:} High-accuracy validation, swing-up control
+
+\textbf{Tradeoff:} Most accurate, but slower (variable overhead)
+
+\end{multicols}
+
+% ==============================================================================
+% PAGE 3: VECTORIZATION & NUMBA JIT
+% ==============================================================================
+\newpage
+
+\section*{Vectorization: 5x Speedup with NumPy Broadcasting}
+
+\begin{keypoint}
+\textbf{Problem:} PSO needs 30 simulations simultaneously (one per particle)
+
+\textbf{Naive approach:} Loop over particles (30 sequential simulations)
+
+\textbf{Vectorized approach:} Batch all 30 particles into one NumPy array (parallel evaluation)
+\end{keypoint}
+
+\subsection*{Broadcasting Example}
+
+\begin{multicols}{2}
+
+\textbf{Sequential (slow):}
+\begin{lstlisting}[style=python, numbers=none]
+results = []
+for particle in particles:
+    sim = SimulationRunner(...)
+    result = sim.run()
+    results.append(result)
+# Time: 6.0 seconds (30 runs)
+\end{lstlisting}
+
+\columnbreak
+
+\textbf{Vectorized (5x faster):}
+\begin{lstlisting}[style=python, numbers=none]
+# Shape: (30, 6) - 30 particles
+states = np.array([p.state
+                   for p in particles])
+vsim = VectorizedSimulator(...)
+results = vsim.run_batch(states)
+# Time: 1.2 seconds (batched)
+\end{lstlisting}
+
+\end{multicols}
+
+\subsection*{How Broadcasting Works}
+
+\begin{example}
+\textbf{Dynamics computation for 30 particles:}
+
+\textbf{Input:} \texttt{states} shape (30, 6), \texttt{controls} shape (30,)
+
+\textbf{NumPy magic:}
+\begin{lstlisting}[style=python, numbers=none]
+# Compute mass matrix for ALL particles at once
+M = compute_mass_matrix(states[:, 0], states[:, 2])  # Shape: (30, 3, 3)
+
+# Solve ALL linear systems simultaneously
+accels = np.linalg.solve(M, forces)  # Shape: (30, 3)
+\end{lstlisting}
+
+\textbf{Result:} Single vectorized call replaces 30 sequential calls $\Rightarrow$ 5x speedup!
+\end{example}
+
+\begin{tip}
+\textbf{Why faster?} NumPy uses optimized C/Fortran libraries (BLAS, LAPACK). Vectorization reduces Python interpreter overhead.
+\end{tip}
+
+\section*{Numba JIT: 69x Speedup with Machine Code Compilation}
+
+\begin{keypoint}
+\textbf{Numba:} Just-In-Time compiler that translates Python to machine code
+
+\textbf{Target:} Inner loops (dynamics computation, integration)
+
+\textbf{Result:} 69x speedup for critical code paths!
+\end{keypoint}
+
+\subsection*{Before and After Numba}
+
+\begin{multicols}{2}
+
+\textbf{Pure Python (slow):}
+\begin{lstlisting}[style=python, numbers=none]
+def compute_dynamics(state, u):
+    # Build mass matrix
+    M = ...  # Python loops
+    # Solve dynamics
+    accel = ...
+    return state_dot
+# Time: 138ms per call
+\end{lstlisting}
+
+\columnbreak
+
+\textbf{Numba JIT (69x faster):}
+\begin{lstlisting}[style=python, numbers=none]
+from numba import jit
+
+@jit(nopython=True)
+def compute_dynamics(state, u):
+    # SAME CODE!
+    M = ...
+    accel = ...
+    return state_dot
+# Time: 2ms per call
+\end{lstlisting}
+
+\end{multicols}
+
+\subsection*{How Numba Works}
+
+\begin{tcolorbox}[colback=accent!10, colframe=accent, title=\faCode\ JIT Compilation Process]
+\textbf{First call (compilation overhead):}
+\begin{itemize}
+    \item \textbf{1.} Analyze Python bytecode
+    \item \textbf{2.} Infer types from input arguments
+    \item \textbf{3.} Generate LLVM intermediate representation
+    \item \textbf{4.} Compile to machine code (x86/ARM)
+    \item \textbf{5.} Cache compiled function
+\end{itemize}
+Time: ~500ms (one-time cost)
+
+\textbf{Subsequent calls (blazing fast):}
+\begin{itemize}
+    \item \textbf{1.} Load cached machine code
+    \item \textbf{2.} Execute directly on CPU (no Python interpreter!)
+\end{itemize}
+Time: ~2ms (69x faster than pure Python)
+\end{tcolorbox}
+
+\subsection*{Numba Best Practices}
+
+\begin{warning}
+\textbf{Numba Limitations:}
+\begin{itemize}
+    \item \texttt{nopython=True} required for max speed (no Python objects!)
+    \item No lists/dicts - use NumPy arrays only
+    \item No string operations
+    \item Limited NumPy function support
+\end{itemize}
+
+\textbf{Workaround:} Keep Numba functions small, focused on inner loops. Complex orchestration stays in Python.
+\end{warning}
+
+\begin{tip}
+\textbf{Where to use Numba:}
+\begin{itemize}
+    \item Dynamics computation (mass matrix, Coriolis, gravity)
+    \item Integration inner loops (RK4 slope evaluations)
+    \item Controller compute functions
+    \item \textbf{NOT:} High-level orchestration, I/O, plotting
+\end{itemize}
+\end{tip}
+
+% ==============================================================================
+% PAGE 4: PERFORMANCE METRICS & QUICK REFERENCE
+% ==============================================================================
+\newpage
+
+\section*{Performance Achievements}
+
+\begin{tcolorbox}[colback=secondary!10, colframe=secondary, title=\faChartBar\ Speedup Summary]
+\begin{tabular}{lll}
+\toprule
+\textbf{Optimization} & \textbf{Speedup} & \textbf{Cumulative} \\
+\midrule
+Baseline (pure Python) & 1x & 1x \\
+Pre-allocation & 2x & 2x \\
+Vectorization (NumPy) & 5x & 10x \\
+Numba JIT (inner loops) & 6.9x & 69x \\
+\textbf{Total} & - & \textbf{69x faster!} \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.3cm}
+
+\textbf{Real-World Impact:}
+\begin{itemize}
+    \item Single simulation: 10s $\to$ 0.145s (69x faster)
+    \item PSO (1,500 sims): 4.2 hours $\to$ 3.6 minutes (70x faster)
+    \item MT-5 (2,400 sims): 6.7 hours $\to$ 5.8 minutes (69x faster)
+\end{itemize}
+\end{tcolorbox}
+
+\subsection*{Memory Efficiency}
+
+\begin{multicols}{2}
+
+\textbf{Challenge:} 2,400 simulations $\times$ 1,000 steps $\times$ 6 states = 14.4M floats
+
+\textbf{Naive:} Store everything $\Rightarrow$ 115 MB RAM
+
+\textbf{Optimized:}
+\begin{itemize}
+    \item Reuse arrays across simulations
+    \item Store only final metrics (not full trajectory)
+    \item Compress historical data
+\end{itemize}
+
+\columnbreak
+
+\textbf{Result:}
+\begin{itemize}
+    \item Peak RAM: 23 MB (5x reduction)
+    \item Garbage collection: Minimal
+    \item Cache-friendly access patterns
+\end{itemize}
+
+\begin{tip}
+Pre-allocate once, reuse arrays $\Rightarrow$ no allocation in inner loop!
+\end{tip}
+
+\end{multicols}
+
+\subsection*{Quick Reference: Integration Methods}
+
+\quickref{Euler (Educational Only)}{
+\begin{equation*}
+x_{\text{new}} = x + dt \cdot \dot{x}
+\end{equation*}
+Local error: $O(dt^2)$, Global error: $O(dt)$
+}
+
+\quickref{RK4 (Research Standard)}{
+\begin{align*}
+k_1 &= f(x, u), \quad k_2 = f(x + 0.5 dt \cdot k_1, u) \\
+k_3 &= f(x + 0.5 dt \cdot k_2, u), \quad k_4 = f(x + dt \cdot k_3, u) \\
+x_{\text{new}} &= x + \frac{dt}{6}(k_1 + 2k_2 + 2k_3 + k_4)
+\end{align*}
+Local error: $O(dt^5)$, Global error: $O(dt^4)$ - Use with $dt=0.001$ s
+}
+
+\quickref{RK45 (High-Accuracy Validation)}{
+Adaptive step sizing: SciPy's \texttt{solve\_ivp(method='RK45')}
+
+Error control: \texttt{rtol=1e-6}, \texttt{atol=1e-9}
+
+Best for: Swing-up control, final validation
+}
+
+\subsection*{Configuration Parameters}
+
+\begin{tcolorbox}[colback=background, colframe=codeblock, title=\faWrench\ Typical Settings]
+\begin{tabular}{ll}
+\toprule
+\textbf{Parameter} & \textbf{Value} \\
+\midrule
+Time step ($dt$) & 0.001 s (1 kHz sampling) \\
+Integration method & RK4 (standard) \\
+Simulation duration & 10 s (10,000 steps) \\
+Actuator limits & $\pm 50$ Nm (motor saturation) \\
+Instability threshold & $|\theta| > 45°$ (early exit) \\
+Vectorized batch size & 30 particles (PSO swarm) \\
+Numba cache & Enabled (first-call overhead ~500ms) \\
+\bottomrule
+\end{tabular}
+\end{tcolorbox}
+
+\subsection*{Performance Tuning Tips}
+
+\begin{summary}
+\textbf{For Development (fast iteration):}
+\begin{itemize}
+    \item Use Simplified model (10-100x faster than Full)
+    \item RK4 with $dt=0.01$ s (10x larger step)
+    \item Disable monitoring/logging
+\end{itemize}
+
+\textbf{For Research (accuracy):}
+\begin{itemize}
+    \item Use Full Nonlinear model
+    \item RK4 with $dt=0.001$ s (1 kHz)
+    \item Enable monitoring (latency, deadline misses)
+\end{itemize}
+
+\textbf{For High-Accuracy Validation:}
+\begin{itemize}
+    \item RK45 adaptive integrator
+    \item Full Nonlinear model
+    \item Multiple seeds for Monte Carlo
+\end{itemize}
+\end{summary}
+
+\subsection*{What's Next?}
+
+\begin{keypoint}
+\textbf{Phase 1 Complete!} You now understand:
+\begin{itemize}
+    \item E001: Project overview, system architecture
+    \item E002: Control theory (Lyapunov, SMC, STA, Adaptive)
+    \item E003: Plant models (Lagrangian, 3 variants)
+    \item E004: PSO optimization (cost function, 6-21\% gains)
+    \item E005: Simulation engine (69x speedup!)
+\end{itemize}
+
+\textbf{Phase 2 (Technical):} E006-E013 - Analysis tools, testing, documentation, HIL, monitoring
+\end{keypoint}
+
+\end{document}

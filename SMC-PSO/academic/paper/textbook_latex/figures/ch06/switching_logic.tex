@@ -1,0 +1,83 @@
+% Hybrid Controller Switching Logic
+% TikZ diagram for Chapter 6 - Flowchart showing mode selection
+
+\begin{tikzpicture}[
+    node distance=1.5cm,
+    block/.style={rectangle, draw, thick, fill=blue!10, text width=3.5cm, align=center, minimum height=1cm},
+    decision/.style={diamond, draw, thick, fill=orange!20, text width=2.5cm, align=center, aspect=2},
+    mode/.style={rectangle, draw, very thick, rounded corners, text width=3cm, align=center, minimum height=1.2cm},
+    arrow/.style={->, thick}
+]
+
+    % Start
+    \node[block] (start) {Measure System State\\$\mathbf{x}(t), e(t)$};
+
+    % Error magnitude check
+    \node[decision, below=of start] (error_check) {Large Error?\\$|e| > \epsilon_{\text{thresh}}$};
+
+    % Large error branch
+    \node[mode, fill=red!20, below left=1.2cm and 2cm of error_check] (sta_mode) {
+        \textbf{STA Mode}\\[0.2cm]
+        Super-Twisting\\Algorithm\\[0.1cm]
+        \small Fast convergence
+    };
+
+    % Small error branch
+    \node[decision, below right=1.2cm and 2cm of error_check] (uncertainty_check) {
+        High\\Uncertainty?\\$|\Delta f| > \delta$
+    };
+
+    % Adaptive mode
+    \node[mode, fill=green!20, below left=1cm and 0.5cm of uncertainty_check] (adaptive_mode) {
+        \textbf{Adaptive Mode}\\[0.2cm]
+        Gain Adaptation\\Active\\[0.1cm]
+        \small Disturbance rejection
+    };
+
+    % Nominal mode
+    \node[mode, fill=blue!20, below right=1cm and 0.5cm of uncertainty_check] (nominal_mode) {
+        \textbf{Nominal Mode}\\[0.2cm]
+        Fixed Gains\\Sufficient\\[0.1cm]
+        \small Low control effort
+    };
+
+    % Apply control
+    \node[block, below=3cm of uncertainty_check] (apply_control) {
+        Apply Control Law\\$u(t) = u_{\text{mode}}$
+    };
+
+    % Loop back
+    \node[block, below=of apply_control] (update) {
+        Update State\\$t \leftarrow t + \Delta t$
+    };
+
+    % Arrows
+    \draw[arrow] (start) -- (error_check);
+    \draw[arrow] (error_check) -- node[above left, near start] {\small Yes} (sta_mode);
+    \draw[arrow] (error_check) -- node[above right, near start] {\small No} (uncertainty_check);
+    \draw[arrow] (uncertainty_check) -- node[above left, near start] {\small Yes} (adaptive_mode);
+    \draw[arrow] (uncertainty_check) -- node[above right, near start] {\small No} (nominal_mode);
+    \draw[arrow] (sta_mode) -- ++(0, -1.5) -| (apply_control);
+    \draw[arrow] (adaptive_mode) -- (apply_control);
+    \draw[arrow] (nominal_mode) -- ++(0, -1.5) -| (apply_control);
+    \draw[arrow] (apply_control) -- (update);
+    \draw[arrow] (update) -- ++(-6, 0) |- (start);
+
+    % Threshold annotations
+    \node[draw, thick, fill=yellow!10, align=left, font=\small] at (7, 0) {
+        \textbf{Thresholds:}\\
+        $\epsilon_{\text{thresh}} = 0.1$ rad\\
+        $\delta = 0.05$ (normalized)\\[0.2cm]
+        \textbf{Benefits:}\\
+        \quad$\bullet$ Mode switching\\
+        \quad$\bullet$ Optimal control effort\\
+        \quad$\bullet$ Adaptive to conditions
+    };
+
+    % Mode priority
+    \node[draw, thick, fill=red!10, align=center, font=\small] at (-5, -2) {
+        \textbf{Priority:}\\
+        STA $>$ Adaptive $>$ Nominal
+    };
+
+\end{tikzpicture}

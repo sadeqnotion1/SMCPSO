@@ -1,0 +1,136 @@
+% ============================================================================
+% SECTION 8: RESEARCH OUTPUTS & PUBLICATIONS
+% ============================================================================
+\section{Research Outputs \& Publications}
+
+\begin{frame}{Phase 5 Research Roadmap: Overview}
+    \textbf{72-Hour Roadmap (Oct 29 - Nov 7, 2025):}
+
+    \vspace{0.3cm}
+
+    \textbf{Quick Wins (Week 1, 8 hours):}
+    \begin{itemize}
+        \item \success{QW-1:} SMC theory documentation (800-1,200 lines)
+        \item \success{QW-2:} Baseline benchmarks (7 controllers × 4 metrics)
+        \item \success{QW-3:} PSO visualization tools
+        \item \success{QW-4:} Chattering metrics (FFT analysis)
+        \item \success{QW-5:} Status tracking updates
+    \end{itemize}
+
+    \vspace{0.3cm}
+
+    \textbf{Medium-Term (Weeks 2-4, 18 hours):}
+    \begin{itemize}
+        \item \success{MT-5:} Comprehensive 7-controller benchmark (100 Monte Carlo)
+        \item \success{MT-6:} Boundary layer optimization (3.7\% improvement, marginal)
+        \item \success{MT-7:} Robust PSO validation (bonus task)
+        \item \success{MT-8:} Disturbance rejection analysis
+    \end{itemize}
+
+    \vspace{0.3cm}
+
+    \textbf{Long-Term (Months 2-3, 46 hours):}
+    \begin{itemize}
+        \item \success{LT-4:} Lyapunov proofs for all 7 controllers (~1,000 lines)
+        \item \success{LT-6:} Model uncertainty analysis (±10\%, ±20\%)
+        \item \success{LT-7:} Research paper SUBMISSION-READY (v2.1)
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{LT-7 Research Paper: Submission-Ready v2.1}
+    \textbf{Target Journals:} IEEE Transactions on Control Systems Technology, IFAC
+
+    \vspace{0.3cm}
+
+    \textbf{Paper Structure:}
+    \begin{enumerate}
+        \item \textbf{Introduction} -- Motivation, related work, contributions
+        \item \textbf{Controller Overview} -- 7 SMC variants, theoretical foundations
+        \item \textbf{PSO Methodology} -- Gain tuning, multi-objective cost function
+        \item \textbf{Lyapunov Analysis} -- Stability proofs for all controllers
+        \item \textbf{Experimental Setup} -- DIP model, simulation parameters
+        \item \textbf{Performance Comparison} -- MT-5 benchmark results
+        \item \textbf{Robustness Analysis} -- Disturbances (MT-8), model uncertainty (LT-6)
+        \item \textbf{Discussion} -- Insights, tradeoffs, practical considerations
+        \item \textbf{Conclusions} -- Summary, future work
+    \end{enumerate}
+
+    \vspace{0.3cm}
+
+    \textbf{Deliverables:}
+    \begin{itemize}
+        \item 14 publication-ready figures (PDF/EPS)
+        \item Comprehensive bibliography (39 academic references)
+        \item LaTeX source (95\% automation level)
+        \item Cover letter + user manual
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Research Contributions Summary}
+    \textbf{Novel Contributions:}
+
+    \vspace{0.3cm}
+
+    \begin{enumerate}
+        \item \textbf{Comprehensive Controller Comparison}
+        \begin{itemize}
+            \item First systematic comparison of 7 SMC variants on DIP
+            \item 100 Monte Carlo runs per controller (statistical rigor)
+        \end{itemize}
+
+        \item \textbf{PSO-Based Automatic Gain Tuning}
+        \begin{itemize}
+            \item Multi-objective cost function (settling time, energy, chattering)
+            \item Validated across 100 random seeds (MT-7)
+        \end{itemize}
+
+        \item \textbf{Lyapunov Stability Proofs}
+        \begin{itemize}
+            \item Formal proofs for all 7 controllers (LT-4)
+            \item ~1,000 lines of rigorous mathematical derivations
+        \end{itemize}
+
+        \item \textbf{Robustness Validation}
+        \begin{itemize}
+            \item Disturbance rejection (MT-8): Impulse, step, sinusoidal
+            \item Model uncertainty (LT-6): ±10\%, ±20\% parameter variations
+        \end{itemize}
+
+        \item \textbf{Open-Source Framework}
+        \begin{itemize}
+            \item Production-grade Python codebase
+            \item 985 documentation files, complete learning paths
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{Experimental Data Organization}
+    \textbf{Controller-Based Structure:}
+
+    \vspace{0.3cm}
+
+    \texttt{academic/paper/experiments/}
+    \begin{itemize}
+        \item \texttt{classical\_smc/} -- Classical SMC experiments
+        \item \texttt{sta\_smc/} -- Super-Twisting experiments
+        \item \texttt{adaptive\_smc/} -- Adaptive SMC experiments
+        \item \texttt{hybrid\_adaptive\_sta/} -- Hybrid controller experiments
+        \item \texttt{comparative/} -- Cross-controller studies (MT-5, MT-7, MT-8, LT-6)
+        \begin{itemize}
+            \item \texttt{MT5\_comprehensive\_benchmark/}
+            \item \texttt{MT7\_robust\_pso/}
+            \item \texttt{MT8\_disturbance\_rejection/}
+            \item \texttt{LT6\_model\_uncertainty/}
+        \end{itemize}
+        \item \texttt{figures/} -- 14 LT-7 paper figures
+        \item \texttt{reports/} -- Task completion summaries
+    \end{itemize}
+
+    \vspace{0.3cm}
+
+    \begin{block}{Data Format}
+        \textbf{CSV:} Time-series data (states, control, metrics) \\
+        \textbf{JSON:} Metadata, configuration, statistical summaries \\
+        \textbf{PDF/EPS:} Publication-ready figures
+    \end{block}
+\end{frame}

@@ -1,0 +1,252 @@
+{
+  "audit_metadata": {
+    "paper_title": "Comparative Analysis of Sliding Mode Control Variants for Double-Inverted Pendulum Systems",
+    "version": "v2.1",
+    "date": "2025-12-26",
+    "total_sections": 12,
+    "audit_categories": [
+      "technical_accuracy",
+      "writing_quality",
+      "completeness"
+    ],
+    "scoring_scale": "1-10 (1=Poor, 5=Acceptable, 10=Excellent)"
+  },
+  "sections": [
+    {
+      "section_id": "01",
+      "section_name": "Introduction",
+      "markdown_file": "Section_01_Introduction.md",
+      "pdf_file": "Section_01_Introduction.pdf",
+      "expected_content": [
+        "Motivation and background",
+        "Literature review with survey table",
+        "Research gaps (5 quantified gaps)",
+        "Contributions (6 main contributions)",
+        "68 citations referenced"
+      ],
+      "audit_prompt": "You are auditing Section 1 (Introduction) of a research paper on sliding mode control for double-inverted pendulum systems.\n\n**AUDIT SCOPE:**\n1. Technical Accuracy: Verify correctness of literature survey statistics, citation claims, research gap quantification\n2. Writing Quality: Check clarity, flow, grammar, academic tone, logical progression from motivation to contributions\n3. Completeness: Verify all required elements (motivation, literature review, gaps, contributions)\n\n**SPECIFIC CHECKS:**\n- Literature survey table (Table 1.1): Do the statistics add up? Are claims consistent?\n- Research gaps: Are all 5 gaps quantified with percentages/numbers from the survey?\n- Contributions: Are all 6 contributions specific and measurable (not generic)?\n- Citation coverage: Are 68 citations properly referenced in IEEE format?\n- Flow: Does the section progress logically from real-world examples to research gaps to contributions?\n\n**OUTPUT FORMAT:**\nProvide a structured audit report with:\n1. SCORES (1-10 scale):\n   - Technical Accuracy: X/10\n   - Writing Quality: X/10\n   - Completeness: X/10\n   - Overall: X/10\n\n2. STRENGTHS: List 3-5 specific strengths\n\n3. ISSUES FOUND: List specific problems with line references if possible\n   - Critical issues (must fix)\n   - Minor issues (should fix)\n   - Suggestions (optional improvements)\n\n4. IMPROVEMENT RECOMMENDATIONS: 3-5 actionable recommendations",
+      "key_metrics": {
+        "word_count_expected": "~3000",
+        "citations_expected": "68",
+        "tables_expected": 1,
+        "subsections_expected": 3
+      }
+    },
+    {
+      "section_id": "02",
+      "section_name": "System_Model",
+      "markdown_file": "Section_02_System_Model.md",
+      "pdf_file": "Section_02_List_of_Figures.pdf",
+      "expected_content": [
+        "14 figure captions",
+        "Clear, descriptive titles",
+        "Proper numbering sequence"
+      ],
+      "audit_prompt": "You are auditing Section 2 (List of Figures) of a research paper.\n\n**AUDIT SCOPE:**\n1. Technical Accuracy: Verify figure numbering is sequential and correct\n2. Writing Quality: Check caption clarity and descriptiveness\n3. Completeness: Verify all 14 figures are listed\n\n**SPECIFIC CHECKS:**\n- Are all 14 figures listed in order (Figure 1 through Figure 14)?\n- Are captions clear and self-explanatory?\n- Do captions specify what is being shown (e.g., controller type, scenario)?\n- Is formatting consistent across all captions?\n\n**OUTPUT FORMAT:**\nProvide a structured audit report with scores, strengths, issues, and recommendations.",
+      "key_metrics": {
+        "figures_expected": 14,
+        "numbering": "sequential"
+      }
+    },
+    {
+      "section_id": "03",
+      "section_name": "Controller_Design",
+      "markdown_file": "Section_03_Controller_Design.md",
+      "pdf_file": "Section_03_System_Model.pdf",
+      "expected_content": [
+        "Double-inverted pendulum dynamics",
+        "Mathematical model equations",
+        "Problem formulation",
+        "State-space representation",
+        "Physical parameters and constraints"
+      ],
+      "audit_prompt": "You are auditing Section 2 (System Model and Problem Formulation) of a research paper.\n\n**AUDIT SCOPE:**\n1. Technical Accuracy: Verify mathematical correctness of equations, dimensional consistency, parameter values\n2. Writing Quality: Check mathematical notation clarity, equation formatting, explanation quality\n3. Completeness: Verify all model components (kinematics, dynamics, constraints, parameters)\n\n**SPECIFIC CHECKS:**\n- Equations: Are all equations properly formatted with consistent notation?\n- Dimensional analysis: Do units match across equations?\n- Parameters: Are all physical parameters defined with units and typical values?\n- Problem statement: Is the control objective clearly defined?\n- Assumptions: Are modeling assumptions stated explicitly?\n\n**OUTPUT FORMAT:**\nProvide a structured audit report with scores, strengths, issues, and recommendations.",
+      "key_metrics": {
+        "equations_expected": "10+",
+        "parameters_defined": "mass, length, gravity, etc."
+      }
+    },
+    {
+      "section_id": "04",
+      "section_name": "Lyapunov_Stability",
+      "markdown_file": "Section_04_Lyapunov_Stability.md",
+      "pdf_file": "Section_04_Controller_Design.pdf",
+      "expected_content": [
+        "7 controller variants",
+        "Classical SMC equations",
+        "Super-Twisting Algorithm (STA)",
+        "Adaptive SMC",
+        "Hybrid Adaptive STA-SMC",
+        "Swing-Up SMC",
+        "MPC",
+        "Design equations and parameters"
+      ],
+      "audit_prompt": "You are auditing Section 3 (Controller Design) covering 7 SMC variants.\n\n**AUDIT SCOPE:**\n1. Technical Accuracy: Verify controller equations, sliding surfaces, reaching laws, parameter definitions\n2. Writing Quality: Check clarity of design rationale, equation presentation, design trade-offs\n3. Completeness: Verify all 7 controllers are fully described with equations and parameters\n\n**SPECIFIC CHECKS:**\n- Are all 7 controllers described (Classical, STA, Adaptive, Hybrid, Swing-Up, MPC, combinations)?\n- Are sliding surface definitions clear and mathematically correct?\n- Are control laws properly formulated?\n- Are design parameters (gains, boundary layers) specified?\n- Is the rationale for each controller variant explained?\n- Are differences between variants clearly articulated?\n\n**OUTPUT FORMAT:**\nProvide a structured audit report with scores, strengths, issues, and recommendations.",
+      "key_metrics": {
+        "controllers_expected": 7,
+        "equations_per_controller": "3-5"
+      }
+    },
+    {
+      "section_id": "05",
+      "section_name": "Lyapunov_Stability",
+      "markdown_file": "Section_05_PSO_Methodology.md",
+      "pdf_file": "Section_05_Lyapunov_Stability.pdf",
+      "expected_content": [
+        "4 complete Lyapunov proofs (Theorems 4.1-4.4)",
+        "Asymptotic stability (Classical, Adaptive)",
+        "Finite-time stability (STA with time bound)",
+        "ISS stability (Hybrid)",
+        "Experimental validation (96.2% agreement)"
+      ],
+      "audit_prompt": "You are auditing Section 4 (Lyapunov Stability Analysis) with 4 formal proofs.\n\n**AUDIT SCOPE:**\n1. Technical Accuracy: Verify mathematical rigor of proofs, Lyapunov function candidates, derivative calculations\n2. Writing Quality: Check proof structure, clarity of steps, mathematical notation\n3. Completeness: Verify all 4 theorems (4.1-4.4) are complete with assumptions, proofs, conclusions\n\n**SPECIFIC CHECKS:**\n- Theorem statements: Are assumptions clearly stated?\n- Lyapunov functions: Are candidate functions positive definite?\n- Derivatives: Are time derivatives calculated correctly?\n- Negative definiteness: Is \\dot{V} < 0 proven rigorously?\n- Finite-time bounds: For Theorem 4.2 (STA), is the time bound T derived correctly?\n- Experimental validation: Is the 96.2% agreement claim substantiated?\n\n**OUTPUT FORMAT:**\nProvide a structured audit report with scores, strengths, issues, and recommendations.\n\n**CRITICAL:** Flag any mathematical errors or gaps in proofs as CRITICAL ISSUES.",
+      "key_metrics": {
+        "theorems_expected": 4,
+        "proof_types": [
+          "asymptotic",
+          "finite-time",
+          "ISS"
+        ],
+        "validation_agreement": "96.2%"
+      }
+    },
+    {
+      "section_id": "06",
+      "section_name": "PSO_Methodology",
+      "markdown_file": "Section_06_Experimental_Setup.md",
+      "pdf_file": "Section_06_PSO_Methodology.pdf",
+      "expected_content": [
+        "PSO algorithm description",
+        "Gain tuning objective function",
+        "Multi-scenario optimization",
+        "Robust PSO with worst-case penalty",
+        "15 diverse scenarios (3 nominal, 4 moderate, 8 large)"
+      ],
+      "audit_prompt": "You are auditing Section 5 (PSO Optimization Methodology).\n\n**AUDIT SCOPE:**\n1. Technical Accuracy: Verify PSO algorithm correctness, objective function formulation, optimization parameters\n2. Writing Quality: Check clarity of methodology, algorithmic descriptions, parameter choices\n3. Completeness: Verify all components (algorithm, objective, scenarios, parameters)\n\n**SPECIFIC CHECKS:**\n- PSO algorithm: Is the algorithm description complete and correct?\n- Objective function: Is the cost function well-defined with all terms explained?\n- Multi-scenario approach: Are all 15 scenarios clearly specified?\n- Worst-case penalty: Is alpha=0.3 penalty justified?\n- Parameter ranges: Are gain search bounds specified?\n- Convergence criteria: Are stopping conditions defined?\n\n**OUTPUT FORMAT:**\nProvide a structured audit report with scores, strengths, issues, and recommendations.",
+      "key_metrics": {
+        "scenarios_expected": 15,
+        "penalty_alpha": 0.3
+      }
+    },
+    {
+      "section_id": "07",
+      "section_name": "Experimental_Setup",
+      "markdown_file": "Section_07_Performance_Results.md",
+      "pdf_file": "Section_07_Experimental_Setup.pdf",
+      "expected_content": [
+        "Benchmarking protocol",
+        "4 operating scenarios",
+        "12-metric evaluation framework",
+        "400-500 Monte Carlo simulations per scenario",
+        "Statistical methods (Welch's t-test, bootstrap, Cohen's d)"
+      ],
+      "audit_prompt": "You are auditing Section 6 (Experimental Setup and Benchmarking Protocol).\n\n**AUDIT SCOPE:**\n1. Technical Accuracy: Verify statistical methods, sample sizes, experimental design rigor\n2. Writing Quality: Check clarity of methodology, reproducibility, parameter reporting\n3. Completeness: Verify all scenarios, metrics, and statistical methods are described\n\n**SPECIFIC CHECKS:**\n- Scenarios: Are all 4 operating scenarios clearly defined?\n- Metrics: Are all 12 metrics listed with clear definitions?\n- Sample size: Is 400-500 Monte Carlo runs justified for statistical power?\n- Statistical methods: Are Welch's t-test, bootstrap (10,000 resamples), and Bonferroni correction properly described?\n- Reproducibility: Are random seeds, simulation parameters, and stopping conditions specified?\n- Hardware specs: Is the simulation platform described?\n\n**OUTPUT FORMAT:**\nProvide a structured audit report with scores, strengths, issues, and recommendations.",
+      "key_metrics": {
+        "scenarios": 4,
+        "metrics": 12,
+        "monte_carlo_runs": "400-500",
+        "statistical_methods": [
+          "Welch's t-test",
+          "bootstrap",
+          "Bonferroni",
+          "Cohen's d"
+        ]
+      }
+    },
+    {
+      "section_id": "08",
+      "section_name": "Performance_Results",
+      "markdown_file": "Section_08_Robustness_Analysis.md",
+      "pdf_file": "Section_08_Performance_Results.pdf",
+      "expected_content": [
+        "12-metric evaluation results",
+        "Comparative analysis across 7 controllers",
+        "Statistical significance testing",
+        "Key findings: STA-SMC best overall, Classical SMC fastest",
+        "Tables and figures with confidence intervals"
+      ],
+      "audit_prompt": "You are auditing Section 7 (Performance Comparison Results).\n\n**AUDIT SCOPE:**\n1. Technical Accuracy: Verify data consistency, statistical claims, confidence intervals, significance testing\n2. Writing Quality: Check clarity of results presentation, table/figure quality, interpretation\n3. Completeness: Verify all 12 metrics are reported for all 7 controllers with statistics\n\n**SPECIFIC CHECKS:**\n- Results tables: Do confidence intervals make sense? Are all 7 controllers compared?\n- Statistical significance: Are p-values reported? Is Bonferroni correction applied?\n- Key claims: Are numerical claims (1.82s settling, 91% chattering reduction) supported by data?\n- Effect sizes: Are Cohen's d values reported for major comparisons?\n- Consistency: Do results align with theoretical predictions from Section 4?\n- Figures: Are error bars (95% CI) shown clearly?\n\n**OUTPUT FORMAT:**\nProvide a structured audit report with scores, strengths, issues, and recommendations.\n\n**CRITICAL:** Flag any unsupported claims or statistical errors as CRITICAL ISSUES.",
+      "key_metrics": {
+        "controllers_compared": 7,
+        "metrics_reported": 12,
+        "confidence_level": "95%"
+      }
+    },
+    {
+      "section_id": "09",
+      "section_name": "Robustness_Analysis",
+      "markdown_file": "Section_09_Robustness_Analysis.md",
+      "pdf_file": "Section_09_Robustness_Analysis.pdf",
+      "expected_content": [
+        "Model uncertainty analysis (±20% parameter variation)",
+        "Disturbance rejection testing (±0.3 rad)",
+        "PSO generalization failure (50.4x chattering degradation, 90.2% failure rate)",
+        "Robust multi-scenario PSO solution (7.5x improvement)",
+        "Controller-specific robustness findings"
+      ],
+      "audit_prompt": "You are auditing Section 8 (Robustness Analysis).\n\n**AUDIT SCOPE:**\n1. Technical Accuracy: Verify robustness testing methodology, failure mode analysis, degradation metrics\n2. Writing Quality: Check clarity of robustness experiments, failure analysis, interpretation\n3. Completeness: Verify model uncertainty, disturbances, and PSO generalization are all covered\n\n**SPECIFIC CHECKS:**\n- Model uncertainty: Is ±20% parameter variation tested systematically?\n- Disturbance rejection: Are ±0.3 rad disturbances applied? How is rejection measured?\n- PSO failure: Is the 50.4x degradation claim substantiated with data?\n- Failure rate: Is the 90.2% instability rate properly defined and measured?\n- Robust solution: Is the 7.5x improvement (144.59x -> 19.28x) verified?\n- Controller rankings: Are robustness rankings consistent (Hybrid STA best, STA disturbance rejection)?\n\n**OUTPUT FORMAT:**\nProvide a structured audit report with scores, strengths, issues, and recommendations.\n\n**CRITICAL:** This section contains major claims about PSO failure. Verify ALL numerical claims carefully.",
+      "key_metrics": {
+        "uncertainty_range": "±20%",
+        "disturbance_range": "±0.3 rad",
+        "pso_degradation": "50.4x",
+        "failure_rate": "90.2%"
+      }
+    },
+    {
+      "section_id": "10",
+      "section_name": "Discussion",
+      "markdown_file": "Section_09_Discussion.md",
+      "pdf_file": "Section_10_Discussion.pdf",
+      "expected_content": [
+        "Evidence-based design guidelines",
+        "Application-specific controller selection matrix (Table 9.1)",
+        "Theoretical insights vs practical findings",
+        "Limitations and assumptions",
+        "Broader implications"
+      ],
+      "audit_prompt": "You are auditing Section 9 (Discussion).\n\n**AUDIT SCOPE:**\n1. Technical Accuracy: Verify design guidelines are supported by results, matrix recommendations are justified\n2. Writing Quality: Check synthesis quality, insight depth, limitation acknowledgment\n3. Completeness: Verify guidelines, theoretical discussion, limitations, implications are all present\n\n**SPECIFIC CHECKS:**\n- Design guidelines: Are recommendations specific and actionable?\n- Table 9.1: Does the selection matrix match findings from Sections 7-8?\n- Theoretical vs practical: Are discrepancies between theory and experiments discussed?\n- Limitations: Are assumptions and limitations acknowledged honestly?\n- Novel insights: Does the discussion go beyond restating results?\n- Practical implications: Are real-world applications addressed?\n\n**OUTPUT FORMAT:**\nProvide a structured audit report with scores, strengths, issues, and recommendations.",
+      "key_metrics": {
+        "design_guidelines": "evidence-based",
+        "selection_matrix": "Table 9.1"
+      }
+    },
+    {
+      "section_id": "11",
+      "section_name": "Conclusion",
+      "markdown_file": "Section_10_Conclusion.md",
+      "pdf_file": "Section_11_Conclusion.pdf",
+      "expected_content": [
+        "Summary of key findings",
+        "Main contributions recap",
+        "Future work directions",
+        "Broader impact statement"
+      ],
+      "audit_prompt": "You are auditing Section 10 (Conclusion and Future Work).\n\n**AUDIT SCOPE:**\n1. Technical Accuracy: Verify all numerical claims match previous sections\n2. Writing Quality: Check synthesis quality, forward-looking vision, closing impact\n3. Completeness: Verify findings summary, contributions, future work, impact are all present\n\n**SPECIFIC CHECKS:**\n- Key findings: Are the most important results highlighted (STA-SMC best, PSO failure, etc.)?\n- Contributions: Is the recap concise and aligned with Section 1?\n- Future work: Are future directions specific and feasible?\n- Numerical accuracy: Do all numbers match previous sections (1.82s, 91%, 50.4x, etc.)?\n- Closing impact: Does the conclusion emphasize broader significance?\n- No new claims: Are only previously stated results summarized (no new data)?\n\n**OUTPUT FORMAT:**\nProvide a structured audit report with scores, strengths, issues, and recommendations.",
+      "key_metrics": {
+        "word_count_expected": "~1500",
+        "future_directions": "3-5"
+      }
+    },
+    {
+      "section_id": "12",
+      "section_name": "Acknowledgments",
+      "markdown_file": "Section_12_Acknowledgments.md",
+      "pdf_file": "Section_12_Acknowledgments.pdf",
+      "expected_content": [
+        "Funding acknowledgment",
+        "Institutional support",
+        "Contributor recognition"
+      ],
+      "audit_prompt": "You are auditing the Acknowledgments section.\n\n**AUDIT SCOPE:**\n1. Completeness: Verify all required acknowledgments are present\n2. Writing Quality: Check tone, professionalism, appropriateness\n\n**SPECIFIC CHECKS:**\n- Are funding sources acknowledged?\n- Are institutional resources mentioned?\n- Is the tone professional and concise?\n- Are acknowledgments appropriate for the journal?\n\n**OUTPUT FORMAT:**\nProvide a brief audit report with scores and any issues.",
+      "key_metrics": {
+        "word_count_expected": "~200"
+      }
+    }
+  ],
+  "audit_instructions": {
+    "how_to_use": "Copy the audit_prompt for each section and paste into Gemini CLI along with the markdown file content",
+    "output_format": "Gemini will generate a structured audit report with scores (1-10), strengths, issues, and recommendations",
+    "manual_execution": "gemini < Section_XX.md + audit_prompt",
+    "report_storage": "Save Gemini's output as Section_XX_AUDIT_REPORT.md in the audits/ directory"
+  }
+}

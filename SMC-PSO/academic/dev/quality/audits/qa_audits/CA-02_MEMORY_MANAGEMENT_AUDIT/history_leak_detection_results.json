@@ -1,0 +1,334 @@
+{
+  "classical_smc": {
+    "controller_type": "classical_smc",
+    "num_steps": 1000,
+    "dt": 0.01,
+    "timestamp": "2025-11-11T07:03:48.393204",
+    "memory_snapshots": {
+      "0": {
+        "current": 0.00079345703125,
+        "peak": 0.00079345703125
+      },
+      "100": {
+        "current": 0.050820350646972656,
+        "peak": 0.06305980682373047
+      },
+      "500": {
+        "current": 0.11602783203125,
+        "peak": 0.127105712890625
+      },
+      "1000": {
+        "current": 0.20110797882080078,
+        "peak": 0.21218585968017578
+      }
+    },
+    "start_memory_mb": 0.00079345703125,
+    "end_memory_mb": 0.20222187042236328,
+    "peak_memory_mb": 0.21218585968017578,
+    "total_growth_mb": 0.20142841339111328,
+    "growth_per_step_kb": 0.2062626953125,
+    "history_sizes": {},
+    "top_allocations": [
+      {
+        "file": "D:\\Projects\\main\\src\\controllers\\smc\\classic_smc.py:489",
+        "size_diff_mb": 0.03133392333984375,
+        "count_diff": 1002
+      },
+      {
+        "file": "D:\\Projects\\main\\src\\controllers\\smc\\classic_smc.py:488",
+        "size_diff_mb": 0.03133392333984375,
+        "count_diff": 1002
+      },
+      {
+        "file": "D:\\Projects\\main\\src\\controllers\\smc\\classic_smc.py:485",
+        "size_diff_mb": 0.03133392333984375,
+        "count_diff": 1002
+      },
+      {
+        "file": "C:\\Users\\SadeQ\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\linecache.py:142",
+        "size_diff_mb": 0.029956817626953125,
+        "count_diff": 334
+      },
+      {
+        "file": "D:\\Projects\\main\\src\\controllers\\smc\\classic_smc.py:481",
+        "size_diff_mb": 0.02288818359375,
+        "count_diff": 1000
+      },
+      {
+        "file": "D:\\Projects\\main\\src\\controllers\\smc\\classic_smc.py:449",
+        "size_diff_mb": 0.02288818359375,
+        "count_diff": 1000
+      },
+      {
+        "file": "D:\\Projects\\main\\src\\controllers\\smc\\classic_smc.py:490",
+        "size_diff_mb": 0.00864410400390625,
+        "count_diff": 3
+      },
+      {
+        "file": "D:\\Projects\\main\\src\\controllers\\smc\\classic_smc.py:487",
+        "size_diff_mb": 0.00844573974609375,
+        "count_diff": 2
+      },
+      {
+        "file": "D:\\Projects\\main\\src\\controllers\\smc\\classic_smc.py:486",
+        "size_diff_mb": 0.00844573974609375,
+        "count_diff": 2
+      },
+      {
+        "file": "C:\\Users\\SadeQ\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\numpy\\core\\fromnumeric.py:59",
+        "size_diff_mb": 0.0024471282958984375,
+        "count_diff": 57
+      }
+    ],
+    "verdict": "OK"
+  },
+  "sta_smc": {
+    "controller_type": "sta_smc",
+    "num_steps": 1000,
+    "dt": 0.01,
+    "timestamp": "2025-11-11T07:03:50.740763",
+    "memory_snapshots": {
+      "0": {
+        "current": 0.000762939453125,
+        "peak": 0.000762939453125
+      },
+      "100": {
+        "current": 13.615680694580078,
+        "peak": 13.663959503173828
+      },
+      "500": {
+        "current": 13.660155296325684,
+        "peak": 13.671462059020996
+      },
+      "1000": {
+        "current": 13.712554931640625,
+        "peak": 13.723861694335938
+      }
+    },
+    "start_memory_mb": 0.000762939453125,
+    "end_memory_mb": 13.713640213012695,
+    "peak_memory_mb": 13.723861694335938,
+    "total_growth_mb": 13.71287727355957,
+    "growth_per_step_kb": 14.041986328125,
+    "history_sizes": {},
+    "top_allocations": [
+      {
+        "file": "<frozen importlib._bootstrap_external>:757",
+        "size_diff_mb": 3.7092971801757812,
+        "count_diff": 31600
+      },
+      {
+        "file": "<frozen abc>:106",
+        "size_diff_mb": 2.98199462890625,
+        "count_diff": 9181
+      },
+      {
+        "file": "C:\\Users\\SadeQ\\AppData\\Roaming\\Python\\Python312\\site-packages\\numba\\core\\typing\\templates.py:1183",
+        "size_diff_mb": 0.5402374267578125,
+        "count_diff": 1971
+      },
+      {
+        "file": "<frozen abc>:107",
+        "size_diff_mb": 0.38690185546875,
+        "count_diff": 2807
+      },
+      {
+        "file": "C:\\Users\\SadeQ\\AppData\\Roaming\\Python\\Python312\\site-packages\\numba\\core\\typing\\context.py:439",
+        "size_diff_mb": 0.3636016845703125,
+        "count_diff": 2444
+      },
+      {
+        "file": "C:\\Users\\SadeQ\\AppData\\Roaming\\Python\\Python312\\site-packages\\numba\\core\\typing\\templates.py:891",
+        "size_diff_mb": 0.28546905517578125,
+        "count_diff": 4971
+      },
+      {
+        "file": "<frozen abc>:123",
+        "size_diff_mb": 0.2796459197998047,
+        "count_diff": 3170
+      },
+      {
+        "file": "C:\\Users\\SadeQ\\AppData\\Roaming\\Python\\Python312\\site-packages\\numba\\core\\typing\\context.py:474",
+        "size_diff_mb": 0.26943206787109375,
+        "count_diff": 3027
+      },
+      {
+        "file": "C:\\Users\\SadeQ\\AppData\\Roaming\\Python\\Python312\\site-packages\\numba\\core\\typing\\templates.py:889",
+        "size_diff_mb": 0.26351165771484375,
+        "count_diff": 3710
+      },
+      {
+        "file": "C:\\Users\\SadeQ\\AppData\\Roaming\\Python\\Python312\\site-packages\\numba\\np\\npyimpl.py:465",
+        "size_diff_mb": 0.18434906005859375,
+        "count_diff": 774
+      }
+    ],
+    "verdict": "LEAK DETECTED"
+  },
+  "adaptive_smc": {
+    "controller_type": "adaptive_smc",
+    "num_steps": 1000,
+    "dt": 0.01,
+    "timestamp": "2025-11-11T07:03:51.396448",
+    "memory_snapshots": {
+      "0": {
+        "current": 0.000732421875,
+        "peak": 0.000732421875
+      },
+      "100": {
+        "current": 0.016249656677246094,
+        "peak": 0.027327537536621094
+      },
+      "500": {
+        "current": 0.06903648376464844,
+        "peak": 0.08011436462402344
+      },
+      "1000": {
+        "current": 0.13730335235595703,
+        "peak": 0.14838123321533203
+      }
+    },
+    "start_memory_mb": 0.000732421875,
+    "end_memory_mb": 0.13835620880126953,
+    "peak_memory_mb": 0.14838123321533203,
+    "total_growth_mb": 0.13762378692626953,
+    "growth_per_step_kb": 0.1409267578125,
+    "history_sizes": {},
+    "top_allocations": [
+      {
+        "file": "C:\\Users\\SadeQ\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\numpy\\core\\_methods.py:99",
+        "size_diff_mb": 0.0458221435546875,
+        "count_diff": 2002
+      },
+      {
+        "file": "D:\\Projects\\main\\src\\controllers\\smc\\adaptive_smc.py:372",
+        "size_diff_mb": 0.02288818359375,
+        "count_diff": 1000
+      },
+      {
+        "file": "D:\\Projects\\main\\src\\controllers\\smc\\adaptive_smc.py:354",
+        "size_diff_mb": 0.02288818359375,
+        "count_diff": 1000
+      },
+      {
+        "file": "D:\\Projects\\main\\src\\controllers\\smc\\adaptive_smc.py:429",
+        "size_diff_mb": 0.008392333984375,
+        "count_diff": 1
+      },
+      {
+        "file": "D:\\Projects\\main\\src\\controllers\\smc\\adaptive_smc.py:428",
+        "size_diff_mb": 0.008392333984375,
+        "count_diff": 1
+      },
+      {
+        "file": "D:\\Projects\\main\\src\\controllers\\smc\\adaptive_smc.py:427",
+        "size_diff_mb": 0.008392333984375,
+        "count_diff": 1
+      },
+      {
+        "file": "D:\\Projects\\main\\src\\controllers\\smc\\adaptive_smc.py:426",
+        "size_diff_mb": 0.008392333984375,
+        "count_diff": 1
+      },
+      {
+        "file": "D:\\Projects\\main\\src\\controllers\\smc\\adaptive_smc.py:425",
+        "size_diff_mb": 0.008392333984375,
+        "count_diff": 1
+      },
+      {
+        "file": "C:\\Users\\SadeQ\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\numpy\\core\\fromnumeric.py:59",
+        "size_diff_mb": 0.0015020370483398438,
+        "count_diff": 35
+      },
+      {
+        "file": "D:\\Projects\\main\\.artifacts\\qa_audits\\CA-02_MEMORY_MANAGEMENT_AUDIT\\detect_history_leaks.py:132",
+        "size_diff_mb": 0.00058746337890625,
+        "count_diff": 8
+      }
+    ],
+    "verdict": "OK"
+  },
+  "hybrid_adaptive_sta_smc": {
+    "controller_type": "hybrid_adaptive_sta_smc",
+    "num_steps": 1000,
+    "dt": 0.01,
+    "timestamp": "2025-11-11T07:03:52.986509",
+    "memory_snapshots": {
+      "0": {
+        "current": 0.000701904296875,
+        "peak": 0.000701904296875
+      },
+      "100": {
+        "current": 0.014064788818359375,
+        "peak": 0.025577545166015625
+      },
+      "500": {
+        "current": 0.06370830535888672,
+        "peak": 0.07522106170654297
+      },
+      "1000": {
+        "current": 0.1275501251220703,
+        "peak": 0.13906288146972656
+      }
+    },
+    "start_memory_mb": 0.000701904296875,
+    "end_memory_mb": 0.1285572052001953,
+    "peak_memory_mb": 0.13906288146972656,
+    "total_growth_mb": 0.1278553009033203,
+    "growth_per_step_kb": 0.130923828125,
+    "history_sizes": {},
+    "top_allocations": [
+      {
+        "file": "D:\\Projects\\main\\src\\controllers\\smc\\hybrid_adaptive_sta_smc.py:639",
+        "size_diff_mb": 0.02288818359375,
+        "count_diff": 1000
+      },
+      {
+        "file": "D:\\Projects\\main\\src\\controllers\\smc\\hybrid_adaptive_sta_smc.py:629",
+        "size_diff_mb": 0.02288818359375,
+        "count_diff": 1000
+      },
+      {
+        "file": "D:\\Projects\\main\\src\\controllers\\smc\\hybrid_adaptive_sta_smc.py:628",
+        "size_diff_mb": 0.02288818359375,
+        "count_diff": 1000
+      },
+      {
+        "file": "D:\\Projects\\main\\src\\controllers\\smc\\hybrid_adaptive_sta_smc.py:457",
+        "size_diff_mb": 0.02288818359375,
+        "count_diff": 1000
+      },
+      {
+        "file": "D:\\Projects\\main\\src\\controllers\\smc\\hybrid_adaptive_sta_smc.py:681",
+        "size_diff_mb": 0.008392333984375,
+        "count_diff": 1
+      },
+      {
+        "file": "D:\\Projects\\main\\src\\controllers\\smc\\hybrid_adaptive_sta_smc.py:680",
+        "size_diff_mb": 0.008392333984375,
+        "count_diff": 1
+      },
+      {
+        "file": "D:\\Projects\\main\\src\\controllers\\smc\\hybrid_adaptive_sta_smc.py:679",
+        "size_diff_mb": 0.008392333984375,
+        "count_diff": 1
+      },
+      {
+        "file": "D:\\Projects\\main\\src\\controllers\\smc\\hybrid_adaptive_sta_smc.py:678",
+        "size_diff_mb": 0.008392333984375,
+        "count_diff": 1
+      },
+      {
+        "file": "D:\\Projects\\main\\.artifacts\\qa_audits\\CA-02_MEMORY_MANAGEMENT_AUDIT\\detect_history_leaks.py:132",
+        "size_diff_mb": 0.00058746337890625,
+        "count_diff": 8
+      },
+      {
+        "file": "C:\\Users\\SadeQ\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\encodings\\cp1252.py:19",
+        "size_diff_mb": 0.0003414154052734375,
+        "count_diff": 6
+      }
+    ],
+    "verdict": "OK"
+  }
+}

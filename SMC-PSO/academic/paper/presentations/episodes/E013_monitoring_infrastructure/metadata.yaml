@@ -1,0 +1,15 @@
+﻿episode_id: E013
+slug: monitoring_infrastructure
+title: Monitoring Infrastructure
+status: migrated_auto
+last_updated: 2026-02-24
+languages:
+  - en
+channels:
+  - podcast
+source_file_count: 7
+source_buckets:
+  - archive_part1_foundations
+  - cheatsheets_phase2_technical
+  - episodes_markdown
+  - episodes_pdf

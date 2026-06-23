@@ -1,0 +1,181 @@
+% ============================================================================
+% SECTION 5: SIMULATION ENGINE
+% ============================================================================
+\section{Simulation Engine}
+
+\begin{frame}{Simulation Architecture Overview}
+    \textbf{Core Components:}
+
+    \vspace{0.3cm}
+
+    \begin{enumerate}
+        \item \textbf{SimulationRunner} -- Main orchestration interface
+        \begin{itemize}
+            \item \texttt{src/core/simulation\_runner.py}
+            \item Coordinates plant, controller, data logging
+        \end{itemize}
+
+        \item \textbf{Unified Simulation Context} -- State management
+        \begin{itemize}
+            \item \texttt{src/core/simulation\_context.py}
+            \item Thread-safe state updates
+            \item 3 re-export locations (backward compatibility)
+        \end{itemize}
+
+        \item \textbf{Batch Simulator} -- Numba-accelerated parallel execution
+        \begin{itemize}
+            \item \texttt{src/core/vector\_sim.py}
+            \item JIT compilation for performance
+        \end{itemize}
+
+        \item \textbf{Integrators} -- Numerical ODE solvers
+        \begin{itemize}
+            \item RK4, RK45, adaptive schemes
+            \item \texttt{src/core/integrators/}
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{Simulation Loop: Control Cycle}
+    \textbf{Execution Flow (100 Hz control rate):}
+
+    \vspace{0.3cm}
+
+    \begin{tikzpicture}[node distance=1.5cm, auto,
+        block/.style={rectangle, draw, fill=dipblue!20, text width=3cm, text centered, minimum height=1cm},
+        arrow/.style={->, thick, dipblue}
+    ]
+        \node[block] (init) {Initialize State $\statevec_0$};
+        \node[block, below of=init] (sense) {Read State $\statevec(t)$};
+        \node[block, below of=sense] (control) {Compute Control $u(t)$};
+        \node[block, below of=control] (plant) {Plant Dynamics $\dot{\statevec} = f(\statevec, u)$};
+        \node[block, below of=plant] (integrate) {Integrate $\statevec(t+\Delta t)$};
+        \node[block, below of=integrate] (log) {Log Data};
+
+        \draw[arrow] (init) -- (sense);
+        \draw[arrow] (sense) -- (control);
+        \draw[arrow] (control) -- (plant);
+        \draw[arrow] (plant) -- (integrate);
+        \draw[arrow] (integrate) -- (log);
+        \draw[arrow] (log.west) -- ++(-1,0) |- (sense.west);
+    \end{tikzpicture}
+\end{frame}
+
+\begin{frame}{Real-Time Simulation Parameters}
+    \textbf{Default Configuration:}
+
+    \vspace{0.3cm}
+
+    \begin{tabular}{ll}
+        \toprule
+        \textbf{Parameter} & \textbf{Value} \\
+        \midrule
+        Time step ($\Delta t$) & 0.01 s (100 Hz) \\
+        Simulation duration & 10 s \\
+        Total steps & 1000 \\
+        Integrator & RK4 (4th-order Runge-Kutta) \\
+        \midrule
+        \multicolumn{2}{l}{\textit{Safety Guards:}} \\
+        Max angle deviation & $\pm 45^\circ$ \\
+        Max cart position & $\pm 2.0$ m \\
+        NaN detection & Enabled \\
+        \bottomrule
+    \end{tabular}
+
+    \vspace{0.3cm}
+
+    \begin{block}{Performance}
+        \textbf{Single simulation:} ~10-50 ms (depending on controller complexity) \\
+        \textbf{100 Monte Carlo runs:} ~5-10 seconds (with Numba acceleration)
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Batch Simulation: Numba Acceleration}
+    \textbf{Vectorized Execution:}
+
+    \vspace{0.3cm}
+
+    \begin{lstlisting}[language=Python,basicstyle=\ttfamily\tiny]
+from src.core.vector_sim import run_batch_simulation
+import numpy as np
+
+# Generate 100 initial conditions (Monte Carlo)
+initial_states = np.random.uniform(
+    low=[-0.1, -0.1, -0.1, -0.1, -0.1, -0.1],
+    high=[0.1, 0.1, 0.1, 0.1, 0.1, 0.1],
+    size=(100, 6)
+)
+
+# Run batch simulation (parallelized, JIT-compiled)
+results = run_batch_simulation(
+    controller=controller,
+    dynamics=dynamics,
+    initial_conditions=initial_states,
+    sim_params={'dt': 0.01, 'duration': 10.0}
+)
+
+# Results shape: (100 runs, 1000 steps, 6 states)
+# Speedup: ~50x compared to sequential Python loop
+    \end{lstlisting}
+
+    \vspace{0.3cm}
+
+    \begin{exampleblock}{MT-5 Benchmark}
+        100 Monte Carlo runs × 7 controllers = 700 simulations in ~2 minutes
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}[fragile]{Hardware-in-the-Loop (HIL) Support}
+    \textbf{Architecture:}
+
+    \vspace{0.3cm}
+
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \textbf{Plant Server:}
+            \begin{itemize}
+                \item Runs plant dynamics
+                \item Listens on network port
+                \item Sends state $\statevec(t)$
+                \item Receives control $u(t)$
+            \end{itemize}
+
+            \vspace{0.3cm}
+
+            \textbf{Usage:}
+            \begin{lstlisting}[language=bash,basicstyle=\ttfamily\tiny]
+python simulate.py --run-hil-server --port 8888
+            \end{lstlisting}
+        \end{column}
+
+        \begin{column}{0.5\textwidth}
+            \textbf{Controller Client:}
+            \begin{itemize}
+                \item Runs controller algorithm
+                \item Connects to plant server
+                \item Receives state $\statevec(t)$
+                \item Sends control $u(t)$
+            \end{itemize}
+
+            \vspace{0.3cm}
+
+            \textbf{Usage:}
+            \begin{lstlisting}[language=bash,basicstyle=\ttfamily\tiny]
+python simulate.py --run-hil --host localhost --port 8888
+            \end{lstlisting}
+        \end{column}
+    \end{columns}
+
+    \vspace{0.3cm}
+
+    \begin{alertblock}{Validation}
+        \statusok Thread-safety validated (100\% tests passing) \\
+        Real-time latency monitoring enabled
+    \end{alertblock}
+\end{frame}
+
+% ============================================================================
+% PART II: INFRASTRUCTURE
+% ============================================================================
+\part{Infrastructure}
+\frame{\partpage}

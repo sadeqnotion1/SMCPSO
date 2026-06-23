@@ -1,0 +1,578 @@
+% ==============================================================================
+% EPISODE 030: CONTROLLER BASE CLASSES & FACTORY PATTERN
+% ==============================================================================
+\input{../templates/master_template.tex}
+\input{../templates/tikz_components.tex}
+\input{episode_macros.tex}
+
+% Episode-specific title
+\renewcommand{\episodetitle}{E030: Controller Base \& Factory}
+
+\begin{document}
+
+% ==============================================================================
+% TITLE PAGE
+% ==============================================================================
+\makeepisodetitle{E030: Controller Base Classes \& Factory}{Understanding the Foundation: How 5 Controllers Share One Interface}{5A}{25-30 minutes}
+
+% ==============================================================================
+% PAGE 1: CONTROLLER INTERFACE - THE CONTRACT
+% ==============================================================================
+\learningobjective{Understand the abstract base class that all controllers inherit from, the factory pattern for creating controllers, and how this enables seamless controller swapping}
+
+\section*{The Design Challenge}
+
+\begin{keypoint}
+\textbf{One Interface, Five Controllers:} All controllers (Classical SMC, STA, Adaptive, Hybrid Adaptive STA, Conditional Hybrid) implement the SAME interface. The factory pattern makes adding new controllers (e.g., Swing-Up, MPC) trivial - just register them!
+
+Result: Change one line in config.yaml and swap algorithms without touching code!
+\end{keypoint}
+
+\subsection*{Why This Matters}
+
+\sidebysidecomparison
+{Without Interface:}
+{
+\begin{itemize}
+    \item Each controller has different method names
+    \item Simulation code full of if/else chains
+    \item Adding new controller = rewrite everything
+    \item Testing = nightmare (5 different APIs)
+\end{itemize}
+}
+{With Interface:}
+{
+\begin{itemize}
+    \item One method: \texttt{compute\_control()}
+    \item Simulation code agnostic to controller type
+    \item New controller = implement interface
+    \item Testing = same harness for all 5
+\end{itemize}
+}
+
+\subsection*{The ControllerInterface Abstract Base Class}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.9]
+    % Abstract base class
+    \node[block, fill=primary!30, text width=8cm, minimum height=3.5cm] (base) at (0,0) {
+        \textbf{ControllerInterface (ABC)}\\[0.2cm]
+        \small
+        \textbf{Abstract Methods:}\\
+        - \texttt{compute\_control(state, reference)}\\
+        - \texttt{reset()}\\[0.2cm]
+        \textbf{Concrete Methods:}\\
+        - \texttt{step(state, reference)}\\
+        - \texttt{\_reset\_state()}\\
+        - \texttt{parameters} property
+    };
+
+    % Concrete controllers
+    \node[process, fill=secondary!20, below left=2cm and -3cm of base] (classic) {\textbf{ClassicalSMC}};
+    \node[process, fill=secondary!20, below=2cm of base] (sta) {\textbf{SuperTwistingSMC}};
+    \node[process, fill=secondary!20, below right=2cm and -3cm of base] (adaptive) {\textbf{AdaptiveSMC}};
+
+    \node[process, fill=accent!20, below=3.5cm of classic] (hybrid) {\textbf{HybridAdaptiveSTA}};
+    \node[process, fill=warning!20, below=3.5cm of adaptive] (mpc) {\textbf{MPC (not registered)}};
+
+    % Inheritance arrows
+    \draw[arrow, thick] (classic) -- (base);
+    \draw[arrow, thick] (sta) -- (base);
+    \draw[arrow, thick] (adaptive) -- (base);
+    \draw[arrow, thick, dashed] (hybrid) -- (classic);
+    \draw[arrow, thick, dashed] (mpc) -- (base);
+\end{tikzpicture}
+\end{center}
+
+\begin{example}
+\textbf{Python ABC Pattern:} Abstract Base Class (ABC) defines a contract. Subclasses MUST implement abstract methods or Python raises TypeError at instantiation.
+\end{example}
+
+\subsection*{Core Interface Code (src/controllers/base/controller\_interface.py)}
+
+\begin{lstlisting}[style=python, basicstyle=\ttfamily\tiny]
+from abc import ABC, abstractmethod
+from typing import Optional, Tuple, Any
+import numpy as np
+
+class ControllerInterface(ABC):
+    """Abstract base class for all controllers in the DIP system."""
+
+    def __init__(self, max_force: float = 20.0, dt: float = 0.01):
+        """Initialize base controller with common parameters."""
+        self.max_force = max_force  # Actuator saturation limit (N)
+        self.dt = dt                 # Sampling timestep (s)
+        self._reset_state()
+
+    @abstractmethod
+    def compute_control(self, state: np.ndarray,
+                       reference: Optional[np.ndarray] = None) -> float:
+        """THE KEY METHOD - Compute control force for given state.
+
+        Args:
+            state: [x, xdot, theta1, theta1dot, theta2, theta2dot]
+            reference: Target state (default: upright equilibrium)
+        Returns:
+            float: Control force to apply to cart (N)
+        """
+        pass  # Subclasses MUST implement
+
+    @abstractmethod
+    def reset(self) -> None:
+        """Reset controller internal state (for multi-simulation)."""
+        pass
+
+    def step(self, state: np.ndarray,
+            reference: Optional[np.ndarray] = None) -> Tuple[float, Any]:
+        """Perform one control step with saturation."""
+        control = self.compute_control(state, reference)
+
+        # Apply actuator limits (CRITICAL for real hardware!)
+        control = np.clip(control, -self.max_force, self.max_force)
+
+        # Return control + diagnostics
+        info = {'saturated': bool(abs(control) >= self.max_force),
+                'control_raw': control}
+        return control, info
+
+    @property
+    def parameters(self) -> dict:
+        """Get controller parameters for logging/analysis."""
+        return {'max_force': self.max_force, 'dt': self.dt}
+\end{lstlisting}
+
+% ==============================================================================
+% PAGE 2: FACTORY PATTERN - CREATING CONTROLLERS
+% ==============================================================================
+\newpage
+
+\section*{Factory Pattern: One Function to Rule Them All}
+
+\begin{keypoint}
+\textbf{Problem:} How do you create 5 controller types from configuration without massive if/else chains?
+
+\textbf{Solution:} Factory pattern - one function \texttt{create\_controller()} that uses a registry to instantiate the right class.
+\end{keypoint}
+
+\subsection*{Factory Pattern Flow}
+
+\begin{center}
+\begin{tikzpicture}[node distance=1.5cm, scale=0.85, every node/.style={scale=0.85}]
+    % User code
+    \node[cloud, fill=highlight!30] (user) {\textbf{User Code}\\config.yaml};
+
+    % Factory function
+    \node[block, fill=primary!30, below=of user, text width=5cm] (factory) {
+        \textbf{create\_controller()}\\[0.1cm]
+        \small
+        1. Read controller type\\
+        2. Lookup in registry\\
+        3. Instantiate class\\
+        4. Return instance
+    };
+
+    % Registry
+    \node[process, fill=secondary!20, left=of factory, text width=4cm] (registry) {
+        \textbf{CONTROLLER\_REGISTRY}\\[0.1cm]
+        \tiny
+        'classical\_smc': ClassicalSMC\\
+        'sta\_smc': SuperTwistingSMC\\
+        'adaptive\_smc': AdaptiveSMC\\
+        ...
+    };
+
+    % Controller instance
+    \node[block, fill=accent!30, below=of factory] (controller) {\textbf{Controller Instance}\\Ready to use!};
+
+    % Arrows
+    \draw[arrow] (user) -- node[right] {\tiny type='sta\_smc'} (factory);
+    \draw[arrow] (factory) -- node[above, sloped] {\tiny lookup} (registry);
+    \draw[arrow] (factory) -- (controller);
+\end{tikzpicture}
+\end{center}
+
+\subsection*{Factory Code (src/controllers/factory/base.py)}
+
+\begin{lstlisting}[style=python, basicstyle=\ttfamily\tiny]
+# Simplified version for clarity (verified 2026-02-04)
+CONTROLLER_REGISTRY = {
+    'classical_smc': ClassicalSMC,
+    'sta_smc': SuperTwistingSMC,
+    'adaptive_smc': AdaptiveSMC,
+    'hybrid_adaptive_sta_smc': HybridAdaptiveSTASMC,
+    'conditional_hybrid': ConditionalHybrid,
+    # Note: SwingUp and MPC not yet registered (can be added by extending registry)
+}
+
+def create_controller(ctrl_type: str, config: dict, gains: list) -> ControllerInterface:
+    """Factory function to create any controller type.
+
+    Args:
+        ctrl_type: Controller identifier (e.g., 'sta_smc')
+        config: Configuration dictionary
+        gains: Controller gains (validated before instantiation)
+
+    Returns:
+        Controller instance implementing ControllerInterface
+
+    Raises:
+        ValueError: Unknown controller type
+    """
+    # Canonicalize type (handle aliases)
+    ctrl_type = canonicalize_controller_type(ctrl_type)
+
+    # Lookup controller class in registry
+    if ctrl_type not in CONTROLLER_REGISTRY:
+        raise ValueError(f"Unknown controller: {ctrl_type}")
+
+    controller_class = CONTROLLER_REGISTRY[ctrl_type]
+
+    # Instantiate controller with validated parameters
+    return controller_class(gains=gains, **config)
+\end{lstlisting}
+
+\begin{multicols}{2}
+
+\subsection*{Registry Benefits}
+
+\begin{itemize}
+    \item \textbf{No if/else chains}: Dictionary lookup = O(1)
+    \item \textbf{Easy to extend}: Add new controller = register it
+    \item \textbf{Type-safe}: All values implement ControllerInterface
+    \item \textbf{Discoverable}: List available controllers programmatically
+\end{itemize}
+
+\columnbreak
+
+\subsection*{Alias Support}
+
+\begin{lstlisting}[style=python, numbers=none, basicstyle=\ttfamily\scriptsize]
+CONTROLLER_ALIASES = {
+    'classical': 'classical_smc',
+    'sta': 'sta_smc',
+    'super_twisting': 'sta_smc',
+    'adaptive': 'adaptive_smc',
+    # User-friendly names
+}
+\end{lstlisting}
+
+\end{multicols}
+
+\subsection*{Usage Example: Swapping Controllers}
+
+\quickref{Python Usage}{
+\begin{lstlisting}[style=python, numbers=none, basicstyle=\ttfamily\scriptsize]
+from src.controllers.factory import create_controller
+
+# Load configuration
+config = load_config("config.yaml")
+
+# Create controller (type from config, NOT hardcoded!)
+controller = create_controller(
+    ctrl_type=config['controller_type'],  # 'sta_smc'
+    config=config['controller_params'],
+    gains=config['controller_gains']
+)
+
+# Simulation loop - controller type doesn't matter here!
+for t in np.arange(0, 10, dt):
+    state = get_current_state()
+    control = controller.compute_control(state)
+    apply_control(control)
+
+# Want to test different algorithm? Change ONE line in config.yaml!
+\end{lstlisting}
+}
+
+% ==============================================================================
+% PAGE 3: MEMORY MANAGEMENT & BEST PRACTICES
+% ==============================================================================
+\newpage
+
+\section*{Memory Management: Breaking Circular References}
+
+\begin{warning}
+\textbf{The Circular Reference Problem:}
+
+Controller $\rightarrow$ holds reference to $\rightarrow$ Dynamics Model
+
+Dynamics Model $\rightarrow$ sometimes holds reference to $\rightarrow$ Controller
+
+Result: Python garbage collector can't free memory (memory leak!)
+\end{warning}
+
+\subsection*{Solution: Weakref Pattern}
+
+\begin{multicols}{2}
+
+\textbf{Bad (Strong Reference):}
+\begin{lstlisting}[style=python, numbers=none, basicstyle=\ttfamily\tiny]
+class ClassicalSMC:
+    def __init__(self, dynamics_model):
+        # Strong reference
+        self.dyn = dynamics_model
+\end{lstlisting}
+
+Problem: If \texttt{dynamics\_model} holds controller, both objects never freed!
+
+\columnbreak
+
+\textbf{Good (Weak Reference):}
+\begin{lstlisting}[style=python, numbers=none, basicstyle=\ttfamily\tiny]
+import weakref
+
+class ClassicalSMC:
+    def __init__(self, dynamics_model):
+        # Weak reference
+        self._dynamics_ref = weakref.ref(dynamics_model)
+
+    @property
+    def dyn(self):
+        return self._dynamics_ref()
+\end{lstlisting}
+
+Weak reference doesn't prevent garbage collection!
+
+\end{multicols}
+
+\subsection*{Cleanup Pattern}
+
+\begin{lstlisting}[style=python, basicstyle=\ttfamily\tiny]
+class ClassicalSMC(ControllerInterface):
+    def cleanup(self) -> None:
+        """Explicit memory cleanup to prevent leaks."""
+        # Nullify dynamics reference
+        if hasattr(self, '_dynamics_ref'):
+            self._dynamics_ref = lambda: None
+
+        # Clear large NumPy arrays
+        if hasattr(self, 'L'):
+            self.L = None
+        if hasattr(self, 'B'):
+            self.B = None
+
+    def __del__(self) -> None:
+        """Destructor for automatic cleanup."""
+        try:
+            self.cleanup()
+        except Exception:
+            pass  # Prevent exceptions during finalization
+\end{lstlisting}
+
+\begin{tip}
+\textbf{Memory Management Guideline:} Call \texttt{cleanup()} when done with controller, especially in batch simulations or PSO optimization (1000s of instantiations).
+
+The \texttt{\_\_del\_\_()} destructor provides automatic cleanup, but explicit \texttt{cleanup()} is more reliable.
+\end{tip}
+
+\subsection*{Controller Initialization Flow}
+
+\begin{center}
+\begin{tikzpicture}[node distance=1.2cm, scale=0.9, every node/.style={scale=0.9}]
+    \node[block, fill=primary!30] (config) {\textbf{Load Config}\\config.yaml};
+    \node[process, below=of config] (validate) {\textbf{Validate Gains}\\Factory checks};
+    \node[process, below=of validate] (create) {\textbf{create\_controller()}};
+    \node[decision, below=of create, aspect=2] (check) {\textbf{Type\\Valid?}};
+    \node[block, fill=secondary!30, below left=of check] (inst) {\textbf{Instantiate}\\Controller class};
+    \node[block, fill=warning!30, below right=of check] (error) {\textbf{Raise}\\ValueError};
+    \node[block, fill=accent!30, below=3cm of check] (return) {\textbf{Return}\\Controller instance};
+
+    \draw[arrow] (config) -- (validate);
+    \draw[arrow] (validate) -- (create);
+    \draw[arrow] (create) -- (check);
+    \draw[arrow] (check) -- node[left] {\tiny Yes} (inst);
+    \draw[arrow] (check) -- node[right] {\tiny No} (error);
+    \draw[arrow] (inst) -- (return);
+\end{tikzpicture}
+\end{center}
+
+\subsection*{Design Patterns Identified}
+
+\fourkeypatterns
+{\textbf{Abstract Base Class (ABC)}: Enforces contract via Python's \texttt{@abstractmethod}}
+{\textbf{Factory Pattern}: Registry-based instantiation decouples creation from usage}
+{\textbf{Weak Reference Pattern}: Prevents memory leaks from circular references}
+{\textbf{Strategy Pattern}: Controllers are interchangeable strategies for same problem}
+
+% ==============================================================================
+% PAGE 4: PRACTICAL EXAMPLES & QUICK REFERENCE
+% ==============================================================================
+\newpage
+
+\section*{Practical Examples: Using the Factory}
+
+\subsection*{Example 1: Command-Line Simulation}
+
+\begin{lstlisting}[style=python, basicstyle=\ttfamily\tiny]
+# File: simulate.py
+import argparse
+from src.controllers.factory import create_controller
+from src.config import load_config
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--ctrl', default='classical_smc',
+                       help='Controller type')
+    args = parser.parse_args()
+
+    # Load config
+    config = load_config("config.yaml")
+
+    # Create controller from command-line argument
+    controller = create_controller(
+        ctrl_type=args.ctrl,  # User-specified type!
+        config=config['controllers'][args.ctrl],
+        gains=config['gains'][args.ctrl]
+    )
+
+    # Run simulation (same code for ALL controllers)
+    results = simulate(controller, initial_state, dt=0.01, duration=10.0)
+    plot_results(results)
+
+# Usage:
+# python simulate.py --ctrl classical_smc
+# python simulate.py --ctrl sta_smc
+# python simulate.py --ctrl adaptive_smc
+\end{lstlisting}
+
+\subsection*{Example 2: Batch Comparison}
+
+\begin{lstlisting}[style=python, basicstyle=\ttfamily\tiny]
+from src.controllers.factory import list_available_controllers, create_controller
+
+# Discover all available controllers programmatically
+all_controllers = list_available_controllers()
+# Returns: ['classical_smc', 'sta_smc', 'adaptive_smc', ...]
+
+results = {}
+for ctrl_type in all_controllers:
+    # Create controller
+    controller = create_controller(ctrl_type, config, default_gains[ctrl_type])
+
+    # Run simulation
+    metrics = run_simulation(controller)
+    results[ctrl_type] = metrics
+
+    # Clean up memory (IMPORTANT for batch!)
+    controller.cleanup()
+
+# Compare all controllers
+plot_comparison(results)
+\end{lstlisting}
+
+\subsection*{Example 3: PSO Optimization}
+
+\begin{lstlisting}[style=python, basicstyle=\ttfamily\tiny]
+from src.controllers.factory import create_smc_for_pso, get_gain_bounds_for_pso
+
+def objective_function(gains):
+    """PSO evaluates this function 1000s of times."""
+    # Create controller with candidate gains
+    controller = create_smc_for_pso('sta_smc', gains, max_force=20.0, dt=0.01)
+
+    # Simulate
+    cost = simulate_and_evaluate(controller)
+
+    # Clean up (prevents memory leak over 1000 iterations!)
+    controller.cleanup()
+
+    return cost
+
+# Get valid gain bounds for chosen controller type
+bounds = get_gain_bounds_for_pso('sta_smc')  # Returns: [(K1_min, K1_max), (K2_min, K2_max), ...]
+
+# Run PSO
+best_gains = pso_optimize(objective_function, bounds, n_particles=30, n_iterations=50)
+\end{lstlisting}
+
+\subsection*{Quick Reference: Factory API}
+
+\quickref{Factory Functions}{
+\begin{lstlisting}[style=python, numbers=none, basicstyle=\ttfamily\scriptsize]
+# Main factory function
+create_controller(ctrl_type, config, gains) -> ControllerInterface
+
+# Discovery functions
+list_available_controllers() -> list[str]
+list_all_controllers() -> dict  # With metadata
+
+# Validation
+validate_controller_gains(ctrl_type, gains) -> ValidationResult
+get_default_gains(ctrl_type) -> list[float]
+get_gain_bounds(ctrl_type) -> list[tuple]
+
+# PSO integration
+create_smc_for_pso(ctrl_type, gains, **params) -> ControllerInterface
+get_gain_bounds_for_pso(ctrl_type) -> list[tuple]
+
+# Type utilities
+canonicalize_controller_type(name) -> str  # Resolves aliases
+\end{lstlisting}
+}
+
+\subsection*{Configuration Example (config.yaml)}
+
+\begin{lstlisting}[style=yaml, numbers=none, basicstyle=\ttfamily\scriptsize]
+# Controller selection (actual config.yaml structure verified 2026-02-04)
+# No single controller_type field - specify via simulate.py --ctrl flag
+# Controller-specific parameters
+controllers:
+  classical_smc:
+    max_force: 20.0
+    boundary_layer: 0.1
+    switch_method: 'tanh'
+
+  sta_smc:
+    max_force: 20.0
+    dt: 0.01
+    boundary_layer: 0.01
+    damping_gain: 0.5
+
+  adaptive_smc:
+    max_force: 20.0
+    leak_rate: 0.1
+    K_min: 1.0
+    K_max: 50.0
+    dead_zone: 0.05
+
+# Controller gains (tuned via PSO or manually)
+gains:
+  classical_smc: [23.068, 12.854, 5.515, 3.487, 2.233, 0.148]  # MT-8 robust optimized gains
+  sta_smc: [15.0, 10.0, 5.0, 3.0, 2.0, 1.0]       # [K1, K2, k1, k2, lam1, lam2]
+  adaptive_smc: [8.0, 4.0, 6.0, 2.5, 0.8]         # [k1, k2, lam1, lam2, gamma]
+\end{lstlisting}
+
+\subsection*{Key Takeaways}
+
+\begin{summary}
+\textbf{1. Interface Unity}: \texttt{ControllerInterface} enforces contract - all 5 controllers implement \texttt{compute\_control()}
+
+\textbf{2. Factory Power}: One function creates any controller via registry pattern - no if/else chains!
+
+\textbf{3. Memory Safety}: Weakref pattern prevents circular reference leaks (critical for batch simulations)
+
+\textbf{4. Configuration-Driven}: Change controller algorithm by editing ONE line in config.yaml
+
+\textbf{5. Discoverable}: Programmatically list/validate controllers for testing and optimization
+\end{summary}
+
+\subsection*{What's Next?}
+
+\begin{keypoint}
+\textbf{E031: Classical SMC Implementation} - Deep-dive into the baseline algorithm: sliding surface, switching control, equivalent control, and the chattering phenomenon
+
+\textbf{E032: Super-Twisting Algorithm (STA)} - 2nd-order sliding mode for smooth control without chattering
+
+\textbf{E033-E036}: Adaptive controllers, Swing-Up, MPC, and testing strategies
+\end{keypoint}
+
+\subsection*{Code References}
+
+\begin{itemize}
+    \item \texttt{src/controllers/base/controller\_interface.py:12-101} - Base class definition
+    \item \texttt{src/controllers/factory/base.py:25-90} - Factory function
+    \item \texttt{src/controllers/factory/registry.py:10-60} - Controller registry
+    \item \texttt{src/controllers/smc/classic\_smc.py:187-190} - Weakref example
+\end{itemize}
+
+\end{document}

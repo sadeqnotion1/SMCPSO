@@ -1,0 +1,172 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{E009}
+\lhead{DIP-SMC-PSO Learning Episode}
+\rfoot{\thepage}
+
+\title{\Large\textbf{E009: Educational Materials and Learning Paths}}
+\author{DIP-SMC-PSO Educational Series}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section*{Overview}
+
+This episode covers educational materials and learning paths from the DIP-SMC-PSO project.
+
+\textbf{Part:} Part2 Infrastructure
+
+\textbf{Duration:} 15-20 minutes
+
+\textbf{Source:} Comprehensive Presentation Materials
+
+\newpage
+
+\section{Particle Swarm Optimization: Overview}
+
+**Inspiration:** Social behavior of bird flocking, fish schooling
+
+    **Algorithm:** Population-based stochastic optimization
+    
+        - **Particles:** Candidate solutions in search space
+        - **Velocity:** Direction and speed of movement
+        - **Personal best:** Best solution found by each particle
+        - **Global best:** Best solution found by entire swarm
+
+    **Update Equations:**
+    \begin{align}
+        v_i^{(t+1)} &= w v_i^{(t)} + c_1 r_1 (p_i - x_i^{(t)}) + c_2 r_2 (g - x_i^{(t)}) \\
+        x_i^{(t+1)} &= x_i^{(t)} + v_i^{(t+1)}
+    \end{align}
+
+    where:
+    
+        - $w$ -- Inertia weight (0.729)
+        - $c_1, c_2$ -- Cognitive/social coefficients (1.494 each)
+        - $r_1, r_2$ -- Random numbers $\in [0,1]$
+        - $p_i$ -- Personal best, $g$ -- Global best
+
+\section{PSO for Controller Gain Tuning}
+
+**Objective:** Find optimal controller gains to minimize cost function
+
+    **Search Space:** Controller gains (6-dimensional for classical SMC)
+    \begin{equation}
+        \mathbf{x} = [k_1, k_2, \lambda_1, \lambda_2, K, \epsilon]
+    \end{equation}
+
+    **Cost Function (Multi-Objective):**
+    \begin{equation}
+        J = w_1 \cdot ISE + w_2 \cdot t_{settle} + w_3 \cdot \int u^2 dt + w_4 \cdot \text{chattering}
+    \end{equation}
+
+    where:
+    
+        - $ISE = \int (\theta_1^2 + \theta_2^2) dt$ -- Integral squared error
+        - $t_{settle}$ -- Settling time
+        - $\int u^2 dt$ -- Control effort
+        - chattering -- High-frequency energy metric
+
+        Complete -- Convergence curves, particle trajectories, fitness landscapes
+
+\section{PSO Algorithm Parameters}
+
+**Default Configuration:**
+
+    \begin{tabular}{ll}
+        \toprule
+        **Parameter** & **Value** \\
+        \midrule
+        Number of particles & 30 \\
+        Generations & 50-100 \\
+        Inertia weight ($w$) & 0.729 \\
+        Cognitive coefficient ($c_1$) & 1.494 \\
+        Social coefficient ($c_2$) & 1.494 \\
+        \midrule
+        \multicolumn{2}{l}{\textit{Convergence Criteria:}} \\
+        Fitness tolerance & $10^{-6}$ \\
+        Max stagnation generations & 10 \\
+        \bottomrule
+    \end{tabular}
+
+        Complete -- Tested across 100 seeds, validated convergence reliability \\
+        Integrated into LT-7 research paper
+
+\section{PSO Convergence Analysis}
+
+**Typical Convergence Curve:**
+
+    [Visual diagram - see PDF]
+
+    **Characteristics:**
+    
+        - **Rapid initial decrease:** Exploration phase (generations 0-30)
+        - **Gradual refinement:** Exploitation phase (generations 30-100)
+        - **Convergence:** Fitness plateau indicates optimal solution found
+
+\section{Optimization Results: Controller Comparison}
+
+**Optimized Gains (MT-5 Benchmark):**
+
+    \begin{tabular}{lccc}
+        \toprule
+        **Controller** & **Settling Time (s)** & **ISE** & **Energy (J)** \\
+        \midrule
+        Classical SMC & 2.5 & 0.45 & 12.3 \\
+        STA-SMC & 2.1 & 0.38 & 10.8 \\
+        Adaptive SMC & 2.3 & 0.41 & 11.5 \\
+        Hybrid Adaptive STA & **2.0** & **0.35** & **10.2** \\
+        \bottomrule
+    \end{tabular}
+
+            - **Best overall:** Hybrid Adaptive STA-SMC
+            - **Lowest chattering:** STA-SMC
+            - **Fastest convergence:** PSO typically converges in 60-80 generations
+            - **Repeatability:** 95\
+
+\section{Alternative Optimization Algorithms}
+
+**Implemented but not primary:**
+
+        - **CMA-ES** (Covariance Matrix Adaptation Evolution Strategy)
+        
+            - Better for high-dimensional problems
+            - `src/optimization/algorithms/cma\_es.py`
+
+        - **Differential Evolution (DE)**
+        
+            - Simple, robust global optimizer
+            - `src/optimization/algorithms/differential\_evolution.py`
+
+        - **Genetic Algorithm (GA)**
+        
+            - Classic evolutionary approach
+            - `src/optimization/algorithms/genetic\_algorithm.py`
+
+        \statuswarning PSO is primary method (best performance for this application) \\
+        Other algorithms available for research/comparison
+
+\newpage
+
+\section*{{Resources}}
+
+\begin{itemize}
+    \item \textbf{Repository:} \url{https://github.com/theSadeQ/dip-smc-pso.git}
+    \item \textbf{Documentation:} See \texttt{docs/} directory
+    \item \textbf{Getting Started:} \texttt{docs/guides/getting-started.md}
+\end{itemize}
+
+\vfill
+
+\noindent\textit{Educational podcast episode generated from comprehensive presentation materials}
+
+\end{document}

@@ -1,0 +1,190 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{E003}
+\lhead{DIP-SMC-PSO Learning Episode}
+\rfoot{\thepage}
+
+\title{\Large\textbf{E003: Plant Models and Dynamics}}
+\author{DIP-SMC-PSO Educational Series}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section*{Overview}
+
+This episode covers plant models and dynamics from the DIP-SMC-PSO project.
+
+\textbf{Part:} Part1 Foundations
+
+\textbf{Duration:} 15-20 minutes
+
+\textbf{Source:} Comprehensive Presentation Materials
+
+\newpage
+
+\section{Three Fidelity Levels}
+
+- **Simplified Dynamics** -- Linearized, fast prototyping
+        
+            - `src/plant/models/simplified\_dynamics.py`
+            - 98\
+            - Ideal for initial controller design
+
+        - **Full Nonlinear Model** -- High-fidelity with coupling effects
+        
+            - `src/plant/models/full\_nonlinear\_dynamics.py`
+            - Includes centripetal, Coriolis forces
+            - Used for final validation
+
+        - **Low-Rank Approximation** -- Computationally efficient reduced-order
+        
+            - `src/plant/models/lowrank\_dynamics.py`
+            - Truncated state representation
+            - Suitable for real-time embedded systems
+
+        Accuracy vs Computational Cost -- Choose based on application requirements
+
+\section{Physical System Parameters}
+
+**Default Configuration (`config.yaml**):`
+
+    \begin{tabular}{lll}
+        \toprule
+        **Parameter** & **Value** & **Units** \\
+        \midrule
+        Cart mass ($m_0$) & 1.0 & kg \\
+        Pole 1 mass ($m_1$) & 0.1 & kg \\
+        Pole 2 mass ($m_2$) & 0.1 & kg \\
+        Pole 1 length ($\ell_1$) & 0.5 & m \\
+        Pole 2 length ($\ell_2$) & 0.5 & m \\
+        Gravity ($g$) & 9.81 & m/s$^2$ \\
+        \midrule
+        \multicolumn{3}{l}{\textit{Control Constraints:}} \\
+        Max force ($u_{max}$) & 20.0 & N \\
+        Min force ($u_{min}$) & -20.0 & N \\
+        \bottomrule
+    \end{tabular}
+
+        Tested parameter variations: \\
+        **Low:** ±10\
+        All controllers remain stable under ±10\
+
+\section{State Space Representation}
+
+**6-Dimensional State Vector:**
+    \begin{equation}
+        \statevec = \begin{bmatrix}
+            x & \dot{x} & \theta_1 & \dot{\theta}_1 & \theta_2 & \dot{\theta}_2
+        \end{bmatrix}^T
+    \end{equation}
+
+    where:
+    
+        - $x$ -- Cart position
+        - $\dot{x}$ -- Cart velocity
+        - $\theta_1$ -- Pole 1 angle (from vertical)
+        - $\dot{\theta}_1$ -- Pole 1 angular velocity
+        - $\theta_2$ -- Pole 2 angle (from vertical)
+        - $\dot{\theta}_2$ -- Pole 2 angular velocity
+
+    **Control Input:**
+    \begin{equation}
+        \controlvec = u \quad \text{(horizontal force on cart)}
+    \end{equation}
+
+    **Initial Condition (typical):**
+    \begin{equation}
+        \statevec_0 = [0, 0, 0.1, 0, -0.05, 0]^T \quad \text{(small angular perturbations)}
+    \end{equation}
+
+\section{Lagrangian Formulation}
+
+**Equations of Motion:**
+    \begin{equation}
+        \massmatrix(\mathbf{q}) \ddot{\mathbf{q}} + \coriolismatrix(\mathbf{q}, \dot{\mathbf{q}}) \dot{\mathbf{q}} + \gravitymatrix(\mathbf{q}) = \inputmatrix \controlvec
+    \end{equation}
+
+    where:
+    
+        - $\mathbf{q} = [x, \theta_1, \theta_2]^T$ -- Generalized coordinates
+        - $\massmatrix$ -- Mass/inertia matrix (3×3, positive definite)
+        - $\coriolismatrix$ -- Coriolis/centripetal matrix (3×3)
+        - $\gravitymatrix$ -- Gravity vector (3×1)
+        - $\inputmatrix$ -- Input mapping (3×1)
+
+    **Key Properties:**
+    
+        - **Nonlinearity:** $\massmatrix$, $\coriolismatrix$, $\gravitymatrix$ depend on $\mathbf{q}$
+        - **Underactuated:** 3 DOF, 1 actuator
+        - **Coupling:** Motion of one pole affects the other
+
+\section{Mass Matrix Structure}
+
+**General Form:**
+    \begin{equation}
+        \massmatrix = \begin{bmatrix}
+            M_{00} & M_{01} & M_{02} \\
+            M_{10} & M_{11} & M_{12} \\
+            M_{20} & M_{21} & M_{22}
+        \end{bmatrix}
+    \end{equation}
+
+    **Explicit Elements (simplified):**
+    \begin{align}
+        M_{00} &= m_0 + m_1 + m_2 \\
+        M_{01} &= (m_1 + m_2) \ell_1 \cos\theta_1 \\
+        M_{02} &= m_2 \ell_2 \cos\theta_2 \\
+        M_{11} &= (m_1 + m_2) \ell_1^2 \\
+        M_{12} &= m_2 \ell_1 \ell_2 \cos(\theta_1 - \theta_2) \\
+        M_{22} &= m_2 \ell_2^2
+    \end{align}
+
+        $\massmatrix$ can become ill-conditioned at certain configurations \\
+        Robust inversion required: `numpy.linalg.solve(M, rhs)`
+
+\section{Plant Architecture: Code Organization}
+
+**Module Structure:**
+
+        - `src/plant/core/` -- Core interfaces, base classes
+        
+            - `physics\_matrices.py` -- $\massmatrix$, $\coriolismatrix$, $\gravitymatrix$ computation
+            - `state\_validation.py` -- Bounds checking, NaN detection
+
+        - `src/plant/models/` -- 8 dynamics files
+        
+            - `simplified\_dynamics.py` -- Linearized (98\
+            - `full\_nonlinear\_dynamics.py` -- High-fidelity
+            - `lowrank\_dynamics.py` -- Reduced-order
+            - 5 other variants (experimental)
+
+        - `src/plant/configurations/` -- Predefined plant setups
+        
+            - `default\_config.yaml` -- Standard parameters
+            - `heavy\_cart.yaml` -- Increased $m_0$
+            - `long\_poles.yaml` -- Increased $\ell_1$, $\ell_2$
+
+\newpage
+
+\section*{{Resources}}
+
+\begin{itemize}
+    \item \textbf{Repository:} \url{https://github.com/theSadeQ/dip-smc-pso.git}
+    \item \textbf{Documentation:} See \texttt{docs/} directory
+    \item \textbf{Getting Started:} \texttt{docs/guides/getting-started.md}
+\end{itemize}
+
+\vfill
+
+\noindent\textit{Educational podcast episode generated from comprehensive presentation materials}
+
+\end{document}

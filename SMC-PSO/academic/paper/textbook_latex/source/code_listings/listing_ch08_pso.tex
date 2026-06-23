@@ -1,0 +1,322 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ANNOTATED CODE LISTING: PSO Tuner Implementation
+% Maps to Algorithm 8.1 (PSO Main Loop) and Algorithm 8.2 (Cost Function)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{listing}[H]
+\caption{PSO Tuner Implementation (\texttt{src/optimization/algorithms/pso\_optimizer.py})}
+\label{lst:pso_tuner}
+\begin{lstlisting}[language=Python, numbers=left, basicstyle=\ttfamily\scriptsize, breaklines=true, frame=single]
+class PSOTuner:
+    """High-throughput vectorized PSO tuner for SMC controllers.
+
+    Maps to Algorithm 8.1 (PSO Main Loop).
+    Uses Numba-accelerated batch simulation for $~$10x speedup.
+    """
+
+    def __init__(self, controller_factory, config, seed=None,
+                 instability_penalty_factor=100.0):
+        """Initialize PSO tuner.
+
+        Args:
+            controller_factory: Callable mapping gains to controller
+            config: Validated ConfigSchema or path to YAML
+            seed: RNG seed for reproducibility
+            instability_penalty_factor: Penalty for divergent sims
+        """
+        # Load config if path provided
+        if isinstance(config, (str, Path)):
+            self.cfg = load_config(config)
+        else:
+            self.cfg = config
+
+        self.controller_factory = controller_factory
+        self.physics_cfg = self.cfg.physics
+        self.sim_cfg = self.cfg.simulation
+        self.cost_cfg = self.cfg.cost_function
+
+        # Local PRNG (avoid global state contamination)
+        default_seed = seed if seed else getattr(
+            self.cfg, "global_seed", None)
+        self.seed = int(default_seed) if default_seed else None
+        self.rng = create_rng(self.seed)
+
+        # Cost weights (Algorithm 8.2, Line 19)
+        self.weights = self.cost_cfg.weights
+
+        # Normalization constants (Algorithm 8.2, Lines 20-23)
+        norms = getattr(self.cost_cfg, "norms", None)
+        if norms:
+            self.norm_ise = float(getattr(norms,
+                                          "state_error", 1.0))
+            self.norm_u = float(getattr(norms,
+                                        "control_effort", 1.0))
+            self.norm_du = float(getattr(norms,
+                                         "control_rate", 1.0))
+            self.norm_sigma = float(getattr(norms,
+                                            "sliding", 1.0))
+        else:
+            self.norm_ise = self.norm_u = \
+                self.norm_du = self.norm_sigma = 1.0
+
+        # Instability penalty (Algorithm 8.2, Line 7)
+        explicit_penalty = getattr(self.cost_cfg,
+                                    "instability_penalty", None)
+        if explicit_penalty:
+            self.instability_penalty = float(explicit_penalty)
+        else:
+            denom_sum = (self.norm_ise + self.norm_u +
+                         self.norm_du + self.norm_sigma)
+            self.instability_penalty = float(
+                instability_penalty_factor * denom_sum)
+
+    def _compute_cost_from_traj(self, t, x_b, u_b, sigma_b):
+        """Compute cost per particle from simulated trajectories.
+
+        Maps to Algorithm 8.2 (Multi-Objective Cost Function).
+        Time complexity: O(T/dt) per trajectory.
+
+        Args:
+            t: Time vector
+            x_b: State trajectories (B x T x 6)
+            u_b: Control trajectories (B x T)
+            sigma_b: Sliding surface (B x T)
+
+        Returns:
+            Cost vector J (B,) with penalties for instability
+        """
+        # Flag trajectories with NaN (Algorithm 8.2, Line 5)
+        nan_traj_mask = ~np.all(np.isfinite(x_b), axis=(1, 2))
+
+        dt = np.diff(t)
+        dt_b = dt[None, :]  # Broadcast shape (1, T-1)
+        N = len(dt)
+        B = x_b.shape[0]
+
+        if N == 0:
+            return np.zeros(B, dtype=float)
+
+        # Instability detection (Algorithm 8.2, Line 6)
+        fall_mask = np.abs(x_b[:, :, 1]) > (0.5 * np.pi)
+        explodes_mask = np.any(np.abs(x_b) > 1e6, axis=2)
+        unstable_mask = fall_mask | explodes_mask
+
+        # Find failure timestep for graded penalty
+        temp = np.full((B, N + 1), N + 1)
+        temp[unstable_mask] = np.tile(np.arange(N + 1),
+                                       (B, 1))[unstable_mask]
+        failure_steps = np.min(temp, axis=1)
+        time_mask = (np.arange(N)[None, :] <
+                     (failure_steps - 1)[:, None])
+
+        # State error (Algorithm 8.2, Line 10)
+        ise = np.sum((x_b[:, :-1, :] ** 2 * dt_b[:, :, None]) *
+                     time_mask[:, :, None], axis=(1, 2))
+        ise_n = self._normalise(ise, self.norm_ise)
+
+        # Control effort (Algorithm 8.2, Line 11)
+        u_b_trunc = u_b[:, :N] if u_b.shape[1] > N else u_b
+        u_sq = np.sum((u_b_trunc ** 2 * dt_b) *
+                      time_mask, axis=1)
+        u_n = self._normalise(u_sq, self.norm_u)
+
+        # Control slew (chattering metric, Algorithm 8.2, Line 12)
+        du = np.diff(u_b, axis=1, prepend=u_b[:, 0:1])
+        du_trunc = du[:, :N] if du.shape[1] > N else du
+        du_sq = np.sum((du_trunc ** 2 * dt_b) *
+                       time_mask, axis=1)
+        du_n = self._normalise(du_sq, self.norm_du)
+
+        # Sliding variable energy (Algorithm 8.2, Line 13)
+        sigma_b_trunc = sigma_b[:, :N] if \
+            sigma_b.shape[1] > N else sigma_b
+        sigma_sq = np.sum((sigma_b_trunc ** 2 * dt_b) *
+                          time_mask, axis=1)
+        sigma_n = self._normalise(sigma_sq, self.norm_sigma)
+
+        # Graded instability penalty (Algorithm 8.2, Lines 25-27)
+        dt_const = dt[0] if dt.size else self.sim_cfg.dt
+        failure_t = np.clip((failure_steps - 1) * dt_const, 0,
+                            self.sim_cfg.duration)
+        penalty = self.weights.stability * (
+            (self.sim_cfg.duration - failure_t) /
+            self.sim_cfg.duration
+        ) * self.instability_penalty
+
+        # Aggregate cost (Algorithm 8.2, Line 24)
+        J = (self.weights.state_error * ise_n +
+             self.weights.control_effort * u_n +
+             self.weights.control_rate * du_n +
+             self.weights.stability * sigma_n) + penalty
+
+        # Penalize NaN trajectories (Algorithm 8.2, Line 28)
+        if nan_traj_mask.any():
+            J = J.astype(float, copy=True)
+            J[nan_traj_mask] = float(self.instability_penalty)
+
+        return J
+
+    def _fitness(self, particles):
+        """Vectorized fitness function for swarm.
+
+        Maps to Algorithm 8.1, Lines 18-20 (cost evaluation).
+        Calls Algorithm 8.4 (Batch Simulation).
+
+        Args:
+            particles: (N_p x D) array of gain vectors
+
+        Returns:
+            Cost vector (N_p,)
+        """
+        # Get controller parameters (Algorithm 8.2, Line 1)
+        ref_ctrl = self.controller_factory(particles[0])
+        self._u_max = getattr(ref_ctrl, "max_force", 150.0)
+        self._T = self.sim_cfg.duration
+
+        B = particles.shape[0]
+        valid_mask = np.ones(B, dtype=bool)
+
+        # Pre-filter using validate_gains (Algorithm 8.2, Line 3)
+        if hasattr(ref_ctrl, "validate_gains"):
+            try:
+                valid_mask = ref_ctrl.validate_gains(particles)
+                if (~valid_mask).sum() == B:
+                    return np.full(B, self.instability_penalty)
+                valid_particles = particles[valid_mask]
+            except Exception:
+                valid_particles = particles
+        else:
+            valid_particles = particles
+
+        # Batch simulation (Algorithm 8.4, Numba-accelerated)
+        t, x_b, u_b, sigma_b = simulate_system_batch(
+            controller_factory=self.controller_factory,
+            particles=valid_particles,
+            sim_time=self._T,
+            dt=self.sim_cfg.dt,
+            u_max=self._u_max
+        )
+
+        # Compute costs (Algorithm 8.2)
+        J_valid = self._compute_cost_from_traj(t, x_b, u_b,
+                                                sigma_b)
+
+        # Assign penalties to invalid particles
+        if (~valid_mask).any():
+            J_full = np.full(B, self.instability_penalty)
+            J_full[valid_mask] = J_valid
+            return J_full
+
+        return J_valid
+
+    def optimise(self, iters_override=None,
+                 n_particles_override=None):
+        """Run PSO optimization with optional overrides.
+
+        Maps to Algorithm 8.1 (PSO Main Loop).
+
+        Returns:
+            dict: best_cost, best_pos, history
+        """
+        from pyswarms.single import GlobalBestPSO
+
+        pso_cfg = self.cfg.pso
+
+        # Get controller-specific bounds (Algorithm 8.1, Line 1)
+        bounds_config = pso_cfg.bounds
+        controller_type = getattr(self.controller_factory,
+                                   "controller_type", None)
+
+        if hasattr(bounds_config, controller_type):
+            ctrl_bounds = getattr(bounds_config, controller_type)
+            min_list = list(ctrl_bounds.min)
+            max_list = list(ctrl_bounds.max)
+        else:
+            min_list = list(bounds_config.min)
+            max_list = list(bounds_config.max)
+
+        # PSO hyperparameters (Algorithm 8.1, Lines 3-4)
+        pso_options = {
+            'c1': pso_cfg.c1,  # Cognitive coefficient
+            'c2': pso_cfg.c2,  # Social coefficient
+            'w': pso_cfg.w     # Inertia weight
+        }
+
+        bmin = np.array(min_list, dtype=float)
+        bmax = np.array(max_list, dtype=float)
+        bounds = (bmin, bmax)
+
+        n_particles = int(n_particles_override) if \
+            n_particles_override else int(pso_cfg.n_particles)
+        iters = int(iters_override) if iters_override else \
+            int(pso_cfg.iters)
+
+        # Initialize swarm (Algorithm 8.1, Lines 5-8)
+        init_pos = self.rng.uniform(low=bmin, high=bmax,
+                                     size=(n_particles, len(bmin)))
+
+        # Velocity clamping (Algorithm 8.3)
+        v_clamp = None
+        try:
+            vc = getattr(pso_cfg, "velocity_clamp", None)
+            if vc:
+                frac_min, frac_max = float(vc[0]), float(vc[1])
+                range_vec = bmax - bmin
+                v_clamp = (frac_min * range_vec,
+                           frac_max * range_vec)
+        except Exception:
+            v_clamp = None
+
+        # Create optimizer
+        optimizer = GlobalBestPSO(
+            n_particles=n_particles,
+            dimensions=len(bmin),
+            options=pso_options,
+            bounds=bounds,
+            init_pos=init_pos,
+            velocity_clamp=v_clamp
+        )
+
+        # Run optimization (Algorithm 8.1, Lines 14-22)
+        cost, pos = optimizer.optimize(self._fitness, iters=iters)
+
+        return {
+            "best_cost": float(cost),
+            "best_pos": np.asarray(pos),
+            "history": {
+                "cost": optimizer.cost_history,
+                "pos": optimizer.pos_history
+            }
+        }
+\end{lstlisting}
+\end{listing}
+
+\textbf{Algorithm-Code Correspondence}:
+\begin{itemize}
+    \item \textbf{Line 63-130}: Cost computation $\rightarrow$ Algorithm 8.2, complete mapping
+    \item \textbf{Line 76-84}: Instability detection $\rightarrow$ Algorithm 8.2, Line 6
+    \item \textbf{Line 92-107}: Cost components $\rightarrow$ Algorithm 8.2, Lines 10-13
+    \item \textbf{Line 112-116}: Graded penalty $\rightarrow$ Algorithm 8.2, Lines 25-27
+    \item \textbf{Line 119-122}: Weighted aggregation $\rightarrow$ Algorithm 8.2, Line 24
+    \item \textbf{Line 147-163}: Batch simulation $\rightarrow$ Algorithm 8.4, Numba-accelerated
+    \item \textbf{Line 179-231}: PSO main loop $\rightarrow$ Algorithm 8.1, complete mapping
+    \item \textbf{Line 214-219}: Velocity clamping $\rightarrow$ Algorithm 8.3
+\end{itemize}
+
+\textbf{Complexity Summary}:
+\begin{itemize}
+    \item \textbf{PSO Loop}: $O(I_{\max} \cdot N_p \cdot T_{\text{sim}})$ time where $T_{\text{sim}} = T/\Delta t$
+    \item \textbf{Cost Evaluation}: $O(T/\Delta t)$ per trajectory (dominated by RK4 integration)
+    \item \textbf{Batch Speedup}: Numba JIT compilation achieves $\sim$10x speedup vs pure Python
+    \item \textbf{Space}: $O(N_p \cdot T/\Delta t)$ for storing all trajectories during evaluation
+\end{itemize}
+
+\textbf{Performance Notes}:
+\begin{itemize}
+    \item Typical swarm size: $N_p = 20$-$30$ particles
+    \item Typical iterations: $I_{\max} = 50$-$100$
+    \item Simulation horizon: $T = 10$ seconds at $\Delta t = 0.01$ s
+    \item Total PSO runtime: $\sim$5-10 minutes on modern CPU (with Numba)
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

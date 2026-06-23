@@ -1,0 +1,58 @@
+source_type,source_path,episode_range,episode_start,episode_end,notes
+slides,slides/sections/00_introduction.tex,E001-E001,E001,E001,Intro context for episode series kickoff
+slides_wrapper,slides/sections/part1_foundations.tex,E001-E020,E001,E020,Part I wrapper
+slides_section,slides/sections/part1_foundations/01_project_overview.tex,E001-E004,E001,E004,Section 01 mapping
+slides_section,slides/sections/part1_foundations/02_control_theory.tex,E005-E008,E005,E008,Section 02 mapping
+slides_section,slides/sections/part1_foundations/03_plant_models.tex,E009-E012,E009,E012,Section 03 mapping
+slides_section,slides/sections/part1_foundations/04_optimization_pso.tex,E013-E016,E013,E016,Section 04 mapping
+slides_section,slides/sections/part1_foundations/05_simulation_engine.tex,E017-E020,E017,E020,Section 05 mapping
+slides_wrapper,slides/sections/part2_infrastructure.tex,E021-E044,E021,E044,Part II wrapper
+slides_section,slides/sections/part2_infrastructure/06_analysis_visualization.tex,E021-E024,E021,E024,Section 06 mapping
+slides_section,slides/sections/part2_infrastructure/07_testing_qa.tex,E025-E028,E025,E028,Section 07 mapping
+slides_section,slides/sections/part2_infrastructure/08_research_outputs.tex,E029-E032,E029,E032,Section 08 mapping
+slides_section,slides/sections/part2_infrastructure/09_educational_materials.tex,E033-E036,E033,E036,Section 09 mapping
+slides_section,slides/sections/part2_infrastructure/10_documentation_system.tex,E037-E040,E037,E040,Section 10 mapping
+slides_section,slides/sections/part2_infrastructure/11_configuration_deployment.tex,E041-E044,E041,E044,Section 11 mapping
+slides_wrapper,slides/sections/part3_advanced.tex,E045-E068,E045,E068,Part III wrapper
+slides_section,slides/sections/part3_advanced/12_hil_system.tex,E045-E048,E045,E048,Section 12 mapping
+slides_section,slides/sections/part3_advanced/13_monitoring_infrastructure.tex,E049-E052,E049,E052,Section 13 mapping
+slides_section,slides/sections/part3_advanced/14_development_infrastructure.tex,E053-E056,E053,E056,Section 14 mapping
+slides_section,slides/sections/part3_advanced/15_architectural_standards.tex,E057-E060,E057,E060,Section 15 mapping
+slides_section,slides/sections/part3_advanced/16_attribution_citations.tex,E061-E064,E061,E064,Section 16 mapping
+slides_section,slides/sections/part3_advanced/17_memory_performance.tex,E065-E068,E065,E068,Section 17 mapping
+slides_wrapper,slides/sections/part4_professional.tex,E069-E096,E069,E096,Part IV wrapper
+slides_section,slides/sections/part4_professional/18_browser_automation.tex,E069-E072,E069,E072,Section 18 mapping
+slides_section,slides/sections/part4_professional/19_workspace_organization.tex,E073-E076,E073,E076,Section 19 mapping
+slides_section,slides/sections/part4_professional/20_version_control.tex,E077-E080,E077,E080,Section 20 mapping
+slides_section,slides/sections/part4_professional/21_future_work.tex,E081-E084,E081,E084,Section 21 mapping
+slides_section,slides/sections/part4_professional/22_key_statistics.tex,E085-E088,E085,E088,Section 22 mapping
+slides_section,slides/sections/part4_professional/23_visual_diagrams.tex,E089-E092,E089,E092,Legacy plan named this block as lessons learned
+slides_section,slides/sections/part4_professional/24_lessons_learned.tex,E093-E096,E093,E096,Legacy plan named this block as closing and Q&A
+slides_wrapper,slides/sections/appendix.tex,E097-E116,E097,E116,Appendix wrapper
+slides_section,slides/sections/appendix/appendix_01.tex,E097-E100,E097,E100,Appendix A1 mapping
+slides_section,slides/sections/appendix/appendix_02.tex,E101-E104,E101,E104,Appendix A2 mapping
+slides_section,slides/sections/appendix/appendix_03.tex,E105-E108,E105,E108,Appendix A3 mapping
+slides_section,slides/sections/appendix/appendix_04.tex,E109-E112,E109,E112,Appendix A4 mapping
+slides_section,slides/sections/appendix/appendix_05.tex,E113-E116,E113,E116,Appendix A5 mapping
+speaker_wrapper,speaker/speaker_scripts.tex,E001-E116,E001,E116,Master speaker script entry point
+speaker_wrapper,speaker/speaker_scripts_comprehensive.tex,E001-E116,E001,E116,Comprehensive speaker script entry point
+speaker_part,speaker/speaker_scripts/part1_foundations.tex,E001-E020,E001,E020,Part I speaker scripts
+speaker_part,speaker/speaker_scripts/part2_infrastructure.tex,E021-E044,E021,E044,Part II speaker scripts
+speaker_part,speaker/speaker_scripts/part3_advanced.tex,E045-E068,E045,E068,Part III speaker scripts full range
+speaker_variant,speaker/speaker_scripts/part3_half.tex,E045-E056,E045,E056,First-half subset of Part III
+speaker_variant,speaker/speaker_scripts/part3_second_half.tex,E057-E068,E057,E068,Second-half subset of Part III
+speaker_variant,speaker/speaker_scripts/part3_minimal.tex,E045-E068,E045,E068,Minimal subset drawn from Part III
+speaker_part,speaker/speaker_scripts/part4_professional.tex,E069-E096,E069,E096,Part IV speaker scripts
+speaker_part,speaker/speaker_scripts/appendix.tex,E097-E116,E097,E116,Appendix speaker scripts
+specialized_track,podcasts/episodes/specialized_advisor_report_complete/tex/01_system_model.tex,EP001-EP001,EP001,EP001,Specialized advisor report track
+specialized_track,podcasts/episodes/specialized_advisor_report_complete/tex/02_sliding_surface_design.tex,EP002-EP002,EP002,EP002,Specialized advisor report track
+specialized_track,podcasts/episodes/specialized_advisor_report_complete/tex/03_controller_formulations.tex,EP003-EP003,EP003,EP003,Specialized advisor report track
+specialized_track,podcasts/episodes/specialized_advisor_report_complete/tex/04_pso_configuration.tex,EP004-EP004,EP004,EP004,Specialized advisor report track
+specialized_track,podcasts/episodes/specialized_advisor_report_complete/tex/05_lyapunov_stability.tex,EP005-EP005,EP005,EP005,Specialized advisor report track
+specialized_track,podcasts/episodes/specialized_advisor_report_complete/tex/06_monte_carlo_methodology.tex,EP006-EP006,EP006,EP006,Specialized advisor report track
+specialized_track,podcasts/episodes/specialized_advisor_report_complete/tex/07_statistical_analysis.tex,EP007-EP007,EP007,EP007,Specialized advisor report track
+specialized_track,podcasts/episodes/specialized_advisor_report_complete/tex/08_boundary_layer_mt6.tex,EP008-EP008,EP008,EP008,Specialized advisor report track
+specialized_track,podcasts/episodes/specialized_advisor_report_complete/tex/09_robustness_analysis.tex,EP009-EP009,EP009,EP009,Specialized advisor report track
+specialized_track,podcasts/episodes/specialized_advisor_report_complete/tex/10_cross_consistency.tex,EP010-EP010,EP010,EP010,Specialized advisor report track
+specialized_track,podcasts/episodes/specialized_advisor_report_complete/tex/11_missing_sections_and_additions.tex,EP011-EP011,EP011,EP011,Specialized advisor report track
+specialized_track,podcasts/episodes/specialized_advisor_report_complete/tex/12_advisor_defense_qa.tex,EP012-EP012,EP012,EP012,Specialized advisor report track

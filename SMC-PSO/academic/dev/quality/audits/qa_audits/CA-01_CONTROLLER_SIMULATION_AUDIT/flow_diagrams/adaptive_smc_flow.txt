@@ -1,0 +1,79 @@
+================================================================================
+DATA FLOW DIAGRAM: Controller Factory -> Simulation Runner
+================================================================================
+
+
+[FACTORY_CREATE]
+--------------------------------------------------------------------------------
+  SMCFactory: controller_type
+    (operation=create_from_gains)
+  SMCFactory: gains
+    (n_gains=6)
+  SMCFactory: controller_instance
+    (has_compute_control=True, has_max_force=True)
+
+[CONTROLLER_INIT]
+--------------------------------------------------------------------------------
+  AdaptiveSMC: state_vars
+    (state_vars_type=tuple)
+  AdaptiveSMC: history
+    (history_type=dict, history_keys=['K', 'sigma', 'u_sw', 'dK', 'time_in_sliding'])
+
+[SIMULATION_SETUP]
+--------------------------------------------------------------------------------
+  LowRankDIPDynamics: config
+    (config_type=LowRankDIPConfig)
+  SimulationRunner: initial_state
+    -> {'type': 'ndarray', 'shape': (6,), 'dtype': 'float64', 'value': [0.0, 0.1, 0.1, 0.0, 0.0, 0.0]}
+    (state_dim=6)
+  SimulationRunner: sim_params
+
+[CONTROL_LOOP]
+--------------------------------------------------------------------------------
+  Controller: state_input
+    -> {'type': 'ndarray', 'shape': (6,), 'dtype': 'float64', 'value': [0.0, 0.1, 0.1, 0.0, 0.0, 0.0]}
+    (step=0)
+  Controller: control_output
+    (output_type=AdaptiveSMCOutput)
+  Controller: control_value
+    (step=0, units=N)
+  Controller: state_input
+    -> {'type': 'ndarray', 'shape': (6,), 'dtype': 'float64', 'value': [0.0, 0.1, 0.1, 0.0, 0.0, 0.0]}
+    (step=1)
+  Controller: control_output
+    (output_type=AdaptiveSMCOutput)
+  Controller: control_value
+    (step=1, units=N)
+  Controller: state_input
+    -> {'type': 'ndarray', 'shape': (6,), 'dtype': 'float64', 'value': [0.0, 0.1, 0.1, 0.0, 0.0, 0.0]}
+    (step=2)
+  Controller: control_output
+    (output_type=AdaptiveSMCOutput)
+  Controller: control_value
+    (step=2, units=N)
+
+[DYNAMICS_STEP]
+--------------------------------------------------------------------------------
+  Dynamics: state_output
+    -> {'type': 'ndarray', 'shape': (6,), 'dtype': 'float64', 'value': [0.0, 0.1, 0.1, 0.0, 0.0, 0.0]}
+    (step=0, is_finite=True)
+  Dynamics: state_output
+    -> {'type': 'ndarray', 'shape': (6,), 'dtype': 'float64', 'value': [0.0, 0.1, 0.1, 0.0, 0.0, 0.0]}
+    (step=1, is_finite=True)
+  Dynamics: state_output
+    -> {'type': 'ndarray', 'shape': (6,), 'dtype': 'float64', 'value': [0.0, 0.1, 0.1, 0.0, 0.0, 0.0]}
+    (step=2, is_finite=True)
+
+[OUTPUT]
+--------------------------------------------------------------------------------
+  SimulationRunner: time_array
+    -> {'type': 'ndarray', 'shape': (11,), 'dtype': 'float64', 'value': [0.0, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.1]}
+    (length=11)
+  SimulationRunner: state_trajectory
+    -> {'type': 'ndarray', 'shape': (11, 6), 'dtype': 'float64', 'value': 'array((11, 6))'}
+    (shape=(11, 6))
+  SimulationRunner: control_trajectory
+    -> {'type': 'ndarray', 'shape': (10,), 'dtype': 'float64', 'value': [-14.75, -15.75, -16.75, -17.75, -18.75, -19.75, -20.75, -21.75, -22.75, -23.75]}
+    (shape=(10,), rms=19.46310612415192)
+
+================================================================================

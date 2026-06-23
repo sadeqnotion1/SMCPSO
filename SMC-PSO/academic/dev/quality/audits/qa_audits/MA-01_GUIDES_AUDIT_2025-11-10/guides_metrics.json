@@ -1,0 +1,3323 @@
+{
+  "audit_metadata": {
+    "category": "docs/guides/",
+    "audit_date": "2025-11-10T19:08:41.566246",
+    "auditor": "Claude Code MA-01"
+  },
+  "overall_scores": {
+    "completeness": 95.4,
+    "accuracy": 78.3,
+    "readability": 60.7,
+    "overall": 78.1
+  },
+  "per_subcategory_scores": {
+    "api": {
+      "completeness": 100.0,
+      "accuracy": 80.3,
+      "readability": 55.0,
+      "overall": 78.4,
+      "file_count": 7
+    },
+    "features": {
+      "completeness": 93.2,
+      "accuracy": 78.7,
+      "readability": 68.3,
+      "overall": 80.1,
+      "file_count": 9
+    },
+    "how-to": {
+      "completeness": 98.0,
+      "accuracy": 83.0,
+      "readability": 52.6,
+      "overall": 77.9,
+      "file_count": 5
+    },
+    "interactive": {
+      "completeness": 97.5,
+      "accuracy": 73.0,
+      "readability": 60.8,
+      "overall": 77.1,
+      "file_count": 6
+    },
+    "theory": {
+      "completeness": 97.5,
+      "accuracy": 75.8,
+      "readability": 65.0,
+      "overall": 79.4,
+      "file_count": 4
+    },
+    "tutorials": {
+      "completeness": 97.5,
+      "accuracy": 77.5,
+      "readability": 58.2,
+      "overall": 77.7,
+      "file_count": 6
+    },
+    "workflows": {
+      "completeness": 93.7,
+      "accuracy": 78.3,
+      "readability": 58.7,
+      "overall": 76.9,
+      "file_count": 15
+    },
+    "root": {
+      "completeness": 91.8,
+      "accuracy": 78.9,
+      "readability": 64.9,
+      "overall": 78.5,
+      "file_count": 10
+    }
+  },
+  "per_file_metrics": [
+    {
+      "file": "docs\\guides\\api\\configuration.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 20,
+        "has_examples": true,
+        "code_block_count": 24,
+        "has_summary": true,
+        "has_navigation": true,
+        "link_count": 14,
+        "score": 100
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 24,
+        "code_blocks_total": 48,
+        "valid_file_paths": 0,
+        "total_file_paths": 0,
+        "valid_commands": 20,
+        "total_commands": 20,
+        "todo_markers": 0,
+        "old_version_references": 105,
+        "score": 80
+      },
+      "readability": {
+        "flesch_reading_ease": -29.7,
+        "avg_sentence_length": 18.1,
+        "avg_paragraph_sentences": 1.8,
+        "avg_heading_words": 3.1,
+        "headings_too_short": 17,
+        "headings_too_long": 1,
+        "code_to_text_ratio": 0.82,
+        "score": 57
+      },
+      "overall": 79.0,
+      "metadata": {
+        "path": "guides\\api\\configuration.md",
+        "subcategory": "api",
+        "type": "api_reference",
+        "lines": 611,
+        "words": 1821
+      }
+    },
+    {
+      "file": "docs\\guides\\api\\controllers.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 20,
+        "has_examples": true,
+        "code_block_count": 31,
+        "has_summary": true,
+        "has_navigation": true,
+        "link_count": 16,
+        "score": 100
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 30,
+        "code_blocks_total": 62,
+        "valid_file_paths": 0,
+        "total_file_paths": 0,
+        "valid_commands": 26,
+        "total_commands": 26,
+        "todo_markers": 0,
+        "old_version_references": 70,
+        "score": 79
+      },
+      "readability": {
+        "flesch_reading_ease": 11.1,
+        "avg_sentence_length": 27.9,
+        "avg_paragraph_sentences": 1.6,
+        "avg_heading_words": 3.8,
+        "headings_too_short": 8,
+        "headings_too_long": 3,
+        "code_to_text_ratio": 0.62,
+        "score": 47
+      },
+      "overall": 75.3,
+      "metadata": {
+        "path": "guides\\api\\controllers.md",
+        "subcategory": "api",
+        "type": "api_reference",
+        "lines": 767,
+        "words": 2324
+      }
+    },
+    {
+      "file": "docs\\guides\\api\\optimization.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 22,
+        "has_examples": true,
+        "code_block_count": 26,
+        "has_summary": true,
+        "has_navigation": true,
+        "link_count": 16,
+        "score": 100
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 26,
+        "code_blocks_total": 52,
+        "valid_file_paths": 0,
+        "total_file_paths": 0,
+        "valid_commands": 26,
+        "total_commands": 26,
+        "todo_markers": 0,
+        "old_version_references": 73,
+        "score": 80
+      },
+      "readability": {
+        "flesch_reading_ease": 2.9,
+        "avg_sentence_length": 17.3,
+        "avg_paragraph_sentences": 2.1,
+        "avg_heading_words": 3.4,
+        "headings_too_short": 19,
+        "headings_too_long": 4,
+        "code_to_text_ratio": 0.78,
+        "score": 57
+      },
+      "overall": 79.0,
+      "metadata": {
+        "path": "guides\\api\\optimization.md",
+        "subcategory": "api",
+        "type": "api_reference",
+        "lines": 749,
+        "words": 2100
+      }
+    },
+    {
+      "file": "docs\\guides\\api\\plant-models.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 13,
+        "has_examples": true,
+        "code_block_count": 18,
+        "has_summary": true,
+        "has_navigation": true,
+        "link_count": 15,
+        "score": 100
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 16,
+        "code_blocks_total": 36,
+        "valid_file_paths": 2,
+        "total_file_paths": 2,
+        "valid_commands": 13,
+        "total_commands": 13,
+        "todo_markers": 0,
+        "old_version_references": 48,
+        "score": 78
+      },
+      "readability": {
+        "flesch_reading_ease": 13.3,
+        "avg_sentence_length": 27.8,
+        "avg_paragraph_sentences": 1.9,
+        "avg_heading_words": 3.0,
+        "headings_too_short": 6,
+        "headings_too_long": 1,
+        "code_to_text_ratio": 0.56,
+        "score": 50
+      },
+      "overall": 76.0,
+      "metadata": {
+        "path": "guides\\api\\plant-models.md",
+        "subcategory": "api",
+        "type": "api_reference",
+        "lines": 541,
+        "words": 1739
+      }
+    },
+    {
+      "file": "docs\\guides\\api\\README.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 7,
+        "has_examples": true,
+        "code_block_count": 10,
+        "has_summary": true,
+        "has_navigation": true,
+        "link_count": 39,
+        "score": 100
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 9,
+        "code_blocks_total": 12,
+        "valid_file_paths": 0,
+        "total_file_paths": 0,
+        "valid_commands": 9,
+        "total_commands": 9,
+        "todo_markers": 0,
+        "old_version_references": 7,
+        "score": 85
+      },
+      "readability": {
+        "flesch_reading_ease": -4.4,
+        "avg_sentence_length": 12.5,
+        "avg_paragraph_sentences": 3.5,
+        "avg_heading_words": 17.5,
+        "headings_too_short": 1,
+        "headings_too_long": 5,
+        "code_to_text_ratio": 0.32,
+        "score": 70
+      },
+      "overall": 85.0,
+      "metadata": {
+        "path": "guides\\api\\README.md",
+        "subcategory": "api",
+        "type": "index",
+        "lines": 172,
+        "words": 953
+      }
+    },
+    {
+      "file": "docs\\guides\\api\\simulation.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 91,
+        "has_examples": true,
+        "code_block_count": 41,
+        "has_summary": true,
+        "has_navigation": true,
+        "link_count": 16,
+        "score": 100
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 41,
+        "code_blocks_total": 82,
+        "valid_file_paths": 2,
+        "total_file_paths": 2,
+        "valid_commands": 38,
+        "total_commands": 38,
+        "todo_markers": 0,
+        "old_version_references": 65,
+        "score": 80
+      },
+      "readability": {
+        "flesch_reading_ease": -9.6,
+        "avg_sentence_length": 18.5,
+        "avg_paragraph_sentences": 1.6,
+        "avg_heading_words": 3.0,
+        "headings_too_short": 13,
+        "headings_too_long": 0,
+        "code_to_text_ratio": 0.75,
+        "score": 57
+      },
+      "overall": 79.0,
+      "metadata": {
+        "path": "guides\\api\\simulation.md",
+        "subcategory": "api",
+        "type": "api_reference",
+        "lines": 764,
+        "words": 2050
+      }
+    },
+    {
+      "file": "docs\\guides\\api\\utilities.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 22,
+        "has_examples": true,
+        "code_block_count": 27,
+        "has_summary": true,
+        "has_navigation": true,
+        "link_count": 15,
+        "score": 100
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 27,
+        "code_blocks_total": 54,
+        "valid_file_paths": 0,
+        "total_file_paths": 0,
+        "valid_commands": 27,
+        "total_commands": 27,
+        "todo_markers": 0,
+        "old_version_references": 37,
+        "score": 80
+      },
+      "readability": {
+        "flesch_reading_ease": -22.0,
+        "avg_sentence_length": 27.5,
+        "avg_paragraph_sentences": 1.6,
+        "avg_heading_words": 2.8,
+        "headings_too_short": 13,
+        "headings_too_long": 0,
+        "code_to_text_ratio": 0.77,
+        "score": 47
+      },
+      "overall": 75.7,
+      "metadata": {
+        "path": "guides\\api\\utilities.md",
+        "subcategory": "api",
+        "type": "api_reference",
+        "lines": 615,
+        "words": 1435
+      }
+    },
+    {
+      "file": "docs\\guides\\features\\code-collapse\\changelog.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 7,
+        "has_examples": true,
+        "code_block_count": 1,
+        "has_summary": true,
+        "has_navigation": true,
+        "link_count": 12,
+        "score": 90
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 1,
+        "code_blocks_total": 2,
+        "valid_file_paths": 11,
+        "total_file_paths": 11,
+        "valid_commands": 1,
+        "total_commands": 1,
+        "todo_markers": 0,
+        "old_version_references": 7,
+        "score": 80
+      },
+      "readability": {
+        "flesch_reading_ease": 31.8,
+        "avg_sentence_length": 18.1,
+        "avg_paragraph_sentences": 2.9,
+        "avg_heading_words": 2.5,
+        "headings_too_short": 3,
+        "headings_too_long": 0,
+        "code_to_text_ratio": 0.02,
+        "score": 60
+      },
+      "overall": 76.7,
+      "metadata": {
+        "path": "guides\\features\\code-collapse\\changelog.md",
+        "subcategory": "features",
+        "type": "general",
+        "lines": 211,
+        "words": 957
+      }
+    },
+    {
+      "file": "docs\\guides\\features\\code-collapse\\configuration-reference.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 9,
+        "has_examples": true,
+        "code_block_count": 24,
+        "has_summary": true,
+        "has_navigation": true,
+        "link_count": 9,
+        "score": 100
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 23,
+        "code_blocks_total": 48,
+        "valid_file_paths": 0,
+        "total_file_paths": 0,
+        "valid_commands": 0,
+        "total_commands": 0,
+        "todo_markers": 0,
+        "old_version_references": 23,
+        "score": 79
+      },
+      "readability": {
+        "flesch_reading_ease": 35.8,
+        "avg_sentence_length": 19.0,
+        "avg_paragraph_sentences": 1.9,
+        "avg_heading_words": 2.6,
+        "headings_too_short": 6,
+        "headings_too_long": 0,
+        "code_to_text_ratio": 0.31,
+        "score": 70
+      },
+      "overall": 83.0,
+      "metadata": {
+        "path": "guides\\features\\code-collapse\\configuration-reference.md",
+        "subcategory": "features",
+        "type": "general",
+        "lines": 486,
+        "words": 1905
+      }
+    },
+    {
+      "file": "docs\\guides\\features\\code-collapse\\integration-guide.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 11,
+        "has_examples": true,
+        "code_block_count": 17,
+        "has_summary": true,
+        "has_navigation": true,
+        "link_count": 4,
+        "score": 93
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 16,
+        "code_blocks_total": 34,
+        "valid_file_paths": 0,
+        "total_file_paths": 0,
+        "valid_commands": 7,
+        "total_commands": 8,
+        "todo_markers": 0,
+        "old_version_references": 2,
+        "score": 75
+      },
+      "readability": {
+        "flesch_reading_ease": 28.5,
+        "avg_sentence_length": 15.7,
+        "avg_paragraph_sentences": 1.8,
+        "avg_heading_words": 3.0,
+        "headings_too_short": 11,
+        "headings_too_long": 0,
+        "code_to_text_ratio": 0.3,
+        "score": 70
+      },
+      "overall": 79.3,
+      "metadata": {
+        "path": "guides\\features\\code-collapse\\integration-guide.md",
+        "subcategory": "features",
+        "type": "general",
+        "lines": 388,
+        "words": 1042
+      }
+    },
+    {
+      "file": "docs\\guides\\features\\code-collapse\\maintenance-guide.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 13,
+        "has_examples": true,
+        "code_block_count": 14,
+        "has_summary": true,
+        "has_navigation": true,
+        "link_count": 4,
+        "score": 93
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 13,
+        "code_blocks_total": 28,
+        "valid_file_paths": 3,
+        "total_file_paths": 3,
+        "valid_commands": 6,
+        "total_commands": 6,
+        "todo_markers": 0,
+        "old_version_references": 7,
+        "score": 79
+      },
+      "readability": {
+        "flesch_reading_ease": 35.2,
+        "avg_sentence_length": 15.5,
+        "avg_paragraph_sentences": 2.3,
+        "avg_heading_words": 2.5,
+        "headings_too_short": 16,
+        "headings_too_long": 0,
+        "code_to_text_ratio": 0.28,
+        "score": 70
+      },
+      "overall": 80.7,
+      "metadata": {
+        "path": "guides\\features\\code-collapse\\maintenance-guide.md",
+        "subcategory": "features",
+        "type": "general",
+        "lines": 441,
+        "words": 1371
+      }
+    },
+    {
+      "file": "docs\\guides\\features\\code-collapse\\PHASE6_COMPLETION_SUMMARY.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 12,
+        "has_examples": true,
+        "code_block_count": 2,
+        "has_summary": true,
+        "has_navigation": true,
+        "link_count": 12,
+        "score": 100
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 0,
+        "code_blocks_total": 4,
+        "valid_file_paths": 0,
+        "total_file_paths": 0,
+        "valid_commands": 0,
+        "total_commands": 0,
+        "todo_markers": 0,
+        "old_version_references": 5,
+        "score": 70
+      },
+      "readability": {
+        "flesch_reading_ease": 14.0,
+        "avg_sentence_length": 22.6,
+        "avg_paragraph_sentences": 2.5,
+        "avg_heading_words": 2.2,
+        "headings_too_short": 5,
+        "headings_too_long": 0,
+        "code_to_text_ratio": 0.08,
+        "score": 60
+      },
+      "overall": 76.7,
+      "metadata": {
+        "path": "guides\\features\\code-collapse\\PHASE6_COMPLETION_SUMMARY.md",
+        "subcategory": "features",
+        "type": "general",
+        "lines": 308,
+        "words": 1069
+      }
+    },
+    {
+      "file": "docs\\guides\\features\\code-collapse\\technical-reference.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 13,
+        "has_examples": true,
+        "code_block_count": 12,
+        "has_summary": true,
+        "has_navigation": true,
+        "link_count": 10,
+        "score": 100
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 12,
+        "code_blocks_total": 24,
+        "valid_file_paths": 1,
+        "total_file_paths": 1,
+        "valid_commands": 0,
+        "total_commands": 0,
+        "todo_markers": 0,
+        "old_version_references": 10,
+        "score": 80
+      },
+      "readability": {
+        "flesch_reading_ease": 26.1,
+        "avg_sentence_length": 19.0,
+        "avg_paragraph_sentences": 2.0,
+        "avg_heading_words": 2.8,
+        "headings_too_short": 7,
+        "headings_too_long": 0,
+        "code_to_text_ratio": 0.27,
+        "score": 70
+      },
+      "overall": 83.3,
+      "metadata": {
+        "path": "guides\\features\\code-collapse\\technical-reference.md",
+        "subcategory": "features",
+        "type": "general",
+        "lines": 483,
+        "words": 1593
+      }
+    },
+    {
+      "file": "docs\\guides\\features\\code-collapse\\troubleshooting.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 4,
+        "has_examples": true,
+        "code_block_count": 17,
+        "has_summary": true,
+        "has_navigation": true,
+        "link_count": 4,
+        "score": 93
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 17,
+        "code_blocks_total": 34,
+        "valid_file_paths": 0,
+        "total_file_paths": 0,
+        "valid_commands": 4,
+        "total_commands": 4,
+        "todo_markers": 0,
+        "old_version_references": 2,
+        "score": 80
+      },
+      "readability": {
+        "flesch_reading_ease": 49.2,
+        "avg_sentence_length": 12.1,
+        "avg_paragraph_sentences": 2.0,
+        "avg_heading_words": 1.9,
+        "headings_too_short": 42,
+        "headings_too_long": 1,
+        "code_to_text_ratio": 0.32,
+        "score": 80
+      },
+      "overall": 84.3,
+      "metadata": {
+        "path": "guides\\features\\code-collapse\\troubleshooting.md",
+        "subcategory": "features",
+        "type": "general",
+        "lines": 534,
+        "words": 1691
+      }
+    },
+    {
+      "file": "docs\\guides\\features\\code-collapse\\user-guide.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 7,
+        "has_examples": true,
+        "code_block_count": 1,
+        "has_summary": true,
+        "has_navigation": true,
+        "link_count": 5,
+        "score": 90
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 0,
+        "code_blocks_total": 2,
+        "valid_file_paths": 0,
+        "total_file_paths": 0,
+        "valid_commands": 0,
+        "total_commands": 0,
+        "todo_markers": 0,
+        "old_version_references": 1,
+        "score": 75
+      },
+      "readability": {
+        "flesch_reading_ease": 54.0,
+        "avg_sentence_length": 15.0,
+        "avg_paragraph_sentences": 1.9,
+        "avg_heading_words": 3.5,
+        "headings_too_short": 3,
+        "headings_too_long": 3,
+        "code_to_text_ratio": 0.01,
+        "score": 75
+      },
+      "overall": 80.0,
+      "metadata": {
+        "path": "guides\\features\\code-collapse\\user-guide.md",
+        "subcategory": "features",
+        "type": "general",
+        "lines": 278,
+        "words": 1255
+      }
+    },
+    {
+      "file": "docs\\guides\\features\\README.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 6,
+        "has_examples": false,
+        "code_block_count": 0,
+        "has_summary": true,
+        "has_navigation": true,
+        "link_count": 18,
+        "score": 80
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 0,
+        "code_blocks_total": 0,
+        "valid_file_paths": 0,
+        "total_file_paths": 0,
+        "valid_commands": 0,
+        "total_commands": 0,
+        "todo_markers": 0,
+        "old_version_references": 3,
+        "score": 90
+      },
+      "readability": {
+        "flesch_reading_ease": -11.4,
+        "avg_sentence_length": 17.2,
+        "avg_paragraph_sentences": 3.1,
+        "avg_heading_words": 1.8,
+        "headings_too_short": 4,
+        "headings_too_long": 0,
+        "code_to_text_ratio": 0.0,
+        "score": 60
+      },
+      "overall": 76.7,
+      "metadata": {
+        "path": "guides\\features\\README.md",
+        "subcategory": "features",
+        "type": "index",
+        "lines": 163,
+        "words": 626
+      }
+    },
+    {
+      "file": "docs\\guides\\getting-started-validation-report.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 9,
+        "has_examples": true,
+        "code_block_count": 21,
+        "has_summary": true,
+        "has_navigation": null,
+        "link_count": 0,
+        "score": 85
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 11,
+        "code_blocks_total": 25,
+        "valid_file_paths": 1,
+        "total_file_paths": 1,
+        "valid_commands": 7,
+        "total_commands": 7,
+        "todo_markers": 0,
+        "old_version_references": 5,
+        "score": 78
+      },
+      "readability": {
+        "flesch_reading_ease": 11.9,
+        "avg_sentence_length": 20.2,
+        "avg_paragraph_sentences": 2.4,
+        "avg_heading_words": 26.8,
+        "headings_too_short": 0,
+        "headings_too_long": 17,
+        "code_to_text_ratio": 0.25,
+        "score": 65
+      },
+      "overall": 76.0,
+      "metadata": {
+        "path": "guides\\getting-started-validation-report.md",
+        "subcategory": "root",
+        "type": "general",
+        "lines": 279,
+        "words": 2136
+      }
+    },
+    {
+      "file": "docs\\guides\\getting-started.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 7,
+        "has_examples": true,
+        "code_block_count": 20,
+        "has_summary": true,
+        "has_navigation": true,
+        "link_count": 28,
+        "score": 100
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 15,
+        "code_blocks_total": 18,
+        "valid_file_paths": 0,
+        "total_file_paths": 0,
+        "valid_commands": 11,
+        "total_commands": 12,
+        "todo_markers": 0,
+        "old_version_references": 43,
+        "score": 83
+      },
+      "readability": {
+        "flesch_reading_ease": 14.2,
+        "avg_sentence_length": 17.6,
+        "avg_paragraph_sentences": 4.3,
+        "avg_heading_words": 11.9,
+        "headings_too_short": 0,
+        "headings_too_long": 4,
+        "code_to_text_ratio": 0.21,
+        "score": 65
+      },
+      "overall": 82.7,
+      "metadata": {
+        "path": "guides\\getting-started.md",
+        "subcategory": "root",
+        "type": "general",
+        "lines": 237,
+        "words": 2279
+      }
+    },
+    {
+      "file": "docs\\guides\\how-to\\optimization-workflows.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 8,
+        "has_examples": true,
+        "code_block_count": 27,
+        "has_summary": true,
+        "has_navigation": true,
+        "link_count": 13,
+        "score": 100
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 27,
+        "code_blocks_total": 31,
+        "valid_file_paths": 0,
+        "total_file_paths": 0,
+        "valid_commands": 20,
+        "total_commands": 20,
+        "todo_markers": 0,
+        "old_version_references": 70,
+        "score": 87
+      },
+      "readability": {
+        "flesch_reading_ease": 17.5,
+        "avg_sentence_length": 23.7,
+        "avg_paragraph_sentences": 2.1,
+        "avg_heading_words": 10.4,
+        "headings_too_short": 7,
+        "headings_too_long": 4,
+        "code_to_text_ratio": 0.67,
+        "score": 52
+      },
+      "overall": 79.7,
+      "metadata": {
+        "path": "guides\\how-to\\optimization-workflows.md",
+        "subcategory": "how-to",
+        "type": "workflow",
+        "lines": 316,
+        "words": 2338
+      }
+    },
+    {
+      "file": "docs\\guides\\how-to\\result-analysis.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 18,
+        "has_examples": true,
+        "code_block_count": 17,
+        "has_summary": true,
+        "has_navigation": true,
+        "link_count": 9,
+        "score": 100
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 17,
+        "code_blocks_total": 34,
+        "valid_file_paths": 0,
+        "total_file_paths": 0,
+        "valid_commands": 17,
+        "total_commands": 17,
+        "todo_markers": 0,
+        "old_version_references": 24,
+        "score": 80
+      },
+      "readability": {
+        "flesch_reading_ease": 20.2,
+        "avg_sentence_length": 22.1,
+        "avg_paragraph_sentences": 2.1,
+        "avg_heading_words": 2.7,
+        "headings_too_short": 10,
+        "headings_too_long": 0,
+        "code_to_text_ratio": 0.77,
+        "score": 52
+      },
+      "overall": 77.3,
+      "metadata": {
+        "path": "guides\\how-to\\result-analysis.md",
+        "subcategory": "how-to",
+        "type": "how_to_guide",
+        "lines": 608,
+        "words": 1609
+      }
+    },
+    {
+      "file": "docs\\guides\\how-to\\robust-pso-optimization.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 11,
+        "has_examples": true,
+        "code_block_count": 21,
+        "has_summary": false,
+        "has_navigation": true,
+        "link_count": 5,
+        "score": 90
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 18,
+        "code_blocks_total": 42,
+        "valid_file_paths": 0,
+        "total_file_paths": 0,
+        "valid_commands": 12,
+        "total_commands": 12,
+        "todo_markers": 0,
+        "old_version_references": 61,
+        "score": 78
+      },
+      "readability": {
+        "flesch_reading_ease": 19.8,
+        "avg_sentence_length": 16.5,
+        "avg_paragraph_sentences": 2.5,
+        "avg_heading_words": 2.8,
+        "headings_too_short": 7,
+        "headings_too_long": 1,
+        "code_to_text_ratio": 0.54,
+        "score": 60
+      },
+      "overall": 76.0,
+      "metadata": {
+        "path": "guides\\how-to\\robust-pso-optimization.md",
+        "subcategory": "how-to",
+        "type": "how_to_guide",
+        "lines": 451,
+        "words": 1562
+      }
+    },
+    {
+      "file": "docs\\guides\\how-to\\running-simulations.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 8,
+        "has_examples": true,
+        "code_block_count": 22,
+        "has_summary": true,
+        "has_navigation": true,
+        "link_count": 9,
+        "score": 100
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 22,
+        "code_blocks_total": 26,
+        "valid_file_paths": 0,
+        "total_file_paths": 0,
+        "valid_commands": 22,
+        "total_commands": 22,
+        "todo_markers": 0,
+        "old_version_references": 45,
+        "score": 86
+      },
+      "readability": {
+        "flesch_reading_ease": 16.5,
+        "avg_sentence_length": 21.5,
+        "avg_paragraph_sentences": 1.4,
+        "avg_heading_words": 6.6,
+        "headings_too_short": 0,
+        "headings_too_long": 4,
+        "code_to_text_ratio": 0.72,
+        "score": 52
+      },
+      "overall": 79.3,
+      "metadata": {
+        "path": "guides\\how-to\\running-simulations.md",
+        "subcategory": "how-to",
+        "type": "how_to_guide",
+        "lines": 291,
+        "words": 1641
+      }
+    },
+    {
+      "file": "docs\\guides\\how-to\\testing-validation.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 9,
+        "has_examples": true,
+        "code_block_count": 19,
+        "has_summary": true,
+        "has_navigation": true,
+        "link_count": 8,
+        "score": 100
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 17,
+        "code_blocks_total": 24,
+        "valid_file_paths": 0,
+        "total_file_paths": 0,
+        "valid_commands": 16,
+        "total_commands": 16,
+        "todo_markers": 0,
+        "old_version_references": 42,
+        "score": 84
+      },
+      "readability": {
+        "flesch_reading_ease": 23.9,
+        "avg_sentence_length": 26.7,
+        "avg_paragraph_sentences": 1.3,
+        "avg_heading_words": 6.1,
+        "headings_too_short": 5,
+        "headings_too_long": 4,
+        "code_to_text_ratio": 0.84,
+        "score": 47
+      },
+      "overall": 77.0,
+      "metadata": {
+        "path": "guides\\how-to\\testing-validation.md",
+        "subcategory": "how-to",
+        "type": "how_to_guide",
+        "lines": 193,
+        "words": 1625
+      }
+    },
+    {
+      "file": "docs\\guides\\icon_usage_guide.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": false,
+        "h2_section_count": 15,
+        "has_examples": true,
+        "code_block_count": 24,
+        "has_summary": true,
+        "has_navigation": true,
+        "link_count": 41,
+        "score": 85
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 28,
+        "code_blocks_total": 48,
+        "valid_file_paths": 3,
+        "total_file_paths": 3,
+        "valid_commands": 6,
+        "total_commands": 6,
+        "todo_markers": 0,
+        "old_version_references": 2,
+        "score": 81
+      },
+      "readability": {
+        "flesch_reading_ease": 39.5,
+        "avg_sentence_length": 14.0,
+        "avg_paragraph_sentences": 2.5,
+        "avg_heading_words": 2.4,
+        "headings_too_short": 4,
+        "headings_too_long": 0,
+        "code_to_text_ratio": 0.37,
+        "score": 70
+      },
+      "overall": 78.7,
+      "metadata": {
+        "path": "guides\\icon_usage_guide.md",
+        "subcategory": "root",
+        "type": "general",
+        "lines": 419,
+        "words": 1288
+      }
+    },
+    {
+      "file": "docs\\guides\\INDEX.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 13,
+        "has_examples": true,
+        "code_block_count": 12,
+        "has_summary": true,
+        "has_navigation": true,
+        "link_count": 71,
+        "score": 100
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 4,
+        "code_blocks_total": 16,
+        "valid_file_paths": 0,
+        "total_file_paths": 0,
+        "valid_commands": 4,
+        "total_commands": 4,
+        "todo_markers": 0,
+        "old_version_references": 2,
+        "score": 75
+      },
+      "readability": {
+        "flesch_reading_ease": 0.8,
+        "avg_sentence_length": 16.0,
+        "avg_paragraph_sentences": 2.4,
+        "avg_heading_words": 2.8,
+        "headings_too_short": 3,
+        "headings_too_long": 0,
+        "code_to_text_ratio": 0.14,
+        "score": 70
+      },
+      "overall": 81.7,
+      "metadata": {
+        "path": "guides\\INDEX.md",
+        "subcategory": "root",
+        "type": "index",
+        "lines": 383,
+        "words": 1610
+      }
+    },
+    {
+      "file": "docs\\guides\\interactive\\3d-pendulum-demo.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 8,
+        "has_examples": true,
+        "code_block_count": 2,
+        "has_summary": true,
+        "has_navigation": "<re.Match object; span=(10725, 10735), match='## Related'>",
+        "link_count": 0,
+        "score": 100
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 0,
+        "code_blocks_total": 2,
+        "valid_file_paths": 1,
+        "total_file_paths": 1,
+        "valid_commands": 0,
+        "total_commands": 0,
+        "todo_markers": 0,
+        "old_version_references": 21,
+        "score": 70
+      },
+      "readability": {
+        "flesch_reading_ease": 40.2,
+        "avg_sentence_length": 23.5,
+        "avg_paragraph_sentences": 1.7,
+        "avg_heading_words": 2.1,
+        "headings_too_short": 2,
+        "headings_too_long": 0,
+        "code_to_text_ratio": 0.48,
+        "score": 70
+      },
+      "overall": 80.0,
+      "metadata": {
+        "path": "guides\\interactive\\3d-pendulum-demo.md",
+        "subcategory": "interactive",
+        "type": "interactive_demo",
+        "lines": 282,
+        "words": 1205
+      }
+    },
+    {
+      "file": "docs\\guides\\interactive\\index.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": false,
+        "h2_section_count": 7,
+        "has_examples": true,
+        "code_block_count": 2,
+        "has_summary": true,
+        "has_navigation": true,
+        "link_count": 13,
+        "score": 85
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 0,
+        "code_blocks_total": 3,
+        "valid_file_paths": 0,
+        "total_file_paths": 0,
+        "valid_commands": 0,
+        "total_commands": 0,
+        "todo_markers": 0,
+        "old_version_references": 0,
+        "score": 80
+      },
+      "readability": {
+        "flesch_reading_ease": 9.9,
+        "avg_sentence_length": 17.9,
+        "avg_paragraph_sentences": 1.7,
+        "avg_heading_words": 2.7,
+        "headings_too_short": 4,
+        "headings_too_long": 0,
+        "code_to_text_ratio": 0.06,
+        "score": 65
+      },
+      "overall": 76.7,
+      "metadata": {
+        "path": "guides\\interactive\\index.md",
+        "subcategory": "interactive",
+        "type": "index",
+        "lines": 231,
+        "words": 768
+      }
+    },
+    {
+      "file": "docs\\guides\\interactive\\jupyter-notebooks-demo.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 13,
+        "has_examples": true,
+        "code_block_count": 14,
+        "has_summary": true,
+        "has_navigation": true,
+        "link_count": 6,
+        "score": 100
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 7,
+        "code_blocks_total": 21,
+        "valid_file_paths": 0,
+        "total_file_paths": 0,
+        "valid_commands": 1,
+        "total_commands": 1,
+        "todo_markers": 0,
+        "old_version_references": 5,
+        "score": 76
+      },
+      "readability": {
+        "flesch_reading_ease": 19.8,
+        "avg_sentence_length": 27.1,
+        "avg_paragraph_sentences": 1.6,
+        "avg_heading_words": 2.6,
+        "headings_too_short": 4,
+        "headings_too_long": 0,
+        "code_to_text_ratio": 0.38,
+        "score": 60
+      },
+      "overall": 78.7,
+      "metadata": {
+        "path": "guides\\interactive\\jupyter-notebooks-demo.md",
+        "subcategory": "interactive",
+        "type": "interactive_demo",
+        "lines": 398,
+        "words": 1100
+      }
+    },
+    {
+      "file": "docs\\guides\\interactive\\live-python-demo.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 10,
+        "has_examples": true,
+        "code_block_count": 7,
+        "has_summary": true,
+        "has_navigation": "<re.Match object; span=(8851, 8861), match='## Related'>",
+        "link_count": 0,
+        "score": 100
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 0,
+        "code_blocks_total": 8,
+        "valid_file_paths": 0,
+        "total_file_paths": 0,
+        "valid_commands": 0,
+        "total_commands": 0,
+        "todo_markers": 0,
+        "old_version_references": 8,
+        "score": 70
+      },
+      "readability": {
+        "flesch_reading_ease": 37.9,
+        "avg_sentence_length": 15.6,
+        "avg_paragraph_sentences": 1.9,
+        "avg_heading_words": 3.6,
+        "headings_too_short": 3,
+        "headings_too_long": 0,
+        "code_to_text_ratio": 0.5,
+        "score": 60
+      },
+      "overall": 76.7,
+      "metadata": {
+        "path": "guides\\interactive\\live-python-demo.md",
+        "subcategory": "interactive",
+        "type": "interactive_demo",
+        "lines": 375,
+        "words": 1211
+      }
+    },
+    {
+      "file": "docs\\guides\\interactive\\mathematical-visualizations-demo.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 16,
+        "has_examples": true,
+        "code_block_count": 25,
+        "has_summary": true,
+        "has_navigation": true,
+        "link_count": 4,
+        "score": 100
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 4,
+        "code_blocks_total": 29,
+        "valid_file_paths": 0,
+        "total_file_paths": 0,
+        "valid_commands": 0,
+        "total_commands": 0,
+        "todo_markers": 0,
+        "old_version_references": 36,
+        "score": 72
+      },
+      "readability": {
+        "flesch_reading_ease": 4.7,
+        "avg_sentence_length": 30.7,
+        "avg_paragraph_sentences": 1.5,
+        "avg_heading_words": 3.0,
+        "headings_too_short": 5,
+        "headings_too_long": 0,
+        "code_to_text_ratio": 0.24,
+        "score": 55
+      },
+      "overall": 75.7,
+      "metadata": {
+        "path": "guides\\interactive\\mathematical-visualizations-demo.md",
+        "subcategory": "interactive",
+        "type": "interactive_demo",
+        "lines": 658,
+        "words": 1997
+      }
+    },
+    {
+      "file": "docs\\guides\\interactive\\plotly-charts-demo.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 9,
+        "has_examples": true,
+        "code_block_count": 5,
+        "has_summary": true,
+        "has_navigation": "<re.Match object; span=(4347, 4354), match='## Next'>",
+        "link_count": 0,
+        "score": 100
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 0,
+        "code_blocks_total": 5,
+        "valid_file_paths": 0,
+        "total_file_paths": 0,
+        "valid_commands": 0,
+        "total_commands": 0,
+        "todo_markers": 0,
+        "old_version_references": 18,
+        "score": 70
+      },
+      "readability": {
+        "flesch_reading_ease": -7.3,
+        "avg_sentence_length": 47.4,
+        "avg_paragraph_sentences": 1.3,
+        "avg_heading_words": 2.7,
+        "headings_too_short": 2,
+        "headings_too_long": 0,
+        "code_to_text_ratio": 0.24,
+        "score": 55
+      },
+      "overall": 75.0,
+      "metadata": {
+        "path": "guides\\interactive\\plotly-charts-demo.md",
+        "subcategory": "interactive",
+        "type": "interactive_demo",
+        "lines": 198,
+        "words": 652
+      }
+    },
+    {
+      "file": "docs\\guides\\interactive_configuration_guide.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": false,
+        "h2_section_count": 9,
+        "has_examples": true,
+        "code_block_count": 14,
+        "has_summary": true,
+        "has_navigation": true,
+        "link_count": 4,
+        "score": 85
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 7,
+        "code_blocks_total": 20,
+        "valid_file_paths": 0,
+        "total_file_paths": 0,
+        "valid_commands": 0,
+        "total_commands": 0,
+        "todo_markers": 0,
+        "old_version_references": 55,
+        "score": 77
+      },
+      "readability": {
+        "flesch_reading_ease": 14.5,
+        "avg_sentence_length": 23.6,
+        "avg_paragraph_sentences": 2.0,
+        "avg_heading_words": 3.6,
+        "headings_too_short": 0,
+        "headings_too_long": 0,
+        "code_to_text_ratio": 0.72,
+        "score": 62
+      },
+      "overall": 74.7,
+      "metadata": {
+        "path": "guides\\interactive_configuration_guide.md",
+        "subcategory": "root",
+        "type": "general",
+        "lines": 517,
+        "words": 1641
+      }
+    },
+    {
+      "file": "docs\\guides\\interactive_visualizations.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 12,
+        "has_examples": true,
+        "code_block_count": 13,
+        "has_summary": true,
+        "has_navigation": true,
+        "link_count": 4,
+        "score": 93
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 9,
+        "code_blocks_total": 21,
+        "valid_file_paths": 0,
+        "total_file_paths": 0,
+        "valid_commands": 2,
+        "total_commands": 2,
+        "todo_markers": 0,
+        "old_version_references": 19,
+        "score": 78
+      },
+      "readability": {
+        "flesch_reading_ease": 30.9,
+        "avg_sentence_length": 19.5,
+        "avg_paragraph_sentences": 2.3,
+        "avg_heading_words": 2.6,
+        "headings_too_short": 8,
+        "headings_too_long": 0,
+        "code_to_text_ratio": 0.52,
+        "score": 60
+      },
+      "overall": 77.0,
+      "metadata": {
+        "path": "guides\\interactive_visualizations.md",
+        "subcategory": "root",
+        "type": "general",
+        "lines": 341,
+        "words": 1030
+      }
+    },
+    {
+      "file": "docs\\guides\\QUICK_REFERENCE.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": false,
+        "h2_section_count": 9,
+        "has_examples": true,
+        "code_block_count": 22,
+        "has_summary": true,
+        "has_navigation": true,
+        "link_count": 21,
+        "score": 85
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 21,
+        "code_blocks_total": 44,
+        "valid_file_paths": 0,
+        "total_file_paths": 0,
+        "valid_commands": 18,
+        "total_commands": 18,
+        "todo_markers": 0,
+        "old_version_references": 36,
+        "score": 79
+      },
+      "readability": {
+        "flesch_reading_ease": 14.8,
+        "avg_sentence_length": 14.4,
+        "avg_paragraph_sentences": 3.6,
+        "avg_heading_words": 3.6,
+        "headings_too_short": 1,
+        "headings_too_long": 2,
+        "code_to_text_ratio": 0.71,
+        "score": 57
+      },
+      "overall": 73.7,
+      "metadata": {
+        "path": "guides\\QUICK_REFERENCE.md",
+        "subcategory": "root",
+        "type": "general",
+        "lines": 321,
+        "words": 1324
+      }
+    },
+    {
+      "file": "docs\\guides\\README.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 10,
+        "has_examples": true,
+        "code_block_count": 5,
+        "has_summary": true,
+        "has_navigation": true,
+        "link_count": 47,
+        "score": 100
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 2,
+        "code_blocks_total": 4,
+        "valid_file_paths": 0,
+        "total_file_paths": 0,
+        "valid_commands": 1,
+        "total_commands": 1,
+        "todo_markers": 0,
+        "old_version_references": 2,
+        "score": 80
+      },
+      "readability": {
+        "flesch_reading_ease": -0.8,
+        "avg_sentence_length": 14.0,
+        "avg_paragraph_sentences": 3.8,
+        "avg_heading_words": 8.6,
+        "headings_too_short": 0,
+        "headings_too_long": 4,
+        "code_to_text_ratio": 0.19,
+        "score": 70
+      },
+      "overall": 83.3,
+      "metadata": {
+        "path": "guides\\README.md",
+        "subcategory": "root",
+        "type": "index",
+        "lines": 179,
+        "words": 1422
+      }
+    },
+    {
+      "file": "docs\\guides\\sphinx_theme_guide.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 14,
+        "has_examples": true,
+        "code_block_count": 41,
+        "has_summary": true,
+        "has_navigation": null,
+        "link_count": 0,
+        "score": 85
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 39,
+        "code_blocks_total": 82,
+        "valid_file_paths": 1,
+        "total_file_paths": 1,
+        "valid_commands": 10,
+        "total_commands": 10,
+        "todo_markers": 0,
+        "old_version_references": 3,
+        "score": 79
+      },
+      "readability": {
+        "flesch_reading_ease": 36.0,
+        "avg_sentence_length": 18.6,
+        "avg_paragraph_sentences": 1.7,
+        "avg_heading_words": 3.3,
+        "headings_too_short": 4,
+        "headings_too_long": 0,
+        "code_to_text_ratio": 0.37,
+        "score": 70
+      },
+      "overall": 78.0,
+      "metadata": {
+        "path": "guides\\sphinx_theme_guide.md",
+        "subcategory": "root",
+        "type": "general",
+        "lines": 823,
+        "words": 2411
+      }
+    },
+    {
+      "file": "docs\\guides\\theory\\dip-dynamics.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 7,
+        "has_examples": true,
+        "code_block_count": 31,
+        "has_summary": true,
+        "has_navigation": true,
+        "link_count": 8,
+        "score": 100
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 10,
+        "code_blocks_total": 62,
+        "valid_file_paths": 0,
+        "total_file_paths": 0,
+        "valid_commands": 1,
+        "total_commands": 1,
+        "todo_markers": 0,
+        "old_version_references": 3,
+        "score": 73
+      },
+      "readability": {
+        "flesch_reading_ease": 16.3,
+        "avg_sentence_length": 28.0,
+        "avg_paragraph_sentences": 1.6,
+        "avg_heading_words": 2.4,
+        "headings_too_short": 3,
+        "headings_too_long": 0,
+        "code_to_text_ratio": 0.32,
+        "score": 60
+      },
+      "overall": 77.7,
+      "metadata": {
+        "path": "guides\\theory\\dip-dynamics.md",
+        "subcategory": "theory",
+        "type": "theory",
+        "lines": 505,
+        "words": 1726
+      }
+    },
+    {
+      "file": "docs\\guides\\theory\\pso-theory.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 6,
+        "has_examples": true,
+        "code_block_count": 18,
+        "has_summary": true,
+        "has_navigation": true,
+        "link_count": 7,
+        "score": 100
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 10,
+        "code_blocks_total": 36,
+        "valid_file_paths": 0,
+        "total_file_paths": 0,
+        "valid_commands": 1,
+        "total_commands": 1,
+        "todo_markers": 0,
+        "old_version_references": 13,
+        "score": 75
+      },
+      "readability": {
+        "flesch_reading_ease": 14.0,
+        "avg_sentence_length": 23.7,
+        "avg_paragraph_sentences": 1.9,
+        "avg_heading_words": 2.8,
+        "headings_too_short": 1,
+        "headings_too_long": 0,
+        "code_to_text_ratio": 0.26,
+        "score": 70
+      },
+      "overall": 81.7,
+      "metadata": {
+        "path": "guides\\theory\\pso-theory.md",
+        "subcategory": "theory",
+        "type": "theory",
+        "lines": 460,
+        "words": 1809
+      }
+    },
+    {
+      "file": "docs\\guides\\theory\\README.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 6,
+        "has_examples": true,
+        "code_block_count": 1,
+        "has_summary": true,
+        "has_navigation": true,
+        "link_count": 33,
+        "score": 90
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 0,
+        "code_blocks_total": 2,
+        "valid_file_paths": 0,
+        "total_file_paths": 0,
+        "valid_commands": 0,
+        "total_commands": 0,
+        "todo_markers": 0,
+        "old_version_references": 0,
+        "score": 80
+      },
+      "readability": {
+        "flesch_reading_ease": -9.1,
+        "avg_sentence_length": 17.7,
+        "avg_paragraph_sentences": 2.6,
+        "avg_heading_words": 3.1,
+        "headings_too_short": 0,
+        "headings_too_long": 0,
+        "code_to_text_ratio": 0.02,
+        "score": 70
+      },
+      "overall": 80.0,
+      "metadata": {
+        "path": "guides\\theory\\README.md",
+        "subcategory": "theory",
+        "type": "index",
+        "lines": 198,
+        "words": 714
+      }
+    },
+    {
+      "file": "docs\\guides\\theory\\smc-theory.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 8,
+        "has_examples": true,
+        "code_block_count": 35,
+        "has_summary": true,
+        "has_navigation": true,
+        "link_count": 8,
+        "score": 100
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 17,
+        "code_blocks_total": 64,
+        "valid_file_paths": 1,
+        "total_file_paths": 1,
+        "valid_commands": 3,
+        "total_commands": 3,
+        "todo_markers": 0,
+        "old_version_references": 67,
+        "score": 75
+      },
+      "readability": {
+        "flesch_reading_ease": 19.3,
+        "avg_sentence_length": 27.7,
+        "avg_paragraph_sentences": 1.6,
+        "avg_heading_words": 3.5,
+        "headings_too_short": 1,
+        "headings_too_long": 0,
+        "code_to_text_ratio": 0.46,
+        "score": 60
+      },
+      "overall": 78.3,
+      "metadata": {
+        "path": "guides\\theory\\smc-theory.md",
+        "subcategory": "theory",
+        "type": "theory",
+        "lines": 1106,
+        "words": 4770
+      }
+    },
+    {
+      "file": "docs\\guides\\tutorials\\tutorial-01-first-simulation.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 7,
+        "has_examples": true,
+        "code_block_count": 32,
+        "has_summary": true,
+        "has_navigation": true,
+        "link_count": 14,
+        "score": 100
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 23,
+        "code_blocks_total": 31,
+        "valid_file_paths": 0,
+        "total_file_paths": 0,
+        "valid_commands": 13,
+        "total_commands": 14,
+        "todo_markers": 0,
+        "old_version_references": 131,
+        "score": 81
+      },
+      "readability": {
+        "flesch_reading_ease": 29.1,
+        "avg_sentence_length": 19.8,
+        "avg_paragraph_sentences": 4.1,
+        "avg_heading_words": 10.9,
+        "headings_too_short": 0,
+        "headings_too_long": 8,
+        "code_to_text_ratio": 0.47,
+        "score": 60
+      },
+      "overall": 80.3,
+      "metadata": {
+        "path": "guides\\tutorials\\tutorial-01-first-simulation.md",
+        "subcategory": "tutorials",
+        "type": "tutorial",
+        "lines": 597,
+        "words": 3902
+      }
+    },
+    {
+      "file": "docs\\guides\\tutorials\\tutorial-01-validation-report.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 10,
+        "has_examples": true,
+        "code_block_count": 7,
+        "has_summary": true,
+        "has_navigation": null,
+        "link_count": 0,
+        "score": 85
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 4,
+        "code_blocks_total": 9,
+        "valid_file_paths": 3,
+        "total_file_paths": 3,
+        "valid_commands": 4,
+        "total_commands": 4,
+        "todo_markers": 0,
+        "old_version_references": 21,
+        "score": 78
+      },
+      "readability": {
+        "flesch_reading_ease": 10.2,
+        "avg_sentence_length": 24.4,
+        "avg_paragraph_sentences": 3.2,
+        "avg_heading_words": 12.2,
+        "headings_too_short": 0,
+        "headings_too_long": 14,
+        "code_to_text_ratio": 0.19,
+        "score": 65
+      },
+      "overall": 76.0,
+      "metadata": {
+        "path": "guides\\tutorials\\tutorial-01-validation-report.md",
+        "subcategory": "tutorials",
+        "type": "tutorial",
+        "lines": 299,
+        "words": 2297
+      }
+    },
+    {
+      "file": "docs\\guides\\tutorials\\tutorial-02-controller-comparison.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 19,
+        "has_examples": true,
+        "code_block_count": 32,
+        "has_summary": true,
+        "has_navigation": true,
+        "link_count": 8,
+        "score": 100
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 20,
+        "code_blocks_total": 35,
+        "valid_file_paths": 0,
+        "total_file_paths": 0,
+        "valid_commands": 10,
+        "total_commands": 10,
+        "todo_markers": 0,
+        "old_version_references": 76,
+        "score": 81
+      },
+      "readability": {
+        "flesch_reading_ease": 21.7,
+        "avg_sentence_length": 22.0,
+        "avg_paragraph_sentences": 2.5,
+        "avg_heading_words": 11.4,
+        "headings_too_short": 1,
+        "headings_too_long": 23,
+        "code_to_text_ratio": 0.33,
+        "score": 65
+      },
+      "overall": 82.0,
+      "metadata": {
+        "path": "guides\\tutorials\\tutorial-02-controller-comparison.md",
+        "subcategory": "tutorials",
+        "type": "tutorial",
+        "lines": 495,
+        "words": 3771
+      }
+    },
+    {
+      "file": "docs\\guides\\tutorials\\tutorial-03-pso-optimization.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 12,
+        "has_examples": true,
+        "code_block_count": 38,
+        "has_summary": true,
+        "has_navigation": true,
+        "link_count": 8,
+        "score": 100
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 28,
+        "code_blocks_total": 37,
+        "valid_file_paths": 0,
+        "total_file_paths": 0,
+        "valid_commands": 20,
+        "total_commands": 20,
+        "todo_markers": 0,
+        "old_version_references": 147,
+        "score": 85
+      },
+      "readability": {
+        "flesch_reading_ease": 24.2,
+        "avg_sentence_length": 19.8,
+        "avg_paragraph_sentences": 3.0,
+        "avg_heading_words": 12.5,
+        "headings_too_short": 4,
+        "headings_too_long": 18,
+        "code_to_text_ratio": 0.52,
+        "score": 60
+      },
+      "overall": 81.7,
+      "metadata": {
+        "path": "guides\\tutorials\\tutorial-03-pso-optimization.md",
+        "subcategory": "tutorials",
+        "type": "tutorial",
+        "lines": 398,
+        "words": 3974
+      }
+    },
+    {
+      "file": "docs\\guides\\tutorials\\tutorial-04-custom-controller.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 11,
+        "has_examples": true,
+        "code_block_count": 21,
+        "has_summary": true,
+        "has_navigation": true,
+        "link_count": 7,
+        "score": 100
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 21,
+        "code_blocks_total": 42,
+        "valid_file_paths": 1,
+        "total_file_paths": 4,
+        "valid_commands": 16,
+        "total_commands": 16,
+        "todo_markers": 0,
+        "old_version_references": 105,
+        "score": 57
+      },
+      "readability": {
+        "flesch_reading_ease": 28.4,
+        "avg_sentence_length": 17.4,
+        "avg_paragraph_sentences": 1.8,
+        "avg_heading_words": 3.3,
+        "headings_too_short": 8,
+        "headings_too_long": 0,
+        "code_to_text_ratio": 0.64,
+        "score": 57
+      },
+      "overall": 71.3,
+      "metadata": {
+        "path": "guides\\tutorials\\tutorial-04-custom-controller.md",
+        "subcategory": "tutorials",
+        "type": "tutorial",
+        "lines": 881,
+        "words": 3173
+      }
+    },
+    {
+      "file": "docs\\guides\\tutorials\\tutorial-05-research-workflow.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 11,
+        "has_examples": true,
+        "code_block_count": 12,
+        "has_summary": true,
+        "has_navigation": true,
+        "link_count": 6,
+        "score": 100
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 11,
+        "code_blocks_total": 16,
+        "valid_file_paths": 0,
+        "total_file_paths": 0,
+        "valid_commands": 9,
+        "total_commands": 9,
+        "todo_markers": 0,
+        "old_version_references": 43,
+        "score": 83
+      },
+      "readability": {
+        "flesch_reading_ease": -12.0,
+        "avg_sentence_length": 35.9,
+        "avg_paragraph_sentences": 1.3,
+        "avg_heading_words": 6.5,
+        "headings_too_short": 1,
+        "headings_too_long": 8,
+        "code_to_text_ratio": 0.63,
+        "score": 42
+      },
+      "overall": 75.0,
+      "metadata": {
+        "path": "guides\\tutorials\\tutorial-05-research-workflow.md",
+        "subcategory": "tutorials",
+        "type": "tutorial",
+        "lines": 315,
+        "words": 2177
+      }
+    },
+    {
+      "file": "docs\\guides\\user-guide.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 28,
+        "has_examples": true,
+        "code_block_count": 40,
+        "has_summary": true,
+        "has_navigation": true,
+        "link_count": 32,
+        "score": 100
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 38,
+        "code_blocks_total": 80,
+        "valid_file_paths": 0,
+        "total_file_paths": 0,
+        "valid_commands": 26,
+        "total_commands": 26,
+        "todo_markers": 0,
+        "old_version_references": 93,
+        "score": 79
+      },
+      "readability": {
+        "flesch_reading_ease": 3.3,
+        "avg_sentence_length": 15.8,
+        "avg_paragraph_sentences": 2.5,
+        "avg_heading_words": 3.1,
+        "headings_too_short": 11,
+        "headings_too_long": 0,
+        "code_to_text_ratio": 0.56,
+        "score": 60
+      },
+      "overall": 79.7,
+      "metadata": {
+        "path": "guides\\user-guide.md",
+        "subcategory": "root",
+        "type": "general",
+        "lines": 854,
+        "words": 2870
+      }
+    },
+    {
+      "file": "docs\\guides\\workflows\\batch-simulation-workflow.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 14,
+        "has_examples": true,
+        "code_block_count": 17,
+        "has_summary": false,
+        "has_navigation": true,
+        "link_count": 7,
+        "score": 90
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 13,
+        "code_blocks_total": 34,
+        "valid_file_paths": 3,
+        "total_file_paths": 3,
+        "valid_commands": 12,
+        "total_commands": 12,
+        "todo_markers": 0,
+        "old_version_references": 40,
+        "score": 77
+      },
+      "readability": {
+        "flesch_reading_ease": 25.9,
+        "avg_sentence_length": 13.5,
+        "avg_paragraph_sentences": 2.5,
+        "avg_heading_words": 3.7,
+        "headings_too_short": 7,
+        "headings_too_long": 1,
+        "code_to_text_ratio": 0.67,
+        "score": 57
+      },
+      "overall": 74.7,
+      "metadata": {
+        "path": "guides\\workflows\\batch-simulation-workflow.md",
+        "subcategory": "workflows",
+        "type": "workflow",
+        "lines": 556,
+        "words": 1921
+      }
+    },
+    {
+      "file": "docs\\guides\\workflows\\custom-cost-functions.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 7,
+        "has_examples": true,
+        "code_block_count": 33,
+        "has_summary": true,
+        "has_navigation": null,
+        "link_count": 1,
+        "score": 85
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 34,
+        "code_blocks_total": 66,
+        "valid_file_paths": 0,
+        "total_file_paths": 0,
+        "valid_commands": 32,
+        "total_commands": 32,
+        "todo_markers": 0,
+        "old_version_references": 59,
+        "score": 80
+      },
+      "readability": {
+        "flesch_reading_ease": 26.0,
+        "avg_sentence_length": 16.9,
+        "avg_paragraph_sentences": 1.5,
+        "avg_heading_words": 3.7,
+        "headings_too_short": 2,
+        "headings_too_long": 0,
+        "code_to_text_ratio": 0.69,
+        "score": 57
+      },
+      "overall": 74.0,
+      "metadata": {
+        "path": "guides\\workflows\\custom-cost-functions.md",
+        "subcategory": "workflows",
+        "type": "general",
+        "lines": 775,
+        "words": 2483
+      }
+    },
+    {
+      "file": "docs\\guides\\workflows\\hil-disaster-recovery.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 16,
+        "has_examples": true,
+        "code_block_count": 21,
+        "has_summary": true,
+        "has_navigation": null,
+        "link_count": 2,
+        "score": 85
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 21,
+        "code_blocks_total": 42,
+        "valid_file_paths": 0,
+        "total_file_paths": 0,
+        "valid_commands": 17,
+        "total_commands": 17,
+        "todo_markers": 6,
+        "old_version_references": 4,
+        "score": 70
+      },
+      "readability": {
+        "flesch_reading_ease": 38.2,
+        "avg_sentence_length": 17.9,
+        "avg_paragraph_sentences": 1.7,
+        "avg_heading_words": 3.3,
+        "headings_too_short": 9,
+        "headings_too_long": 2,
+        "code_to_text_ratio": 0.54,
+        "score": 60
+      },
+      "overall": 71.7,
+      "metadata": {
+        "path": "guides\\workflows\\hil-disaster-recovery.md",
+        "subcategory": "workflows",
+        "type": "general",
+        "lines": 771,
+        "words": 2944
+      }
+    },
+    {
+      "file": "docs\\guides\\workflows\\hil-multi-machine.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 12,
+        "has_examples": true,
+        "code_block_count": 43,
+        "has_summary": true,
+        "has_navigation": true,
+        "link_count": 6,
+        "score": 100
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 41,
+        "code_blocks_total": 86,
+        "valid_file_paths": 0,
+        "total_file_paths": 0,
+        "valid_commands": 37,
+        "total_commands": 37,
+        "todo_markers": 0,
+        "old_version_references": 20,
+        "score": 79
+      },
+      "readability": {
+        "flesch_reading_ease": 19.4,
+        "avg_sentence_length": 22.9,
+        "avg_paragraph_sentences": 1.4,
+        "avg_heading_words": 3.6,
+        "headings_too_short": 6,
+        "headings_too_long": 1,
+        "code_to_text_ratio": 0.56,
+        "score": 55
+      },
+      "overall": 78.0,
+      "metadata": {
+        "path": "guides\\workflows\\hil-multi-machine.md",
+        "subcategory": "workflows",
+        "type": "general",
+        "lines": 712,
+        "words": 2064
+      }
+    },
+    {
+      "file": "docs\\guides\\workflows\\hil-production-checklist.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 9,
+        "has_examples": true,
+        "code_block_count": 31,
+        "has_summary": true,
+        "has_navigation": true,
+        "link_count": 7,
+        "score": 100
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 29,
+        "code_blocks_total": 62,
+        "valid_file_paths": 0,
+        "total_file_paths": 0,
+        "valid_commands": 24,
+        "total_commands": 24,
+        "todo_markers": 0,
+        "old_version_references": 4,
+        "score": 79
+      },
+      "readability": {
+        "flesch_reading_ease": -3.9,
+        "avg_sentence_length": 66.3,
+        "avg_paragraph_sentences": 1.3,
+        "avg_heading_words": 3.1,
+        "headings_too_short": 9,
+        "headings_too_long": 0,
+        "code_to_text_ratio": 0.41,
+        "score": 50
+      },
+      "overall": 76.3,
+      "metadata": {
+        "path": "guides\\workflows\\hil-production-checklist.md",
+        "subcategory": "workflows",
+        "type": "general",
+        "lines": 759,
+        "words": 2722
+      }
+    },
+    {
+      "file": "docs\\guides\\workflows\\hil-safety-validation.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 15,
+        "has_examples": true,
+        "code_block_count": 41,
+        "has_summary": true,
+        "has_navigation": null,
+        "link_count": 2,
+        "score": 85
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 41,
+        "code_blocks_total": 82,
+        "valid_file_paths": 0,
+        "total_file_paths": 0,
+        "valid_commands": 31,
+        "total_commands": 31,
+        "todo_markers": 0,
+        "old_version_references": 53,
+        "score": 80
+      },
+      "readability": {
+        "flesch_reading_ease": 25.9,
+        "avg_sentence_length": 18.9,
+        "avg_paragraph_sentences": 1.3,
+        "avg_heading_words": 3.7,
+        "headings_too_short": 3,
+        "headings_too_long": 0,
+        "code_to_text_ratio": 0.63,
+        "score": 57
+      },
+      "overall": 74.0,
+      "metadata": {
+        "path": "guides\\workflows\\hil-safety-validation.md",
+        "subcategory": "workflows",
+        "type": "general",
+        "lines": 866,
+        "words": 2766
+      }
+    },
+    {
+      "file": "docs\\guides\\workflows\\hil-workflow.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 17,
+        "has_examples": true,
+        "code_block_count": 38,
+        "has_summary": false,
+        "has_navigation": true,
+        "link_count": 9,
+        "score": 90
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 31,
+        "code_blocks_total": 76,
+        "valid_file_paths": 0,
+        "total_file_paths": 0,
+        "valid_commands": 23,
+        "total_commands": 23,
+        "todo_markers": 0,
+        "old_version_references": 49,
+        "score": 78
+      },
+      "readability": {
+        "flesch_reading_ease": 28.0,
+        "avg_sentence_length": 20.0,
+        "avg_paragraph_sentences": 1.9,
+        "avg_heading_words": 4.2,
+        "headings_too_short": 3,
+        "headings_too_long": 2,
+        "code_to_text_ratio": 0.56,
+        "score": 55
+      },
+      "overall": 74.3,
+      "metadata": {
+        "path": "guides\\workflows\\hil-workflow.md",
+        "subcategory": "workflows",
+        "type": "workflow",
+        "lines": 756,
+        "words": 2746
+      }
+    },
+    {
+      "file": "docs\\guides\\workflows\\monte-carlo-validation-quickstart.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 8,
+        "has_examples": true,
+        "code_block_count": 9,
+        "has_summary": true,
+        "has_navigation": "<re.Match object; span=(13092, 13099), match='## Next'>",
+        "link_count": 2,
+        "score": 100
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 6,
+        "code_blocks_total": 12,
+        "valid_file_paths": 0,
+        "total_file_paths": 0,
+        "valid_commands": 6,
+        "total_commands": 6,
+        "todo_markers": 0,
+        "old_version_references": 49,
+        "score": 80
+      },
+      "readability": {
+        "flesch_reading_ease": 29.8,
+        "avg_sentence_length": 17.6,
+        "avg_paragraph_sentences": 2.3,
+        "avg_heading_words": 10.9,
+        "headings_too_short": 1,
+        "headings_too_long": 6,
+        "code_to_text_ratio": 0.7,
+        "score": 57
+      },
+      "overall": 79.0,
+      "metadata": {
+        "path": "guides\\workflows\\monte-carlo-validation-quickstart.md",
+        "subcategory": "workflows",
+        "type": "general",
+        "lines": 231,
+        "words": 1672
+      }
+    },
+    {
+      "file": "docs\\guides\\workflows\\pso-adaptive-smc.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 9,
+        "has_examples": true,
+        "code_block_count": 36,
+        "has_summary": true,
+        "has_navigation": true,
+        "link_count": 3,
+        "score": 93
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 28,
+        "code_blocks_total": 72,
+        "valid_file_paths": 0,
+        "total_file_paths": 0,
+        "valid_commands": 19,
+        "total_commands": 19,
+        "todo_markers": 0,
+        "old_version_references": 118,
+        "score": 77
+      },
+      "readability": {
+        "flesch_reading_ease": 38.1,
+        "avg_sentence_length": 15.2,
+        "avg_paragraph_sentences": 1.8,
+        "avg_heading_words": 4.3,
+        "headings_too_short": 0,
+        "headings_too_long": 0,
+        "code_to_text_ratio": 0.45,
+        "score": 75
+      },
+      "overall": 81.7,
+      "metadata": {
+        "path": "guides\\workflows\\pso-adaptive-smc.md",
+        "subcategory": "workflows",
+        "type": "general",
+        "lines": 669,
+        "words": 2539
+      }
+    },
+    {
+      "file": "docs\\guides\\workflows\\pso-hil-tuning.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 12,
+        "has_examples": true,
+        "code_block_count": 78,
+        "has_summary": true,
+        "has_navigation": true,
+        "link_count": 4,
+        "score": 93
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 67,
+        "code_blocks_total": 156,
+        "valid_file_paths": 0,
+        "total_file_paths": 0,
+        "valid_commands": 48,
+        "total_commands": 48,
+        "todo_markers": 0,
+        "old_version_references": 182,
+        "score": 78
+      },
+      "readability": {
+        "flesch_reading_ease": 37.6,
+        "avg_sentence_length": 16.5,
+        "avg_paragraph_sentences": 1.7,
+        "avg_heading_words": 4.2,
+        "headings_too_short": 8,
+        "headings_too_long": 3,
+        "code_to_text_ratio": 0.53,
+        "score": 60
+      },
+      "overall": 77.0,
+      "metadata": {
+        "path": "guides\\workflows\\pso-hil-tuning.md",
+        "subcategory": "workflows",
+        "type": "general",
+        "lines": 1290,
+        "words": 4381
+      }
+    },
+    {
+      "file": "docs\\guides\\workflows\\pso-hybrid-smc.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 12,
+        "has_examples": true,
+        "code_block_count": 49,
+        "has_summary": true,
+        "has_navigation": true,
+        "link_count": 11,
+        "score": 100
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 43,
+        "code_blocks_total": 98,
+        "valid_file_paths": 2,
+        "total_file_paths": 2,
+        "valid_commands": 31,
+        "total_commands": 31,
+        "todo_markers": 0,
+        "old_version_references": 149,
+        "score": 78
+      },
+      "readability": {
+        "flesch_reading_ease": 34.5,
+        "avg_sentence_length": 12.9,
+        "avg_paragraph_sentences": 2.4,
+        "avg_heading_words": 4.2,
+        "headings_too_short": 5,
+        "headings_too_long": 3,
+        "code_to_text_ratio": 0.38,
+        "score": 70
+      },
+      "overall": 82.7,
+      "metadata": {
+        "path": "guides\\workflows\\pso-hybrid-smc.md",
+        "subcategory": "workflows",
+        "type": "general",
+        "lines": 1074,
+        "words": 4385
+      }
+    },
+    {
+      "file": "docs\\guides\\workflows\\pso-optimization-workflow.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 11,
+        "has_examples": true,
+        "code_block_count": 22,
+        "has_summary": true,
+        "has_navigation": true,
+        "link_count": 9,
+        "score": 100
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 16,
+        "code_blocks_total": 27,
+        "valid_file_paths": 0,
+        "total_file_paths": 0,
+        "valid_commands": 14,
+        "total_commands": 14,
+        "todo_markers": 0,
+        "old_version_references": 44,
+        "score": 81
+      },
+      "readability": {
+        "flesch_reading_ease": 16.4,
+        "avg_sentence_length": 20.7,
+        "avg_paragraph_sentences": 2.1,
+        "avg_heading_words": 7.8,
+        "headings_too_short": 1,
+        "headings_too_long": 11,
+        "code_to_text_ratio": 0.54,
+        "score": 55
+      },
+      "overall": 78.7,
+      "metadata": {
+        "path": "guides\\workflows\\pso-optimization-workflow.md",
+        "subcategory": "workflows",
+        "type": "workflow",
+        "lines": 279,
+        "words": 1806
+      }
+    },
+    {
+      "file": "docs\\guides\\workflows\\pso-sta-smc.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 16,
+        "has_examples": true,
+        "code_block_count": 24,
+        "has_summary": true,
+        "has_navigation": true,
+        "link_count": 7,
+        "score": 100
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 19,
+        "code_blocks_total": 48,
+        "valid_file_paths": 0,
+        "total_file_paths": 0,
+        "valid_commands": 17,
+        "total_commands": 17,
+        "todo_markers": 0,
+        "old_version_references": 46,
+        "score": 77
+      },
+      "readability": {
+        "flesch_reading_ease": -2.2,
+        "avg_sentence_length": 56.3,
+        "avg_paragraph_sentences": 1.5,
+        "avg_heading_words": 3.4,
+        "headings_too_short": 4,
+        "headings_too_long": 0,
+        "code_to_text_ratio": 0.39,
+        "score": 55
+      },
+      "overall": 77.3,
+      "metadata": {
+        "path": "guides\\workflows\\pso-sta-smc.md",
+        "subcategory": "workflows",
+        "type": "general",
+        "lines": 524,
+        "words": 1728
+      }
+    },
+    {
+      "file": "docs\\guides\\workflows\\pso-vs-grid-search.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 14,
+        "has_examples": true,
+        "code_block_count": 21,
+        "has_summary": true,
+        "has_navigation": true,
+        "link_count": 8,
+        "score": 100
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 21,
+        "code_blocks_total": 42,
+        "valid_file_paths": 0,
+        "total_file_paths": 0,
+        "valid_commands": 21,
+        "total_commands": 21,
+        "todo_markers": 0,
+        "old_version_references": 44,
+        "score": 80
+      },
+      "readability": {
+        "flesch_reading_ease": 22.4,
+        "avg_sentence_length": 22.8,
+        "avg_paragraph_sentences": 1.6,
+        "avg_heading_words": 4.1,
+        "headings_too_short": 6,
+        "headings_too_long": 7,
+        "code_to_text_ratio": 0.43,
+        "score": 60
+      },
+      "overall": 80.0,
+      "metadata": {
+        "path": "guides\\workflows\\pso-vs-grid-search.md",
+        "subcategory": "workflows",
+        "type": "general",
+        "lines": 561,
+        "words": 1922
+      }
+    },
+    {
+      "file": "docs\\guides\\workflows\\streamlit-theme-integration.md",
+      "completeness": {
+        "has_h1_title": true,
+        "has_introduction": true,
+        "h2_section_count": 13,
+        "has_examples": true,
+        "code_block_count": 45,
+        "has_summary": true,
+        "has_navigation": null,
+        "link_count": 0,
+        "score": 85
+      },
+      "accuracy": {
+        "code_blocks_with_tags": 45,
+        "code_blocks_total": 90,
+        "valid_file_paths": 1,
+        "total_file_paths": 1,
+        "valid_commands": 28,
+        "total_commands": 28,
+        "todo_markers": 0,
+        "old_version_references": 3,
+        "score": 80
+      },
+      "readability": {
+        "flesch_reading_ease": 32.1,
+        "avg_sentence_length": 16.5,
+        "avg_paragraph_sentences": 1.5,
+        "avg_heading_words": 2.9,
+        "headings_too_short": 23,
+        "headings_too_long": 0,
+        "code_to_text_ratio": 0.63,
+        "score": 57
+      },
+      "overall": 74.0,
+      "metadata": {
+        "path": "guides\\workflows\\streamlit-theme-integration.md",
+        "subcategory": "workflows",
+        "type": "general",
+        "lines": 889,
+        "words": 2264
+      }
+    }
+  ],
+  "file_rankings": {
+    "top_5": [
+      {
+        "rank": 1,
+        "path": "guides\\api\\README.md",
+        "overall": 85.0,
+        "completeness": 100,
+        "accuracy": 85,
+        "readability": 70
+      },
+      {
+        "rank": 2,
+        "path": "guides\\features\\code-collapse\\troubleshooting.md",
+        "overall": 84.3,
+        "completeness": 93,
+        "accuracy": 80,
+        "readability": 80
+      },
+      {
+        "rank": 3,
+        "path": "guides\\features\\code-collapse\\technical-reference.md",
+        "overall": 83.3,
+        "completeness": 100,
+        "accuracy": 80,
+        "readability": 70
+      },
+      {
+        "rank": 4,
+        "path": "guides\\README.md",
+        "overall": 83.3,
+        "completeness": 100,
+        "accuracy": 80,
+        "readability": 70
+      },
+      {
+        "rank": 5,
+        "path": "guides\\features\\code-collapse\\configuration-reference.md",
+        "overall": 83.0,
+        "completeness": 100,
+        "accuracy": 79,
+        "readability": 70
+      }
+    ],
+    "bottom_5": [
+      {
+        "rank": 58,
+        "path": "guides\\workflows\\hil-safety-validation.md",
+        "overall": 74.0,
+        "completeness": 85,
+        "accuracy": 80,
+        "readability": 57
+      },
+      {
+        "rank": 59,
+        "path": "guides\\workflows\\streamlit-theme-integration.md",
+        "overall": 74.0,
+        "completeness": 85,
+        "accuracy": 80,
+        "readability": 57
+      },
+      {
+        "rank": 60,
+        "path": "guides\\QUICK_REFERENCE.md",
+        "overall": 73.7,
+        "completeness": 85,
+        "accuracy": 79,
+        "readability": 57
+      },
+      {
+        "rank": 61,
+        "path": "guides\\workflows\\hil-disaster-recovery.md",
+        "overall": 71.7,
+        "completeness": 85,
+        "accuracy": 70,
+        "readability": 60
+      },
+      {
+        "rank": 62,
+        "path": "guides\\tutorials\\tutorial-04-custom-controller.md",
+        "overall": 71.3,
+        "completeness": 100,
+        "accuracy": 57,
+        "readability": 57
+      }
+    ],
+    "all_files_ranked": [
+      {
+        "rank": 1,
+        "path": "guides\\api\\README.md",
+        "overall": 85.0,
+        "completeness": 100,
+        "accuracy": 85,
+        "readability": 70
+      },
+      {
+        "rank": 2,
+        "path": "guides\\features\\code-collapse\\troubleshooting.md",
+        "overall": 84.3,
+        "completeness": 93,
+        "accuracy": 80,
+        "readability": 80
+      },
+      {
+        "rank": 3,
+        "path": "guides\\features\\code-collapse\\technical-reference.md",
+        "overall": 83.3,
+        "completeness": 100,
+        "accuracy": 80,
+        "readability": 70
+      },
+      {
+        "rank": 4,
+        "path": "guides\\README.md",
+        "overall": 83.3,
+        "completeness": 100,
+        "accuracy": 80,
+        "readability": 70
+      },
+      {
+        "rank": 5,
+        "path": "guides\\features\\code-collapse\\configuration-reference.md",
+        "overall": 83.0,
+        "completeness": 100,
+        "accuracy": 79,
+        "readability": 70
+      },
+      {
+        "rank": 6,
+        "path": "guides\\getting-started.md",
+        "overall": 82.7,
+        "completeness": 100,
+        "accuracy": 83,
+        "readability": 65
+      },
+      {
+        "rank": 7,
+        "path": "guides\\workflows\\pso-hybrid-smc.md",
+        "overall": 82.7,
+        "completeness": 100,
+        "accuracy": 78,
+        "readability": 70
+      },
+      {
+        "rank": 8,
+        "path": "guides\\tutorials\\tutorial-02-controller-comparison.md",
+        "overall": 82.0,
+        "completeness": 100,
+        "accuracy": 81,
+        "readability": 65
+      },
+      {
+        "rank": 9,
+        "path": "guides\\INDEX.md",
+        "overall": 81.7,
+        "completeness": 100,
+        "accuracy": 75,
+        "readability": 70
+      },
+      {
+        "rank": 10,
+        "path": "guides\\theory\\pso-theory.md",
+        "overall": 81.7,
+        "completeness": 100,
+        "accuracy": 75,
+        "readability": 70
+      },
+      {
+        "rank": 11,
+        "path": "guides\\tutorials\\tutorial-03-pso-optimization.md",
+        "overall": 81.7,
+        "completeness": 100,
+        "accuracy": 85,
+        "readability": 60
+      },
+      {
+        "rank": 12,
+        "path": "guides\\workflows\\pso-adaptive-smc.md",
+        "overall": 81.7,
+        "completeness": 93,
+        "accuracy": 77,
+        "readability": 75
+      },
+      {
+        "rank": 13,
+        "path": "guides\\features\\code-collapse\\maintenance-guide.md",
+        "overall": 80.7,
+        "completeness": 93,
+        "accuracy": 79,
+        "readability": 70
+      },
+      {
+        "rank": 14,
+        "path": "guides\\tutorials\\tutorial-01-first-simulation.md",
+        "overall": 80.3,
+        "completeness": 100,
+        "accuracy": 81,
+        "readability": 60
+      },
+      {
+        "rank": 15,
+        "path": "guides\\features\\code-collapse\\user-guide.md",
+        "overall": 80.0,
+        "completeness": 90,
+        "accuracy": 75,
+        "readability": 75
+      },
+      {
+        "rank": 16,
+        "path": "guides\\interactive\\3d-pendulum-demo.md",
+        "overall": 80.0,
+        "completeness": 100,
+        "accuracy": 70,
+        "readability": 70
+      },
+      {
+        "rank": 17,
+        "path": "guides\\theory\\README.md",
+        "overall": 80.0,
+        "completeness": 90,
+        "accuracy": 80,
+        "readability": 70
+      },
+      {
+        "rank": 18,
+        "path": "guides\\workflows\\pso-vs-grid-search.md",
+        "overall": 80.0,
+        "completeness": 100,
+        "accuracy": 80,
+        "readability": 60
+      },
+      {
+        "rank": 19,
+        "path": "guides\\how-to\\optimization-workflows.md",
+        "overall": 79.7,
+        "completeness": 100,
+        "accuracy": 87,
+        "readability": 52
+      },
+      {
+        "rank": 20,
+        "path": "guides\\user-guide.md",
+        "overall": 79.7,
+        "completeness": 100,
+        "accuracy": 79,
+        "readability": 60
+      },
+      {
+        "rank": 21,
+        "path": "guides\\features\\code-collapse\\integration-guide.md",
+        "overall": 79.3,
+        "completeness": 93,
+        "accuracy": 75,
+        "readability": 70
+      },
+      {
+        "rank": 22,
+        "path": "guides\\how-to\\running-simulations.md",
+        "overall": 79.3,
+        "completeness": 100,
+        "accuracy": 86,
+        "readability": 52
+      },
+      {
+        "rank": 23,
+        "path": "guides\\api\\configuration.md",
+        "overall": 79.0,
+        "completeness": 100,
+        "accuracy": 80,
+        "readability": 57
+      },
+      {
+        "rank": 24,
+        "path": "guides\\api\\optimization.md",
+        "overall": 79.0,
+        "completeness": 100,
+        "accuracy": 80,
+        "readability": 57
+      },
+      {
+        "rank": 25,
+        "path": "guides\\api\\simulation.md",
+        "overall": 79.0,
+        "completeness": 100,
+        "accuracy": 80,
+        "readability": 57
+      },
+      {
+        "rank": 26,
+        "path": "guides\\workflows\\monte-carlo-validation-quickstart.md",
+        "overall": 79.0,
+        "completeness": 100,
+        "accuracy": 80,
+        "readability": 57
+      },
+      {
+        "rank": 27,
+        "path": "guides\\icon_usage_guide.md",
+        "overall": 78.7,
+        "completeness": 85,
+        "accuracy": 81,
+        "readability": 70
+      },
+      {
+        "rank": 28,
+        "path": "guides\\interactive\\jupyter-notebooks-demo.md",
+        "overall": 78.7,
+        "completeness": 100,
+        "accuracy": 76,
+        "readability": 60
+      },
+      {
+        "rank": 29,
+        "path": "guides\\workflows\\pso-optimization-workflow.md",
+        "overall": 78.7,
+        "completeness": 100,
+        "accuracy": 81,
+        "readability": 55
+      },
+      {
+        "rank": 30,
+        "path": "guides\\theory\\smc-theory.md",
+        "overall": 78.3,
+        "completeness": 100,
+        "accuracy": 75,
+        "readability": 60
+      },
+      {
+        "rank": 31,
+        "path": "guides\\sphinx_theme_guide.md",
+        "overall": 78.0,
+        "completeness": 85,
+        "accuracy": 79,
+        "readability": 70
+      },
+      {
+        "rank": 32,
+        "path": "guides\\workflows\\hil-multi-machine.md",
+        "overall": 78.0,
+        "completeness": 100,
+        "accuracy": 79,
+        "readability": 55
+      },
+      {
+        "rank": 33,
+        "path": "guides\\theory\\dip-dynamics.md",
+        "overall": 77.7,
+        "completeness": 100,
+        "accuracy": 73,
+        "readability": 60
+      },
+      {
+        "rank": 34,
+        "path": "guides\\how-to\\result-analysis.md",
+        "overall": 77.3,
+        "completeness": 100,
+        "accuracy": 80,
+        "readability": 52
+      },
+      {
+        "rank": 35,
+        "path": "guides\\workflows\\pso-sta-smc.md",
+        "overall": 77.3,
+        "completeness": 100,
+        "accuracy": 77,
+        "readability": 55
+      },
+      {
+        "rank": 36,
+        "path": "guides\\how-to\\testing-validation.md",
+        "overall": 77.0,
+        "completeness": 100,
+        "accuracy": 84,
+        "readability": 47
+      },
+      {
+        "rank": 37,
+        "path": "guides\\interactive_visualizations.md",
+        "overall": 77.0,
+        "completeness": 93,
+        "accuracy": 78,
+        "readability": 60
+      },
+      {
+        "rank": 38,
+        "path": "guides\\workflows\\pso-hil-tuning.md",
+        "overall": 77.0,
+        "completeness": 93,
+        "accuracy": 78,
+        "readability": 60
+      },
+      {
+        "rank": 39,
+        "path": "guides\\features\\code-collapse\\changelog.md",
+        "overall": 76.7,
+        "completeness": 90,
+        "accuracy": 80,
+        "readability": 60
+      },
+      {
+        "rank": 40,
+        "path": "guides\\features\\code-collapse\\PHASE6_COMPLETION_SUMMARY.md",
+        "overall": 76.7,
+        "completeness": 100,
+        "accuracy": 70,
+        "readability": 60
+      },
+      {
+        "rank": 41,
+        "path": "guides\\features\\README.md",
+        "overall": 76.7,
+        "completeness": 80,
+        "accuracy": 90,
+        "readability": 60
+      },
+      {
+        "rank": 42,
+        "path": "guides\\interactive\\index.md",
+        "overall": 76.7,
+        "completeness": 85,
+        "accuracy": 80,
+        "readability": 65
+      },
+      {
+        "rank": 43,
+        "path": "guides\\interactive\\live-python-demo.md",
+        "overall": 76.7,
+        "completeness": 100,
+        "accuracy": 70,
+        "readability": 60
+      },
+      {
+        "rank": 44,
+        "path": "guides\\workflows\\hil-production-checklist.md",
+        "overall": 76.3,
+        "completeness": 100,
+        "accuracy": 79,
+        "readability": 50
+      },
+      {
+        "rank": 45,
+        "path": "guides\\api\\plant-models.md",
+        "overall": 76.0,
+        "completeness": 100,
+        "accuracy": 78,
+        "readability": 50
+      },
+      {
+        "rank": 46,
+        "path": "guides\\getting-started-validation-report.md",
+        "overall": 76.0,
+        "completeness": 85,
+        "accuracy": 78,
+        "readability": 65
+      },
+      {
+        "rank": 47,
+        "path": "guides\\how-to\\robust-pso-optimization.md",
+        "overall": 76.0,
+        "completeness": 90,
+        "accuracy": 78,
+        "readability": 60
+      },
+      {
+        "rank": 48,
+        "path": "guides\\tutorials\\tutorial-01-validation-report.md",
+        "overall": 76.0,
+        "completeness": 85,
+        "accuracy": 78,
+        "readability": 65
+      },
+      {
+        "rank": 49,
+        "path": "guides\\api\\utilities.md",
+        "overall": 75.7,
+        "completeness": 100,
+        "accuracy": 80,
+        "readability": 47
+      },
+      {
+        "rank": 50,
+        "path": "guides\\interactive\\mathematical-visualizations-demo.md",
+        "overall": 75.7,
+        "completeness": 100,
+        "accuracy": 72,
+        "readability": 55
+      },
+      {
+        "rank": 51,
+        "path": "guides\\api\\controllers.md",
+        "overall": 75.3,
+        "completeness": 100,
+        "accuracy": 79,
+        "readability": 47
+      },
+      {
+        "rank": 52,
+        "path": "guides\\interactive\\plotly-charts-demo.md",
+        "overall": 75.0,
+        "completeness": 100,
+        "accuracy": 70,
+        "readability": 55
+      },
+      {
+        "rank": 53,
+        "path": "guides\\tutorials\\tutorial-05-research-workflow.md",
+        "overall": 75.0,
+        "completeness": 100,
+        "accuracy": 83,
+        "readability": 42
+      },
+      {
+        "rank": 54,
+        "path": "guides\\interactive_configuration_guide.md",
+        "overall": 74.7,
+        "completeness": 85,
+        "accuracy": 77,
+        "readability": 62
+      },
+      {
+        "rank": 55,
+        "path": "guides\\workflows\\batch-simulation-workflow.md",
+        "overall": 74.7,
+        "completeness": 90,
+        "accuracy": 77,
+        "readability": 57
+      },
+      {
+        "rank": 56,
+        "path": "guides\\workflows\\hil-workflow.md",
+        "overall": 74.3,
+        "completeness": 90,
+        "accuracy": 78,
+        "readability": 55
+      },
+      {
+        "rank": 57,
+        "path": "guides\\workflows\\custom-cost-functions.md",
+        "overall": 74.0,
+        "completeness": 85,
+        "accuracy": 80,
+        "readability": 57
+      },
+      {
+        "rank": 58,
+        "path": "guides\\workflows\\hil-safety-validation.md",
+        "overall": 74.0,
+        "completeness": 85,
+        "accuracy": 80,
+        "readability": 57
+      },
+      {
+        "rank": 59,
+        "path": "guides\\workflows\\streamlit-theme-integration.md",
+        "overall": 74.0,
+        "completeness": 85,
+        "accuracy": 80,
+        "readability": 57
+      },
+      {
+        "rank": 60,
+        "path": "guides\\QUICK_REFERENCE.md",
+        "overall": 73.7,
+        "completeness": 85,
+        "accuracy": 79,
+        "readability": 57
+      },
+      {
+        "rank": 61,
+        "path": "guides\\workflows\\hil-disaster-recovery.md",
+        "overall": 71.7,
+        "completeness": 85,
+        "accuracy": 70,
+        "readability": 60
+      },
+      {
+        "rank": 62,
+        "path": "guides\\tutorials\\tutorial-04-custom-controller.md",
+        "overall": 71.3,
+        "completeness": 100,
+        "accuracy": 57,
+        "readability": 57
+      }
+    ]
+  }
+}

@@ -1,0 +1,202 @@
+% ============================================================================
+% SECTION 14: DEVELOPMENT INFRASTRUCTURE
+% ============================================================================
+\section{Development Infrastructure}
+
+\begin{frame}{6-Agent Orchestration System}
+    \textbf{Ultimate Orchestrator Pattern:}
+
+    \vspace{0.3cm}
+
+    \textbf{Agent Hierarchy:}
+    \begin{enumerate}
+        \item \textbf{Ultimate Orchestrator (UO)}
+        \begin{itemize}
+            \item Plans multi-domain tasks
+            \item Launches subordinate agents
+            \item Aggregates results
+        \end{itemize}
+
+        \item \textbf{Integration Agent}
+        \begin{itemize}
+            \item End-to-end system integration
+            \item Cross-component validation
+        \end{itemize}
+
+        \item \textbf{Control Systems Agent}
+        \begin{itemize}
+            \item SMC algorithm implementation
+            \item Stability analysis
+        \end{itemize}
+
+        \item \textbf{PSO Agent}
+        \begin{itemize}
+            \item Optimization algorithm tuning
+            \item Convergence analysis
+        \end{itemize}
+
+        \item \textbf{Documentation Agent}
+        \begin{itemize}
+            \item Generate comprehensive docs
+            \item Ensure quality standards
+        \end{itemize}
+
+        \item \textbf{Code Beautification Agent}
+        \begin{itemize}
+            \item Apply style guidelines
+            \item Refactor for clarity
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Checkpoint System for Multi-Agent Tasks}
+    \textbf{Purpose:} Prevent loss of agent work on token limits/crashes
+
+    \vspace{0.3cm}
+
+    \textbf{Checkpoint Lifecycle:}
+    \begin{enumerate}
+        \item \textbf{Plan Approved:} \texttt{checkpoint\_plan\_approved(task\_id, plan, hours, agents)}
+        \item \textbf{Agent Launched:} \texttt{checkpoint\_agent\_launched(task\_id, agent\_id, role)}
+        \item \textbf{Progress Updates:} \texttt{checkpoint\_agent\_progress(task\_id, agent\_id, hours\_done)}
+        \item \textbf{Agent Complete:} \texttt{checkpoint\_agent\_complete(task\_id, agent\_id, deliverables)}
+        \item \textbf{Agent Failed:} \texttt{checkpoint\_agent\_failed(task\_id, agent\_id, reason)}
+    \end{enumerate}
+
+    \vspace{0.3cm}
+
+    \textbf{Recovery Workflow:}
+    \begin{lstlisting}[language=bash]
+# After token limit or crash
+/recover  # Loads project state
+
+# Resume incomplete agent work
+/resume LT-4 agent1
+
+# Verify completion
+python .ai_workspace/tools/checkpoints/analyze_checkpoints.py
+    \end{lstlisting}
+
+    \vspace{0.3cm}
+
+    \begin{block}{Reliability}
+        Checkpoints survived 100\% of token limit interruptions during Phase 5 research
+    \end{block}
+\end{frame}
+
+\begin{frame}{Model Context Protocol (MCP) Servers}
+    \textbf{12 Specialized MCP Servers for AI-Assisted Development:}
+
+    \vspace{0.3cm}
+
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \textbf{Core Servers:}
+            \begin{itemize}
+                \item \textbf{filesystem:} File operations
+                \item \textbf{github:} Issues/PRs
+                \item \textbf{sequential-thinking:} Planning
+                \item \textbf{puppeteer:} UI testing
+                \item \textbf{pytest-mcp:} Test debugging
+                \item \textbf{git-mcp:} Advanced Git ops
+            \end{itemize}
+        \end{column}
+
+        \begin{column}{0.5\textwidth}
+            \textbf{Domain Servers:}
+            \begin{itemize}
+                \item \textbf{sqlite-mcp:} PSO DB queries
+                \item \textbf{mcp-analyzer:} Code quality
+                \item \textbf{lighthouse-mcp:} Audits
+                \item \textbf{pandas-mcp:} Data analysis
+                \item \textbf{numpy-mcp:} Numerical compute
+                \item \textbf{mcp-debugger:} API testing
+            \end{itemize}
+        \end{column}
+    \end{columns}
+
+    \vspace{0.3cm}
+
+    \textbf{Auto-Trigger Strategy:}
+    \begin{itemize}
+        \item Claude Code automatically chains 3-5 MCPs for complex tasks
+        \item Example: \textit{sequential-thinking} → \textit{filesystem} → \textit{pytest-mcp} → \textit{pandas-mcp}
+    \end{itemize}
+
+    \vspace{0.3cm}
+
+    \begin{exampleblock}{Configuration}
+        All 12 servers enabled in \texttt{.mcp.json} \\
+        \textit{See:} \texttt{.ai\_workspace/guides/mcp\_usage\_guide.md}
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}[fragile]{Recovery System: 30-Second Project Restoration}
+    \textbf{Purpose:} Resume work after token limits or multi-month gaps
+
+    \vspace{0.3cm}
+
+    \textbf{What Survives Token Limits:}
+    \begin{itemize}
+        \item \success{Git commits} (10/10 reliability)
+        \item \success{Project state} (9/10 reliability)
+        \item \success{Agent checkpoints} (9/10 reliability)
+        \item \success{Data files} (8/10 reliability)
+        \item \statuserror{Background bash processes} (0/10 -- expected)
+    \end{itemize}
+
+    \vspace{0.3cm}
+
+    \textbf{One-Command Recovery:}
+    \begin{lstlisting}[language=bash]
+# Windows
+.ai_workspace\tools\recovery\quick_recovery.bat
+
+# Linux/Mac
+bash .ai_workspace/tools/recovery/recover_project.sh && \
+  python .ai_workspace/tools/checkpoints/analyze_checkpoints.py
+    \end{lstlisting}
+
+    \vspace{0.3cm}
+
+    \textbf{Automated Tracking (Zero Manual Updates):}
+    \begin{lstlisting}[language=bash]
+# Git hooks auto-detect task IDs and update project state
+git commit -m "feat(MT-6): Complete boundary layer optimization"
+# Pre-commit hook auto-updates project state
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}{Multi-Account Recovery (Nov 2025)}
+    \textbf{Problem:} Resume work across different Claude accounts/sessions
+
+    \vspace{0.3cm}
+
+    \textbf{Solution:} Git-based multi-account recovery workflow
+
+    \vspace{0.3cm}
+
+    \textbf{Recovery Steps:}
+    \begin{enumerate}
+        \item Pull latest commits from remote
+        \item Load project state from \texttt{.ai\_workspace/state/}
+        \item Analyze agent checkpoints for incomplete work
+        \item Review roadmap tracker for remaining tasks
+        \item Resume from last known good state
+    \end{enumerate}
+
+    \vspace{0.3cm}
+
+    \textbf{Key Tools:}
+    \begin{itemize}
+        \item \texttt{project\_state\_manager.py} -- Tracks phase, roadmap progress
+        \item \texttt{roadmap\_tracker.py} -- Parses 72-hour research roadmap (50 tasks)
+        \item \texttt{agent\_checkpoint.py} -- Recovers interrupted multi-agent work
+    \end{itemize}
+
+    \vspace{0.3cm}
+
+    \begin{block}{Test Coverage}
+        11/11 tests passing, 100\% coverage for recovery system
+    \end{block}
+\end{frame}

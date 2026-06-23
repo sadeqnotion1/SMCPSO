@@ -1,0 +1,161 @@
+{
+  "analysis_metadata": {
+    "timestamp": "20251006_183442",
+    "mcp_server": "mcp-analyzer",
+    "total_duration_seconds": 1.687138557434082
+  },
+  "scope": {
+    "total_files": 9,
+    "total_phases": 1
+  },
+  "ruff_summary": {
+    "total_issues": 4,
+    "fixable_issues": 2,
+    "severity_distribution": {
+      "F": 1
+    }
+  },
+  "vulture_summary": {
+    "total_items": 2,
+    "high_confidence": 2,
+    "medium_confidence": 0,
+    "low_confidence": 0
+  },
+  "phase_results": [
+    {
+      "phase_number": 2,
+      "phase_name": "Optimization & Analysis",
+      "files_analyzed": 9,
+      "ruff_total_issues": 4,
+      "vulture_total_items": 2,
+      "duration_seconds": 1.687138557434082,
+      "file_results": [
+        {
+          "file_path": "src\\optimizer\\__init__.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.09091305732727051,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\optimizer\\pso_optimizer.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.06810235977172852,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\utils\\analysis\\__init__.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.05046701431274414,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\utils\\analysis\\statistics.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\src\\utils\\analysis\\statistics.py",
+              "line": 15,
+              "column": 31,
+              "code": "F401",
+              "message": "`scipy.stats.chi2` imported but unused",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\src\\utils\\analysis\\statistics.py",
+              "line": 16,
+              "column": 39,
+              "code": "F401",
+              "message": "`typing.Optional` imported but unused",
+              "severity": "F",
+              "fixable": true
+            },
+            {
+              "file_path": "D:\\Projects\\main\\src\\utils\\analysis\\statistics.py",
+              "line": 209,
+              "column": 5,
+              "code": "F841",
+              "message": "Local variable `df_total` is assigned to but never used",
+              "severity": "F",
+              "fixable": false
+            }
+          ],
+          "vulture_items": [
+            {
+              "file_path": "src\\utils\\analysis\\statistics.py",
+              "line": 15,
+              "item_type": "unknown",
+              "name": "chi2",
+              "confidence": 90
+            },
+            {
+              "file_path": "src\\utils\\analysis\\statistics.py",
+              "line": 16,
+              "item_type": "unknown",
+              "name": "Optional",
+              "confidence": 90
+            }
+          ],
+          "analysis_time": 0.08795404434204102,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\utils\\monitoring\\__init__.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.05752229690551758,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\utils\\monitoring\\diagnostics.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.06859207153320312,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\utils\\monitoring\\latency.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.10627245903015137,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\utils\\monitoring\\memory_monitor.py",
+          "ruff_issues": [
+            {
+              "file_path": "D:\\Projects\\main\\src\\utils\\monitoring\\memory_monitor.py",
+              "line": 318,
+              "column": 9,
+              "code": "F841",
+              "message": "Local variable `alert` is assigned to but never used",
+              "severity": "F",
+              "fixable": false
+            }
+          ],
+          "vulture_items": [],
+          "analysis_time": 0.11217832565307617,
+          "success": true,
+          "error_message": null
+        },
+        {
+          "file_path": "src\\utils\\monitoring\\stability.py",
+          "ruff_issues": [],
+          "vulture_items": [],
+          "analysis_time": 0.0539858341217041,
+          "success": false,
+          "error_message": null
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+% Comprehensive Benchmark Table - Part II: Energy & Chattering
+% Auto-generated and manually split from comprehensive.tex
+
+\begin{table}[htbp]
+\centering
+\caption{Comprehensive Benchmark (Part II) - Energy Consumption \& Chattering}
+\label{tab:comprehensive_part2}
+\small
+\begin{tabular}{lcccccccc}
+\toprule
+Controller & $M_p$ CI & $M_p$ CI & Energy & Energy & Energy CI & Energy CI & Chat. & Chat. \\
+ & Low & High & Mean & Std & Low & High & Freq & Amp \\
+ & (deg) & (deg) & (N$^2$s) & (N$^2$s) & (N$^2$s) & (N$^2$s) & (Hz) & (N) \\
+\midrule
+Classical & 23152 & 31824 & 9843 & 7518 & 8369 & 11316 & 0.002 & 0.647 \\
+STA & 12491 & 17675 & 202907 & 15750 & 199820 & 205994 & 0.000 & 3.088 \\
+Adaptive & 12621 & 17871 & 214255 & 6254 & 213029 & 215481 & 0.000 & 3.098 \\
+Hybrid & 100 & 100 & 1000000 & 0 & 1000000 & 1000000 & 0.000 & 0.000 \\
+\bottomrule
+\end{tabular}
+\end{table}

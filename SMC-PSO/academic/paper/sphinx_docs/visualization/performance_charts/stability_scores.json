@@ -1,0 +1,82 @@
+{
+  "type": "radar",
+  "data": {
+    "labels": [
+      "Overall Score",
+      "Thread Safety",
+      "Stability Validated"
+    ],
+    "datasets": [
+      {
+        "label": "Classical Smc",
+        "data": [
+          100.0,
+          100.0,
+          100.0
+        ],
+        "backgroundColor": "rgba(75, 192, 192, 0.2)",
+        "borderColor": "rgb(75, 192, 192)",
+        "borderWidth": 2,
+        "pointRadius": 4
+      },
+      {
+        "label": "Sta Smc",
+        "data": [
+          100.0,
+          100.0,
+          100.0
+        ],
+        "backgroundColor": "rgba(255, 99, 132, 0.2)",
+        "borderColor": "rgb(255, 99, 132)",
+        "borderWidth": 2,
+        "pointRadius": 4
+      },
+      {
+        "label": "Adaptive Smc",
+        "data": [
+          100.0,
+          100.0,
+          100.0
+        ],
+        "backgroundColor": "rgba(54, 162, 235, 0.2)",
+        "borderColor": "rgb(54, 162, 235)",
+        "borderWidth": 2,
+        "pointRadius": 4
+      },
+      {
+        "label": "Hybrid Adaptive Sta Smc",
+        "data": [
+          75.0,
+          100.0,
+          0.0
+        ],
+        "backgroundColor": "rgba(255, 206, 86, 0.2)",
+        "borderColor": "rgb(255, 206, 86)",
+        "borderWidth": 2,
+        "pointRadius": 4
+      }
+    ]
+  },
+  "options": {
+    "responsive": true,
+    "plugins": {
+      "title": {
+        "display": true,
+        "text": "Controller Stability Scores (Multi-Metric Comparison)"
+      },
+      "legend": {
+        "display": true,
+        "position": "top"
+      }
+    },
+    "scales": {
+      "r": {
+        "beginAtZero": true,
+        "max": 100,
+        "ticks": {
+          "stepSize": 20
+        }
+      }
+    }
+  }
+}

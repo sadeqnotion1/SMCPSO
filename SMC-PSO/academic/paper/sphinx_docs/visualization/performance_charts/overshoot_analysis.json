@@ -1,0 +1,96 @@
+{
+  "type": "boxplot",
+  "data": {
+    "labels": [
+      "Classical Smc",
+      "Sta Smc",
+      "Adaptive Smc",
+      "Hybrid Adaptive Sta Smc"
+    ],
+    "datasets": [
+      {
+        "label": "Classical Smc",
+        "data": [
+          {
+            "min": 0.009635838483938897,
+            "q1": 0.19394667041040276,
+            "median": 0.2641422860233226,
+            "q3": 0.29755288764424476,
+            "max": 0.44320858622410053
+          }
+        ],
+        "backgroundColor": "rgba(75, 192, 192, 0.2)",
+        "borderColor": "rgb(75, 192, 192)",
+        "borderWidth": 2
+      },
+      {
+        "label": "Sta Smc",
+        "data": [
+          {
+            "min": 0.0354651314215199,
+            "q1": 0.10619510944460267,
+            "median": 0.1317825720001732,
+            "q3": 0.14834997781515885,
+            "max": 0.18670227482052362
+          }
+        ],
+        "backgroundColor": "rgba(255, 99, 132, 0.2)",
+        "borderColor": "rgb(255, 99, 132)",
+        "borderWidth": 2
+      },
+      {
+        "label": "Adaptive Smc",
+        "data": [
+          {
+            "min": 0.01859323840253075,
+            "q1": 0.05059607542392623,
+            "median": 0.07050876472699344,
+            "q3": 0.09203779002293808,
+            "max": 0.1510829810696122
+          }
+        ],
+        "backgroundColor": "rgba(54, 162, 235, 0.2)",
+        "borderColor": "rgb(54, 162, 235)",
+        "borderWidth": 2
+      },
+      {
+        "label": "Hybrid Adaptive Sta Smc",
+        "data": [
+          {
+            "min": 0.027899449236953575,
+            "q1": 0.08806797356019608,
+            "median": 0.10863151400813877,
+            "q3": 0.12997053452133978,
+            "max": 0.2051263545016228
+          }
+        ],
+        "backgroundColor": "rgba(255, 206, 86, 0.2)",
+        "borderColor": "rgb(255, 206, 86)",
+        "borderWidth": 2
+      }
+    ]
+  },
+  "options": {
+    "responsive": true,
+    "plugins": {
+      "title": {
+        "display": true,
+        "text": "Overshoot Analysis (Box Plot Distribution)"
+      },
+      "legend": {
+        "display": true,
+        "position": "top"
+      }
+    },
+    "scales": {
+      "y": {
+        "beginAtZero": true,
+        "max": 1.0,
+        "title": {
+          "display": true,
+          "text": "Overshoot (0-1 scale, multiply by 100 for percentage)"
+        }
+      }
+    }
+  }
+}

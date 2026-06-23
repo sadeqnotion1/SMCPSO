@@ -1,0 +1,109 @@
+\documentclass[tikz,border=10pt]{standalone}
+\usepackage{tikz}
+\usepackage{amsmath}
+\usetikzlibrary{shapes,arrows,positioning,calc,decorations.pathreplacing}
+
+\begin{document}
+
+% Define block styles
+\tikzstyle{block} = [draw, rectangle, minimum height=1.2cm, minimum width=2.5cm,
+                     text width=2.3cm, text centered, rounded corners, thick]
+\tikzstyle{sum} = [draw, circle, minimum size=0.8cm, thick]
+\tikzstyle{input} = [coordinate]
+\tikzstyle{output} = [coordinate]
+\tikzstyle{pinstyle} = [pin edge={to-,thin,black}]
+\tikzstyle{arrow} = [thick,->,>=stealth]
+
+\begin{tikzpicture}[auto, node distance=2.5cm,>=latex']
+
+    % Title
+    \node[font=\Large\bfseries] at (0,8.5) {Sliding Mode Control Loop - DIP System};
+
+    % Input
+    \node[input] (ref) at (-8,5) {};
+    \node[left of=ref, node distance=1.5cm] {\textbf{Reference:} $\theta_1^d=0, \theta_2^d=0$};
+
+    % State Measurement
+    \node[block, fill=blue!10] (sensor) at (-5,5) {State\\Measurement\\$\mathbf{x} = [x, \theta_1, \theta_2, \dot{x}, \dot{\theta}_1, \dot{\theta}_2]^T$};
+
+    % Error Calculation
+    \node[sum, fill=red!10] (sum1) at (-2,5) {$-$};
+
+    % Sliding Surface
+    \node[block, fill=green!10] (surface) at (1.5,5) {Sliding Surface\\$s_1 = \lambda_1\theta_1 + \dot{\theta}_1$\\$s_2 = \lambda_2\theta_2 + \dot{\theta}_2$};
+
+    % Controller Variants (stacked)
+    \node[block, fill=yellow!10, text width=3cm, minimum width=3.5cm] (controller) at (5.5,5) {
+        \textbf{Control Law:}\\[0.1cm]
+        \textit{Classical SMC:}\\
+        $u = -K \text{sign}(s)$\\[0.1cm]
+        \textit{STA-SMC:}\\
+        $u = -K_1|s|^{1/2}\text{sgn}(s)$\\
+        \hspace{0.5cm}$-K_2\int\text{sgn}(s)dt$\\[0.1cm]
+        \textit{Adaptive:}\\
+        $\hat{K}(t) = \gamma|s|$
+    };
+
+    % Boundary Layer / Saturation
+    \node[block, fill=orange!10] (sat) at (9.5,5) {Saturation \&\\Boundary Layer\\$u = \text{sat}(u, F_{\max})$};
+
+    % Plant Dynamics
+    \node[block, fill=purple!10, minimum height=2cm, text width=3.5cm, minimum width=4cm] (plant) at (6,-0.5) {
+        \textbf{DIP Dynamics}\\[0.1cm]
+        $M(\mathbf{q})\ddot{\mathbf{q}} + C(\mathbf{q},\dot{\mathbf{q}})\dot{\mathbf{q}}$\\
+        \hspace{1.5cm}$+ G(\mathbf{q}) = B u$\\[0.1cm]
+        where $\mathbf{q} = [x, \theta_1, \theta_2]^T$\\
+        Integration: RK45, $\Delta t = 0.001$s
+    };
+
+    % Integration Block
+    \node[block, fill=cyan!10, below of=plant, node distance=2.5cm] (integrator) at (6,-3) {Numerical\\Integration\\$\dot{\mathbf{x}} = f(\mathbf{x}, u, t)$};
+
+    % State Output
+    \node[output] (stateout) at (6,-5.5) {};
+    \node[right of=stateout, node distance=2cm] {\textbf{State Output}};
+
+    % Feedback loop
+    \draw[arrow] (ref) -- (sensor);
+    \draw[arrow] (sensor) -- node[above] {$\mathbf{x}$} (sum1);
+    \draw[arrow] (sum1) -- node[above] {$e$} (surface);
+    \draw[arrow] (surface) -- node[above] {$s$} (controller);
+    \draw[arrow] (controller) -- node[above] {$u_{\text{raw}}$} (sat);
+    \draw[arrow] (sat) -- node[right, pos=0.3] {$u$} ++(0,-4.5) -- (plant);
+    \draw[arrow] (plant) -- (integrator);
+    \draw[arrow] (integrator) -- (stateout);
+
+    % Feedback path
+    \draw[arrow] (stateout) -| node[pos=0.1, right] {Feedback} ++(-12,0) |- (sensor);
+
+    % Annotations
+    \node[draw=none, fill=none, text width=4cm, font=\small] at (-5,1.5) {
+        \textbf{Key Parameters:}\\
+        $\lambda_1, \lambda_2$: Surface slopes\\
+        $K, K_1, K_2$: Control gains\\
+        $F_{\max} = 150$ N: Force limit\\
+        $\Delta t = 0.001$ s: Sample time
+    };
+
+    % PSO Optimization (side annotation)
+    \node[draw, dashed, thick, rectangle, rounded corners, fill=yellow!5,
+          text width=3cm, font=\small] at (11,2) {
+        \textbf{PSO Optimization}\\[0.1cm]
+        Tunes controller\\gains offline:\\
+        $K^*, \lambda^*$\\[0.1cm]
+        30 particles\\
+        50 iterations\\
+        Multi-objective\\cost function
+    };
+    \draw[->, dashed, thick] (11,2.8) -- (controller.east);
+
+    % Legend
+    \node[draw=none, fill=none, text width=5cm, font=\scriptsize] at (1,-5) {
+        \textbf{Legend:} \colorbox{blue!10}{Measurement} \colorbox{green!10}{Sliding Surface}
+        \colorbox{yellow!10}{Controller} \colorbox{orange!10}{Saturation}
+        \colorbox{purple!10}{Plant} \colorbox{cyan!10}{Integration}
+    };
+
+\end{tikzpicture}
+
+\end{document}

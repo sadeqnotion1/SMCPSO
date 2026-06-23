@@ -1,0 +1,209 @@
+% ============================================================================
+% SECTION 9: EDUCATIONAL MATERIALS
+% ============================================================================
+\section{Educational Materials}
+
+\begin{frame}{Educational System Overview}
+    \textbf{Mission:} Democratize access to advanced control theory
+
+    \vspace{0.3cm}
+
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \textbf{Learning Paths:}
+            \begin{itemize}
+                \item \textbf{Path 0:} Complete beginners (125-150 hrs)
+                \item \textbf{Path 1:} Quick start (1-2 hrs)
+                \item \textbf{Path 2:} Intermediate (5-8 hrs)
+                \item \textbf{Path 3:} Advanced (8-12 hrs)
+                \item \textbf{Path 4:} Research level (12+ hrs)
+            \end{itemize}
+        \end{column}
+
+        \begin{column}{0.5\textwidth}
+            \textbf{Content Types:}
+            \begin{itemize}
+                \item Written tutorials (5 comprehensive)
+                \item Theory documentation (~2,000 lines)
+                \item Podcast series (44 episodes)
+                \item Interactive notebooks
+                \item Code examples (100+)
+            \end{itemize}
+        \end{column}
+    \end{columns}
+
+    \vspace{0.3cm}
+
+    \begin{block}{Key Feature: NotebookLM Podcast Series}
+        \success{44 episodes} covering Phases 1-4, ~40 hours audio content \\
+        Convert written materials to commute-friendly learning format
+    \end{block}
+\end{frame}
+
+\begin{frame}{Beginner Roadmap: Path 0}
+    \textbf{Target:} Zero prerequisites (no coding/control theory background)
+
+    \vspace{0.3cm}
+
+    \textbf{Duration:} 125-150 hours over 4-6 months
+
+    \vspace{0.3cm}
+
+    \textbf{Phase Breakdown:}
+    \begin{enumerate}
+        \item \textbf{Computing Fundamentals (30 hrs)}
+        \begin{itemize}
+            \item Terminal/command line basics
+            \item Git version control
+            \item Package management (pip, conda)
+        \end{itemize}
+
+        \item \textbf{Python Programming (40 hrs)}
+        \begin{itemize}
+            \item Variables, functions, classes
+            \item NumPy/SciPy fundamentals
+            \item Matplotlib visualization
+        \end{itemize}
+
+        \item \textbf{Physics \& Mathematics (35 hrs)}
+        \begin{itemize}
+            \item Classical mechanics (pendulum dynamics)
+            \item Linear algebra (matrices, eigenvalues)
+            \item Differential equations (ODEs)
+        \end{itemize}
+
+        \item \textbf{Control Theory (20 hrs)}
+        \begin{itemize}
+            \item PID control introduction
+            \item State-space representation
+            \item Lyapunov stability basics
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{Tutorial System Architecture}
+    \textbf{Progressive Learning Structure:}
+
+    \vspace{0.3cm}
+
+    \begin{tabular}{lll}
+        \toprule
+        \textbf{Tutorial} & \textbf{Topic} & \textbf{Duration} \\
+        \midrule
+        Tutorial 01 & Getting Started & 1-2 hrs \\
+        & CLI basics, first simulation & \\
+        \midrule
+        Tutorial 02 & Controller Comparison & 3-4 hrs \\
+        & All 7 controllers, PSO tuning & \\
+        \midrule
+        Tutorial 03 & Advanced Features & 4-5 hrs \\
+        & Batch simulation, monitoring & \\
+        \midrule
+        Tutorial 04 & Web Interface & 2-3 hrs \\
+        & Streamlit dashboard, real-time plots & \\
+        \midrule
+        Tutorial 05 & Research Workflow & 5-8 hrs \\
+        & Reproducible experiments, paper figures & \\
+        \bottomrule
+    \end{tabular}
+
+    \vspace{0.3cm}
+
+    \begin{exampleblock}{Hands-On Philosophy}
+        Every tutorial includes runnable code, expected outputs, troubleshooting tips
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}{NotebookLM Podcast Series}
+    \textbf{Innovation:} Convert documentation to podcast-style audio
+
+    \vspace{0.3cm}
+
+    \textbf{Series Statistics:}
+    \begin{itemize}
+        \item \textbf{44 episodes} covering Phases 1-4
+        \item \textbf{~40 hours} total audio content
+        \item \textbf{125 hours} equivalent learning material
+        \item TTS optimization for commute/exercise listening
+    \end{itemize}
+
+    \vspace{0.3cm}
+
+    \textbf{Episode Structure:}
+    \begin{enumerate}
+        \item \textbf{Phase 1:} Foundations (Python, Git, Physics) -- 12 episodes
+        \item \textbf{Phase 2:} Control Theory (SMC, PSO) -- 10 episodes
+        \item \textbf{Phase 3:} Implementation (Controllers, Simulation) -- 14 episodes
+        \item \textbf{Phase 4:} Advanced Topics (HIL, Monitoring, Research) -- 8 episodes
+    \end{enumerate}
+
+    \vspace{0.3cm}
+
+    \begin{block}{Quality Validation}
+        Episode templates, TTS optimization checklist, phase-specific examples \\
+        \textit{See:} \texttt{.ai\_workspace/guides/notebooklm\_guide.md}
+    \end{block}
+\end{frame}
+
+\begin{frame}{Learning Path Integration}
+    \textbf{Seamless Progression Across Paths:}
+
+    \vspace{0.3cm}
+
+    \begin{tikzpicture}[
+        node distance=1.5cm,
+        every node/.style={font=\small},
+        box/.style={rectangle, draw, fill=dipblue!20, minimum width=2.5cm, minimum height=0.8cm}
+    ]
+        \node[box] (path0) {Path 0: Beginner Roadmap};
+        \node[box, below of=path0] (path1) {Path 1: Quick Start};
+        \node[box, below of=path1] (path2) {Path 2: Intermediate};
+        \node[box, below of=path2] (path3) {Path 3: Advanced};
+        \node[box, below of=path3] (path4) {Path 4: Research};
+
+        \draw[->, thick] (path0) -- node[right] {125-150 hrs} (path1);
+        \draw[->, thick] (path1) -- node[right] {1-2 hrs} (path2);
+        \draw[->, thick] (path2) -- node[right] {5-8 hrs} (path3);
+        \draw[->, thick] (path3) -- node[right] {8-12 hrs} (path4);
+
+        \node[right=3cm of path0] (edu) {\texttt{.ai\_workspace/edu/}};
+        \node[right=3cm of path1] (tut1) {Tutorial 01};
+        \node[right=3cm of path2] (tut23) {Tutorials 02-03};
+        \node[right=3cm of path3] (tut45) {Tutorials 04-05};
+        \node[right=3cm of path4] (research) {Research docs};
+
+        \draw[->, dashed, dipgreen] (path0.east) -- (edu.west);
+        \draw[->, dashed, dipgreen] (path1.east) -- (tut1.west);
+        \draw[->, dashed, dipgreen] (path2.east) -- (tut23.west);
+        \draw[->, dashed, dipgreen] (path3.east) -- (tut45.west);
+        \draw[->, dashed, dipgreen] (path4.east) -- (research.west);
+    \end{tikzpicture}
+\end{frame}
+
+\begin{frame}[fragile]{Educational Code Examples}
+    \textbf{Example: First Simulation (Tutorial 01)}
+
+    \vspace{0.3cm}
+
+    \begin{lstlisting}
+# Step 1: Run classical SMC simulation
+python simulate.py --ctrl classical_smc --plot
+
+# Step 2: View performance metrics
+# Output includes:
+#   - Settling time: ~2.5 seconds
+#   - Final angle error: <0.01 radians
+#   - Control effort: integral of u^2
+
+# Step 3: Save results
+python simulate.py --ctrl classical_smc --save results.json
+    \end{lstlisting}
+
+    \vspace{0.3cm}
+
+    \begin{exampleblock}{Expected Output}
+        \texttt{Simulation complete! Settling time: 2.47s} \\
+        \texttt{Angles stabilized within 0.01 rad tolerance} \\
+        \texttt{Results saved to: results.json}
+    \end{exampleblock}
+\end{frame}

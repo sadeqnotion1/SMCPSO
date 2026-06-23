@@ -1,0 +1,152 @@
+% ============================================================================
+% SECTION 13: MONITORING INFRASTRUCTURE
+% ============================================================================
+\section{Monitoring Infrastructure}
+
+\begin{frame}[fragile]{LatencyMonitor: Real-Time Performance Tracking}
+    \textbf{Purpose:} Track control loop timing for real-time systems
+
+    \vspace{0.3cm}
+
+    \textbf{Usage Pattern:}
+    \begin{lstlisting}
+from src.utils.monitoring.latency import LatencyMonitor
+
+monitor = LatencyMonitor(dt=0.01)  # Expected 10ms cycle
+
+for t in simulation_loop:
+    start = monitor.start()
+
+    # Controller computation
+    u = controller.compute_control(state, last_u, history)
+
+    # End timing and check for deadline miss
+    missed = monitor.end(start)
+
+    if missed:
+        logger.warning(f"Deadline miss at t={t:.2f}s")
+    \end{lstlisting}
+
+    \vspace{0.3cm}
+
+    \textbf{Tracked Statistics:}
+    \begin{itemize}
+        \item Mean, median, 95th percentile latency
+        \item Maximum latency (worst-case)
+        \item Total deadline misses
+        \item Weakly-hard constraint violations (m out of k pattern)
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Logging System Architecture}
+    \textbf{Centralized Log Management:}
+
+    \vspace{0.3cm}
+
+    \textbf{Log Categories:}
+    \begin{itemize}
+        \item \texttt{academic/logs/pso/} -- PSO optimization runs (978 KB)
+        \item \texttt{academic/logs/benchmarks/} -- Research task execution (~10 MB)
+        \item \texttt{academic/logs/docs\_build/} -- Sphinx build logs (352 KB)
+        \item \texttt{academic/logs/monitoring/} -- Runtime monitoring logs
+        \item \texttt{academic/logs/test/} -- Test execution logs
+        \item \texttt{academic/logs/archive/} -- Compressed historical logs (214 KB)
+    \end{itemize}
+
+    \vspace{0.3cm}
+
+    \textbf{Centralized Path Management:}
+    \begin{lstlisting}
+from src.utils.logging.paths import get_log_path
+
+# Single source of truth for log paths
+log_file = get_log_path('pso', 'classical_smc_20250930.log')
+# Returns: academic/logs/pso/classical_smc_20250930.log
+    \end{lstlisting}
+
+    \vspace{0.3cm}
+
+    \begin{block}{Workspace Hygiene}
+        All logs in \texttt{academic/logs/} (HIDDEN directory) \\
+        NEVER create log files at project root
+    \end{block}
+\end{frame}
+
+\begin{frame}{Fault Detection \& Isolation (FDI)}
+    \textbf{Monitoring Anomalous Behavior:}
+
+    \vspace{0.3cm}
+
+    \textbf{Detected Faults:}
+    \begin{enumerate}
+        \item \textbf{Sensor Faults}
+        \begin{itemize}
+            \item State measurement out of physical range
+            \item Sudden jumps (> 3σ from trend)
+            \item Stuck sensor (constant value)
+        \end{itemize}
+
+        \item \textbf{Actuator Faults}
+        \begin{itemize}
+            \item Control saturation (persistent $|u| = u_{\max}$)
+            \item Actuator deadband (zero response region)
+            \item Reduced effectiveness (partial failure)
+        \end{itemize}
+
+        \item \textbf{Controller Faults}
+        \begin{itemize}
+            \item Numerical instability (NaN/Inf in control)
+            \item Excessive chattering (> threshold frequency)
+            \item Sliding surface divergence
+        \end{itemize}
+
+        \item \textbf{System Faults}
+        \begin{itemize}
+            \item Deadline misses exceeding threshold
+            \item Memory leak detection (growing allocations)
+            \item Communication timeout (HIL mode)
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Monitoring Data Visualization}
+    \textbf{Real-Time Dashboard (Streamlit):}
+
+    \vspace{0.3cm}
+
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \textbf{Live Plots:}
+            \begin{itemize}
+                \item Control loop latency histogram
+                \item Deadline miss time series
+                \item Sliding surface magnitude
+                \item Control effort over time
+            \end{itemize}
+        \end{column}
+
+        \begin{column}{0.5\textwidth}
+            \textbf{Metrics Display:}
+            \begin{itemize}
+                \item Current cycle time
+                \item Mean latency (rolling window)
+                \item Miss rate (m-of-k pattern)
+                \item Safety status indicators
+            \end{itemize}
+        \end{column}
+    \end{columns}
+
+    \vspace{0.3cm}
+
+    \textbf{Launch Monitoring Dashboard:}
+    \begin{lstlisting}[language=bash]
+streamlit run scripts/monitoring/real_time_dashboard.py
+    \end{lstlisting}
+
+    \vspace{0.3cm}
+
+    \begin{exampleblock}{Production Readiness}
+        Monitoring infrastructure fully operational \\
+        Validated in HIL tests and long-duration simulations
+    \end{exampleblock}
+\end{frame}

@@ -1,0 +1,217 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ANNOTATED CODE LISTING: Classical SMC Implementation
+% Maps to Algorithm 3.1 (Control Law) and Algorithm 3.2 (Equivalent Control)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{listing}[H]
+\caption{Classical SMC Implementation (\texttt{src/controllers/smc/classic\_smc.py})}
+\label{lst:classical_smc}
+\begin{lstlisting}[language=Python, numbers=left, basicstyle=\ttfamily\small, breaklines=true, frame=single]
+class ClassicalSMC:
+    """Classical Sliding-Mode Controller with boundary layer.
+
+    Implements first-order SMC with saturation function for
+    chattering reduction. Maps to Algorithm 3.1.
+    """
+
+    def __init__(self, gains, max_force, boundary_layer,
+                 dynamics_model=None, regularization=1e-10,
+                 switch_method="tanh", **kwargs):
+        """Initialize controller.
+
+        Args:
+            gains: [k1, k2, lam1, lam2, K, kd] (6 gains)
+            max_force: Saturation limit (N)
+            boundary_layer: Epsilon for chattering reduction
+            dynamics_model: For equivalent control
+            switch_method: "tanh" (smooth) or "linear"
+        """
+        # Validate exactly 6 gains (Algorithm 3.4)
+        self.validate_gains(gains)
+        gains_arr = np.asarray(gains, dtype=float).ravel()
+
+        # Unpack gains (must be positive, Theorem 3.1)
+        self.k1, self.k2, self.lam1, self.lam2, \
+            self.K, self.kd = map(float, gains_arr)
+
+        # Validate positivity constraints (Algorithm 3.4)
+        self.k1 = require_positive(self.k1, "k1")
+        self.k2 = require_positive(self.k2, "k2")
+        self.lam1 = require_positive(self.lam1, "lam1")
+        self.lam2 = require_positive(self.lam2, "lam2")
+        self.K = require_positive(self.K, "K")
+        self.kd = require_positive(self.kd, "kd",
+                                    allow_zero=True)
+
+        self.max_force = require_positive(max_force, "max_force")
+        self.epsilon = require_positive(boundary_layer,
+                                        "boundary_layer")
+
+        # Dynamics for equivalent control (weakref to break cycles)
+        if dynamics_model is not None:
+            self._dynamics_ref = weakref.ref(dynamics_model)
+        else:
+            self._dynamics_ref = lambda: None
+
+        self.regularization = float(regularization)
+        self.switch_method = switch_method  # "tanh" or "linear"
+        self.n_gains = 6  # Expose for PSO
+
+    def _compute_sliding_surface(self, state):
+        """Compute sliding surface sigma (Equation 3.7).
+
+        Maps to Algorithm 3.1, Line 2.
+        Time complexity: O(1), Space: O(1).
+        """
+        _, theta1, theta2, _, dtheta1, dtheta2 = state
+        # Linear combination of joint angles and velocities
+        return (self.lam1 * theta1 + self.lam2 * theta2 +
+                self.k1 * dtheta1 + self.k2 * dtheta2)
+
+    def _compute_equivalent_control(self, state):
+        """Compute model-based equivalent control u_eq.
+
+        Maps to Algorithm 3.2 (Equivalent Control).
+        Time complexity: O(n^3) for matrix inversion.
+        Space: O(n^2) for physics matrices.
+
+        Returns:
+            u_eq or 0.0 if unreliable
+        """
+        if self.dyn is None:
+            return 0.0  # No model attached
+
+        q_dot = state[3:]  # Velocities
+
+        try:
+            # Get physics matrices (Equation 2.8)
+            M, C, G = self.dyn._compute_physics_matrices(state)
+        except Exception:
+            return 0.0  # Safe fallback
+
+        # Tikhonov regularization (Algorithm 3.2, Line 10)
+        M_reg = M + np.eye(3) * max(self.regularization, 0.0)
+
+        try:
+            # Check controllability (Algorithm 3.2, Lines 11-14)
+            L = np.array([0.0, self.k1, self.k2])
+            B = np.array([1.0, 0.0, 0.0])
+            Minv_B = np.linalg.solve(M_reg, B)  # O(n^3)
+            L_Minv_B = float(L @ Minv_B)
+
+            # Threshold check (Algorithm 3.2, Line 16)
+            if abs(L_Minv_B) < self.eq_threshold:
+                return 0.0  # Uncontrollable
+
+            # Compute numerator (Algorithm 3.2, Lines 17-20)
+            if getattr(C, "ndim", 1) == 2:
+                rhs = C @ q_dot + G
+            else:
+                rhs = C + G
+
+            Minv_rhs = np.linalg.solve(M_reg, rhs)  # O(n^3)
+            term1 = float(L @ Minv_rhs)
+            term2 = (self.k1 * self.lam1 * q_dot[1] +
+                     self.k2 * self.lam2 * q_dot[2])
+
+            # Final division (Algorithm 3.2, Line 22)
+            u_eq = (term1 - term2) / L_Minv_B
+
+        except np.linalg.LinAlgError:
+            return 0.0  # Singular matrix despite regularization
+
+        return float(u_eq)
+
+    def compute_control(self, state, state_vars, history):
+        """Compute classical SMC control law.
+
+        Maps to Algorithm 3.1 (Main Control Law).
+        Time complexity: O(n^3) due to equivalent control.
+        Space: O(1) for stateless controller.
+
+        Returns:
+            ClassicalSMCOutput(u, state, history)
+        """
+        # Sliding surface (Algorithm 3.1, Line 2)
+        sigma = self._compute_sliding_surface(state)
+
+        # Adaptive boundary layer (optional extension)
+        eps_dyn = self.epsilon0 + self.epsilon1 * abs(sigma)
+
+        # Boundary layer saturation (Algorithm 3.1, Lines 4-8)
+        if abs(sigma) < self.hysteresis_ratio * self.epsilon0:
+            sat_sigma = 0.0  # Hysteresis dead-zone
+        else:
+            sat_sigma = saturate(sigma, eps_dyn,
+                                 method=self.switch_method)
+
+        # Equivalent control (Algorithm 3.2)
+        u_eq = self._compute_equivalent_control(state)
+
+        # Moderately clamp u_eq to prevent spikes
+        max_eq = 5.0 * self.max_force
+        u_eq = np.clip(u_eq, -max_eq, max_eq)
+
+        # Switching control (Algorithm 3.1, Line 10)
+        u_robust = -self.K * sat_sigma - self.kd * sigma
+
+        # Total control (Algorithm 3.1, Line 12)
+        u = u_eq + u_robust
+
+        # Saturation (Algorithm 3.1, Line 13)
+        u_saturated = float(np.clip(u, -self.max_force,
+                                     self.max_force))
+
+        # Telemetry (for analysis)
+        history.setdefault('sigma', []).append(float(sigma))
+        history.setdefault('epsilon_eff', []).append(eps_dyn)
+        history.setdefault('u_eq', []).append(float(u_eq))
+        history.setdefault('u_robust', []).append(u_robust)
+        history.setdefault('u', []).append(u_saturated)
+
+        # Return structured output (stateless controller)
+        return ClassicalSMCOutput(u_saturated, (), history)
+
+    @staticmethod
+    def validate_gains(gains):
+        """Validate 6-element gain vector.
+
+        Maps to Algorithm 3.4 (Gain Validation).
+        Time complexity: O(1), Space: O(1).
+
+        Raises:
+            ValueError if len(gains) != 6
+        """
+        try:
+            arr = np.asarray(gains, dtype=float).ravel()
+        except Exception:
+            raise ValueError(
+                "ClassicalSMC requires 6 gains: "
+                "[k1, k2, lam1, lam2, K, kd]")
+
+        if arr.size != 6:
+            raise ValueError(
+                "ClassicalSMC requires 6 gains: "
+                "[k1, k2, lam1, lam2, K, kd]")
+\end{lstlisting}
+\end{listing}
+
+\textbf{Algorithm-Code Correspondence}:
+\begin{itemize}
+    \item \textbf{Line 53-57}: Sliding surface computation $\rightarrow$ Algorithm 3.1, Line 2
+    \item \textbf{Line 71-108}: Equivalent control $\rightarrow$ Algorithm 3.2, complete mapping
+    \item \textbf{Line 127-135}: Boundary layer saturation $\rightarrow$ Algorithm 3.1, Lines 4-8
+    \item \textbf{Line 144-146}: Switching control $\rightarrow$ Algorithm 3.1, Line 10
+    \item \textbf{Line 149}: Total control $\rightarrow$ Algorithm 3.1, Line 12
+    \item \textbf{Line 152-153}: Saturation $\rightarrow$ Algorithm 3.1, Line 13
+    \item \textbf{Line 168-184}: Gain validation $\rightarrow$ Algorithm 3.4, complete mapping
+\end{itemize}
+
+\textbf{Complexity Summary}:
+\begin{itemize}
+    \item \textbf{Worst-case}: $O(n^3)$ time for equivalent control (two $3 \times 3$ linear solves)
+    \item \textbf{Best-case}: $O(1)$ time if no dynamics model attached (pure switching control)
+    \item \textbf{Space}: $O(n^2) = O(9)$ for physics matrices (constant for DIP system)
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

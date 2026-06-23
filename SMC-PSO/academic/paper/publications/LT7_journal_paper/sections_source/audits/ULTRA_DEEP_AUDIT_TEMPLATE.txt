@@ -1,0 +1,249 @@
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ULTRA-DEEP AUDIT PROTOCOL - MANDATORY DEEP ANALYSIS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+CRITICAL INSTRUCTION: This audit MUST be thorough and take 3-5 minutes minimum.
+If you complete this in under 2 minutes, you are NOT doing it correctly.
+
+PROVEN ERROR FOUND: Section 4 audit found Theorem 4.3 proof assumes β=1 but β=0.78.
+This invalidated an entire proof. YOU MUST find similar errors in THIS section.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+MANDATORY CHECKLIST - ANSWER EVERY QUESTION EXPLICITLY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+You MUST answer EVERY question below with step-by-step verification.
+DO NOT say "appears correct" or "looks reasonable" - SHOW YOUR WORK.
+
+FOR EVERY NUMERICAL CLAIM:
+
+Example: "50.4x degradation"
+
+Q1: Where is this claim stated? (exact paragraph, sentence)
+    → Answer: "Section 8.3, paragraph 2, sentence 1"
+
+Q2: What is the exact calculation?
+    → Answer: degradation_ratio = (value_disturbance - value_nominal) / value_nominal
+    → Show: (107.61 - 2.14) / 2.14 = 105.47 / 2.14 = 49.28x ≠ 50.4x
+    → CRITICAL ERROR: Claimed 50.4x but calculation gives 49.28x!
+
+Q3: Can you trace this to source data (table/figure)?
+    → Answer: "Table 8.3, row 'Classical SMC', columns 'Nominal' and 'Disturbance'"
+    → Values: nominal=2.14, disturbance=107.61
+    → Verify calculation matches claim: [YES/NO with explanation]
+
+Q4: Are there ANY implicit assumptions?
+    → Answer: "Assumes β=1 in controller equations (check Section 3)"
+    → If β≠1, does this invalidate the result? [Explain]
+
+Q5: Cross-check with theoretical predictions
+    → Section 4 predicts: [state prediction]
+    → This result shows: [state result]
+    → Consistency: [MATCH / MISMATCH with explanation]
+
+REPEAT THIS FOR EVERY CLAIM:
+- List ALL numerical claims (make a table)
+- Answer Q1-Q5 for EACH claim
+- If you cannot verify ANY claim, FLAG IT AS CRITICAL
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+FOR EVERY EQUATION/PROOF:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Example: Equation showing settling time calculation
+
+Q1: Write out the equation EXACTLY as stated
+    → Answer: "t_s = 4/ζω_n where ζ=damping, ω_n=natural frequency"
+
+Q2: Check dimensional consistency
+    → Left side: [time] in seconds
+    → Right side: 4 (dimensionless) / (dimensionless × rad/s) = [time] ✓
+    → OR: Dimensional mismatch! [Explain]
+
+Q3: Plug in example values and verify
+    → Example gives: ζ=0.7, ω_n=2.5 rad/s
+    → Calculate: t_s = 4/(0.7×2.5) = 4/1.75 = 2.29s
+    → Text claims: [what value?]
+    → Match: [YES/NO]
+
+Q4: List ALL implicit assumptions
+    → Assumes: second-order system
+    → Assumes: ζ < 1 (underdamped)
+    → Assumes: β=1 in control gain
+    → If ANY assumption violated, what happens? [Explain]
+
+Q5: What if parameters change?
+    → If ζ→0, then t_s→∞ (equation valid? YES)
+    → If ω_n→0, then t_s→∞ (equation valid? YES)
+    → If β≠1, does equation still hold? [CRITICAL - Explain]
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+FOR EVERY STATISTICAL CLAIM:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Example: "Welch's t-test shows p<0.05, thus STA significantly better than Classical"
+
+Q1: What test was used?
+    → Answer: "Welch's t-test (unequal variances t-test)"
+
+Q2: Are test assumptions satisfied?
+    → Normality: Check if claimed. If not checked, FLAG AS ISSUE.
+    → Independence: Are samples independent? [Verify]
+    → Sample size: n=400 stated. Is this adequate?
+      → For 95% CI with margin ±0.1s and σ~0.5s: n = (1.96×0.5/0.1)² = 96
+      → 400 > 96, so YES adequate
+
+Q3: Is multiple comparison correction applied?
+    → How many comparisons? 7 controllers = 7×6/2 = 21 pairwise comparisons
+    → Bonferroni correction: α = 0.05/21 = 0.0024
+    → Text claims p<0.05. Is this p<0.0024? [Check]
+    → If not corrected: FLAG AS CRITICAL (inflated Type I error)
+
+Q4: What is the effect size?
+    → Text claims Cohen's d = 2.14
+    → Verify: d = (mean1 - mean2) / pooled_SD
+    → Given means: mean_STA=1.82s, mean_Classical=2.15s, SD_pooled=?
+    → If SD_pooled not stated, cannot verify d=2.14. FLAG AS ISSUE.
+
+Q5: Practical significance vs statistical significance
+    → Difference: 2.15 - 1.82 = 0.33s
+    → Is 0.33s practically significant for this application? [Discuss]
+    → Can be statistically significant (p<0.05) but practically irrelevant!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CROSS-SECTION VERIFICATION (MANDATORY)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+For EVERY result in this section, check against other sections:
+
+1. Does this match Section 4 (Lyapunov Stability) predictions?
+   → Section 4 predicts STA has finite-time convergence with T < 2.1s
+   → This section shows settling time = 1.82s
+   → Is 1.82s < 2.1s? YES ✓
+   → BUT: Does β=0.78 affect this? Section 4 proof assumes β=1!
+   → CRITICAL: Recheck if T<2.1s bound valid for β=0.78
+
+2. Does this match Section 6 (Experimental Setup) methodology?
+   → Section 6 claims 400-500 Monte Carlo runs
+   → This section shows results from how many runs? [Verify]
+   → Sample sizes match? [YES/NO]
+
+3. Does this match Section 3 (Controller Design) equations?
+   → Controllers use gains: K_classical = [values from Section 3]
+   → This section uses gains: [values from results]
+   → Do they match? [Verify]
+
+Create table:
+
+| Value | This Section | Section 3 | Section 4 | Section 6 | Consistent? |
+|-------|-------------|-----------|-----------|-----------|-------------|
+| β | 0.78 (implicit?) | ? | 1.0 (assumed) | ? | ❌ MISMATCH |
+| K_1 | ... | ... | ... | ... | ✓/❌ |
+| ... | ... | ... | ... | ... | ... |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+MANDATORY OUTPUT STRUCTURE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Your audit MUST include:
+
+1. VERIFICATION TABLE (for ALL numerical claims):
+
+| Claim | Location | Calculation | Source Table | Verified? | Issues |
+|-------|----------|-------------|--------------|-----------|--------|
+| "50.4x degradation" | Sec 8.3, para 2 | (107.61-2.14)/2.14 | Table 8.3 | ❌ | Calc gives 49.28x, not 50.4x |
+| "1.82s settling" | Sec 7.2, para 1 | (stated) | Table 7.1 | ✓ | Matches table |
+| ... | ... | ... | ... | ... | ... |
+
+2. ASSUMPTION LIST (for ALL implicit assumptions):
+
+| Assumption | Where Used | Valid? | Impact if Violated |
+|------------|-----------|--------|-------------------|
+| β=1 | Throughout | ❌ NO | β=0.78 from Ex 4.1, invalidates calculations |
+| d=0 | Nominal case | ✓ YES | Only for nominal scenario |
+| Normality | Statistical tests | ⚠️ UNCHECKED | Can't validate t-test results |
+| ... | ... | ... | ... |
+
+3. DIMENSIONAL ANALYSIS TABLE:
+
+| Equation | LHS Units | RHS Units | Consistent? | Notes |
+|----------|-----------|-----------|-------------|-------|
+| t_s = 4/ζω_n | [s] | [dimensionless]/([dimensionless]×[rad/s]) = [s] | ✓ | OK |
+| ... | ... | ... | ... | ... |
+
+4. SEVERITY-CLASSIFIED ISSUES:
+
+⚠️ SEVERITY 1 (CRITICAL - Invalidates result):
+  - Issue 1: [Exact description with location]
+  - Impact: [How this invalidates result]
+  - Fix: [At least 2 options]
+
+⚠️ SEVERITY 2 (HIGH - Reduces confidence):
+  - Issue 1: [...]
+
+⚠️ SEVERITY 3 (MEDIUM - Quality issue):
+  - Issue 1: [...]
+
+5. DETAILED STEP-BY-STEP VERIFICATION:
+
+For each critical claim, show:
+```
+CLAIM: "50.4x degradation in PSO-optimized gains under realistic disturbances"
+
+STEP 1: Locate claim
+  → Section 8.3, paragraph 2, sentence 1
+
+STEP 2: Find source data
+  → Table 8.3, row "Classical SMC", columns "Nominal" and "Realistic"
+  → Nominal chattering index: 2.14 ± 0.13
+  → Realistic chattering index: 107.61 ± 5.48
+
+STEP 3: Verify calculation
+  → Degradation = (Realistic - Nominal) / Nominal
+  → = (107.61 - 2.14) / 2.14
+  → = 105.47 / 2.14
+  → = 49.28x
+
+STEP 4: Compare to claim
+  → Claim: 50.4x
+  → Calculated: 49.28x
+  → Discrepancy: 50.4 - 49.28 = 1.12x (2.2% error)
+
+STEP 5: Determine if critical
+  → 2.2% error is small but claim is PRECISE (50.4x, not "~50x")
+  → Should be 49.3x rounded, not 50.4x
+  → SEVERITY 2: High - Undermines precision claims
+
+STEP 6: Check for implicit assumptions
+  → Does this assume β=1? [Check equations in Section 3]
+  → If β≠1, does degradation change? [Verify]
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TIME CHECK
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+If you completed this audit in under 2 minutes, you did NOT follow instructions.
+
+A proper audit of this section should take 3-5 minutes and include:
+  - Verification table with 10+ claims
+  - Assumption list with 5+ implicit assumptions
+  - Dimensional analysis for all equations
+  - Step-by-step verification for at least 3 critical claims
+  - Cross-section consistency checks
+  - At least 2 SEVERITY 1 issues found (or explain why none exist)
+
+If your output is under 500 lines, it's too brief.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+FINAL REMINDER
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+This paper is being submitted to a peer-reviewed journal. Reviewers WILL catch errors.
+
+Section 4 already has a CRITICAL error (Theorem 4.3 β≠1).
+There ARE likely errors in this section too.
+
+Your job is to find them BEFORE reviewers do.
+
+Be skeptical. Question everything. Show your work. Take your time.

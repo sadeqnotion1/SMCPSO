@@ -1,0 +1,526 @@
+/**
+ * ============================================================================
+ * PWA UI STYLES - Progressive Web App Interface
+ * ============================================================================
+ *
+ * Styles for PWA features:
+ *   - Update notification toast
+ *   - Offline status indicator
+ *   - Install app button
+ *   - Mini toast notifications
+ *   - Dark mode support
+ *   - Responsive design
+ *
+ * ============================================================================
+ */
+
+/* ============================================================================
+   Update Notification Toast
+   ============================================================================ */
+
+.pwa-toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 10000;
+  max-width: 400px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.pwa-toast-hidden {
+  transform: translateY(-120%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.pwa-toast-visible {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.pwa-toast-content {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  gap: 12px;
+}
+
+.pwa-toast-icon {
+  font-size: 32px;
+  flex-shrink: 0;
+}
+
+.pwa-toast-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.pwa-toast-text strong {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 4px;
+}
+
+.pwa-toast-text p {
+  font-size: 13px;
+  color: #7f8c8d;
+  margin: 0;
+}
+
+.pwa-toast-button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  flex-shrink: 0;
+}
+
+.pwa-toast-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.pwa-toast-button:active {
+  transform: translateY(0);
+}
+
+.pwa-toast-close {
+  background: transparent;
+  border: none;
+  color: #95a5a6;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background 0.2s, color 0.2s;
+  flex-shrink: 0;
+}
+
+.pwa-toast-close:hover {
+  background: #ecf0f1;
+  color: #2c3e50;
+}
+
+/* ============================================================================
+   Offline Status Indicator
+   ============================================================================ */
+
+.pwa-offline-indicator {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
+  background: #e74c3c;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 24px;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.4);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  opacity: 0;
+  transform: translateY(100px);
+  transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+  pointer-events: none;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.pwa-offline-indicator.pwa-offline-visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.pwa-offline-icon {
+  font-size: 18px;
+}
+
+.pwa-offline-text {
+  line-height: 1;
+}
+
+/* ============================================================================
+   Install App Button
+   ============================================================================ */
+
+.pwa-install-button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+  transition: transform 0.2s, box-shadow 0.2s, opacity 0.3s;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  margin-left: auto;
+}
+
+.pwa-install-button.pwa-install-hidden {
+  opacity: 0;
+  transform: scale(0.8);
+  pointer-events: none;
+}
+
+.pwa-install-button.pwa-install-visible {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
+}
+
+.pwa-install-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.5);
+}
+
+.pwa-install-button:active {
+  transform: translateY(0);
+}
+
+.pwa-install-icon {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.pwa-install-text {
+  line-height: 1;
+}
+
+/* ============================================================================
+   Mini Toast Notifications
+   ============================================================================ */
+
+.pwa-mini-toast {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  z-index: 9998;
+  background: #2c3e50;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+  max-width: 300px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.pwa-mini-toast-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.pwa-mini-toast-info {
+  background: #3498db;
+}
+
+.pwa-mini-toast-success {
+  background: #2ecc71;
+}
+
+.pwa-mini-toast-error {
+  background: #e74c3c;
+}
+
+.pwa-mini-toast-warning {
+  background: #f39c12;
+}
+
+/* ============================================================================
+   Dark Mode Support
+   ============================================================================ */
+
+@media (prefers-color-scheme: dark) {
+  .pwa-toast {
+    background: #2d2d2d;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+  }
+
+  .pwa-toast-text strong {
+    color: #ffffff;
+  }
+
+  .pwa-toast-text p {
+    color: #b0b0b0;
+  }
+
+  .pwa-toast-close:hover {
+    background: #3a3a3a;
+    color: #ffffff;
+  }
+
+  .pwa-offline-indicator {
+    background: #c0392b;
+    box-shadow: 0 4px 12px rgba(192, 57, 43, 0.6);
+  }
+
+  .pwa-mini-toast {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+  }
+}
+
+/* ============================================================================
+   Responsive Design - Mobile
+   ============================================================================ */
+
+@media (max-width: 768px) {
+  .pwa-toast {
+    top: 10px;
+    right: 10px;
+    left: 10px;
+    max-width: none;
+  }
+
+  .pwa-toast-content {
+    padding: 14px;
+    gap: 10px;
+  }
+
+  .pwa-toast-icon {
+    font-size: 28px;
+  }
+
+  .pwa-toast-text strong {
+    font-size: 14px;
+  }
+
+  .pwa-toast-text p {
+    font-size: 12px;
+  }
+
+  .pwa-toast-button {
+    padding: 7px 14px;
+    font-size: 13px;
+  }
+
+  .pwa-offline-indicator {
+    bottom: 15px;
+    right: 15px;
+    padding: 8px 14px;
+    font-size: 13px;
+  }
+
+  .pwa-install-button {
+    padding: 8px 16px;
+    font-size: 13px;
+  }
+
+  .pwa-mini-toast {
+    bottom: 70px;
+    right: 15px;
+    left: 15px;
+    font-size: 13px;
+    padding: 10px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .pwa-toast-content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .pwa-toast-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .pwa-install-button {
+    margin: 0;
+    width: 100%;
+  }
+
+  .pwa-install-text {
+    display: none;
+  }
+
+  .pwa-offline-indicator {
+    bottom: 10px;
+    right: 10px;
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+}
+
+/* ============================================================================
+   High Contrast Mode Support
+   ============================================================================ */
+
+@media (prefers-contrast: high) {
+  .pwa-toast {
+    border: 2px solid currentColor;
+  }
+
+  .pwa-toast-button {
+    border: 2px solid white;
+  }
+
+  .pwa-offline-indicator {
+    border: 2px solid white;
+  }
+
+  .pwa-install-button {
+    border: 2px solid white;
+  }
+}
+
+/* ============================================================================
+   Reduced Motion Support
+   ============================================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .pwa-toast,
+  .pwa-offline-indicator,
+  .pwa-install-button,
+  .pwa-mini-toast {
+    transition: opacity 0.1s linear;
+  }
+
+  .pwa-toast-button,
+  .pwa-toast-close,
+  .pwa-install-button {
+    transition: none;
+  }
+
+  .pwa-toast-button:hover,
+  .pwa-install-button:hover {
+    transform: none;
+  }
+}
+
+/* ============================================================================
+   Print Styles (Hide PWA UI)
+   ============================================================================ */
+
+@media print {
+  .pwa-toast,
+  .pwa-offline-indicator,
+  .pwa-install-button,
+  .pwa-mini-toast {
+    display: none !important;
+  }
+}
+
+/* ============================================================================
+   Focus Styles (Accessibility)
+   ============================================================================ */
+
+.pwa-toast-button:focus,
+.pwa-toast-close:focus,
+.pwa-install-button:focus {
+  outline: 2px solid #667eea;
+  outline-offset: 2px;
+}
+
+.pwa-toast-button:focus:not(:focus-visible),
+.pwa-toast-close:focus:not(:focus-visible),
+.pwa-install-button:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ============================================================================
+   Integration with Sphinx Theme (Read the Docs)
+   ============================================================================ */
+
+/* Ensure PWA buttons work well with RTD theme header */
+.wy-nav-top .pwa-install-button {
+  margin-left: 12px;
+  height: 38px;
+}
+
+/* Adjust z-index to work with Sphinx sidebar */
+.pwa-toast {
+  z-index: 2000; /* Above Sphinx sidebar (z-index: 999) */
+}
+
+.pwa-offline-indicator,
+.pwa-mini-toast {
+  z-index: 1999;
+}
+
+/* ============================================================================
+   Animation Keyframes
+   ============================================================================ */
+
+@keyframes pwa-slide-in {
+  from {
+    transform: translateY(-120%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes pwa-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ============================================================================
+   Loading State (Optional)
+   ============================================================================ */
+
+.pwa-loading {
+  pointer-events: none;
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.pwa-loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: pwa-spin 0.8s linear infinite;
+}
+
+@keyframes pwa-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ============================================================================
+   End of PWA Styles
+   ============================================================================ */

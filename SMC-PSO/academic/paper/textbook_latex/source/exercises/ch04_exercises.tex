@@ -1,0 +1,331 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CHAPTER 4 EXERCISES: Super-Twisting Algorithm (STA-SMC)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section*{Exercises}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Conceptual Questions}
+
+\begin{exercise}[Second-Order vs First-Order SMC]
+\label{ex:ch4_second_order}
+Explain the key difference between first-order SMC (classical) and second-order SMC (super-twisting).
+\begin{enumerate}[label=(\alph*)]
+    \item Where is the discontinuity applied in each method?
+    \item Why does STA achieve continuous control signals?
+    \item What is the cost of this continuity?
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Finite-Time Convergence Intuition]
+\label{ex:ch4_finite_time}
+The STA achieves finite-time convergence of both $\sigma$ and $\dot{\sigma}$ to zero.
+\begin{enumerate}[label=(\alph*)]
+    \item How does this differ from exponential convergence?
+    \item Give a physical example where finite-time convergence is advantageous
+    \item What are the potential disadvantages?
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Fractional Power Interpretation]
+\label{ex:ch4_fractional_power}
+The STA uses $|s|^{1/2} \sign(s)$ instead of $\sign(s)$.
+\begin{enumerate}[label=(\alph*)]
+    \item Plot both functions for $s \in [-1, 1]$
+    \item Verify that $|s|^{1/2} \sign(s)$ is Lipschitz continuous at $s = 0$
+    \item Explain why this ensures bounded control derivatives
+\end{enumerate}
+\end{exercise}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Derivation Problems}
+
+\begin{exercise}[STA Stability Conditions]
+\label{ex:ch4_stability_conditions}
+Derive the STA sufficient stability conditions from the Lyapunov function:
+\begin{equation*}
+V = 2k_2 |s| + \frac{1}{2}(u_1 + k_1 |s|^{1/2} \sign(s))^2
+\end{equation*}
+\begin{enumerate}[label=(\alph*)]
+    \item Show that $V > 0$ for $s \neq 0$
+    \item Compute $\dot{V}$ assuming $|\ddot{s}| \leq L$ (Lipschitz disturbance)
+    \item Derive the conditions: $k_1 > 0$, $k_2 > \frac{L}{k_1}$, $k_1^2 \geq 4k_2 \frac{k_2 + L}{k_2 - L}$
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Finite-Time Convergence Proof]
+\label{ex:ch4_finite_time_proof}
+Prove that STA achieves finite-time convergence.
+\begin{enumerate}[label=(\alph*)]
+    \item Start with the Lyapunov function $V = \xi_1 |s| + \xi_2 u_1^2$ for appropriate $\xi_1, \xi_2 > 0$
+    \item Show that $\dot{V} \leq -\beta V^{\alpha}$ for some $\beta, \alpha > 0$ with $\alpha < 1$
+    \item Integrate to obtain the reaching time: $T_r \leq \frac{V(0)^{1-\alpha}}{\beta(1-\alpha)}$
+    \item Verify that $T_r$ is finite and independent of subsequent initial conditions
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Integral Anti-Windup Derivation]
+\label{ex:ch4_antiwindup}
+Design an anti-windup mechanism for the integral state $u_1$.
+\begin{enumerate}[label=(\alph*)]
+    \item If control is saturated: $u_{\text{actual}} = \sat(u_{\text{desired}}, u_{\min}, u_{\max})$
+    \item Derive the back-calculation anti-windup: $\dot{u}_1 = -k_2 \sign(s) + k_{aw}(u_{\text{actual}} - u_{\text{desired}})$
+    \item Choose $k_{aw}$ to ensure $u_1$ remains bounded
+    \item Prove that anti-windup does not violate stability
+\end{enumerate}
+\end{exercise}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Gain Tuning Problems}
+
+\begin{exercise}[Manual STA Gain Tuning]
+\label{ex:ch4_manual_tuning}
+Tune STA gains for the DIP benchmark.
+\begin{enumerate}[label=(\alph*)]
+    \item Start with $k_1 = 10$, $k_2 = 1.0$, $\epsilon = 0.02$ rad
+    \item Verify that stability conditions are satisfied (assume $L = 5$ Nm/s)
+    \item Simulate for 5 seconds from $\theta_1(0) = 0.1$ rad
+    \item Adjust $k_1$ to improve settling time (try $k_1 = 5, 10, 15, 20$)
+    \item Adjust $k_2$ to reduce overshoot (try $k_2 = 0.5, 1.0, 1.5, 2.0$)
+    \item Report final gains and performance metrics (settling time, chattering, RMS error)
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Chattering Quantification]
+\label{ex:ch4_chattering_quant}
+Compare chattering between classical SMC and STA.
+\begin{enumerate}[label=(\alph*)]
+    \item Define chattering metric: $\mathcal{C} = \sum_{i=1}^{N-1} |u_{i+1} - u_i| / N$
+    \item Simulate both controllers with identical gains ($K = k_1 = 15$)
+    \item Measure $\mathcal{C}_{\text{classical}}$ and $\mathcal{C}_{\text{STA}}$
+    \item Compute chattering reduction: $\frac{\mathcal{C}_{\text{classical}} - \mathcal{C}_{\text{STA}}}{\mathcal{C}_{\text{classical}}} \times 100\%$
+    \item Verify that STA achieves $\geq 50\%$ reduction
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Boundary Layer Adaptation]
+\label{ex:ch4_boundary_adapt}
+Implement adaptive boundary layer thickness for STA.
+\begin{enumerate}[label=(\alph*)]
+    \item Propose $\epsilon(t) = \epsilon_{\max} - (\epsilon_{\max} - \epsilon_{\min}) e^{-\alpha t}$
+    \item Choose $\epsilon_{\max} = 0.05$ rad (large initial), $\epsilon_{\min} = 0.01$ rad (precise final), $\alpha = 1$ s$^{-1}$
+    \item Implement in the STA controller (modify saturation function)
+    \item Compare to constant $\epsilon = 0.02$ rad
+    \item Measure improvement in transient response and final tracking error
+\end{enumerate}
+\end{exercise}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Implementation Problems}
+
+\begin{exercise}[Super-Twisting Controller Implementation]
+\label{ex:ch4_sta_impl}
+Implement the complete STA-SMC controller with Numba acceleration:
+
+\begin{lstlisting}[language=Python]
+import numpy as np
+from numba import jit
+
+@jit(nopython=True)
+def sta_core(sigma, u1_int, k1, k2, epsilon):
+    """
+    Numba-accelerated STA control law computation.
+
+    Args:
+        sigma: sliding surface value
+        u1_int: integrator state
+        k1: STA gain for proportional term
+        k2: STA gain for integral term
+        epsilon: boundary layer thickness
+
+    Returns:
+        u_sta: STA control output
+        du1_dt: integrator derivative
+    """
+    # Saturation function
+    if abs(sigma) < epsilon:
+        sigma_sat = sigma / epsilon
+    else:
+        sigma_sat = np.sign(sigma)
+
+    # STA control law
+    u_proportional = -k1 * np.sqrt(abs(sigma)) * sigma_sat
+    u_sta = u_proportional + u1_int
+
+    # Integrator update
+    du1_dt = -k2 * sigma_sat
+
+    return u_sta, du1_dt
+
+class SuperTwistingSMC:
+    def __init__(self, lambda1, lambda2, k1_surf, k2_surf, k1_sta, k2_sta, epsilon):
+        """Initialize STA-SMC controller."""
+        self.lambda1 = lambda1
+        self.lambda2 = lambda2
+        self.k1 = k1_surf
+        self.k2 = k2_surf
+        self.k1_sta = k1_sta
+        self.k2_sta = k2_sta
+        self.epsilon = epsilon
+        self.u1_int = 0.0  # Integrator state
+
+    def compute_sliding_surface(self, state):
+        """Compute sliding surface value."""
+        # YOUR CODE HERE (same as classical SMC)
+        pass
+
+    def compute_equivalent_control(self, state, params):
+        """Compute equivalent control."""
+        # YOUR CODE HERE (same as classical SMC)
+        pass
+
+    def compute_control(self, state, params, dt):
+        """
+        Compute STA control output.
+
+        Args:
+            state: current state
+            params: system parameters
+            dt: timestep for integrator update
+
+        Returns:
+            u: control force (N)
+        """
+        sigma = self.compute_sliding_surface(state)
+        u_eq = self.compute_equivalent_control(state, params)
+
+        # STA control law
+        u_sta, du1_dt = sta_core(sigma, self.u1_int, self.k1_sta,
+                                  self.k2_sta, self.epsilon)
+
+        # Update integrator (Euler)
+        self.u1_int += du1_dt * dt
+
+        return u_eq + u_sta
+
+    def reset(self):
+        """Reset integrator state."""
+        self.u1_int = 0.0
+
+# Test controller
+controller = SuperTwistingSMC(lambda1=5.0, lambda2=5.0, k1_surf=1.0, k2_surf=1.0,
+                               k1_sta=12.0, k2_sta=1.5, epsilon=0.02)
+state_test = np.array([0.0, 0.1, 0.05, 0.0, 0.0, 0.0])
+params = {'M': 1.0, 'm1': 0.1, 'm2': 0.1, 'L1': 0.5, 'L2': 0.5, 'g': 9.81}
+u_out = controller.compute_control(state_test, params, dt=0.01)
+print(f"STA control output: {u_out:.2f} N")
+\end{lstlisting}
+\end{exercise}
+
+\begin{exercise}[Finite-Time Convergence Verification]
+\label{ex:ch4_finite_time_verify}
+Implement a test to verify finite-time convergence experimentally:
+
+\begin{lstlisting}[language=Python]
+def verify_finite_time_convergence(controller, initial_states, dt=0.01, tol=1e-4):
+    """
+    Verify that STA achieves finite-time convergence.
+
+    Args:
+        controller: STA-SMC instance
+        initial_states: list of initial conditions to test
+        dt: simulation timestep
+        tol: convergence tolerance (rad)
+
+    Returns:
+        converged: bool (True if all tests converge in finite time)
+        max_time: maximum convergence time across all tests
+    """
+    convergence_times = []
+
+    for state0 in initial_states:
+        controller.reset()
+        state = state0.copy()
+        time = 0.0
+
+        # Simulate until convergence or timeout
+        while time < 10.0:  # 10 second timeout
+            sigma = controller.compute_sliding_surface(state)
+
+            if abs(sigma) < tol:
+                convergence_times.append(time)
+                break
+
+            u = controller.compute_control(state, params, dt)
+            state = rk4_step(state, u, dt, params)
+            time += dt
+
+        if time >= 10.0:
+            return False, np.inf  # Failed to converge
+
+    converged = True
+    max_time = max(convergence_times)
+    return converged, max_time
+
+# Test with 10 random initial conditions
+initial_states = [np.array([0, 0.1*np.random.rand(), 0.1*np.random.rand(), 0, 0, 0])
+                  for _ in range(10)]
+converged, t_max = verify_finite_time_convergence(controller, initial_states)
+print(f"Finite-time convergence: {converged}, Max time: {t_max:.3f} s")
+\end{lstlisting}
+\end{exercise}
+
+\begin{exercise}[Lyapunov Function Visualization]
+\label{ex:ch4_lyapunov_viz}
+Visualize the Moreno-Osorio Lyapunov function for STA:
+
+\begin{lstlisting}[language=Python]
+def plot_moreno_osorio_lyapunov(k1, k2, L, s_range=(-0.1, 0.1), u1_range=(-5, 5)):
+    """
+    Plot V = 2*k2*|s| + 0.5*(u1 + k1*|s|^0.5*sign(s))^2 as 3D surface.
+
+    Args:
+        k1, k2: STA gains
+        L: Lipschitz constant
+        s_range: (min, max) for sliding surface axis
+        u1_range: (min, max) for integrator state axis
+    """
+    import matplotlib.pyplot as plt
+    from mpl_toolkits.mplot3d import Axes3D
+
+    # YOUR CODE HERE
+    # Create meshgrid for (s, u1)
+    # Compute V(s, u1)
+    # Plot 3D surface
+    # Add contour lines at V = const
+    # Verify V > 0 for (s, u1) != (0, 0)
+    pass
+
+# Generate plot
+plot_moreno_osorio_lyapunov(k1=12.0, k2=1.5, L=5.0)
+\end{lstlisting}
+\end{exercise}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Advanced Problems}
+
+\begin{exercise}[Adaptive STA Gains]
+\label{ex:ch4_adaptive_sta}
+Design an adaptive law for STA gains $k_1, k_2$.
+\begin{enumerate}[label=(\alph*)]
+    \item Propose $\dot{\hat{k}}_1 = \gamma_1 |s|^{1/2}$, $\dot{\hat{k}}_2 = \gamma_2 |s|$
+    \item Construct an extended Lyapunov function including gain errors
+    \item Prove stability of the adaptive STA system
+    \item Implement and compare to fixed-gain STA
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Higher-Order Sliding Modes]
+\label{ex:ch4_hosm}
+Research third-order sliding mode control (quasi-continuous algorithm).
+\begin{enumerate}[label=(\alph*)]
+    \item Explain the control law structure
+    \item What are the advantages over STA?
+    \item Implement for the DIP system
+    \item Compare chattering to STA
+\end{enumerate}
+\end{exercise}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% End of Chapter 4 Exercises
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

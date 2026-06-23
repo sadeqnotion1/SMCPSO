@@ -1,0 +1,8 @@
+controller_name,compute_time_us,settling_time_s,overshoot_pct,energy_j,convergence_ms,note
+Classical SMC,18.5,2.15,5.8,12.4,2100,Boundary layer ε=0.02; stable baseline
+STA SMC,24.2,1.82,2.3,11.8,1850,Super-Twisting Algorithm; low overshoot
+Adaptive SMC,31.6,2.35,8.2,13.6,2400,Online parameter estimation; higher control effort
+Hybrid Adaptive STA,26.8,1.95,3.5,12.3,1920,Modular switching; balanced performance
+Swing-Up SMC,42.3,3.15,7.1,14.5,3100,Energy-based large-angle control
+MPC Controller,48.7,1.48,1.2,10.9,1650,Experimental mode; requires cvxpy
+Factory Pattern,20.1,2.08,5.2,12.5,2150,Thread-safe wrapper; minimal overhead

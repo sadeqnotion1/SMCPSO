@@ -1,0 +1,209 @@
+{
+  "controllers_tested": [
+    "classical_smc",
+    "sta_smc",
+    "adaptive_smc",
+    "hybrid_adaptive_sta_smc"
+  ],
+  "scenarios": [
+    "step",
+    "impulse",
+    "sinusoidal",
+    "random"
+  ],
+  "num_trials_per_scenario": 5,
+  "results": [
+    {
+      "controller_name": "classical_smc",
+      "disturbance_type": "step",
+      "settling_time": 10.0,
+      "max_overshoot": 187.34770946954512,
+      "recovery_time": 10.0,
+      "control_effort_nominal": 7.555446150403558,
+      "control_effort_disturbed": 12.42020515926146,
+      "control_effort_increase_pct": 64.38744862999337,
+      "robustness_index": 1.0,
+      "converged": false
+    },
+    {
+      "controller_name": "classical_smc",
+      "disturbance_type": "impulse",
+      "settling_time": 10.0,
+      "max_overshoot": 187.71111548678422,
+      "recovery_time": 10.0,
+      "control_effort_nominal": 7.555446150403558,
+      "control_effort_disturbed": 7.295942707120202,
+      "control_effort_increase_pct": -3.434654130510828,
+      "robustness_index": 1.0,
+      "converged": false
+    },
+    {
+      "controller_name": "classical_smc",
+      "disturbance_type": "sinusoidal",
+      "settling_time": 10.0,
+      "max_overshoot": 226.18164629228968,
+      "recovery_time": 10.0,
+      "control_effort_nominal": 7.555446150403558,
+      "control_effort_disturbed": 12.020375289809392,
+      "control_effort_increase_pct": 59.09550608295117,
+      "robustness_index": 1.0,
+      "converged": false
+    },
+    {
+      "controller_name": "classical_smc",
+      "disturbance_type": "random",
+      "settling_time": 10.0,
+      "max_overshoot": 215.89910996774924,
+      "recovery_time": 10.0,
+      "control_effort_nominal": 7.555446150403558,
+      "control_effort_disturbed": 8.565235705086204,
+      "control_effort_increase_pct": 13.365055280404718,
+      "robustness_index": 1.0,
+      "converged": false
+    },
+    {
+      "controller_name": "sta_smc",
+      "disturbance_type": "step",
+      "settling_time": 10.0,
+      "max_overshoot": 269.28257431175257,
+      "recovery_time": 10.0,
+      "control_effort_nominal": 20.0,
+      "control_effort_disturbed": 12.649110640673518,
+      "control_effort_increase_pct": -36.75444679663241,
+      "robustness_index": 1.0,
+      "converged": false
+    },
+    {
+      "controller_name": "sta_smc",
+      "disturbance_type": "impulse",
+      "settling_time": 10.0,
+      "max_overshoot": 269.28257431175257,
+      "recovery_time": 10.0,
+      "control_effort_nominal": 20.0,
+      "control_effort_disturbed": 19.917329138215294,
+      "control_effort_increase_pct": -0.4133543089235303,
+      "robustness_index": 1.0,
+      "converged": false
+    },
+    {
+      "controller_name": "sta_smc",
+      "disturbance_type": "sinusoidal",
+      "settling_time": 10.0,
+      "max_overshoot": 399.6708616264215,
+      "recovery_time": 10.0,
+      "control_effort_nominal": 20.0,
+      "control_effort_disturbed": 20.784609690826528,
+      "control_effort_increase_pct": 3.9230484541326405,
+      "robustness_index": 1.0,
+      "converged": false
+    },
+    {
+      "controller_name": "sta_smc",
+      "disturbance_type": "random",
+      "settling_time": 10.0,
+      "max_overshoot": 276.7255405628166,
+      "recovery_time": 10.0,
+      "control_effort_nominal": 20.0,
+      "control_effort_disturbed": 20.24547216537963,
+      "control_effort_increase_pct": 1.2273608268981633,
+      "robustness_index": 1.0,
+      "converged": false
+    },
+    {
+      "controller_name": "adaptive_smc",
+      "disturbance_type": "step",
+      "settling_time": 10.0,
+      "max_overshoot": 267.65662124099174,
+      "recovery_time": 10.0,
+      "control_effort_nominal": 19.983329300347076,
+      "control_effort_disturbed": 12.62273543753928,
+      "control_effort_increase_pct": -36.83367146774665,
+      "robustness_index": 1.0,
+      "converged": false
+    },
+    {
+      "controller_name": "adaptive_smc",
+      "disturbance_type": "impulse",
+      "settling_time": 10.0,
+      "max_overshoot": 267.65662124099174,
+      "recovery_time": 10.0,
+      "control_effort_nominal": 19.983329300347076,
+      "control_effort_disturbed": 19.90058918540127,
+      "control_effort_increase_pct": -0.41404569630131577,
+      "robustness_index": 1.0,
+      "converged": false
+    },
+    {
+      "controller_name": "adaptive_smc",
+      "disturbance_type": "sinusoidal",
+      "settling_time": 10.0,
+      "max_overshoot": 418.28530715693853,
+      "recovery_time": 10.0,
+      "control_effort_nominal": 19.983329300347076,
+      "control_effort_disturbed": 20.769109837662715,
+      "control_effort_increase_pct": 3.9321802964133226,
+      "robustness_index": 1.0,
+      "converged": false
+    },
+    {
+      "controller_name": "adaptive_smc",
+      "disturbance_type": "random",
+      "settling_time": 10.0,
+      "max_overshoot": 259.84675112824107,
+      "recovery_time": 10.0,
+      "control_effort_nominal": 19.983329300347076,
+      "control_effort_disturbed": 20.254577609935204,
+      "control_effort_increase_pct": 1.3573729657921094,
+      "robustness_index": 1.0,
+      "converged": false
+    },
+    {
+      "controller_name": "hybrid_adaptive_sta_smc",
+      "disturbance_type": "step",
+      "settling_time": 10.0,
+      "max_overshoot": 625.1989013125764,
+      "recovery_time": 10.0,
+      "control_effort_nominal": 4.183137291601027,
+      "control_effort_disturbed": 9.874139841038467,
+      "control_effort_increase_pct": 136.04627705774632,
+      "robustness_index": 1.0,
+      "converged": false
+    },
+    {
+      "controller_name": "hybrid_adaptive_sta_smc",
+      "disturbance_type": "impulse",
+      "settling_time": 10.0,
+      "max_overshoot": 616.8674476300167,
+      "recovery_time": 10.0,
+      "control_effort_nominal": 4.183137291601027,
+      "control_effort_disturbed": 5.23437079316924,
+      "control_effort_increase_pct": 25.13026535559559,
+      "robustness_index": 1.0,
+      "converged": false
+    },
+    {
+      "controller_name": "hybrid_adaptive_sta_smc",
+      "disturbance_type": "sinusoidal",
+      "settling_time": 10.0,
+      "max_overshoot": 720.3837961972124,
+      "recovery_time": 10.0,
+      "control_effort_nominal": 4.183137291601027,
+      "control_effort_disturbed": 6.988035921884356,
+      "control_effort_increase_pct": 67.0525119009374,
+      "robustness_index": 1.0,
+      "converged": false
+    },
+    {
+      "controller_name": "hybrid_adaptive_sta_smc",
+      "disturbance_type": "random",
+      "settling_time": 10.0,
+      "max_overshoot": 705.2934362332392,
+      "recovery_time": 10.0,
+      "control_effort_nominal": 4.183137291601027,
+      "control_effort_disturbed": 5.37903574563821,
+      "control_effort_increase_pct": 28.58855377370299,
+      "robustness_index": 1.0,
+      "converged": false
+    }
+  ]
+}

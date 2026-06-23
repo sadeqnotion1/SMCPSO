@@ -1,0 +1,188 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{E026}
+\lhead{DIP-SMC-PSO Learning Episode}
+\rfoot{\thepage}
+
+\title{\Large\textbf{E026: Appendix Reference Part 2}}
+\author{DIP-SMC-PSO Educational Series}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section*{Overview}
+
+This episode covers appendix reference part 2 from the DIP-SMC-PSO project.
+
+\textbf{Part:} Appendix
+
+\textbf{Duration:} 15-20 minutes
+
+\textbf{Source:} Comprehensive Presentation Materials
+
+\newpage
+
+\section{New Controller Variants}
+
+**Planned Controller Extensions:**
+
+        - **Terminal SMC (TSMC)**
+        
+            - Finite-time convergence guarantees
+            - Faster settling than classical SMC
+            - \textit{Reference:} Yu et al. (2005)
+
+        - **Integral SMC (ISMC)**
+        
+            - Eliminate steady-state error
+            - Improved disturbance rejection
+            - \textit{Reference:} Utkin \& Shi (1996)
+
+        - **Higher-Order SMC (HOSMC)**
+        
+            - 3rd-order super-twisting
+            - Further chattering reduction
+            - \textit{Reference:} Levant (2007)
+
+        - **Neural Network SMC (NN-SMC)**
+        
+            - Learn unknown dynamics online
+            - Adaptive to model uncertainty
+            - \textit{Reference:} Li et al. (2018)
+
+\section{Advanced PSO Variants}
+
+**Optimization Algorithm Enhancements:**
+
+        - **Multi-Objective PSO (MOPSO)**
+        
+            - Pareto-optimal solutions
+            - Trade-off settling time vs. energy vs. chattering
+            - \textit{Tool:} DEAP library (Python)
+
+        - **Adaptive PSO (APSO)**
+        
+            - Time-varying inertia weight $w(t)$
+            - Adaptive cognitive/social coefficients
+            - \textit{Reference:} Zhan et al. (2009)
+
+        - **Hybrid PSO-GA**
+        
+            - Combine PSO exploration with GA exploitation
+            - Mutation operator for diversity
+            - \textit{Tool:} Optuna (hyperparameter optimization)
+
+        - **Bayesian Optimization**
+        
+            - Gaussian process surrogate model
+            - Sample-efficient for expensive simulations
+            - \textit{Tool:} scikit-optimize
+
+\section{Real-Time Control Enhancements}
+
+**Production-Grade Real-Time System:**
+
+        - **Hard Real-Time Scheduler**
+        
+            - Preemptive task scheduling
+            - Guaranteed deadline compliance (100\
+            - \textit{Platform:} PREEMPT\_RT Linux kernel
+
+        - **Predictive Latency Compensation**
+        
+            - Estimate future state during network delay
+            - Smith predictor for delayed systems
+            - \textit{Reference:} Åström \& Wittenmark (1990)
+
+        - **Multi-Rate Control**
+        
+            - Fast inner loop (1 kHz), slow outer loop (100 Hz)
+            - Hierarchical control architecture
+            - \textit{Application:} High-frequency chattering reduction
+
+        - **Event-Triggered Control**
+        
+            - Update control only when error exceeds threshold
+            - Reduce communication bandwidth
+            - \textit{Reference:} Heemels et al. (2012)
+
+\section{Hardware Deployment}
+
+**Physical Testbed Development:**
+
+        - **Actuator Selection**
+        
+            - DC motor with encoder (cart actuation)
+            - Torque: ≥50 Nm, speed: ≥3000 RPM
+            - \textit{Vendor:} Maxon Motor, Faulhaber
+
+        - **Sensor Suite**
+        
+            - High-precision encoders (≥1000 CPR)
+            - IMU for pendulum angles (≥1 kHz)
+            - Force sensor for control input validation
+
+        - **Embedded Controller**
+        
+            - Raspberry Pi 4 or NVIDIA Jetson Nano
+            - Real-time Linux (PREEMPT\_RT patch)
+            - \textit{Interface:} Python + GPIO/SPI/I2C
+
+        - **Safety Mechanisms**
+        
+            - Physical limit switches (cart position)
+            - Emergency stop button (hardware interrupt)
+            - Mechanical dampers (pole protection)
+
+\section{Machine Learning Integration}
+
+**Data-Driven Control Enhancements:**
+
+        - **System Identification**
+        
+            - Learn accurate dynamics from experimental data
+            - Neural network or Gaussian process models
+            - \textit{Tool:} PyTorch, TensorFlow, scikit-learn
+
+        - **Reinforcement Learning (RL)**
+        
+            - Learn optimal control policy via trial-and-error
+            - Compare SMC vs. RL performance
+            - \textit{Tool:} Stable-Baselines3 (PPO, SAC, TD3)
+
+        - **Transfer Learning**
+        
+            - Pre-train on simulation, fine-tune on hardware
+            - Reduce real-world training time
+            - \textit{Technique:} Domain adaptation, sim-to-real
+
+        - **Hybrid SMC-RL**
+        
+            - Use SMC for safety guarantees
+            - Use RL for performance optimization
+            - \textit{Reference:} Cheng et al. (2019)
+
+\newpage
+
+\section*{{Resources}}
+
+\begin{itemize}
+    \item \textbf{Repository:} \url{https://github.com/theSadeQ/dip-smc-pso.git}
+    \item \textbf{Documentation:} See \texttt{docs/} directory
+    \item \textbf{Getting Started:} \texttt{docs/guides/getting-started.md}
+\end{itemize}
+
+\vfill
+
+\noindent\textit{Educational podcast episode generated from comprehensive presentation materials}
+
+\end{document}

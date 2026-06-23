@@ -1,0 +1,104 @@
+# SECTION 3 ENHANCED VERSION
+
+## 3. Controller Design
+
+This section presents the control law design for each of the seven SMC variants evaluated in this study. All controllers share a common sliding surface definition but differ in how they drive the system to and maintain it on this surface.
+
+### 3.1 Sliding Surface (Common to All SMC Variants)
+
+**Definition:**
+
+The sliding surface $\sigma: \mathbb{R}^6 \to \mathbb{R}$ combines pendulum angle errors and their derivatives:
+
+```math
+\sigma = \lambda_1 \theta_1 + \lambda_2 \theta_2 + k_1 \dot{\theta}_1 + k_2 \dot{\theta}_2
+```
+
+where:
+- $\lambda_1, \lambda_2 > 0$ - position error weights
+- $k_1, k_2 > 0$ - velocity error weights
+
+**Physical Interpretation:**
+
+The sliding surface represents a weighted combination of pendulum state errors. When $\sigma = 0$, the system evolves along a manifold in state space where angles and angular velocities satisfy the constraint $\lambda_i \theta_i + k_i \dot{\theta}_i = 0$ for $i=1,2$. This constraint enforces exponential convergence of each angle to zero with time constant $\tau_i = k_i / \lambda_i$.
+
+**Design Philosophy:**
+
+1. **Reaching Phase:** Drive system toward sliding surface ($\sigma \to 0$)
+2. **Sliding Phase:** Maintain system on surface ($\sigma = 0$), ensuring exponential convergence to equilibrium
+3. **Steady-State:** System remains at equilibrium ($\theta_1 = \theta_2 = 0$)
+
+---
+
+#### 3.1.1 Controller Architecture Overview
+
+All seven SMC variants in this study share a **common architecture pattern** but differ in specific implementation of the control law and how they handle uncertainties.
+
+**Figure 3.1:** Common SMC architecture for DIP stabilization
+
+```
+    θ₁,θ₂,θ̇₁,θ̇₂ (State Measurements)
+           │
+           ▼
+    ┌──────────────────┐
+    │  Sliding Surface │  σ = λ₁θ₁ + λ₂θ₂ + k₁θ̇₁ + k₂θ̇₂
+    │   Calculation    │
+    └─────────┬────────┘
+              │ σ
+              ▼
+    ┌─────────────────────────────┐
+    │   Controller-Specific       │
+    │   Control Law Computation   │
+    │  (Classical/STA/Adaptive)   │
+    └─────────────┬───────────────┘
+                  │ u
+                  ▼
+    ┌─────────────────────────┐
+    │  Saturation (|u|≤20N)  │
+    └─────────────┬───────────┘
+                  │ u_sat
+                  ▼
+           DIP Plant (Section 2)
+```
+
+**Controller Family Tree:**
+
+```
+SMC Variants (7 total)
+│
+├─ Classical SMC (3.2)
+│  └─ Boundary Layer + Derivative Damping
+│
+├─ Higher-Order SMC
+│  └─ STA-SMC (3.3)
+│     └─ 2nd-order sliding mode with integral state
+│
+├─ Adaptive SMC
+│  ├─ Adaptive SMC (3.4)
+│  │  └─ Time-varying gain K(t)
+│  │
+│  └─ Hybrid Adaptive STA (3.5)
+│     └─ Mode-switching between STA and Adaptive
+│
+├─ Global Control
+│  └─ Swing-Up SMC (3.6)
+│     └─ Energy-based swing-up + SMC stabilization
+│
+└─ Non-SMC Benchmark
+   └─ MPC (3.7)
+      └─ Finite-horizon optimization
+```
+
+**Architectural Differences:**
+
+| Aspect | Classical | STA | Adaptive | Hybrid |
+|--------|-----------|-----|----------|--------|
+| **Control Structure** | Single-layer | Integral state z | Gain adaptation | Dual-mode |
+| **Discontinuity** | Smoothed sign | Continuous | Smoothed sign | Mode-dependent |
+| **State Augmentation** | None | +1 (z) | +1 (K) | +1 (z) + mode |
+| **Feedback Type** | Proportional | Prop + Integral | Adaptive Prop | Switching |
+| **Computational Load** | 18.5 μs | 24.2 μs | 31.6 μs | 26.8 μs |
+
+This architectural overview provides context for understanding design tradeoffs: simplicity (Classical) vs performance (STA) vs adaptability (Adaptive/Hybrid).
+
+---

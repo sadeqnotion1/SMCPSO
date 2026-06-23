@@ -1,0 +1,228 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CHAPTER 8 EXERCISES: PSO Optimization for Controller Tuning
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section*{Exercises}
+
+\subsection*{Conceptual Questions}
+
+\begin{exercise}[PSO vs Gradient-Based Optimization]
+Compare PSO to gradient descent for controller gain tuning:
+\begin{enumerate}[label=(\alph*)]
+    \item Why is gradient computation difficult for SMC systems (discontinuities)?
+    \item What advantages does PSO provide for non-convex, multimodal cost functions?
+    \item When would gradient methods be preferred?
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Multi-Objective Cost Function Design]
+A good PSO cost function balances tracking error, control effort, and chattering. Explain the trade-offs:
+\begin{enumerate}[label=(\alph*)]
+    \item Minimizing tracking error alone may cause excessive control
+    \item Minimizing control effort alone may sacrifice tracking accuracy
+    \item How do weighting coefficients $w_{\text{tracking}}, w_{\text{effort}}, w_{\text{chattering}}$ affect the Pareto frontier?
+\end{enumerate}
+\end{exercise}
+
+\subsection*{Derivation Problems}
+
+\begin{exercise}[PSO Velocity Update Derivation]
+Derive the PSO velocity update equation from particle dynamics:
+\begin{equation*}
+v_i^{k+1} = \omega v_i^k + c_1 r_1 (p_{\text{best},i} - x_i^k) + c_2 r_2 (g_{\text{best}} - x_i^k)
+\end{equation*}
+Explain each term's physical meaning: inertia, cognitive, social.
+\end{exercise}
+
+\begin{exercise}[Cost Function with Penalties]
+Design a penalized cost function for constrained optimization:
+\begin{enumerate}[label=(\alph*)]
+    \item Base cost: $J_{\text{base}} = w_1 \text{RMS}(\theta) + w_2 \text{IAE}(u) + w_3 \mathcal{C}$
+    \item Add penalty for gain violations: $P_{\text{gains}} = \sum_i \max(0, g_{\text{min},i} - g_i)^2$
+    \item Add penalty for instability: $P_{\text{stable}} = \max(0, \max_t |\theta| - 0.5)^2$
+    \item Total: $J = J_{\text{base}} + \lambda_1 P_{\text{gains}} + \lambda_2 P_{\text{stable}}$
+    \item Choose penalty weights $\lambda_1, \lambda_2$ to enforce constraints
+\end{enumerate}
+\end{exercise}
+
+\subsection*{Implementation Problems}
+
+\begin{exercise}[PSO Tuner Implementation]
+Implement a complete PSO tuner for SMC gains:
+
+\begin{lstlisting}[language=Python]
+import numpy as np
+from multiprocessing import Pool
+
+class PSOTuner:
+    def __init__(self, n_particles=30, n_iterations=100, bounds=None,
+                 omega=0.7, c1=1.5, c2=1.5):
+        """
+        Initialize PSO optimizer.
+
+        Args:
+            n_particles: swarm size
+            n_iterations: maximum iterations
+            bounds: dict {param_name: (min, max)}
+            omega: inertia weight
+            c1: cognitive weight
+            c2: social weight
+        """
+        self.n_particles = n_particles
+        self.n_iterations = n_iterations
+        self.bounds = bounds
+        self.omega = omega
+        self.c1 = c1
+        self.c2 = c2
+        self.n_dim = len(bounds)
+
+    def initialize_swarm(self):
+        """Initialize particle positions and velocities."""
+        positions = np.zeros((self.n_particles, self.n_dim))
+        velocities = np.zeros((self.n_particles, self.n_dim))
+
+        # Random initialization within bounds
+        for i, (param, (lb, ub)) in enumerate(self.bounds.items()):
+            positions[:, i] = np.random.uniform(lb, ub, self.n_particles)
+            velocities[:, i] = np.random.uniform(-(ub-lb)/10, (ub-lb)/10, self.n_particles)
+
+        return positions, velocities
+
+    def evaluate_particle(self, params):
+        """
+        Evaluate cost function for one particle.
+
+        Args:
+            params: array of controller gains
+
+        Returns:
+            cost: scalar cost (lower is better)
+        """
+        # YOUR CODE HERE
+        # 1. Create controller with params
+        # 2. Run simulation
+        # 3. Compute multi-objective cost: tracking + effort + chattering
+        pass
+
+    def update_velocities(self, positions, velocities, p_best, g_best):
+        """Update particle velocities using PSO equation."""
+        r1 = np.random.rand(self.n_particles, self.n_dim)
+        r2 = np.random.rand(self.n_particles, self.n_dim)
+
+        velocities = (self.omega * velocities +
+                      self.c1 * r1 * (p_best - positions) +
+                      self.c2 * r2 * (g_best - positions))
+
+        # Velocity clamping
+        for i, (param, (lb, ub)) in enumerate(self.bounds.items()):
+            v_max = 0.2 * (ub - lb)
+            velocities[:, i] = np.clip(velocities[:, i], -v_max, v_max)
+
+        return velocities
+
+    def optimize(self, cost_function, parallel=True):
+        """
+        Run PSO optimization.
+
+        Args:
+            cost_function: callable(params) -> cost
+            parallel: use multiprocessing for particle evaluations
+
+        Returns:
+            best_params: dict of optimal gains
+            best_cost: final cost value
+            convergence_history: array of global best cost per iteration
+        """
+        # Initialize swarm
+        positions, velocities = self.initialize_swarm()
+        p_best = positions.copy()
+        p_best_costs = np.full(self.n_particles, np.inf)
+        g_best = positions[0].copy()
+        g_best_cost = np.inf
+        convergence = []
+
+        for iteration in range(self.n_iterations):
+            # Evaluate all particles
+            if parallel:
+                with Pool() as pool:
+                    costs = pool.map(cost_function, positions)
+            else:
+                costs = [cost_function(p) for p in positions]
+
+            # Update personal best
+            improved = costs < p_best_costs
+            p_best[improved] = positions[improved]
+            p_best_costs[improved] = costs[improved]
+
+            # Update global best
+            best_idx = np.argmin(costs)
+            if costs[best_idx] < g_best_cost:
+                g_best = positions[best_idx].copy()
+                g_best_cost = costs[best_idx]
+
+            convergence.append(g_best_cost)
+            print(f"Iteration {iteration+1}/{self.n_iterations}: Best cost = {g_best_cost:.4f}")
+
+            # Update velocities and positions
+            velocities = self.update_velocities(positions, velocities, p_best, g_best)
+            positions += velocities
+
+            # Enforce bounds
+            for i, (param, (lb, ub)) in enumerate(self.bounds.items()):
+                positions[:, i] = np.clip(positions[:, i], lb, ub)
+
+        # Convert best params to dict
+        best_params = {name: g_best[i] for i, name in enumerate(self.bounds.keys())}
+        return best_params, g_best_cost, np.array(convergence)
+
+# Example usage
+bounds = {
+    'lambda1': (1, 10),
+    'lambda2': (1, 10),
+    'k1': (0.1, 5),
+    'k2': (0.1, 5),
+    'K': (5, 30)
+}
+pso = PSOTuner(n_particles=30, n_iterations=100, bounds=bounds)
+best_gains, best_cost, history = pso.optimize(cost_function)
+\end{lstlisting}
+\end{exercise}
+
+\subsection*{Tuning Problems}
+
+\begin{exercise}[Hyperparameter Sensitivity Analysis]
+Analyze PSO hyperparameter sensitivity:
+\begin{enumerate}[label=(\alph*)]
+    \item Fix $c_1 = c_2 = 1.5$, vary $\omega \in \{0.4, 0.5, 0.6, 0.7, 0.8\}$
+    \item Fix $\omega = 0.7$, vary $c_1, c_2 \in \{1.0, 1.5, 2.0\}$
+    \item For each configuration, run 10 trials with different random seeds
+    \item Plot mean and std of final cost vs. hyperparameters
+    \item Recommend optimal hyperparameters for DIP benchmark
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Convergence Stagnation Detection]
+Implement stagnation detection and recovery:
+\begin{enumerate}[label=(\alph*)]
+    \item Monitor global best improvement: $\Delta J = J_{\text{best}}^{k} - J_{\text{best}}^{k-10}$
+    \item If $|\Delta J| < 0.01$ for 20 iterations, declare stagnation
+    \item Recovery: re-initialize 50\% of particles randomly
+    \item Test on a difficult problem (many local minima)
+\end{enumerate}
+\end{exercise}
+
+\subsection*{Advanced Problems}
+
+\begin{exercise}[Multi-Objective PSO (MOPSO)]
+Extend PSO to handle multiple objectives simultaneously without weighted sum:
+\begin{enumerate}[label=(\alph*)]
+    \item Define objectives: $J_1 = \text{RMS}(\theta)$, $J_2 = \text{IAE}(u)$, $J_3 = \mathcal{C}$
+    \item Use Pareto dominance for comparing particles
+    \item Maintain an external archive of non-dominated solutions
+    \item Plot the Pareto frontier in 3D objective space
+\end{enumerate}
+\end{exercise}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% End of Chapter 8 Exercises
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

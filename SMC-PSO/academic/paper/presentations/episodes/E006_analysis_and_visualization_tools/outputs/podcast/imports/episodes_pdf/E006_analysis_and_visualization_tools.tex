@@ -1,0 +1,117 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{E006}
+\lhead{DIP-SMC-PSO Learning Episode}
+\rfoot{\thepage}
+
+\title{\Large\textbf{E006: Analysis and Visualization Tools}}
+\author{DIP-SMC-PSO Educational Series}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section*{Overview}
+
+This episode covers analysis and visualization tools from the DIP-SMC-PSO project.
+
+\textbf{Part:} Part2 Infrastructure
+
+\textbf{Duration:} 15-20 minutes
+
+\textbf{Source:} Comprehensive Presentation Materials
+
+\newpage
+
+\section{Performance Metrics}
+
+**Four Primary Metrics (MT-5 Benchmark):**
+
+        - **Settling Time** -- Time to reach and stay within tolerance
+        \begin{equation}
+            t_{settle} = \min\{t : \abs{\theta_1(t')}, \abs{\theta_2(t')} < \epsilon \;\forall t' > t\}
+        \end{equation}
+
+        - **Overshoot** -- Peak deviation from equilibrium
+        \begin{equation}
+            \text{Overshoot} = \max_{t} \abs{\theta_1(t)} + \abs{\theta_2(t)}
+        \end{equation}
+
+        - **Energy Consumption**
+        \begin{equation}
+            E = \int_0^T u^2(t) dt
+        \end{equation}
+
+        - **Chattering Frequency** -- FFT-based high-frequency content
+        \begin{equation}
+            E_{HF} = \int_{f > f_{cutoff}} \abs{\mathcal{F}\{u(t)\}}^2 df
+        \end{equation}
+
+\section{Statistical Analysis Tools}
+
+**Monte Carlo Validation:**
+
+        - **Bootstrap Confidence Intervals** -- 95\
+        - **Welch's t-test** -- Compare two controllers (unequal variances)
+        - **ANOVA** -- Compare multiple controllers simultaneously
+        - **Effect size** -- Cohen's d for practical significance
+
+    **Robustness Ranking (MT-5):**
+
+    \begin{tabular}{lcccc}
+        \toprule
+        **Controller** & **Mean $t_{settle**$} & **Std Dev** & **95\
+        \midrule
+        Hybrid Adaptive STA & 2.0 & 0.15 & [1.97, 2.03] & 1 \\
+        STA-SMC & 2.1 & 0.18 & [2.06, 2.14] & 2 \\
+        Adaptive SMC & 2.3 & 0.22 & [2.26, 2.34] & 3 \\
+        Classical SMC & 2.5 & 0.25 & [2.45, 2.55] & 4 \\
+        \bottomrule
+    \end{tabular**
+
+        All pairwise comparisons: $p < 0.001$ (Welch's t-test)
+
+\section{Publication-Ready Plots}
+
+**14 Figures for LT-7 Research Paper:**
+
+        - Control architecture overview
+        - Classical SMC boundary layer illustration
+        - STA twisting algorithm phase portrait
+        - PSO convergence curves (7 controllers)
+        - Performance comparison (settling time, overshoot, energy, chattering)
+        - Chattering frequency-domain analysis
+        - Disturbance rejection time-series (MT-8)
+        - Model uncertainty robustness (LT-6)
+        - Lyapunov stability regions
+        - Monte Carlo statistical validation
+        - Controller ranking matrix
+        - Comprehensive performance heatmap
+        - Energy consumption bar chart
+        - Pareto frontier (multi-objective optimization)
+
+        Vector graphics (PDF/EPS), 300 DPI raster, IEEE publication requirements
+
+\newpage
+
+\section*{{Resources}}
+
+\begin{itemize}
+    \item \textbf{Repository:} \url{https://github.com/theSadeQ/dip-smc-pso.git}
+    \item \textbf{Documentation:} See \texttt{docs/} directory
+    \item \textbf{Getting Started:} \texttt{docs/guides/getting-started.md}
+\end{itemize}
+
+\vfill
+
+\noindent\textit{Educational podcast episode generated from comprehensive presentation materials}
+
+\end{document}

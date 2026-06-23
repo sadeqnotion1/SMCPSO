@@ -1,0 +1,185 @@
+% ============================================================================
+% Beamer Configuration for DIP-SMC-PSO Comprehensive Presentation
+% ============================================================================
+% This file contains all preamble settings, packages, and custom commands
+% shared across the main presentation and speaker scripts.
+% ============================================================================
+
+% Document class for Beamer presentations
+\documentclass[aspectratio=169,10pt]{beamer}
+
+% ============================================================================
+% Theme and Appearance
+% ============================================================================
+\usetheme{Madrid}
+\usecolortheme{default}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}[frame number]
+\setbeamertemplate{caption}[numbered]
+
+% ============================================================================
+% Essential Packages
+% ============================================================================
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{mathtools}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,positioning,calc,decorations.pathreplacing}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{listings}
+\usepackage{hyperref}
+
+% ============================================================================
+% Code Listings Configuration (Python)
+% ============================================================================
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\footnotesize,
+    keywordstyle=\color{blue}\bfseries,
+    commentstyle=\color{gray}\itshape,
+    stringstyle=\color{red},
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    stepnumber=1,
+    numbersep=5pt,
+    backgroundcolor=\color{white},
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    frame=single,
+    tabsize=4,
+    captionpos=b,
+    breaklines=true,
+    breakatwhitespace=false,
+    escapeinside={\%*}{*)},
+    morekeywords={self,True,False,None},
+}
+
+% ============================================================================
+% Custom Colors
+% ============================================================================
+\definecolor{dipblue}{RGB}{0,102,204}
+\definecolor{dipgreen}{RGB}{0,153,76}
+\definecolor{dipred}{RGB}{204,0,0}
+\definecolor{diporange}{RGB}{255,128,0}
+\definecolor{dipgray}{RGB}{128,128,128}
+
+% ============================================================================
+% Custom Commands - Mathematical Notation
+% ============================================================================
+
+% State vectors
+\newcommand{\statevec}{\mathbf{x}}
+\newcommand{\controlvec}{\mathbf{u}}
+\newcommand{\outputvec}{\mathbf{y}}
+
+% Common operators
+\newcommand{\der}[2]{\frac{d#1}{d#2}}
+\newcommand{\pder}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\norm}[1]{\left\|#1\right\|}
+\newcommand{\abs}[1]{\left|#1\right|}
+\newcommand{\sign}{\text{sign}}
+\newcommand{\sat}{\text{sat}}
+
+% Sliding surface
+\newcommand{\slidingsurf}{s}
+\newcommand{\slidingsurfvec}{\mathbf{s}}
+
+% Lyapunov function
+\newcommand{\lyap}{V}
+
+% Common matrices
+\newcommand{\massmatrix}{\mathbf{M}}
+\newcommand{\coriolismatrix}{\mathbf{C}}
+\newcommand{\gravitymatrix}{\mathbf{G}}
+\newcommand{\inputmatrix}{\mathbf{Q}}
+
+% ============================================================================
+% Custom Commands - Annotations
+% ============================================================================
+\newcommand{\highlight}[1]{\textcolor{dipblue}{\textbf{#1}}}
+\newcommand{\important}[1]{\textcolor{dipred}{\textbf{#1}}}
+\newcommand{\success}[1]{\textcolor{dipgreen}{\textbf{#1}}}
+\newcommand{\warning}[1]{\textcolor{diporange}{\textbf{#1}}}
+
+% Status indicators
+\newcommand{\statusok}{\textcolor{dipgreen}{[OK]}}
+\newcommand{\statuserror}{\textcolor{dipred}{[ERROR]}}
+\newcommand{\statuswarning}{\textcolor{diporange}{[WARNING]}}
+\newcommand{\statusinfo}{\textcolor{dipblue}{[INFO]}}
+
+% ============================================================================
+% Custom Commands - Abbreviations
+% ============================================================================
+\newcommand{\dip}{DIP}
+\newcommand{\smc}{SMC}
+\newcommand{\pso}{PSO}
+\newcommand{\sta}{STA}
+\newcommand{\mpc}{MPC}
+\newcommand{\hil}{HIL}
+\newcommand{\qa}{QA}
+
+% ============================================================================
+% Bibliography Setup
+% ============================================================================
+\usepackage[style=numeric,sorting=none,backend=biber]{biblatex}
+\addbibresource{references.bib}
+
+% ============================================================================
+% Title Information
+% ============================================================================
+\title[DIP-SMC-PSO: Comprehensive Overview]{%
+    Double-Inverted Pendulum Sliding Mode Control \\
+    with PSO Optimization: \\
+    A Comprehensive Technical Overview%
+}
+
+\author{%
+    Sadegh Naderi%
+}
+
+\institute{%
+    GitHub: https://github.com/theSadeQ/dip-smc-pso.git
+}
+
+\date{\today}
+
+% ============================================================================
+% Hyperref Configuration
+% ============================================================================
+\hypersetup{
+    colorlinks=true,
+    linkcolor=dipblue,
+    urlcolor=dipblue,
+    citecolor=dipgreen,
+    pdfauthor={Sadegh Naderi},
+    pdftitle={DIP-SMC-PSO Comprehensive Presentation},
+    pdfsubject={Control Systems, Sliding Mode Control, Particle Swarm Optimization},
+    pdfkeywords={Double Inverted Pendulum, Sliding Mode Control, PSO, Control Theory}
+}
+
+% ============================================================================
+% Custom Blocks
+% ============================================================================
+\setbeamercolor{block title}{bg=dipblue,fg=white}
+\setbeamercolor{block body}{bg=dipblue!10,fg=black}
+
+\setbeamercolor{block title example}{bg=dipgreen,fg=white}
+\setbeamercolor{block body example}{bg=dipgreen!10,fg=black}
+
+\setbeamercolor{block title alerted}{bg=dipred,fg=white}
+\setbeamercolor{block body alerted}{bg=dipred!10,fg=black}
+
+% ============================================================================
+% End of Configuration
+% ============================================================================

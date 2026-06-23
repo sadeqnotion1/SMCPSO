@@ -1,0 +1,19 @@
+SRC/ DIRECTORY ANALYSIS REPORT
+================================================================================
+
+CRITICAL ISSUES:
+1. src/core/ duplicates src/simulation/ (HIGH impact)
+2. 4 metric collector variants - unclear canonical (HIGH impact)
+3. Missing __init__.py in 3 directories (MEDIUM impact)
+
+BLOATED MODULES:
+- controllers: 63 files (should be <40)
+- utils: 55 files across 14 subdirs
+- optimization: 53 files
+- simulation: 45 files
+
+INTENTIONAL DUPLICATES (backward-compat shims):
+- classic_smc.py, adaptive_smc.py, sta_smc.py
+- mpc_controller.py, swing_up_smc.py
+
+TOTAL EFFORT: 15-20 hours to reorganize

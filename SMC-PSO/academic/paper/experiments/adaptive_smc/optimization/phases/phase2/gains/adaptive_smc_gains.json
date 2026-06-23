@@ -1,0 +1,15 @@
+{
+  "controller": "Adaptive SMC",
+  "type": "adaptive_smc",
+  "cost": 1e-06,
+  "gains": [
+    10.853207823312408,
+    5.088044502526612,
+    5.975586554548395,
+    4.451471063867783,
+    0.22934110048173462
+  ],
+  "iterations": 150,
+  "timestamp": 1765381865.1608427,
+  "method": "Bulletproof PSO v2 FAST (5 IC scenarios, adaptive w, baseline warm-start, 25 particles, 150 iters)"
+}

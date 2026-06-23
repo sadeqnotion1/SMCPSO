@@ -1,0 +1,16 @@
+{
+  "controller": "STA-SMC",
+  "type": "sta_smc",
+  "cost": 92.52253111121271,
+  "gains": [
+    30.0,
+    6.499168257155188,
+    2.0,
+    0.2,
+    3.1702195298172526,
+    0.05313872736810488
+  ],
+  "iterations": 150,
+  "timestamp": 1765378461.4191136,
+  "method": "Bulletproof PSO v2 FAST (5 IC scenarios, adaptive w, baseline warm-start, 25 particles, 150 iters)"
+}

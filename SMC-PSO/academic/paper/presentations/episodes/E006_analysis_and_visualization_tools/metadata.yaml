@@ -1,0 +1,17 @@
+﻿episode_id: E006
+slug: analysis_and_visualization_tools
+title: Analysis And Visualization Tools
+status: migrated_auto
+last_updated: 2026-02-24
+languages:
+  - en
+  - fa
+channels:
+  - podcast
+source_file_count: 10
+source_buckets:
+  - archive_part1_foundations
+  - cheatsheets_phase2_technical
+  - episodes_markdown
+  - episodes_pdf
+  - episodes_specialized_advisor_report

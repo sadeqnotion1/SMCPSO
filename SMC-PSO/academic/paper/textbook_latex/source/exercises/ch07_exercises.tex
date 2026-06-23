@@ -1,0 +1,142 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CHAPTER 7 EXERCISES: Swing-Up Control
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section*{Exercises}
+
+\subsection*{Conceptual Questions}
+
+\begin{exercise}[Stabilization vs Swing-Up]
+Explain why linear controllers (LQR, SMC) cannot swing up a pendulum from hanging-down position ($\theta = \pi$) to upright ($\theta = 0$). What fundamental limitation do they face?
+\end{exercise}
+
+\begin{exercise}[Energy-Based Control Intuition]
+The swing-up controller pumps energy into the system until the pendulum reaches the upright equilibrium. Give a physical analogy (e.g., playground swing). How does the controller know when to switch from swing-up to stabilization?
+\end{exercise}
+
+\subsection*{Derivation Problems}
+
+\begin{exercise}[Total Energy Computation]
+Derive the total mechanical energy for the DIP system:
+\begin{enumerate}[label=(\alph*)]
+    \item Compute kinetic energy $T$ (cart + pendula)
+    \item Compute potential energy $V$ (gravitational)
+    \item Define $E_{\text{desired}}$ at upright equilibrium
+    \item Design control law: $u = k_E (\dot{x}_{\text{cart}}) (E - E_{\text{desired}}) \cos\theta_1$
+    \item Explain each term's physical role
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Switching Logic Design]
+Design switching logic between swing-up and SMC stabilization:
+\begin{enumerate}[label=(\alph*)]
+    \item Define energy threshold: $E_{\text{switch}} = 0.95 E_{\text{desired}}$
+    \item Add angle threshold: $|\theta_1| < \theta_{\text{switch}} = 0.3$ rad
+    \item Add angular velocity threshold: $|\dot{\theta}_1| < \dot{\theta}_{\text{switch}} = 2$ rad/s
+    \item Implement hysteresis to prevent chattering between modes
+\end{enumerate}
+\end{exercise}
+
+\subsection*{Implementation Problems}
+
+\begin{exercise}[Swing-Up Controller Implementation]
+Implement the energy-based swing-up controller with SMC stabilization:
+
+\begin{lstlisting}[language=Python]
+class SwingUpSMC:
+    def __init__(self, kE, smc_controller, E_switch=0.95, theta_switch=0.3):
+        """
+        Initialize swing-up controller.
+
+        Args:
+            kE: energy control gain
+            smc_controller: SMC instance for stabilization
+            E_switch: energy threshold for mode switching (fraction of E_desired)
+            theta_switch: angle threshold for switching (rad)
+        """
+        self.kE = kE
+        self.smc = smc_controller
+        self.E_switch = E_switch
+        self.theta_switch = theta_switch
+        self.mode = 'swing_up'  # 'swing_up' or 'stabilize'
+
+    def compute_energy(self, state, params):
+        """Compute total mechanical energy."""
+        # YOUR CODE HERE
+        # T = kinetic energy (cart + pendula)
+        # V = potential energy (gravity)
+        # E = T + V
+        pass
+
+    def compute_desired_energy(self, params):
+        """Energy at upright equilibrium."""
+        # YOUR CODE HERE
+        # E_desired at theta1 = theta2 = 0, velocities = 0
+        pass
+
+    def check_switching_condition(self, state, E, E_desired):
+        """Determine if should switch from swing-up to stabilization."""
+        theta1, theta2 = state[1], state[2]
+        dtheta1 = state[4]
+
+        # Check energy, angle, and velocity thresholds
+        energy_ok = (E >= self.E_switch * E_desired)
+        angle_ok = (abs(theta1) < self.theta_switch and abs(theta2) < self.theta_switch)
+        velocity_ok = (abs(dtheta1) < 2.0)
+
+        return energy_ok and angle_ok and velocity_ok
+
+    def swing_up_control(self, state, E, E_desired, params):
+        """Energy-based swing-up control law."""
+        x_cart_dot = state[3]
+        theta1 = state[1]
+
+        # u = kE * dx_cart * (E - E_desired) * cos(theta1)
+        energy_error = E - E_desired
+        u = self.kE * x_cart_dot * energy_error * np.cos(theta1)
+
+        return u
+
+    def compute_control(self, state, params, dt):
+        """Compute swing-up or stabilization control."""
+        E = self.compute_energy(state, params)
+        E_desired = self.compute_desired_energy(params)
+
+        # Check mode switching
+        if self.mode == 'swing_up':
+            if self.check_switching_condition(state, E, E_desired):
+                self.mode = 'stabilize'
+                print(f"[INFO] Switched to stabilization mode at t={dt:.2f}s")
+
+        # Apply appropriate control law
+        if self.mode == 'swing_up':
+            u = self.swing_up_control(state, E, E_desired, params)
+        else:
+            u = self.smc.compute_control(state, params, dt)
+
+        return u
+
+# Test from hanging-down position
+smc = ClassicalSMC(lambda1=5.0, lambda2=5.0, k1=1.0, k2=1.0, K=15.0, kd=2.0, epsilon=0.02)
+swing_up = SwingUpSMC(kE=50.0, smc_controller=smc)
+state0 = np.array([0, np.pi, np.pi, 0, 0, 0])  # Hanging down
+# Simulate and plot energy evolution, mode switching
+\end{lstlisting}
+\end{exercise}
+
+\subsection*{Simulation Problems}
+
+\begin{exercise}[Large-Angle Initial Conditions]
+Test the swing-up controller on challenging initial conditions:
+\begin{enumerate}[label=(\alph*)]
+    \item $\theta_1(0) = \pi - 0.1$ rad (near hanging-down)
+    \item $\theta_1(0) = \pi/2$ rad (horizontal)
+    \item $\theta_1(0) = 3\pi/4$ rad (45 degrees below horizontal)
+    \item Plot energy evolution, mode transitions, control effort for each case
+    \item Measure swing-up time (time to stabilization)
+\end{enumerate}
+\end{exercise}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% End of Chapter 7 Exercises
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

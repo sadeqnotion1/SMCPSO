@@ -1,0 +1,159 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CHAPTER 6 EXERCISES: Hybrid Adaptive STA-SMC
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section*{Exercises}
+
+\subsection*{Conceptual Questions}
+
+\begin{exercise}[Hybrid Controller Motivation]
+Why combine adaptive gain tuning with super-twisting? What unique advantages does the hybrid approach provide over using each technique separately?
+\end{exercise}
+
+\begin{exercise}[Dual-Gain Adaptation]
+The hybrid controller adapts both $k_1$ and $k_2$ simultaneously. Explain the challenges of dual-gain adaptation compared to single-gain (classical adaptive SMC). How does the lambda scheduler help?
+\end{exercise}
+
+\begin{exercise}[Relative vs Absolute Sliding Surface]
+Compare relative sliding surface $\sigma_{\text{rel}} = \sigma - \sigma_{\text{ref}}$ to absolute $\sigma_{\text{abs}} = \sigma$. When is cart recentering necessary (relative formulation)?
+\end{exercise}
+
+\subsection*{Derivation Problems}
+
+\begin{exercise}[Extended Lyapunov Function]
+Construct a Lyapunov function for the hybrid adaptive STA system:
+\begin{equation*}
+V = V_{\text{STA}} + \frac{1}{2\gamma_1}\tilde{k}_1^2 + \frac{1}{2\gamma_2}\tilde{k}_2^2
+\end{equation*}
+Prove asymptotic stability under dual-gain adaptation.
+\end{exercise}
+
+\begin{exercise}[Lambda Scheduling Design]
+Design a lambda scheduler $\lambda(|\sigma|)$ that:
+\begin{enumerate}[label=(\alph*)]
+    \item Is small when $|\sigma|$ is large (prioritize reaching)
+    \item Is large when $|\sigma|$ is small (prioritize tracking)
+    \item Propose: $\lambda(\sigma) = \lambda_{\min} + (\lambda_{\max} - \lambda_{\min}) e^{-\beta |\sigma|}$
+    \item Tune $\beta$ to balance convergence speed and final accuracy
+\end{enumerate}
+\end{exercise}
+
+\subsection*{Implementation Problems}
+
+\begin{exercise}[Hybrid Adaptive STA Implementation]
+Implement the complete hybrid controller with dual-gain adaptation and lambda scheduling:
+
+\begin{lstlisting}[language=Python]
+class HybridAdaptiveSTASMC:
+    def __init__(self, lambda1, lambda2, k1_surf, k2_surf, k1_sta_init, k2_sta_init,
+                 gamma1, gamma2, alpha1, alpha2, epsilon, lambda_scheduler=None):
+        """
+        Initialize hybrid adaptive STA-SMC.
+
+        Args:
+            lambda1, lambda2, k1_surf, k2_surf: sliding surface parameters
+            k1_sta_init, k2_sta_init: initial STA gains
+            gamma1, gamma2: adaptation rates for k1, k2
+            alpha1, alpha2: leak rates
+            epsilon: boundary layer thickness
+            lambda_scheduler: function(sigma) -> lambda_mod (optional)
+        """
+        self.lambda1 = lambda1
+        self.lambda2 = lambda2
+        self.k1 = k1_surf
+        self.k2 = k2_surf
+        self.k1_sta = k1_sta_init
+        self.k2_sta = k2_sta_init
+        self.gamma1 = gamma1
+        self.gamma2 = gamma2
+        self.alpha1 = alpha1
+        self.alpha2 = alpha2
+        self.epsilon = epsilon
+        self.lambda_scheduler = lambda_scheduler
+        self.u1_int = 0.0
+
+    def adapt_gains(self, sigma, dt):
+        """Dual-gain adaptation law."""
+        # Adapt k1 (proportional STA gain)
+        dk1_dt = self.gamma1 * np.sqrt(abs(sigma)) - self.alpha1 * self.k1_sta
+        self.k1_sta += dk1_dt * dt
+        self.k1_sta = np.clip(self.k1_sta, 5.0, 30.0)
+
+        # Adapt k2 (integral STA gain)
+        dk2_dt = self.gamma2 * abs(sigma) - self.alpha2 * self.k2_sta
+        self.k2_sta += dk2_dt * dt
+        self.k2_sta = np.clip(self.k2_sta, 0.5, 5.0)
+
+        return dk1_dt, dk2_dt
+
+    def compute_sliding_surface(self, state):
+        """Compute sliding surface with optional lambda scheduling."""
+        sigma_base = (self.lambda1 * state[1] + self.lambda2 * state[2] +
+                      self.k1 * state[4] + self.k2 * state[5])
+
+        # Apply lambda scheduler if provided
+        if self.lambda_scheduler:
+            lambda_mod = self.lambda_scheduler(abs(sigma_base))
+            sigma = lambda_mod * sigma_base
+        else:
+            sigma = sigma_base
+
+        return sigma
+
+    def compute_control(self, state, params, dt):
+        """Compute hybrid adaptive STA control."""
+        sigma = self.compute_sliding_surface(state)
+        u_eq = self.compute_equivalent_control(state, params)
+
+        # STA control law with adaptive gains
+        sigma_sat = np.clip(sigma / self.epsilon, -1.0, 1.0)
+        u_proportional = -self.k1_sta * np.sqrt(abs(sigma)) * sigma_sat
+        u_sta = u_proportional + self.u1_int
+
+        # Update integrator
+        du1_dt = -self.k2_sta * sigma_sat
+        self.u1_int += du1_dt * dt
+
+        # Adapt gains
+        dk1_dt, dk2_dt = self.adapt_gains(sigma, dt)
+
+        return u_eq + u_sta
+\end{lstlisting}
+\end{exercise}
+
+\begin{exercise}[Mode Confusion Detection]
+Implement a diagnostic to detect mode confusion (competing adaptation directions):
+
+\begin{lstlisting}[language=Python]
+def detect_mode_confusion(k1_history, k2_history, window=100):
+    """
+    Detect mode confusion via gain oscillations.
+
+    Args:
+        k1_history, k2_history: arrays of gain evolution
+        window: detection window length
+
+    Returns:
+        is_confused: bool (True if mode confusion detected)
+        oscillation_metric: float (0-1, higher = more confused)
+    """
+    # YOUR CODE HERE
+    # Compute zero-crossings in dk1_dt and dk2_dt
+    # High frequency oscillations indicate mode confusion
+    pass
+\end{lstlisting}
+\end{exercise}
+
+\subsection*{Advanced Problems}
+
+\begin{exercise}[Self-Tapering Adaptation]
+Design a self-tapering adaptation law where $\gamma_i(t)$ decreases as the system approaches steady state. Implement and show that it reduces gain overshoot.
+\end{exercise}
+
+\begin{exercise}[Multi-Objective Gain Optimization]
+Formulate a multi-objective optimization problem to find optimal initial gains $(k_1^0, k_2^0)$ that minimize both transient overshoot and final chattering. Use weighted sum or Pareto frontier methods.
+\end{exercise}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% End of Chapter 6 Exercises
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

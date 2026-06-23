@@ -1,0 +1,351 @@
+% ==============================================================================
+% EPISODE 001: PROJECT OVERVIEW AND INTRODUCTION
+% ==============================================================================
+\input{../templates/master_template.tex}
+\input{../templates/tikz_components.tex}
+
+% Episode-specific title
+\renewcommand{\episodetitle}{E001: Project Overview}
+
+\begin{document}
+
+% ==============================================================================
+% TITLE PAGE
+% ==============================================================================
+\makeepisodetitle{E001: Project Overview}{Welcome to DIP-SMC-PSO}{1}{25-30 minutes}
+
+% ==============================================================================
+% PAGE 1: SYSTEM ARCHITECTURE
+% ==============================================================================
+\learningobjective{Understand the DIP-SMC-PSO project structure and how seven different controllers work together with simulation, optimization, and monitoring components}
+
+\section*{What Is This Project?}
+
+\begin{multicols}{2}
+
+\subsection*{The Challenge}
+
+\begin{keypoint}
+Imagine balancing \textbf{two broomsticks} connected end-to-end on your hand while moving left and right. Now add:
+\begin{itemize}
+    \item You're \textbf{blindfolded}
+    \item Random \textbf{wind} is blowing
+    \item You're on a \textbf{moving platform}
+    \item You must respond every \textbf{1-10 milliseconds}
+\end{itemize}
+\end{keypoint}
+
+\columnbreak
+
+\subsection*{Real-World Applications}
+
+\iconTarget\ This isn't just academic - it's the same math that powers:
+
+\begin{itemize}
+    \item \textbf{SpaceX rocket landings} (Falcon 9 boosters)
+    \item \textbf{Humanoid robots} (Boston Dynamics)
+    \item \textbf{Self-balancing vehicles} (Segway, scooters)
+    \item \textbf{Construction cranes} (load stabilization)
+    \item \textbf{Satellite orientation} (aerospace attitude control)
+\end{itemize}
+
+\end{multicols}
+
+\subsection*{System Architecture: The Seven Brains}
+
+\begin{center}
+\systemarchitecture
+\end{center}
+
+\begin{multicols}{2}
+
+\subsubsection*{Controllers by Sophistication}
+
+\textcolor{primary}{\faCheckCircle\ \textbf{Classical SMC}} - The baseline (1970s theory, 200 lines)
+
+\textcolor{secondary}{\faCheckCircle\ \textbf{Super-Twisting}} - Smooth operator (2nd-order, ABS brakes analogy)
+
+\textcolor{accent}{\faCheckCircle\ \textbf{Adaptive Controllers}} - Self-tuning intelligence:
+\begin{itemize}
+    \item Adaptive SMC (real-time gain adjustment)
+    \item Hybrid Adaptive STA (21.4\% improvement)
+    \item Conditional Hybrid (safety-aware switching)
+\end{itemize}
+
+\columnbreak
+
+\textcolor{warning}{\faCheckCircle\ \textbf{Swing-Up SMC}} - Energy-based (starts from hanging position)
+
+\textcolor{codeblock}{\faFlask\ \textbf{MPC (Experimental)}} - Model Predictive Control (constraint handling)
+
+\begin{tip}
+All controllers use the \textbf{same interface}, so you can swap them with a single configuration change!
+\end{tip}
+
+\end{multicols}
+
+% ==============================================================================
+% PAGE 2: PHYSICS AND MODELS
+% ==============================================================================
+\newpage
+
+\section*{The Physics: Double Inverted Pendulum}
+
+\begin{center}
+\dipphysical
+\end{center}
+
+\subsection*{Why Is This Hard?}
+
+\begin{multicols}{2}
+
+\begin{warning}
+\textbf{Underactuated System:} ONE control (cart force) manages THREE states (cart position, angle 1, angle 2)
+
+\textbf{Unstable Equilibrium:} Like balancing a pencil on its tip - tiny errors cause collapse
+
+\textbf{Nonlinear Dynamics:} Sine/cosine functions couple the pendulum angles
+\end{warning}
+
+\columnbreak
+
+\begin{keypoint}
+\textbf{Fast Response Required:}
+
+Control algorithm decides every 1-10ms = 100-1000 times per second.
+
+Blink and you've missed 300 control cycles!
+\end{keypoint}
+
+\end{multicols}
+
+\subsection*{Three Levels of Reality: Plant Models}
+
+\begin{tcolorbox}[colback=background, colframe=primary, title=\faLayerGroup\ Model Comparison]
+\begin{tabular}{lll}
+\toprule
+\textbf{Model} & \textbf{When to Use} & \textbf{Accuracy vs. Speed} \\
+\midrule
+\textbf{Simplified DIP} & Initial testing, PSO prototyping & Fastest (no trig) \\
+& Small angles ($<5^\circ$) & \textcolor{warning}{Low accuracy} \\
+\textbf{Full Nonlinear} & Final validation, research papers & \textcolor{secondary}{Gold standard} \\
+& Complete equations & Slower \\
+\textbf{Low-Rank DIP} & Monte Carlo (1000 runs) & 10-50x faster \\
+& Sensitivity analysis & \textcolor{accent}{Dominant dynamics} \\
+\bottomrule
+\end{tabular}
+\end{tcolorbox}
+
+\begin{example}
+\textbf{Video Game Analogy:}
+\begin{itemize}
+    \item Simplified = Low graphics settings (fast, rough)
+    \item Full Nonlinear = Ultra settings (slow, beautiful)
+    \item Low-Rank = Balanced settings (optimized)
+\end{itemize}
+\end{example}
+
+% ==============================================================================
+% PAGE 3: WORKFLOW AND INSTALLATION
+% ==============================================================================
+\newpage
+
+\section*{From Installation to Research Paper}
+
+\subsection*{Phase 1: Lab Setup (15 minutes)}
+
+\begin{center}
+\begin{tikzpicture}[node distance=1.5cm]
+    \node[block, fill=primary!30] (clone) {\textbf{Clone Repo}\\GitHub $\rightarrow$ Local};
+    \node[process, right=of clone] (venv) {\textbf{Virtual Env}\\Isolated Python};
+    \node[process, right=of venv] (deps) {\textbf{Install Deps}\\NumPy, SciPy, etc.};
+    \node[block, fill=secondary!30, right=of deps] (verify) {\textbf{Verify}\\Config Check};
+
+    \draw[arrow] (clone) -- (venv);
+    \draw[arrow] (venv) -- (deps);
+    \draw[arrow] (deps) -- (verify);
+\end{tikzpicture}
+\end{center}
+
+\subsection*{Phase 2: First Experiments (30 minutes)}
+
+\begin{multicols}{2}
+
+\begin{itemize}
+    \item \textbf{1.} \textbf{Classical SMC}: Baseline performance
+    \item \textbf{2.} \textbf{Super-Twisting}: Notice smoother control?
+    \item \textbf{3.} \textbf{Adaptive SMC}: Watch gains adjust in real-time
+\end{itemize}
+
+\textbf{What to Look For:}
+\begin{itemize}
+    \item \iconTarget\ Settling time (how fast?)
+    \item \iconWarning\ Overshoot (swings too far?)
+    \item \iconCode\ Control effort (energy usage)
+    \item \iconWarning\ Chattering (high-freq oscillations)
+\end{itemize}
+
+\end{multicols}
+
+\subsection*{Phase 3: Intelligent Tuning (2-4 hours)}
+
+\begin{center}
+\psoflowchart
+\end{center}
+
+\begin{tip}
+\textbf{PSO Performance:} Achieved 6-21\% improvement across all seven controllers. In research at this level, those percentage points can make or break a hardware deployment!
+\end{tip}
+
+\subsection*{Phases 4-5: Research-Grade Work}
+
+\begin{summary}
+\textbf{Benchmarking (1-2 days):} Test all 7 controllers, multiple scenarios, disturbances
+
+\textbf{Research (weeks-months):} Lyapunov proofs, uncertainty analysis, paper writing
+
+\textbf{Current Status:} Submission-ready paper (v2.1) with 14 figures, 11 completed tasks
+\end{summary}
+
+% ==============================================================================
+% PAGE 4: QUICK REFERENCE
+% ==============================================================================
+\newpage
+
+\section*{Quick Reference: Common Operations}
+
+\quickref{Running Simulations}{
+\begin{lstlisting}[style=python, numbers=none]
+# Classical SMC with plots
+python simulate.py --ctrl classical_smc --plot
+
+# Super-Twisting Algorithm
+python simulate.py --ctrl sta_smc --plot
+
+# Adaptive SMC
+python simulate.py --ctrl adaptive_smc --plot
+\end{lstlisting}
+}
+
+\quickref{PSO Optimization}{
+\begin{lstlisting}[style=python, numbers=none]
+# Optimize Classical SMC gains
+python simulate.py --ctrl classical_smc --run-pso --save gains.json
+
+# Load optimized gains
+python simulate.py --load gains.json --plot
+\end{lstlisting}
+}
+
+\quickref{Testing \& Validation}{
+\begin{lstlisting}[style=python, numbers=none]
+# Run full test suite
+python run_tests.py
+
+# Specific controller tests
+python -m pytest tests/test_controllers/test_classical_smc.py -v
+
+# Coverage report
+python -m pytest tests/ --cov=src --cov-report=html
+\end{lstlisting}
+}
+
+\subsection*{Directory Structure: Zoning Laws}
+
+\begin{center}
+\directoryzoning
+\end{center}
+
+\subsection*{Key Technologies}
+
+\begin{multicols}{2}
+
+\textbf{Core Scientific Stack:}
+\begin{itemize}
+    \item \iconCode\ NumPy (array operations)
+    \item \iconCode\ SciPy (ODE integrators)
+    \item \iconCode\ Matplotlib (visualization)
+\end{itemize}
+
+\textbf{Optimization:}
+\begin{itemize}
+    \item \iconTarget\ PySwarms (PSO algorithm)
+    \item \iconTarget\ Optuna (Bayesian alternative)
+\end{itemize}
+
+\columnbreak
+
+\textbf{Quality Assurance:}
+\begin{itemize}
+    \item \iconWarning\ pytest (250+ tests)
+    \item \iconWarning\ Hypothesis (property-based)
+    \item \iconKey\ 90\% test coverage
+\end{itemize}
+
+\textbf{Configuration:}
+\begin{itemize}
+    \item \iconBook\ Pydantic (type-safe YAML)
+    \item \iconBook\ PyYAML (file parsing)
+\end{itemize}
+
+\end{multicols}
+
+\subsection*{Project Metrics}
+
+\begin{tcolorbox}[colback=highlight!20, colframe=accent, title=\faChartBar\ Status Dashboard]
+\begin{itemize}
+    \item \textbf{Test Coverage:} 89.7\% overall, 94\% controllers (exceeds 85\%/95\% targets)
+    \item \textbf{Performance:} 1-10s single sim, 2-4hrs PSO, 30s for 100 sims (vectorized)
+    \item \textbf{Codebase:} 150+ Python files, 25,000+ lines, 250+ test cases
+    \item \textbf{Research:} 1 submission-ready paper (v2.1), 14 figures, 11 completed tasks
+\end{itemize}
+\end{tcolorbox}
+
+\subsection*{Design Principles}
+
+\begin{multicols}{2}
+
+\iconKey\ \textbf{Modularity:} One job per component
+
+\iconCode\ \textbf{Type Safety:} Hints everywhere
+
+\iconBook\ \textbf{Configuration-First:} No magic numbers
+
+\columnbreak
+
+\iconTarget\ \textbf{Reproducibility:} Seeded RNGs
+
+\iconWarning\ \textbf{Testability:} Every module tested
+
+\end{multicols}
+
+\subsection*{What's Next?}
+
+\begin{keypoint}
+\textbf{E002: Control Theory Fundamentals} - Lyapunov stability, sliding mode theory, why SpaceX rockets don't tip over
+
+\textbf{E003: Plant Models \& Dynamics} - Lagrangian mechanics, Coriolis forces, complete physics
+
+\textbf{E004-E029: Advanced Topics} - PSO deep dive, benchmarks, Lyapunov proofs, research paper walkthrough
+\end{keypoint}
+
+\subsection*{Learning Resources}
+
+\begin{itemize}
+    \item \resourcelink{https://github.com/theSadeQ/dip-smc-pso}{GitHub Repository}
+    \item \iconBook\ Documentation: \texttt{docs/} directory
+    \item \iconBook\ Sliding Mode Control: Utkin, Guldner, Shi (2009)
+    \item \iconBook\ Nonlinear Control: Khalil (2002)
+    \item \iconBook\ PSO: Kennedy \& Eberhart (1995)
+\end{itemize}
+
+\begin{center}
+\begin{tcolorbox}[colback=secondary!20, colframe=secondary, width=0.9\textwidth]
+\centering
+\Large\textbf{From Broomsticks to Rockets}
+
+\normalsize Every successful SpaceX landing uses control theory similar to what we're building here. That's the power of understanding fundamentals.
+\end{tcolorbox}
+\end{center}
+
+\end{document}

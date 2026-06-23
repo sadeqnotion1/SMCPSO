@@ -1,0 +1,341 @@
+% ==============================================================================
+% APPENDIX TEMPLATE - Reusable Appendix Structure
+% ==============================================================================
+% Copy this template for each new appendix.
+% Replace placeholders with your content.
+% ==============================================================================
+
+\chapter{Appendix Title Here}
+\label{app:appendix-name}
+
+% ==============================================================================
+% APPENDIX INTRODUCTION (1 paragraph)
+% ==============================================================================
+
+This appendix provides [description of content]. The material is organized as follows: \cref{sec:app-section1} presents [topic 1], and \cref{sec:app-section2} contains [topic 2].
+
+% ==============================================================================
+% SECTION 1 - Example: Mathematical Proofs
+% ==============================================================================
+
+\section{Detailed Mathematical Proofs}
+\label{sec:app-section1}
+
+This section provides detailed proofs for theorems presented in the main text.
+
+% Proof 1
+\subsection{Proof of Theorem \ref{thm:smc-stability}}
+\label{subsec:proof-stability}
+
+\begin{proof}[Detailed Proof of Stability]
+Consider the Lyapunov function candidate:
+\begin{equation}
+    V(s) = \frac{1}{2}s^2
+    \label{eq:app-lyapunov}
+\end{equation}
+
+Taking the time derivative along the system trajectories:
+\begin{align}
+    \dot{V} &= s\dot{s} \nonumber \\
+    &= s(\vect{c}^T \dot{\vect{x}}) \nonumber \\
+    &= s(\vect{c}^T [\mat{A}\vect{x} + \mat{B}u]) \label{eq:app-lyapunov-derivative}
+\end{align}
+
+Substituting the control law $u = -K\sign(s)$:
+\begin{align}
+    \dot{V} &= s(\vect{c}^T \mat{A}\vect{x} - \vect{c}^T \mat{B}K\sign(s)) \nonumber \\
+    &= s(\vect{c}^T \mat{A}\vect{x}) - K|\vect{c}^T \mat{B}||s| \label{eq:app-control-substitute}
+\end{align}
+
+Assuming $K > \frac{\|\vect{c}^T \mat{A}\vect{x}\|_\infty}{|\vect{c}^T \mat{B}|}$, we have:
+\begin{equation}
+    \dot{V} < -\eta|s| \quad \text{where} \quad \eta = K|\vect{c}^T \mat{B}| - \|\vect{c}^T \mat{A}\vect{x}\|_\infty
+    \label{eq:app-reaching-condition}
+\end{equation}
+
+This establishes the reaching condition. The time to reach the sliding surface is bounded by:
+\begin{equation}
+    t_r \leq \frac{|s(0)|}{\eta}
+    \label{eq:app-reaching-time}
+\end{equation}
+
+Once on the sliding surface ($s = 0$), the dynamics are governed by:
+\begin{equation}
+    \dot{\vect{x}} = (\mat{I} - \mat{B}(\vect{c}^T \mat{B})^{-1}\vect{c}^T)\mat{A}\vect{x}
+    \label{eq:app-sliding-dynamics}
+\end{equation}
+
+The stability of these sliding dynamics depends on the eigenvalues of the reduced-order system, which can be designed through appropriate choice of $\vect{c}$.
+\end{proof}
+
+% ==============================================================================
+% SECTION 2 - Example: Source Code Listings
+% ==============================================================================
+
+\section{Complete Source Code}
+\label{sec:app-section2}
+
+This section provides complete implementation code for the controllers.
+
+% Code listing 1
+\subsection{Classical SMC Controller}
+\label{subsec:code-classical}
+
+\begin{lstlisting}[language=Python, caption={Complete implementation of Classical SMC}, label={lst:app-classical-smc}, style=python]
+import numpy as np
+
+class ClassicalSMC:
+    """
+    Classical Sliding Mode Controller for DIP system.
+
+    Implements the control law:
+        u = -(c^T x + K * sign(s))
+
+    where s = c^T x is the sliding surface.
+    """
+
+    def __init__(self, c, K, phi=0.0):
+        """
+        Initialize controller.
+
+        Args:
+            c: Sliding surface coefficients
+            K: Switching gain
+            phi: Boundary layer thickness (0 for pure SMC)
+        """
+        self.c = np.array(c)
+        self.K = K
+        self.phi = phi
+
+    def compute_control(self, state):
+        """
+        Compute control input.
+
+        Args:
+            state: State vector [x, x_dot, theta1, theta1_dot, theta2, theta2_dot]
+
+        Returns:
+            u: Control force (N)
+        """
+        # Compute sliding surface
+        s = np.dot(self.c, state)
+
+        # Compute control
+        if self.phi > 0:
+            # Boundary layer approximation
+            u = -self.K * self.saturate(s / self.phi)
+        else:
+            # Pure sign function
+            u = -self.K * np.sign(s)
+
+        return u
+
+    def saturate(self, x):
+        """Saturation function."""
+        return np.clip(x, -1, 1)
+\end{lstlisting}
+
+% Code listing 2
+\subsection{PSO Optimizer}
+\label{subsec:code-pso}
+
+\begin{lstlisting}[language=Python, caption={PSO implementation for gain optimization}, label={lst:app-pso}, style=python]
+import numpy as np
+
+class PSOOptimizer:
+    """Particle Swarm Optimization for controller gain tuning."""
+
+    def __init__(self, n_particles=30, n_iterations=100, bounds=None):
+        """
+        Initialize PSO optimizer.
+
+        Args:
+            n_particles: Number of particles in swarm
+            n_iterations: Number of optimization iterations
+            bounds: List of (min, max) tuples for each parameter
+        """
+        self.n_particles = n_particles
+        self.n_iterations = n_iterations
+        self.bounds = bounds
+        self.w = 0.729  # Inertia weight
+        self.c1 = 1.49445  # Cognitive coefficient
+        self.c2 = 1.49445  # Social coefficient
+
+    def optimize(self, cost_function):
+        """
+        Run PSO optimization.
+
+        Args:
+            cost_function: Function to minimize (takes parameter vector)
+
+        Returns:
+            best_params: Optimal parameter vector
+            best_cost: Minimum cost value
+        """
+        # Initialize particles
+        positions = self.initialize_positions()
+        velocities = np.zeros_like(positions)
+        pbest_positions = positions.copy()
+        pbest_costs = np.array([cost_function(p) for p in positions])
+        gbest_idx = np.argmin(pbest_costs)
+        gbest_position = pbest_positions[gbest_idx]
+        gbest_cost = pbest_costs[gbest_idx]
+
+        # Main optimization loop
+        for iteration in range(self.n_iterations):
+            for i in range(self.n_particles):
+                # Update velocity
+                r1, r2 = np.random.rand(2)
+                cognitive = self.c1 * r1 * (pbest_positions[i] - positions[i])
+                social = self.c2 * r2 * (gbest_position - positions[i])
+                velocities[i] = self.w * velocities[i] + cognitive + social
+
+                # Update position
+                positions[i] = positions[i] + velocities[i]
+                positions[i] = self.enforce_bounds(positions[i])
+
+                # Evaluate cost
+                cost = cost_function(positions[i])
+
+                # Update personal best
+                if cost < pbest_costs[i]:
+                    pbest_costs[i] = cost
+                    pbest_positions[i] = positions[i].copy()
+
+                    # Update global best
+                    if cost < gbest_cost:
+                        gbest_cost = cost
+                        gbest_position = positions[i].copy()
+
+            # Print progress
+            if (iteration + 1) % 10 == 0:
+                print(f"Iteration {iteration + 1}: Best cost = {gbest_cost:.4f}")
+
+        return gbest_position, gbest_cost
+
+    def initialize_positions(self):
+        """Initialize particle positions within bounds."""
+        positions = np.zeros((self.n_particles, len(self.bounds)))
+        for i, (low, high) in enumerate(self.bounds):
+            positions[:, i] = np.random.uniform(low, high, self.n_particles)
+        return positions
+
+    def enforce_bounds(self, position):
+        """Enforce parameter bounds."""
+        for i, (low, high) in enumerate(self.bounds):
+            position[i] = np.clip(position[i], low, high)
+        return position
+\end{lstlisting}
+
+% ==============================================================================
+% SECTION 3 - Example: Data Tables
+% ==============================================================================
+
+\section{Complete Experimental Data}
+\label{sec:app-data}
+
+This section provides complete data tables for all experiments.
+
+% Long table example (multi-page)
+\begin{longtable}{lccccc}
+    \caption{Complete benchmark results for all controllers and test scenarios} \\
+    \toprule
+    \textbf{Controller} & \textbf{Scenario} & \textbf{Settling (s)} & \textbf{Overshoot (\%)} & \textbf{Energy (J)} & \textbf{Chattering} \\
+    \midrule
+    \endfirsthead
+
+    \multicolumn{6}{c}{\textit{(Continued from previous page)}} \\
+    \toprule
+    \textbf{Controller} & \textbf{Scenario} & \textbf{Settling (s)} & \textbf{Overshoot (\%)} & \textbf{Energy (J)} & \textbf{Chattering} \\
+    \midrule
+    \endhead
+
+    \midrule
+    \multicolumn{6}{r}{\textit{(Continued on next page)}} \\
+    \endfoot
+
+    \bottomrule
+    \endlastfoot
+
+    Classical SMC & Nominal       & 3.45 & 12.3 & 245 & 15.2 \\
+    Classical SMC & Disturbance   & 3.89 & 14.1 & 267 & 16.8 \\
+    Classical SMC & Uncertainty   & 4.12 & 15.7 & 289 & 17.3 \\
+    STA-SMC       & Nominal       & 2.78 & 8.5  & 198 & 4.8  \\
+    STA-SMC       & Disturbance   & 3.02 & 9.8  & 215 & 5.2  \\
+    STA-SMC       & Uncertainty   & 3.21 & 10.4 & 228 & 5.6  \\
+    Adaptive SMC  & Nominal       & 2.91 & 9.2  & 210 & 7.3  \\
+    Adaptive SMC  & Disturbance   & 3.15 & 10.1 & 225 & 7.9  \\
+    Adaptive SMC  & Uncertainty   & 3.34 & 10.8 & 238 & 8.4  \\
+    Hybrid        & Nominal       & 2.62 & 7.8  & 185 & 3.9  \\
+    Hybrid        & Disturbance   & 2.84 & 8.6  & 201 & 4.3  \\
+    Hybrid        & Uncertainty   & 3.01 & 9.2  & 214 & 4.7  \\
+\end{longtable}
+
+% ==============================================================================
+% SECTION 4 - Example: Configuration Files
+% ==============================================================================
+
+\section{System Configuration}
+\label{sec:app-config}
+
+Complete configuration file for simulation:
+
+\begin{lstlisting}[language=yaml, caption={Complete system configuration}, label={lst:app-config}]
+# System Configuration - config.yaml
+
+physics:
+  # Cart parameters
+  cart_mass: 1.0          # kg
+  cart_friction: 0.1      # N/(m/s)
+
+  # Pendulum 1 (lower)
+  pendulum1_mass: 0.1     # kg
+  pendulum1_length: 0.5   # m
+  pendulum1_friction: 0.01  # N*m/(rad/s)
+
+  # Pendulum 2 (upper)
+  pendulum2_mass: 0.1     # kg
+  pendulum2_length: 0.5   # m
+  pendulum2_friction: 0.01  # N*m/(rad/s)
+
+  # Gravity
+  gravity: 9.81           # m/s^2
+
+controller:
+  classical_smc:
+    c1: 10.0
+    c2: 5.0
+    c3: 8.0
+    c4: 3.0
+    c5: 15.0
+    c6: 2.0
+    K: 50.0
+    phi: 0.03
+
+  pso_optimization:
+    n_particles: 30
+    n_iterations: 100
+    bounds:
+      - [1.0, 20.0]    # c1 bounds
+      - [1.0, 10.0]    # c2 bounds
+      - [1.0, 20.0]    # c3 bounds
+      - [1.0, 10.0]    # c4 bounds
+      - [1.0, 30.0]    # c5 bounds
+      - [1.0, 10.0]    # c6 bounds
+      - [10.0, 100.0]  # K bounds
+
+simulation:
+  dt: 0.001              # Time step (s)
+  duration: 10.0         # Simulation duration (s)
+  initial_state:
+    x: 0.0
+    x_dot: 0.0
+    theta1: 0.2          # 11.5 degrees
+    theta1_dot: 0.0
+    theta2: 0.2          # 11.5 degrees
+    theta2_dot: 0.0
+\end{lstlisting}
+
+% ==============================================================================
+% END OF APPENDIX
+% ==============================================================================

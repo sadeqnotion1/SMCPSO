@@ -1,0 +1,106 @@
+#==========================================================================================\
+#================================ requirements.txt ========================================\
+#==========================================================================================\
+
+# -----------------------------------------------------------------------------
+# Core Scientific Computing Libraries
+# -----------------------------------------------------------------------------
+# These packages form the algebraic, numerical, and visualization engine of the Double-Inverted Pendulum (DIP).
+# NumPy is pinned below 2.0.0 because Numba's JIT compiler does not support NumPy 2.x, causing runtime compilation crashes.
+numpy>=1.21.0,<2.0.0      # Foundation of state vector operations, matrices, and Numba JIT array structures.
+scipy>=1.10.0,<1.14.0      # Provides high-accuracy differential integration (solve_ivp) for physical state simulation.
+matplotlib>=3.6.0,<4.0.0  # Renders static performance plots, phase portraits, and state trajectories.
+pandas>=1.5.0,<3.0.0      # Manages structured tabular datasets, statistical aggregations, and log files.
+
+# -----------------------------------------------------------------------------
+# Optimization and Control Tools
+# -----------------------------------------------------------------------------
+# Algorithms used for tuning sliding surfaces, boundary layer sizes, and controller gains.
+pymodbus>=3.6.0,<4.0.0    # Protocol library enabling Modbus TCP/RTU communication for HIL server-client.
+pyswarms>=1.3.0,<2.0.0    # Particle Swarm Optimization framework for searching high-dimensional controller gains.
+cma>=3.2.0,<4.0.0         # Covariance Matrix Adaptation Evolution Strategy for derivative-free robust optimization.
+h5py>=3.11.0,<4.0.0      # High-performance data storage for large batch simulation results and training histories.
+optuna>=3.0.0,<4.0.0      # Hyperparameter optimization framework used for model validation and tuning.
+cvxpy>=1.3.0,<2.0.0       # Convex optimization modeling language utilized for Model Predictive Control (MPC).
+
+# -----------------------------------------------------------------------------
+# Performance and Compilation
+# -----------------------------------------------------------------------------
+# Critical speedups enabling hundreds of parallel simulation runs.
+numba>=0.56.0,<0.60.0     # Just-In-Time compiler translating Python physics calculations into native CPU instructions.
+
+# -----------------------------------------------------------------------------
+# Configuration and Data Handling
+# -----------------------------------------------------------------------------
+# Libraries for loading, structuring, and enforcing schemas on input parameters.
+pyyaml>=6.0,<7.0          # Parses the main project settings file: config.yaml.
+pydantic>=2.5.0,<3.0.0    # Enforces strict type validation and structural loading constraints on configurations.
+pydantic-settings>=2.1.0,<3.0.0  # Configures environment variable injection into Pydantic BaseSettings objects.
+jsonschema>=4.17.0,<5.0.0 # Validates target research plans and simulation directives against standard JSON schemas.
+
+# -----------------------------------------------------------------------------
+# Testing and Verification Framework
+# -----------------------------------------------------------------------------
+# Quality gates ensuring the numerical and logical correctness of controllers.
+pytest>=7.4.0,<9.0.0      # Central unit-testing and integration-testing suite execution framework.
+pytest-benchmark>=4.0.0,<5.0.0  # Runs performance regression analysis and checks for computational latency.
+hypothesis>=6.70.0,<7.0.0 # Property-based testing system to discover edge cases in Lyapunov stability logic.
+
+# -----------------------------------------------------------------------------
+# Web Interface (Streamlit Dashboard)
+# -----------------------------------------------------------------------------
+# Libraries for building the interactive simulation dashboard.
+streamlit>=1.28.0,<2.0.0  # App framework used to build the real-time simulation dashboard.
+plotly>=5.15.0,<6.0.0     # Interactive, hardware-accelerated dynamic plotting engine for Web UI visualization.
+altair>=4.2.0,<6.0.0      # Declarative statistical visualization library used in the dashboard panels.
+watchdog>=3.0.0,<4.0.0    # Monitors source file updates to auto-refresh the active Streamlit app.
+aiohttp>=3.9.0,<4.0.0    # Async HTTP library for non-blocking telemetry data and monitoring connections.
+pyzmq>=26.0.0,<27.0.0    # ZeroMQ bindings supporting ultra-low latency real-time communication.
+aio-pika>=9.4.0,<10.0.0  # Async AMQP 0-9-1 client enabling remote message broker pipelines for HIL simulations.
+
+# -----------------------------------------------------------------------------
+# Documentation Dependencies
+# -----------------------------------------------------------------------------
+# Modules responsible for assembling the research paper and technical site.
+sphinx>=5.0.0,<8.0.0            # Assembles documentation sites and outputs PDF/HTML manual builds.
+sphinx-rtd-theme>=1.3.0,<3.0.0  # Provides the standard responsive layout styling for Read-The-Docs builds.
+beautifulsoup4>=4.9.0,<5.0.0    # Parses generated HTML templates to build search indexes.
+
+# -----------------------------------------------------------------------------
+# Advanced Documentation Extensions
+# -----------------------------------------------------------------------------
+# Extensions for rich math, styling, and graphics in technical reports.
+sphinxcontrib-bibtex>=2.5.0,<3.0.0   # Integrates BibTeX bibliographies to reference control literature.
+sphinx-copybutton>=0.5.0,<1.0.0      # Injects interactive copy buttons into Sphinx pre/code elements.
+sphinx-math-dollar>=1.2.0,<2.0.0     # Parses dollar signs ($...$) to insert LaTeX math notation into Sphinx.
+sphinx-design>=0.4.0,<1.0.0          # Framework providing web grids, buttons, and responsive layouts to Sphinx.
+sphinx-togglebutton>=0.3.0,<1.0.0    # Allows developers to create collapsible notes and code blocks.
+sphinxcontrib-mermaid>=0.8.0,<1.0.0  # Renders flowcharts and diagrams directly using text specifications.
+sphinxcontrib-plantuml>=0.24,<1.0.0  # Compiles PlantUML state and sequence drawings to static images.
+myst-parser>=1.0.0,<3.0.0            # Enables Sphinx to process standard Markdown files alongside ReStructuredText.
+
+# -----------------------------------------------------------------------------
+# Scientific and Math Documentation
+# -----------------------------------------------------------------------------
+# Symbolic mathematical derivation output.
+sympy>=1.11.0,<2.0.0             # Computer algebra system used to derive control equations and stability matrices.
+
+# -----------------------------------------------------------------------------
+# Interactive Documentation (Jupyter Integration)
+# -----------------------------------------------------------------------------
+# Formats interactive computation notebooks for rendering.
+nbsphinx>=0.9.0,<1.0.0           # Integrates interactive Jupyter notebooks (.ipynb) directly into Sphinx builds.
+jupyter>=1.0.0,<2.0.0            # Metapackage providing the standard interactive coding ecosystem.
+ipykernel>=6.20.0,<7.0.0         # Renders notebook kernels in document build tasks.
+ipywidgets>=8.0.0,<9.0.0         # Integrates UI sliders and selectors within notebooks.
+nbconvert>=7.0.0,<8.0.0          # Exports notebook code and figures to clean Sphinx HTML pages.
+jupyter-cache>=0.6.0,<1.0.0      # Prevents redundant notebook executions during incremental Sphinx builds.
+
+# -----------------------------------------------------------------------------
+# Code Quality and System Monitoring
+# -----------------------------------------------------------------------------
+# Utilities supporting development workflow and hardware checks.
+pygments>=2.14.0,<3.0.0          # Highlights code syntax in terminal output and docs.
+black>=23.0.0,<25.0.0            # Strict Python code formatting tool enforcing PEP 8 standards.
+linkchecker>=10.0.0,<11.0.0      # Scans compiled documentation to flag broken hyperlinks.
+psutil>=5.9.0,<6.0.0             # Inspects process IDs and system memory usage to prevent memory leaks in control loops.

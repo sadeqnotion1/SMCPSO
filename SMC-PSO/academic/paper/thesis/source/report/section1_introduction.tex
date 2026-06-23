@@ -1,0 +1,69 @@
+\section{Introduction}
+\label{sec:introduction}
+
+% Content to be extracted from docs/guides/getting-started.md and README.md
+
+\subsection{Motivation}
+Underactuated mechanical systems---systems with fewer control inputs than degrees of freedom---appear throughout modern engineering, from bipedal walking robots and humanoid platforms to spacecraft attitude control and personal transportation devices like the Segway \cite{Spong1998,Collins2005}. These systems require controllers that exploit dynamic coupling between actuated and unactuated coordinates, presenting fundamental challenges absent in fully-actuated systems. The double-inverted pendulum (DIP) has emerged as the canonical benchmark for this class, capturing the essential control difficulties of underactuation, nonlinear dynamics, and inherent instability in a mathematically tractable form \cite{Khalil2002,BoubakersIriarte2017}. Successful DIP control strategies transfer directly to practical applications ranging from exoskeleton balance assistance to rocket landing stabilization.
+
+The DIP presents four compounding control challenges. First, underactuation (three degrees of freedom controlled by a single horizontal force) demands exploitation of inertial coupling between the cart and both pendulum links---the controller cannot independently command each coordinate. Second, the upright equilibrium is inherently unstable with two unstable eigenvalues, requiring continuous active stabilization; even small perturbations cause rapid divergence without feedback control. Third, trigonometric nonlinearities in the equations of motion invalidate linearization-based designs for large-angle swings, necessitating nonlinear control synthesis \cite{Khalil2002,FantoniLozano2002}. Fourth, real systems exhibit parametric uncertainties ($\pm$10-30\% variation in mass, inertia) and external disturbances (floor vibrations, sensor noise) that robust controllers must reject.
+
+Sliding mode control (SMC) provides a theoretically grounded framework addressing these challenges through variable structure design. The fundamental strength of SMC lies in its ability to achieve bounded-input bounded-output stability despite matched disturbances---perturbations entering the same channel as the control input---making it inherently robust compared to linear quadratic regulator (LQR) designs that assume perfect models \cite{Utkin1977,Shtessel2014,EdwardsSpurgeon1998}. SMC achieves finite-time convergence to a designer-specified sliding surface, followed by reduced-order dynamics along that surface, enabling systematic separation of transient and steady-state performance specifications. While model predictive control (MPC) offers similar robustness, SMC requires orders of magnitude less computation ($\sim$20~$\mu$s vs.\ $\sim$10~ms per control step), enabling high-frequency implementation on resource-constrained embedded platforms. Furthermore, modern higher-order sliding modes (super-twisting algorithm, adaptive SMC) eliminate the chattering that plagued classical SMC, achieving continuous control signals suitable for physical actuators \cite{Levant2007,Shtessel2014}.
+
+However, SMC performance depends critically on numerous design parameters: sliding surface slopes ($\lambda_i$), switching gains ($K$), boundary layer thickness ($\varepsilon$), and damping coefficients ($k_d$). Manual tuning of these interdependent gains requires deep expertise, consumes hours to days of trial-and-error experimentation, and often yields suboptimal solutions trapped in local minima of the performance landscape \cite{AstromHagglund2006,ODwyer2009}. For multi-objective cost functions balancing settling time, overshoot, energy consumption, and chattering---as required for practical deployment---analytical tuning rules provide insufficient guidance. This tuning bottleneck remains a significant barrier to SMC adoption in industrial control systems, where rapid deployment and reproducible performance are essential.
+
+Particle swarm optimization (PSO) offers a systematic solution to the controller tuning problem. As a population-based metaheuristic inspired by social behavior, PSO explores the multidimensional gain space through cooperating particles, each representing a candidate controller configuration \cite{Kennedy1995}. Unlike gradient-based methods, PSO operates derivative-free, making it applicable to non-smooth, black-box cost functions that aggregate simulation metrics. Comparative studies demonstrate 20-40\% performance improvements over manually-tuned controllers across robotic manipulators \cite{Khanesar2013}, power systems \cite{Dash2015}, and inverted pendulums \cite{Zhou2012}. PSO's parallel search architecture also enables exploitation of modern multi-core processors, reducing tuning time from manual hours to automated minutes. The convergence theory \cite{ClercKennedy2002} provides stability guarantees under appropriate parameter selection, ensuring reliable optimization despite the non-convex search landscape.
+
+Despite extensive separate research on SMC theory and PSO optimization, significant gaps remain. Few studies systematically compare classical SMC, super-twisting algorithm (STA), adaptive SMC, and hybrid variants on a common benchmark with identical performance metrics. PSO-based automatic tuning across multiple SMC architectures for underactuated systems remains under-explored, with most prior work focusing on single controller types. Comprehensive robustness analysis under realistic model uncertainty ($\pm$30\% parameter variation) and external disturbances is limited. Finally, the lack of open-source, reproducible implementations hinders community validation and practical adoption. This work addresses these gaps by implementing four SMC variants with PSO optimization, benchmarking performance across settling time, overshoot, energy, and chattering metrics, and providing a complete open-source framework for reproducible research.
+
+\subsection{Problem Statement}
+Design and implement sliding mode controllers (SMC) for DIP stabilization with particle swarm optimization (PSO) for automatic gain tuning.
+
+\subsection{Literature Review}
+
+\subsubsection{Inverted Pendulum Control}
+The inverted pendulum has served as a canonical benchmark for nonlinear control systems since the 1960s. The double-inverted pendulum extends this challenge through increased underactuation and nonlinear coupling between links. Recent surveys \cite{BoubakersIriarte2017} document over 50 years of control approaches ranging from LQR to modern model predictive control.
+
+\subsubsection{Sliding Mode Control Development}
+Sliding mode control originated with Utkin's seminal work on variable structure systems \cite{Utkin1977}. The fundamental theory establishes finite-time convergence to a sliding surface followed by reduced-order dynamics. Classical SMC provides robust performance but suffers from chattering due to discontinuous switching.
+
+Modern advances address chattering through three main approaches: boundary layer methods \cite{SlotineSastry1983}, higher-order sliding modes \cite{Levant2007}, and adaptive gain tuning \cite{SlotineCoetsee1986}. The Super-Twisting Algorithm represents second-order sliding mode control, achieving continuous control with finite-time convergence. Comprehensive treatment of modern SMC theory and applications is provided by Shtessel et al.\ \cite{Shtessel2014}.
+
+Adaptive SMC addresses model uncertainty through online parameter estimation. Plestan et al.\ \cite{Plestan2010} survey methodologies for adaptive sliding mode control, demonstrating improved robustness over fixed-gain approaches. The hybrid combination of adaptive gains with super-twisting dynamics represents current state-of-the-art for chattering reduction and robustness.
+
+\subsubsection{Optimization-Based Controller Tuning}
+Manual controller tuning remains time-intensive and suboptimal. Particle Swarm Optimization, introduced by Kennedy and Eberhart \cite{Kennedy1995}, provides population-based metaheuristic search inspired by social behavior. PSO has been successfully applied to SMC gain tuning for inverted pendulums \cite{Zhou2012}, robotic manipulators \cite{Khanesar2013}, and power systems \cite{Dash2015}.
+
+Convergence analysis \cite{ClercKennedy2002} establishes stability conditions for PSO particle trajectories. While PSO does not guarantee global optimality for multimodal problems, empirical studies demonstrate 20-40\% performance improvements over manually-tuned controllers. Integration of PSO with SMC for DIP control represents an open research area with limited prior work.
+
+\subsubsection{Gap in Literature}
+Despite extensive work on SMC theory and PSO optimization separately, few studies provide:
+\begin{itemize}
+\item Systematic comparison of classical, STA, adaptive, and hybrid SMC for DIP control
+\item PSO-based automatic gain tuning across multiple SMC variants
+\item Comprehensive robustness analysis under model uncertainty and disturbances
+\item Open-source implementation with reproducible benchmarks
+\end{itemize}
+
+This work addresses these gaps through implementation and benchmarking of four SMC variants with PSO optimization, validated under realistic uncertainty conditions.
+
+\subsection{Contributions}
+This report makes the following contributions:
+\begin{itemize}
+\item Implementation of four SMC variants (Classical, STA, Adaptive, Hybrid) for DIP control
+\item PSO-based automatic gain tuning achieving 25-40\% performance improvement
+\item Comprehensive benchmark comparing settling time, overshoot, energy, and chattering
+\item Robustness validation under $\pm$30\% model uncertainty and external disturbances
+\item Open-source implementation for reproducibility\footnote{Source code, simulation data, and documentation: \url{https://github.com/theSadeQ/dip-smc-pso}}
+\end{itemize}
+
+\subsection{Objectives}
+\begin{itemize}
+\item Implement multiple SMC variants (classical, STA, adaptive, hybrid)
+\item Optimize controller gains using PSO
+\item Compare performance through comprehensive benchmarks
+\item Validate robustness under disturbances and model uncertainty
+\end{itemize}
+
+\subsection{Report Organization}
+Section \ref{sec:model} describes the system model, Section \ref{sec:controllers} presents controller designs, Section \ref{sec:pso} covers PSO optimization, Section \ref{sec:results} analyzes simulation results, and Section \ref{sec:conclusion} concludes.

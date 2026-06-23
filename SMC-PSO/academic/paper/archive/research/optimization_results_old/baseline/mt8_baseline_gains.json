@@ -1,0 +1,76 @@
+{
+  "metadata": {
+    "description": "MT-8 Reproducibility Test - Baseline Gains (Pre-MT-8)",
+    "source": "config.yaml controller_defaults section",
+    "purpose": "Original gains for nominal-only tuning (NO disturbance rejection)",
+    "failure_mode": "These gains FAIL under disturbances: 0% convergence, 187-667° overshoots",
+    "date_created": "2025-12-15",
+    "note": "Baseline for reproducibility validation of MT-8 robust PSO optimization"
+  },
+  "baseline_gains": {
+    "classical_smc": {
+      "controller_type": "classical_smc",
+      "gains": [5.0, 5.0, 5.0, 0.5, 0.5, 0.5],
+      "gain_labels": ["k1", "k2", "k3", "k4", "k5", "k6"],
+      "source": "Pre-MT-8 nominal-only tuning",
+      "performance": {
+        "nominal": "Stable (no disturbances)",
+        "disturbed": "Complete failure (0% convergence, 236° overshoot)"
+      }
+    },
+    "sta_smc": {
+      "controller_type": "sta_smc",
+      "gains": [8.0, 4.0, 12.0, 6.0, 4.85, 3.43],
+      "gain_labels": ["K1", "K2", "k1", "k2", "lambda1", "lambda2"],
+      "source": "Issue #2 resolution (pre-MT-8)",
+      "performance": {
+        "nominal": "Stable (no disturbances)",
+        "disturbed": "Complete failure (0% convergence, 241° overshoot)"
+      }
+    },
+    "adaptive_smc": {
+      "controller_type": "adaptive_smc",
+      "gains": [10.0, 8.0, 5.0, 4.0, 1.0],
+      "gain_labels": ["k1", "k2", "k3", "k4", "k5"],
+      "source": "Pre-MT-8 nominal-only tuning",
+      "performance": {
+        "nominal": "Stable (no disturbances)",
+        "disturbed": "Complete failure (0% convergence, 187° overshoot)"
+      }
+    },
+    "hybrid_adaptive_sta_smc": {
+      "controller_type": "hybrid_adaptive_sta_smc",
+      "gains": [5.0, 5.0, 5.0, 0.5],
+      "gain_labels": ["c1", "lambda1", "c2", "lambda2"],
+      "source": "Pre-MT-8 nominal-only tuning",
+      "performance": {
+        "nominal": "Stable (no disturbances)",
+        "disturbed": "Catastrophic failure (0% convergence, 667° overshoot)"
+      }
+    }
+  },
+  "test_configuration": {
+    "pso_algorithm": "PySwarms GlobalBestPSO",
+    "particles": 30,
+    "iterations": 50,
+    "evaluations_per_controller": 4500,
+    "fitness_function": "50% nominal + 50% disturbed scenarios",
+    "disturbances": {
+      "step": "10.0 N at t=2.0s",
+      "impulse": "30.0 N pulse at t=2.0s (0.1s duration)"
+    },
+    "random_seeds": [42, 123, 456],
+    "expected_runtime_per_seed": "70 minutes (all 4 controllers)"
+  },
+  "original_mt8_results": {
+    "date": "2025-11-08",
+    "fitness_improvements": {
+      "classical_smc": "2.15%",
+      "sta_smc": "1.38%",
+      "adaptive_smc": "0.47%",
+      "hybrid_adaptive_sta_smc": "21.39%"
+    },
+    "average_improvement": "6.35%",
+    "documentation": "benchmarks/MT8_COMPLETE_REPORT.md"
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "hybrid_adaptive_sta_smc": {
+    "gains": [
+      10.148979254143576,
+      12.839386550675101,
+      6.815065802267164,
+      2.7500136927843215
+    ],
+    "validation": {
+      "sinusoidal_low": {
+        "settling_time_mean": 10.0,
+        "settling_time_std": 0.0,
+        "overshoot_mean": 374.60366912631883,
+        "overshoot_std": 0.0,
+        "control_effort_mean": 15.33116928524016,
+        "control_effort_std": 0.0,
+        "convergence_rate": 0.0,
+        "num_trials": 10
+      },
+      "sinusoidal_resonant": {
+        "settling_time_mean": 10.0,
+        "settling_time_std": 0.0,
+        "overshoot_mean": 722.4121559936801,
+        "overshoot_std": 0.0,
+        "control_effort_mean": 15.253861999111555,
+        "control_effort_std": 1.7763568394002505e-15,
+        "convergence_rate": 0.0,
+        "num_trials": 10
+      },
+      "sinusoidal_high": {
+        "settling_time_mean": 10.0,
+        "settling_time_std": 0.0,
+        "overshoot_mean": 592.760083457765,
+        "overshoot_std": 0.0,
+        "control_effort_mean": 7.504615250257996,
+        "control_effort_std": 8.881784197001252e-16,
+        "convergence_rate": 0.0,
+        "num_trials": 10
+      },
+      "random_gaussian_low": {
+        "settling_time_mean": 10.0,
+        "settling_time_std": 0.0,
+        "overshoot_mean": 617.6513676037945,
+        "overshoot_std": 90.87061716012957,
+        "control_effort_mean": 10.280698898153307,
+        "control_effort_std": 6.1567687241272395,
+        "convergence_rate": 0.0,
+        "num_trials": 10
+      },
+      "random_gaussian_mid": {
+        "settling_time_mean": 10.0,
+        "settling_time_std": 0.0,
+        "overshoot_mean": 626.663904753644,
+        "overshoot_std": 31.0812952400757,
+        "control_effort_mean": 7.411650299775426,
+        "control_effort_std": 0.32590175012276174,
+        "convergence_rate": 0.0,
+        "num_trials": 10
+      },
+      "random_gaussian_high": {
+        "settling_time_mean": 10.0,
+        "settling_time_std": 0.0,
+        "overshoot_mean": 586.3198404985292,
+        "overshoot_std": 89.55571487210351,
+        "control_effort_mean": 9.619113658240817,
+        "control_effort_std": 3.2569281975945175,
+        "convergence_rate": 0.0,
+        "num_trials": 10
+      }
+    },
+    "num_trials": 10,
+    "seed": 42
+  }
+}

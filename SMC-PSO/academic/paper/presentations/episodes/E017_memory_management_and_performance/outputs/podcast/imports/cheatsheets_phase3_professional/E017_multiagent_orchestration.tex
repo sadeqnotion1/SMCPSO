@@ -1,0 +1,539 @@
+% =============================================================================
+% Episode 017: Multi-agent Orchestration & Checkpoint Recovery
+% Series: DIP-SMC-PSO Professional Toolkit
+% Phase: 3 (Professional Practice)
+% Duration: ~25 minutes | Pages: 12-14 | Complexity: Professional
+% Dependencies: E015 (architectural standards), E016 (documentation quality)
+% =============================================================================
+
+\input{../templates/master_template.tex}
+
+% Episode Metadata
+\title{\textbf{E017: Multi-agent Orchestration}}
+\def\episodenumber{017}
+\def\episodetitle{Multi-Agent Orchestration \& Checkpoint Recovery}
+\def\episodecategory{Professional Practice}
+\def\difficulty{Professional}
+
+\begin{document}
+\makeepisodetitle
+
+% =============================================================================
+% SECTION 1: OVERVIEW
+% =============================================================================
+\section{Overview}
+
+\subsection{What You'll Learn}
+\begin{itemize}
+  \item \textbf{Ultimate Orchestrator Pattern}: Coordinate 6 specialized agents for complex tasks
+  \item \textbf{Checkpoint System}: Prevent work loss on token limits/crashes
+  \item \textbf{Recovery Workflow}: Resume multi-agent tasks across sessions
+  \item \textbf{Quality Gates}: Automated validation (8 gates, 7/8 pass required)
+\end{itemize}
+
+\subsection{Why This Matters}
+\begin{highlightbox}
+\textbf{Problem}: Large refactorings (e.g., 34-issue UI overhauls) can exceed 200K token limits mid-execution, losing hours of work.
+
+\textbf{Solution}: Checkpoint system + multi-agent orchestration survives crashes and enables resumption with zero context loss.
+
+\textbf{Impact}: Phase 3 UI completion (34 issues) achieved via checkpointed 6-agent orchestration, surviving 3 token limit events.
+\end{highlightbox}
+
+% =============================================================================
+% SECTION 2: THE ULTIMATE ORCHESTRATOR PATTERN
+% =============================================================================
+\section{The Ultimate Orchestrator Pattern}
+
+\subsection{Architecture Overview}
+\begin{center}
+\begin{tikzpicture}[
+  node distance=1.5cm,
+  orchestrator/.style={rectangle, draw=primaryblue, fill=primaryblue!10, thick, minimum width=3cm, minimum height=0.8cm},
+  agent/.style={rectangle, draw=secondarygreen, fill=secondarygreen!10, thick, minimum width=2.5cm, minimum height=0.7cm},
+  checkpoint/.style={diamond, draw=errorred, fill=errorred!10, thick, minimum width=1.5cm, minimum height=1cm}
+]
+  % Orchestrator
+  \node[orchestrator] (orch) at (0,0) {\textbf{Ultimate Orchestrator}};
+
+  % Agents (6 total)
+  \node[agent] (int) at (-5,-2) {Integration Agent};
+  \node[agent] (ctrl) at (-2.5,-2) {Control Systems};
+  \node[agent] (pso) at (0,-2) {PSO Agent};
+  \node[agent] (doc) at (2.5,-2) {Documentation};
+  \node[agent] (beauty) at (5,-2) {Code Beauty};
+  \node[agent] (test) at (0,-3.5) {Testing Agent};
+
+  % Checkpoints
+  \node[checkpoint] (chk1) at (-5,-0.5) {C1};
+  \node[checkpoint] (chk2) at (5,-0.5) {C2};
+
+  % Connections
+  \draw[->, thick] (orch) -- (chk1);
+  \draw[->, thick] (orch) -- (chk2);
+  \draw[->, thick] (chk1) -- (int);
+  \draw[->, thick] (orch) -- (ctrl);
+  \draw[->, thick] (orch) -- (pso);
+  \draw[->, thick] (orch) -- (doc);
+  \draw[->, thick] (chk2) -- (beauty);
+  \draw[->, thick] (orch) -- (test);
+\end{tikzpicture}
+\end{center}
+
+\subsection{Agent Roles \& Responsibilities}
+\begin{itemize}
+  \item \textbf{1.} \textbf{Integration Agent}: Merge changes across 5+ modules, resolve conflicts
+  \item \textbf{2.} \textbf{Control Systems Agent}: Implement controllers, validate Lyapunov stability
+  \item \textbf{3.} \textbf{PSO Agent}: Optimize hyperparameters, run benchmarks
+  \item \textbf{4.} \textbf{Documentation Agent}: Generate API docs, update guides
+  \item \textbf{5.} \textbf{Code Beautification Agent}: Apply formatters, fix linting issues
+  \item \textbf{6.} \textbf{Testing Agent}: Write pytest tests, achieve 95\% coverage
+\end{itemize}
+
+\subsection{Orchestrator Responsibilities}
+\begin{itemize}
+  \item \textbf{Task Decomposition}: Break 34-issue roadmap into 6 agent workstreams
+  \item \textbf{Dependency Resolution}: Launch agents in correct order (e.g., Integration before Documentation)
+  \item \textbf{Checkpoint Management}: Save agent state every 5-10 minutes
+  \item \textbf{Quality Validation}: Run 8 quality gates, fail if <7 pass
+  \item \textbf{Recovery Coordination}: Resume from last checkpoint on token limit
+\end{itemize}
+
+% =============================================================================
+% SECTION 3: CHECKPOINT SYSTEM ARCHITECTURE
+% =============================================================================
+\section{Checkpoint System Architecture}
+
+\subsection{Core Concepts}
+\begin{itemize}
+  \item \textbf{Checkpoint}: Snapshot of agent state (task ID, progress, deliverables, current phase)
+  \item \textbf{Granularity}: Per-agent, per-task, timestamped
+  \item \textbf{Storage}: JSON files in \texttt{.ai\_workspace/state/checkpoints/}
+  \item \textbf{Triggers}: Manual (API call), automatic (every 5-10 min), event-driven (pre-commit)
+\end{itemize}
+
+\subsection{Checkpoint Lifecycle}
+\begin{itemize}
+  \item \textbf{1.} \textbf{Plan Approved}: User approves multi-agent plan, checkpoint created
+  \item \textbf{2.} \textbf{Agent Launched}: Each agent gets unique checkpoint on spawn
+  \item \textbf{3.} \textbf{Progress Updates}: Agent reports completion every 5-10 min
+  \item \textbf{4.} \textbf{Agent Complete/Failed}: Final checkpoint with success/failure status
+  \item \textbf{5.} \textbf{Recovery}: New session loads latest checkpoints, resumes work
+\end{itemize}
+
+\subsection{Checkpoint Data Structure}
+\begin{lstlisting}[language=json]
+{
+  "task_id": "LT-4",
+  "agent_id": "agent_control_systems",
+  "timestamp": "2025-01-29T17:30:00Z",
+  "status": "in_progress",
+  "hours_allocated": 12.0,
+  "hours_completed": 8.5,
+  "deliverables_completed": [
+    "Lyapunov proof for classical SMC",
+    "Boundary layer optimization"
+  ],
+  "current_phase": "Implementing adaptive SMC proofs",
+  "dependencies": ["agent_pso"],
+  "artifacts": [
+    ".artifacts/LT-4/lyapunov_classical.pdf",
+    ".artifacts/LT-4/boundary_layer_results.json"
+  ]
+}
+\end{lstlisting}
+
+% =============================================================================
+% SECTION 4: CHECKPOINT API \& USAGE
+% =============================================================================
+\section{Checkpoint API \& Usage}
+
+\subsection{Mandatory Checkpoint Calls}
+\begin{lstlisting}[style=pythonstyle]
+from .ai_workspace.tools.checkpoints.agent_checkpoint import (
+    checkpoint_plan_approved,
+    checkpoint_agent_launched,
+    checkpoint_agent_progress,
+    checkpoint_agent_complete,
+    checkpoint_agent_failed
+)
+
+# 1. User Approves Plan
+checkpoint_plan_approved(
+    task_id="LT-4",
+    plan_summary="Lyapunov stability proofs for 7 controllers",
+    hours=46.0,
+    agents=["control_systems", "pso", "documentation"],
+    deliverables=["proofs.pdf", "benchmarks.json", "theory_guide.md"]
+)
+
+# 2. Launch Each Agent
+checkpoint_agent_launched(
+    task_id="LT-4",
+    agent_id="agent_control_systems",
+    role="Implement Lyapunov proofs",
+    hours_allocated=18.0
+)
+
+# 3. Progress Updates (every 5-10 minutes)
+checkpoint_agent_progress(
+    task_id="LT-4",
+    agent_id="agent_control_systems",
+    hours_completed=8.5,
+    deliverables_completed=["Lyapunov proof for classical SMC"],
+    current_phase="Implementing adaptive SMC proofs"
+)
+
+# 4. Agent Completes
+checkpoint_agent_complete(
+    task_id="LT-4",
+    agent_id="agent_control_systems",
+    hours_completed=18.0,
+    deliverables=["lyapunov_proofs.pdf"],
+    summary="7 controllers validated, 3 new theorems proven"
+)
+
+# Or Agent Fails
+checkpoint_agent_failed(
+    task_id="LT-4",
+    agent_id="agent_control_systems",
+    hours_completed=12.5,
+    reason="Token limit exceeded at 180K tokens",
+    recovery_recommendation="Resume from checkpoint_0012 at adaptive SMC proof"
+)
+\end{lstlisting}
+
+\subsection{Recovery Commands}
+\begin{lstlisting}[style=bashstyle]
+# Standard Recovery Workflow
+/recover                     # Load project state, list incomplete tasks
+
+/resume LT-4 agent_control_systems
+                            # Resume specific agent from last checkpoint
+
+# Advanced Recovery
+python .ai_workspace/tools/recovery/recover_project.sh
+python .ai_workspace/tools/checkpoints/analyze_checkpoints.py --task LT-4
+\end{lstlisting}
+
+% =============================================================================
+% SECTION 5: QUALITY GATES SYSTEM
+% =============================================================================
+\section{Quality Gates System}
+
+\subsection{The 8 Quality Gates}
+\begin{itemize}
+  \item \textbf{1.} \textbf{Test Coverage}: Critical paths $\geq 95\%$, overall $\geq 85\%$
+  \item \textbf{2.} \textbf{Critical Issues}: Zero high-severity bugs allowed
+  \item \textbf{3.} \textbf{Memory Safety}: All controllers use weakref, no circular refs
+  \item \textbf{4.} \textbf{Documentation}: All public APIs have docstrings + examples
+  \item \textbf{5.} \textbf{Linting}: Ruff/Pylint score $\geq 9.0/10$
+  \item \textbf{6.} \textbf{Type Safety}: MyPy strict mode, no \texttt{Any} types
+  \item \textbf{7.} \textbf{Performance}: Benchmarks within 5\% of baseline
+  \item \textbf{8.} \textbf{Integration}: All 11 MCP servers operational
+\end{itemize}
+
+\subsection{Pass Requirements}
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Phase} & \textbf{Min Gates} & \textbf{Critical Gates} \\
+\midrule
+Development & 5/8 & Test Coverage \\
+Pre-Merge & 7/8 & Coverage + Critical Issues \\
+Production & 8/8 & All gates mandatory \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Automated Validation}
+\begin{lstlisting}[style=bashstyle]
+# Run Quality Gates
+python .ai_workspace/tools/quality/validate_quality_gates.py
+
+# Output Example
+[OK] Gate 1: Test Coverage (87% overall, 96% critical) PASS
+[OK] Gate 2: Critical Issues (0 found) PASS
+[OK] Gate 3: Memory Safety (11/11 tests pass) PASS
+[OK] Gate 4: Documentation (98% API coverage) PASS
+[WARNING] Gate 5: Linting (score 8.7/10) FAIL
+[OK] Gate 6: Type Safety (MyPy strict, 0 errors) PASS
+[OK] Gate 7: Performance (baselines within 3%) PASS
+[OK] Gate 8: MCP Integration (11/11 servers) PASS
+
+[INFO] Result: 7/8 gates pass (PRE-MERGE READY)
+[ACTION] Fix linting issues to achieve 8/8 for production
+\end{lstlisting}
+
+% =============================================================================
+% SECTION 6: CASE STUDY - PHASE 3 UI OVERHAUL
+% =============================================================================
+\section{Case Study: Phase 3 UI Overhaul}
+
+\subsection{Task Overview}
+\begin{itemize}
+  \item \textbf{Goal}: Achieve WCAG 2.1 Level AA accessibility across Streamlit UI
+  \item \textbf{Scope}: 34 issues (GitHub milestones UI-001 through UI-034)
+  \item \textbf{Duration}: 8 days (October 9-17, 2025)
+  \item \textbf{Complexity}: 18 design tokens, 4 breakpoints, 12 color palettes
+\end{itemize}
+
+\subsection{Orchestration Strategy}
+\begin{itemize}
+  \item \textbf{1.} \textbf{Week 1 (Days 1-3)}: Foundation work (Integration + Documentation agents)
+  \begin{itemize}
+    \item Integration Agent: Create design system tokens
+    \item Documentation Agent: Write accessibility guidelines
+  \end{itemize}
+
+  \item \textbf{2.} \textbf{Week 2 (Days 4-6)}: Implementation (Control Systems + PSO agents)
+  \begin{itemize}
+    \item Control Systems Agent: Refactor UI components to use tokens
+    \item PSO Agent: Optimize color contrast ratios
+  \end{itemize}
+
+  \item \textbf{3.} \textbf{Week 3 (Days 7-8)}: Validation (Testing + Code Beauty agents)
+  \begin{itemize}
+    \item Testing Agent: Puppeteer WCAG audits
+    \item Code Beauty Agent: Apply formatters, fix linting
+  \end{itemize}
+\end{itemize}
+
+\subsection{Checkpoint Events}
+\begin{itemize}
+  \item \textbf{Checkpoint 1 (Day 2, 3h)}: Token limit during design token creation
+  \item \textbf{Recovery 1}: Resumed from \texttt{checkpoint\_0008}, lost 0 work
+  \item \textbf{Checkpoint 2 (Day 5, 6h)}: Token limit during component refactoring
+  \item \textbf{Recovery 2}: Resumed from \texttt{checkpoint\_0015}, lost 0 work
+  \item \textbf{Checkpoint 3 (Day 7, 2h)}: Intentional save before WCAG audits
+\end{itemize}
+
+\subsection{Final Results}
+\begin{itemize}
+  \item \textbf{Success}: 34/34 issues resolved, WCAG AA achieved
+  \item \textbf{Quality Gates}: 8/8 passing (production-ready)
+  \item \textbf{Token Efficiency}: 3 recoveries, 0 work lost
+  \item \textbf{Documentation}: 47 pages of UI guidelines generated
+\end{itemize}
+
+% =============================================================================
+% SECTION 7: MULTI-ACCOUNT RECOVERY
+% =============================================================================
+\section{Multi-Account Recovery}
+
+\subsection{Problem Statement}
+\begin{itemize}
+  \item Each Claude Code account has 200K token limit per conversation
+  \item Large refactorings (e.g., 46-hour research roadmaps) exceed single account capacity
+  \item Need to resume work across accounts WITHOUT losing context
+\end{itemize}
+
+\subsection{Solution: Cross-Account Checkpoints}
+\begin{itemize}
+  \item \textbf{1.} \textbf{Account A}: Works until 180K tokens, hits checkpoint
+  \item \textbf{2.} \textbf{Checkpoint System}: Saves state to \texttt{.ai\_workspace/state/checkpoints/}
+  \item \textbf{3.} \textbf{Git Commit}: Push checkpoint files to remote
+  \item \textbf{4.} \textbf{Account B}: Pulls latest commits, runs \texttt{/recover}
+  \item \textbf{5.} \textbf{Recovery}: Loads checkpoint, resumes work with full context
+\end{itemize}
+
+\subsection{Multi-Account Workflow}
+\begin{lstlisting}[style=bashstyle]
+# Account A (reaches token limit)
+checkpoint_agent_progress(...)   # Save progress
+git add .ai_workspace/state/checkpoints/
+git commit -m "chore: Save checkpoint for LT-4 agent_control_systems"
+git push origin main
+
+# Switch to Account B
+D:\Tools\Claude\Switch-ClaudeAccount.ps1
+cd D:\Projects\main
+git pull origin main
+
+# Account B (resume work)
+/recover                         # Load checkpoints
+/resume LT-4 agent_control_systems
+\end{lstlisting}
+
+\subsection{Cross-Account Safety}
+\begin{itemize}
+  \item \textbf{Conflict Prevention}: Never run same agent on multiple accounts simultaneously
+  \item \textbf{Version Control}: All checkpoints tracked via git, merge conflicts resolved
+  \item \textbf{State Validation}: Recovery script verifies checkpoint integrity before resume
+\end{itemize}
+
+% =============================================================================
+% SECTION 8: ADVANCED ORCHESTRATION PATTERNS
+% =============================================================================
+\section{Advanced Orchestration Patterns}
+
+\subsection{Pattern 1: Sequential Pipeline}
+\textbf{Use Case}: Tasks with strict dependencies (e.g., Integration -> Documentation -> Testing)
+
+\begin{lstlisting}[style=pythonstyle]
+# Launch agents sequentially
+integration_result = checkpoint_agent_launched(...)
+wait_for_completion(integration_result)
+
+doc_result = checkpoint_agent_launched(...)
+wait_for_completion(doc_result)
+
+test_result = checkpoint_agent_launched(...)
+\end{lstlisting}
+
+\subsection{Pattern 2: Parallel Fan-Out}
+\textbf{Use Case}: Independent tasks (e.g., PSO optimization + Documentation)
+
+\begin{lstlisting}[style=pythonstyle]
+# Launch multiple agents in parallel
+agents = [
+    checkpoint_agent_launched("LT-4", "agent_pso", ...),
+    checkpoint_agent_launched("LT-4", "agent_doc", ...),
+    checkpoint_agent_launched("LT-4", "agent_beauty", ...)
+]
+
+# Wait for all to complete
+wait_for_all(agents)
+\end{lstlisting}
+
+\subsection{Pattern 3: Hierarchical Delegation}
+\textbf{Use Case}: Sub-agent spawning (e.g., Documentation agent spawns Sphinx builder)
+
+\begin{lstlisting}[style=pythonstyle]
+# Parent agent launches child sub-agents
+doc_agent = checkpoint_agent_launched("LT-4", "agent_doc", ...)
+
+# Within Documentation Agent
+sphinx_builder = spawn_sub_agent("sphinx_builder")
+api_generator = spawn_sub_agent("api_doc_generator")
+
+# Parent waits for children
+wait_for_children([sphinx_builder, api_generator])
+checkpoint_agent_complete("LT-4", "agent_doc", ...)
+\end{lstlisting}
+
+% =============================================================================
+% SECTION 9: MONITORING \& DEBUGGING
+% =============================================================================
+\section{Monitoring \& Debugging}
+
+\subsection{Real-time Monitoring}
+\begin{lstlisting}[style=bashstyle]
+# Watch checkpoint updates in real-time
+watch -n 5 'ls -lh .ai_workspace/state/checkpoints/'
+
+# Monitor agent progress
+python .ai_workspace/tools/checkpoints/analyze_checkpoints.py --live
+
+# Output Example
+[INFO] Active agents: 3
+  - agent_control_systems (LT-4): 8.5h / 18h (47% complete)
+  - agent_pso (LT-4): 12h / 12h (100% complete)
+  - agent_doc (LT-4): 6h / 15h (40% complete)
+
+[WARNING] agent_control_systems: No checkpoint in 12 minutes (expected <10 min)
+[ACTION] Check if agent is blocked or needs manual intervention
+\end{lstlisting}
+
+\subsection{Debugging Failed Recoveries}
+\begin{itemize}
+  \item \textbf{Symptom}: \texttt{/recover} fails to find checkpoints
+  \item \textbf{Cause 1}: Checkpoints not committed to git
+  \item \textbf{Fix}: \texttt{git add .ai\_workspace/state/checkpoints/ \&\& git commit}
+
+  \item \textbf{Cause 2}: Checkpoint file corrupted (invalid JSON)
+  \item \textbf{Fix}: Restore from previous commit (\texttt{git checkout HEAD\textasciitilde 1 -- .ai\_workspace/state/})
+
+  \item \textbf{Cause 3}: Agent dependencies not resolved
+  \item \textbf{Fix}: Launch dependency agents first (\texttt{/resume LT-4 agent\_pso} before \texttt{agent\_control\_systems})
+\end{itemize}
+
+% =============================================================================
+% SECTION 10: BEST PRACTICES
+% =============================================================================
+\section{Best Practices}
+
+\subsection{Checkpoint Frequency}
+\begin{itemize}
+  \item \textbf{Too Frequent (<5 min)}: Overhead slows agents, git bloat
+  \item \textbf{Too Infrequent (>15 min)}: Risk losing significant work on crash
+  \item \textbf{Sweet Spot}: 5-10 minutes OR after completing each deliverable
+\end{itemize}
+
+\subsection{Task Granularity}
+\begin{itemize}
+  \item \textbf{Too Large (>20h)}: Agent gets lost, hard to resume
+  \item \textbf{Too Small (<2h)}: Orchestration overhead dominates
+  \item \textbf{Sweet Spot}: 8-15 hours per agent task
+\end{itemize}
+
+\subsection{Agent Coordination}
+\begin{itemize}
+  \item \textbf{DO}: Use explicit dependency tracking in checkpoints
+  \item \textbf{DO}: Launch independent agents in parallel for speed
+  \item \textbf{DON'T}: Assume agents can communicate directly (they can't)
+  \item \textbf{DON'T}: Retry failed agents without fixing root cause
+\end{itemize}
+
+\subsection{Git Hygiene}
+\begin{itemize}
+  \item Commit checkpoints immediately after creation
+  \item Use descriptive messages: \texttt{"chore: Checkpoint LT-4 agent\_pso at 8h"}
+  \item Prune old checkpoints after task completion (keep last 3)
+  \item Never gitignore \texttt{.ai\_workspace/state/checkpoints/}
+\end{itemize}
+
+% =============================================================================
+% SECTION 11: TROUBLESHOOTING
+% =============================================================================
+\section{Troubleshooting}
+
+\subsection{Common Issues}
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\textbf{Symptom} & \textbf{Solution} \\
+\midrule
+Agent stuck, no progress & Check if waiting on dependency agent, launch it first \\
+Checkpoint not found & Verify \texttt{git pull} completed, check \texttt{.ai\_workspace/state/checkpoints/} exists \\
+Recovery loads wrong task & Specify task ID: \texttt{/resume LT-4 agent\_pso} \\
+Quality gates fail & Run \texttt{validate\_quality\_gates.py}, fix failing gates \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Emergency Recovery}
+\begin{lstlisting}[style=bashstyle]
+# If all else fails, manual recovery
+cd .ai_workspace/state/checkpoints/
+ls -lt | head -5              # Find most recent checkpoint
+cat checkpoint_0023.json      # Read agent state manually
+# Resume work based on "current_phase" and "deliverables_completed"
+\end{lstlisting}
+
+% =============================================================================
+% CHECKLIST: MULTI-AGENT ORCHESTRATION
+% =============================================================================
+\section*{Checklist: Multi-Agent Orchestration}
+\begin{itemize}
+  \item[$\square$] \textbf{Plan}: Decompose task into 3-6 agent workstreams
+  \item[$\square$] \textbf{Checkpoint}: Call \texttt{checkpoint\_plan\_approved()} when user approves
+  \item[$\square$] \textbf{Launch}: Start each agent with \texttt{checkpoint\_agent\_launched()}
+  \item[$\square$] \textbf{Monitor}: Agent calls \texttt{checkpoint\_agent\_progress()} every 5-10 min
+  \item[$\square$] \textbf{Complete}: Finalize with \texttt{checkpoint\_agent\_complete()} or \texttt{checkpoint\_agent\_failed()}
+  \item[$\square$] \textbf{Validate}: Run quality gates (\texttt{validate\_quality\_gates.py})
+  \item[$\square$] \textbf{Commit}: Push checkpoints to git after each session
+  \item[$\square$] \textbf{Recover}: Use \texttt{/recover} + \texttt{/resume} on token limit
+\end{itemize}
+
+% =============================================================================
+% NEXT STEPS
+% =============================================================================
+\section*{Next Steps}
+\begin{itemize}
+  \item \textbf{E018}: Testing philosophy - coverage standards and validation strategies
+  \item \textbf{E019}: Production safety - memory management and thread safety
+  \item \textbf{E020}: MCP integration - auto-trigger strategy and server orchestration
+\end{itemize}
+
+\end{document}

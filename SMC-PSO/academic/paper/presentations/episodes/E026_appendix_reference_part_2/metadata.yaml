@@ -1,0 +1,15 @@
+﻿episode_id: E026
+slug: appendix_reference_part_2
+title: Appendix Reference Part 2
+status: migrated_auto
+last_updated: 2026-02-24
+languages:
+  - en
+channels:
+  - podcast
+source_file_count: 7
+source_buckets:
+  - archive_part2_infrastructure
+  - cheatsheets_phase4_appendix
+  - episodes_markdown
+  - episodes_pdf

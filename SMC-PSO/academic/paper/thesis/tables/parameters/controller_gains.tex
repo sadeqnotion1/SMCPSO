@@ -1,0 +1,46 @@
+% Controller Gains Table
+% Auto-generated from config.yaml (MT-8 Robust PSO Optimization)
+% Last updated: December 29, 2025
+
+\begin{table}[htbp]
+\centering
+\caption{Optimized Controller Gains (MT-8 Robust PSO)}
+\label{tab:controller_gains}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Parameter} & \textbf{Classical} & \textbf{STA} & \textbf{Adaptive} & \textbf{Hybrid} \\
+ & \textbf{SMC} & \textbf{SMC} & \textbf{SMC} & \textbf{STA-SMC} \\
+\midrule
+\multicolumn{5}{l}{\textit{Primary Control Gains}} \\
+$K_1$ / $k_1$ & 23.07 & 2.02 & 2.14 & 10.15 \\
+$K_2$ / $k_2$ & 12.85 & 6.67 & 3.36 & 12.84 \\
+$K_3$ / $k_3$ & 5.51 & 5.62 & 7.20 & 6.82 \\
+$K_4$ / $k_4$ & 3.49 & 3.75 & 0.34 & 2.75 \\
+$K_5$ / $k_5$ & 2.23 & --- & 0.29 & --- \\
+$K_6$ / $k_6$ & 0.15 & --- & --- & --- \\
+\midrule
+\multicolumn{5}{l}{\textit{Sliding Surface Coefficients}} \\
+$\lambda_1$ & --- & 4.36 & --- & --- \\
+$\lambda_2$ & --- & 2.05 & --- & --- \\
+\midrule
+\multicolumn{5}{l}{\textit{Control Parameters}} \\
+Boundary layer $\varepsilon$ & 0.3 & 0.3 & --- & --- \\
+Max force $F_{\max}$ [N] & 150 & 150 & 150 & 150 \\
+Sample time $\Delta t$ [s] & 0.001 & 0.001 & 0.001 & 0.001 \\
+\midrule
+\multicolumn{5}{l}{\textit{Optimization Details}} \\
+\multicolumn{5}{l}{PSO Configuration: 30 particles, 50 iterations (~4,500 evaluations/controller)} \\
+\multicolumn{5}{l}{Cost Function: 50\% nominal + 50\% disturbed (step 10N, impulse 30N)} \\
+\multicolumn{5}{l}{Performance Improvement: Classical +6.1\%, STA +5.8\%, Adaptive +4.2\%, Hybrid +21.4\%} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% Notes:
+% - All gains from config.yaml controller_defaults section (MT-8 robust optimization)
+% - Classical SMC: K1-K6 are control law gains for [k1, k2, k3, k4, k5, k6]
+% - STA-SMC: K1-K2 are super-twisting gains, k1-k4 are sliding surface gains, λ1-λ2 are surface coefficients
+% - Adaptive SMC: k1-k5 are adaptive gains (gamma integration)
+% - Hybrid: c1-c2 surface gains, lambda1-lambda2 coefficients, combines adaptive + STA
+% - MT-8 optimization achieved 21.4% improvement for Hybrid controller (best overall)
+% - See: academic/paper/experiments/comparative/mt8_robust_pso/ for complete results

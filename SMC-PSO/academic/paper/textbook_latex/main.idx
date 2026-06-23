@@ -1,0 +1,426 @@
+\indexentry{underactuated systems|hyperpage}{1}
+\indexentry{underactuated systems|hyperpage}{1}
+\indexentry{sliding mode control|hyperxindexformat{\see{SMC}}}{1}
+\indexentry{sliding mode control|hyperxindexformat{\see{SMC}}}{1}
+\indexentry{double-inverted pendulum|hyperpage}{1}
+\indexentry{double-inverted pendulum|hyperpage}{1}
+\indexentry{chattering|hyperpage}{1}
+\indexentry{chattering|hyperpage}{1}
+\indexentry{degrees of freedom|hyperpage}{1}
+\indexentry{degrees of freedom|hyperpage}{1}
+\indexentry{controllability|hyperpage}{1}
+\indexentry{controllability|hyperpage}{1}
+\indexentry{Particle Swarm Optimization!exploitation|hyperpage}{1}
+\indexentry{equilibrium|hyperpage}{2}
+\indexentry{equilibrium|hyperpage}{2}
+\indexentry{feedback control|hyperpage}{2}
+\indexentry{cart-pole system|hyperpage}{2}
+\indexentry{cart-pole system|hyperpage}{2}
+\indexentry{control input|hyperpage}{2}
+\indexentry{control input|hyperpage}{2}
+\indexentry{double-inverted pendulum|hyperxindexformat{\see{DIP}}}{2}
+\indexentry{double-inverted pendulum|hyperxindexformat{\see{DIP}}}{2}
+\indexentry{state space|hyperpage}{3}
+\indexentry{state space|hyperpage}{3}
+\indexentry{Lagrangian mechanics|hyperpage}{3}
+\indexentry{Lagrangian mechanics|hyperpage}{3}
+\indexentry{inertia matrix|hyperpage}{3}
+\indexentry{inertia matrix|hyperpage}{3}
+\indexentry{Coriolis forces|hyperpage}{3}
+\indexentry{Coriolis forces|hyperpage}{3}
+\indexentry{gravitational force|hyperpage}{4}
+\indexentry{gravitational force|hyperpage}{4}
+\indexentry{stabilization|hyperpage}{4}
+\indexentry{swing-up control|hyperpage}{4}
+\indexentry{trajectory tracking|hyperpage}{4}
+\indexentry{convergence|hyperpage}{5}
+\indexentry{stability|hyperpage}{6}
+\indexentry{stability|hyperpage}{6}
+\indexentry{sliding mode control!classical|hyperpage}{6}
+\indexentry{sliding mode control!classical|hyperpage}{6}
+\indexentry{performance metrics!tracking error|hyperpage}{6}
+\indexentry{robustness|hyperpage}{6}
+\indexentry{robustness|hyperpage}{6}
+\indexentry{Particle Swarm Optimization|hyperpage}{7}
+\indexentry{Particle Swarm Optimization|hyperpage}{7}
+\indexentry{Particle Swarm Optimization|hyperxindexformat{\see{PSO}}}{7}
+\indexentry{Particle Swarm Optimization|hyperxindexformat{\see{PSO}}}{7}
+\indexentry{sensor noise|hyperpage}{8}
+\indexentry{Super-Twisting Algorithm|hyperxindexformat{\see{STA}}}{9}
+\indexentry{chattering|hyperpage}{9}
+\indexentry{robustness|hyperpage}{9}
+\indexentry{sliding mode control!hybrid adaptive|hyperpage}{9}
+\indexentry{sliding mode control!hybrid adaptive|hyperpage}{9}
+\indexentry{Python implementation|hyperpage}{9}
+\indexentry{Python implementation|hyperpage}{9}
+\indexentry{gain tuning|hyperpage}{10}
+\indexentry{performance metrics!overshoot|hyperpage}{10}
+\indexentry{performance metrics!overshoot|hyperpage}{10}
+\indexentry{double-inverted pendulum|hyperxindexformat{\see{DIP}}}{11}
+\indexentry{Super-Twisting Algorithm|hyperxindexformat{\see{STA}}}{11}
+\indexentry{sliding mode control!adaptive|hyperpage}{11}
+\indexentry{chattering|hyperpage}{11}
+\indexentry{convergence|hyperpage}{11}
+\indexentry{Numba optimization|hyperpage}{12}
+\indexentry{Numba optimization|hyperpage}{12}
+\indexentry{simulation|hyperpage}{12}
+\indexentry{performance metrics!control effort|hyperpage}{13}
+\indexentry{performance metrics!control effort|hyperpage}{13}
+\indexentry{Streamlit|hyperpage}{13}
+\indexentry{Streamlit|hyperpage}{13}
+\indexentry{Monte Carlo simulation|hyperpage}{13}
+\indexentry{uncertainty|hyperpage}{14}
+\indexentry{worst-case analysis|hyperpage}{14}
+\indexentry{linearization|hyperpage}{16}
+\indexentry{NumPy|hyperpage}{16}
+\indexentry{NumPy|hyperpage}{16}
+\indexentry{SciPy|hyperpage}{16}
+\indexentry{SciPy|hyperpage}{16}
+\indexentry{double-inverted pendulum|hyperpage}{19}
+\indexentry{double-inverted pendulum|hyperpage}{19}
+\indexentry{Lagrangian mechanics|hyperpage}{19}
+\indexentry{Lagrangian mechanics|hyperpage}{19}
+\indexentry{Lyapunov stability|hyperpage}{19}
+\indexentry{Lyapunov stability|hyperpage}{19}
+\indexentry{stability|hyperpage}{19}
+\indexentry{convergence|hyperpage}{19}
+\indexentry{controllability|hyperpage}{19}
+\indexentry{controllability|hyperpage}{19}
+\indexentry{simulation|hyperpage}{19}
+\indexentry{degrees of freedom|hyperpage}{22}
+\indexentry{degrees of freedom|hyperpage}{22}
+\indexentry{generalized coordinates|hyperpage}{22}
+\indexentry{generalized coordinates|hyperpage}{22}
+\indexentry{inertia matrix|hyperpage}{23}
+\indexentry{inertia matrix|hyperpage}{23}
+\indexentry{equilibrium|hyperpage}{24}
+\indexentry{equilibrium|hyperpage}{24}
+\indexentry{Coriolis forces|hyperpage}{24}
+\indexentry{Coriolis forces|hyperpage}{24}
+\indexentry{Python implementation|hyperpage}{24}
+\indexentry{Python implementation|hyperpage}{24}
+\indexentry{passivity-based control|hyperpage}{25}
+\indexentry{simulation|hyperpage}{34}
+\indexentry{double-inverted pendulum|hyperxindexformat{\see{DIP}}}{34}
+\indexentry{Super-Twisting Algorithm|hyperxindexformat{\see{STA}}}{37}
+\indexentry{chattering|hyperpage}{37}
+\indexentry{sliding mode control!adaptive|hyperpage}{37}
+\indexentry{model uncertainty|hyperpage}{37}
+\indexentry{sliding mode control|hyperpage}{39}
+\indexentry{sliding mode control|hyperpage}{39}
+\indexentry{sliding mode control|hyperxindexformat{\see{SMC}}}{39}
+\indexentry{sliding mode control|hyperxindexformat{\see{SMC}}}{39}
+\indexentry{double-inverted pendulum|hyperpage}{39}
+\indexentry{double-inverted pendulum|hyperpage}{39}
+\indexentry{sliding surface|hyperpage}{39}
+\indexentry{sliding surface|hyperpage}{39}
+\indexentry{boundary layer|hyperpage}{39}
+\indexentry{boundary layer|hyperpage}{39}
+\indexentry{chattering|hyperpage}{39}
+\indexentry{chattering|hyperpage}{39}
+\indexentry{robustness|hyperpage}{39}
+\indexentry{robustness|hyperpage}{39}
+\indexentry{Lyapunov stability|hyperpage}{39}
+\indexentry{Lyapunov stability|hyperpage}{39}
+\indexentry{stability|hyperpage}{39}
+\indexentry{convergence|hyperpage}{39}
+\indexentry{Python implementation|hyperpage}{39}
+\indexentry{Python implementation|hyperpage}{39}
+\indexentry{state space|hyperpage}{39}
+\indexentry{state space|hyperpage}{39}
+\indexentry{feedforward control|hyperpage}{39}
+\indexentry{performance metrics!control effort|hyperpage}{40}
+\indexentry{performance metrics!control effort|hyperpage}{40}
+\indexentry{performance metrics!settling time|hyperpage}{41}
+\indexentry{performance metrics!settling time|hyperpage}{41}
+\indexentry{Particle Swarm Optimization|hyperpage}{41}
+\indexentry{Particle Swarm Optimization|hyperpage}{41}
+\indexentry{Particle Swarm Optimization|hyperxindexformat{\see{PSO}}}{41}
+\indexentry{Particle Swarm Optimization|hyperxindexformat{\see{PSO}}}{41}
+\indexentry{control input|hyperpage}{41}
+\indexentry{control input|hyperpage}{41}
+\indexentry{double-inverted pendulum|hyperxindexformat{\see{DIP}}}{41}
+\indexentry{double-inverted pendulum|hyperxindexformat{\see{DIP}}}{41}
+\indexentry{controllability|hyperpage}{43}
+\indexentry{controllability|hyperpage}{43}
+\indexentry{performance metrics!energy consumption|hyperpage}{44}
+\indexentry{performance metrics!energy consumption|hyperpage}{44}
+\indexentry{saturation function|hyperpage}{44}
+\indexentry{performance metrics!tracking error|hyperpage}{44}
+\indexentry{sliding mode control!classical|hyperpage}{44}
+\indexentry{sliding mode control!classical|hyperpage}{44}
+\indexentry{reaching condition|hyperpage}{47}
+\indexentry{reaching condition|hyperpage}{47}
+\indexentry{real-time control|hyperpage}{55}
+\indexentry{research tasks!MT-6|hyperpage}{55}
+\indexentry{research tasks!MT-6|hyperpage}{55}
+\indexentry{model uncertainty|hyperpage}{56}
+\indexentry{model uncertainty|hyperpage}{56}
+\indexentry{disturbance rejection|hyperpage}{57}
+\indexentry{disturbance rejection|hyperpage}{57}
+\indexentry{Super-Twisting Algorithm|hyperpage}{59}
+\indexentry{Super-Twisting Algorithm|hyperpage}{59}
+\indexentry{Super-Twisting Algorithm|hyperxindexformat{\see{STA}}}{59}
+\indexentry{Super-Twisting Algorithm|hyperxindexformat{\see{STA}}}{59}
+\indexentry{convergence|hyperpage}{59}
+\indexentry{sliding surface|hyperpage}{59}
+\indexentry{sliding surface|hyperpage}{59}
+\indexentry{Lyapunov stability|hyperpage}{59}
+\indexentry{Lyapunov stability|hyperpage}{59}
+\indexentry{chattering|hyperpage}{59}
+\indexentry{chattering|hyperpage}{59}
+\indexentry{Numba optimization|hyperpage}{59}
+\indexentry{Numba optimization|hyperpage}{59}
+\indexentry{gain tuning|hyperpage}{59}
+\indexentry{disturbance rejection|hyperpage}{59}
+\indexentry{disturbance rejection|hyperpage}{59}
+\indexentry{simulation|hyperpage}{60}
+\indexentry{boundary layer|hyperpage}{60}
+\indexentry{boundary layer|hyperpage}{60}
+\indexentry{stability|hyperpage}{67}
+\indexentry{Particle Swarm Optimization|hyperxindexformat{\see{PSO}}}{68}
+\indexentry{Particle Swarm Optimization|hyperxindexformat{\see{PSO}}}{68}
+\indexentry{performance metrics!overshoot|hyperpage}{69}
+\indexentry{performance metrics!overshoot|hyperpage}{69}
+\indexentry{real-time control|hyperpage}{71}
+\indexentry{performance metrics!tracking error|hyperpage}{71}
+\indexentry{uncertainty|hyperpage}{74}
+\indexentry{model uncertainty|hyperpage}{74}
+\indexentry{model uncertainty|hyperpage}{74}
+\indexentry{sliding mode control|hyperpage}{75}
+\indexentry{sliding mode control|hyperpage}{75}
+\indexentry{uncertainty|hyperpage}{75}
+\indexentry{model uncertainty|hyperpage}{75}
+\indexentry{model uncertainty|hyperpage}{75}
+\indexentry{Lyapunov stability|hyperpage}{75}
+\indexentry{Lyapunov stability|hyperpage}{75}
+\indexentry{robustness|hyperpage}{75}
+\indexentry{robustness|hyperpage}{75}
+\indexentry{stability|hyperpage}{75}
+\indexentry{double-inverted pendulum|hyperxindexformat{\see{DIP}}}{75}
+\indexentry{sensor noise|hyperpage}{76}
+\indexentry{sliding mode control!adaptive|hyperpage}{76}
+\indexentry{sliding mode control!adaptive|hyperpage}{76}
+\indexentry{sliding surface|hyperpage}{76}
+\indexentry{sliding surface|hyperpage}{76}
+\indexentry{chattering|hyperpage}{77}
+\indexentry{chattering|hyperpage}{77}
+\indexentry{simulation|hyperpage}{80}
+\indexentry{worst-case analysis|hyperpage}{81}
+\indexentry{real-time control|hyperpage}{82}
+\indexentry{Particle Swarm Optimization|hyperxindexformat{\see{PSO}}}{85}
+\indexentry{performance metrics!overshoot|hyperpage}{85}
+\indexentry{sensor noise|hyperpage}{85}
+\indexentry{Monte Carlo simulation|hyperpage}{86}
+\indexentry{convergence|hyperpage}{89}
+\indexentry{chattering|hyperpage}{89}
+\indexentry{chattering|hyperpage}{89}
+\indexentry{robustness|hyperpage}{89}
+\indexentry{robustness|hyperpage}{89}
+\indexentry{uncertainty|hyperpage}{89}
+\indexentry{model uncertainty|hyperpage}{89}
+\indexentry{model uncertainty|hyperpage}{89}
+\indexentry{sliding mode control|hyperxindexformat{\see{SMC}}}{89}
+\indexentry{stability|hyperpage}{90}
+\indexentry{simulation|hyperpage}{92}
+\indexentry{disturbance rejection|hyperpage}{92}
+\indexentry{stabilization|hyperpage}{93}
+\indexentry{performance metrics!overshoot|hyperpage}{94}
+\indexentry{Particle Swarm Optimization|hyperxindexformat{\see{PSO}}}{94}
+\indexentry{Numba optimization|hyperpage}{97}
+\indexentry{real-time control|hyperpage}{97}
+\indexentry{stabilization|hyperpage}{98}
+\indexentry{swing-up control|hyperpage}{98}
+\indexentry{safety|hyperpage}{99}
+\indexentry{formal verification|hyperpage}{99}
+\indexentry{stability|hyperpage}{99}
+\indexentry{Monte Carlo simulation|hyperpage}{100}
+\indexentry{Particle Swarm Optimization|hyperxindexformat{\see{PSO}}}{101}
+\indexentry{Particle Swarm Optimization|hyperxindexformat{\see{PSO}}}{101}
+\indexentry{hardware-in-the-loop|hyperpage}{101}
+\indexentry{Particle Swarm Optimization|hyperpage}{107}
+\indexentry{Particle Swarm Optimization|hyperpage}{107}
+\indexentry{gain tuning|hyperpage}{107}
+\indexentry{Particle Swarm Optimization!velocity update|hyperpage}{107}
+\indexentry{Particle Swarm Optimization!velocity update|hyperpage}{107}
+\indexentry{convergence|hyperpage}{107}
+\indexentry{sliding mode control|hyperxindexformat{\see{SMC}}}{107}
+\indexentry{sliding mode control|hyperxindexformat{\see{SMC}}}{107}
+\indexentry{Particle Swarm Optimization!exploration|hyperpage}{107}
+\indexentry{Particle Swarm Optimization!exploitation|hyperpage}{107}
+\indexentry{Particle Swarm Optimization|hyperpage}{109}
+\indexentry{Particle Swarm Optimization!global best|hyperpage}{109}
+\indexentry{Particle Swarm Optimization!personal best|hyperpage}{109}
+\indexentry{convergence|hyperpage}{109}
+\indexentry{Particle Swarm Optimization!velocity update|hyperpage}{109}
+\indexentry{Particle Swarm Optimization!personal best|hyperpage}{110}
+\indexentry{Particle Swarm Optimization!global best|hyperpage}{110}
+\indexentry{Particle Swarm Optimization!exploration|hyperpage}{110}
+\indexentry{Particle Swarm Optimization!exploitation|hyperpage}{110}
+\indexentry{performance metrics!energy consumption|hyperpage}{117}
+\indexentry{performance metrics!energy consumption|hyperpage}{117}
+\indexentry{Particle Swarm Optimization!inertia weight|hyperpage}{118}
+\indexentry{Particle Swarm Optimization!exploration|hyperpage}{118}
+\indexentry{Particle Swarm Optimization!exploitation|hyperpage}{118}
+\indexentry{convergence|hyperpage}{118}
+\indexentry{Particle Swarm Optimization!global best|hyperpage}{118}
+\indexentry{sliding mode control!classical|hyperpage}{118}
+\indexentry{sliding mode control!classical|hyperpage}{118}
+\indexentry{double-inverted pendulum|hyperxindexformat{\see{DIP}}}{118}
+\indexentry{double-inverted pendulum|hyperxindexformat{\see{DIP}}}{118}
+\indexentry{Numba optimization|hyperpage}{119}
+\indexentry{Numba optimization|hyperpage}{119}
+\indexentry{Particle Swarm Optimization!inertia weight|hyperpage}{119}
+\indexentry{Particle Swarm Optimization!inertia weight|hyperpage}{119}
+\indexentry{convergence|hyperpage}{120}
+\indexentry{chattering|hyperpage}{121}
+\indexentry{chattering|hyperpage}{121}
+\indexentry{performance metrics!energy consumption|hyperpage}{121}
+\indexentry{performance metrics!energy consumption|hyperpage}{121}
+\indexentry{Monte Carlo simulation|hyperpage}{121}
+\indexentry{double-inverted pendulum|hyperpage}{121}
+\indexentry{double-inverted pendulum|hyperpage}{121}
+\indexentry{double-inverted pendulum|hyperxindexformat{\see{DIP}}}{121}
+\indexentry{double-inverted pendulum|hyperxindexformat{\see{DIP}}}{121}
+\indexentry{underactuated systems|hyperpage}{121}
+\indexentry{underactuated systems|hyperpage}{121}
+\indexentry{performance metrics!settling time|hyperpage}{121}
+\indexentry{performance metrics!settling time|hyperpage}{121}
+\indexentry{performance metrics!overshoot|hyperpage}{121}
+\indexentry{performance metrics!overshoot|hyperpage}{121}
+\indexentry{real-time control|hyperpage}{122}
+\indexentry{Python implementation|hyperpage}{122}
+\indexentry{Python implementation|hyperpage}{122}
+\indexentry{NumPy|hyperpage}{122}
+\indexentry{NumPy|hyperpage}{122}
+\indexentry{research tasks!MT-6|hyperpage}{122}
+\indexentry{research tasks!MT-6|hyperpage}{122}
+\indexentry{convergence|hyperpage}{122}
+\indexentry{equilibrium|hyperpage}{123}
+\indexentry{equilibrium|hyperpage}{123}
+\indexentry{performance metrics!control effort|hyperpage}{124}
+\indexentry{performance metrics!control effort|hyperpage}{124}
+\indexentry{Particle Swarm Optimization|hyperxindexformat{\see{PSO}}}{128}
+\indexentry{Particle Swarm Optimization|hyperxindexformat{\see{PSO}}}{128}
+\indexentry{disturbance rejection|hyperpage}{132}
+\indexentry{disturbance rejection|hyperpage}{132}
+\indexentry{gain tuning|hyperpage}{133}
+\indexentry{uncertainty|hyperpage}{133}
+\indexentry{model uncertainty|hyperpage}{133}
+\indexentry{model uncertainty|hyperpage}{133}
+\indexentry{Particle Swarm Optimization!exploration|hyperpage}{133}
+\indexentry{sensor noise|hyperpage}{133}
+\indexentry{hardware-in-the-loop|hyperpage}{134}
+\indexentry{Particle Swarm Optimization|hyperpage}{135}
+\indexentry{Particle Swarm Optimization|hyperpage}{135}
+\indexentry{gain tuning|hyperpage}{135}
+\indexentry{sliding mode control|hyperxindexformat{\see{SMC}}}{135}
+\indexentry{sliding mode control!classical|hyperpage}{135}
+\indexentry{sliding mode control|hyperxindexformat{\see{SMC}}}{135}
+\indexentry{sliding mode control!classical|hyperpage}{135}
+\indexentry{sliding mode control!adaptive|hyperpage}{135}
+\indexentry{sliding mode control!adaptive|hyperpage}{135}
+\indexentry{performance metrics!settling time|hyperpage}{135}
+\indexentry{performance metrics!settling time|hyperpage}{135}
+\indexentry{chattering|hyperpage}{135}
+\indexentry{chattering|hyperpage}{135}
+\indexentry{sliding surface|hyperpage}{136}
+\indexentry{sliding surface|hyperpage}{136}
+\indexentry{Particle Swarm Optimization!exploration|hyperpage}{138}
+\indexentry{Particle Swarm Optimization!exploitation|hyperpage}{138}
+\indexentry{simulation|hyperpage}{139}
+\indexentry{Numba optimization|hyperpage}{143}
+\indexentry{Numba optimization|hyperpage}{143}
+\indexentry{research tasks!MT-6|hyperpage}{146}
+\indexentry{research tasks!MT-6|hyperpage}{146}
+\indexentry{Lyapunov stability|hyperpage}{147}
+\indexentry{Lyapunov stability|hyperpage}{147}
+\indexentry{stability|hyperpage}{147}
+\indexentry{worst-case analysis|hyperpage}{147}
+\indexentry{real-time control|hyperpage}{152}
+\indexentry{hardware-in-the-loop|hyperpage}{153}
+\indexentry{uncertainty|hyperpage}{153}
+\indexentry{model uncertainty|hyperpage}{153}
+\indexentry{model uncertainty|hyperpage}{153}
+\indexentry{robustness|hyperpage}{155}
+\indexentry{robustness|hyperpage}{155}
+\indexentry{disturbance rejection|hyperpage}{155}
+\indexentry{disturbance rejection|hyperpage}{155}
+\indexentry{research tasks!MT-8|hyperpage}{155}
+\indexentry{research tasks!MT-8|hyperpage}{155}
+\indexentry{uncertainty|hyperpage}{155}
+\indexentry{model uncertainty|hyperpage}{155}
+\indexentry{model uncertainty|hyperpage}{155}
+\indexentry{research tasks!LT-6|hyperpage}{155}
+\indexentry{research tasks!LT-6|hyperpage}{155}
+\indexentry{Particle Swarm Optimization|hyperxindexformat{\see{PSO}}}{155}
+\indexentry{Particle Swarm Optimization|hyperxindexformat{\see{PSO}}}{155}
+\indexentry{sensor noise|hyperpage}{155}
+\indexentry{equilibrium|hyperpage}{155}
+\indexentry{equilibrium|hyperpage}{155}
+\indexentry{simulation|hyperpage}{156}
+\indexentry{sliding mode control|hyperxindexformat{\see{SMC}}}{156}
+\indexentry{sliding mode control|hyperxindexformat{\see{SMC}}}{156}
+\indexentry{Super-Twisting Algorithm|hyperxindexformat{\see{STA}}}{156}
+\indexentry{Super-Twisting Algorithm|hyperxindexformat{\see{STA}}}{156}
+\indexentry{sliding mode control!classical|hyperpage}{159}
+\indexentry{sliding mode control!classical|hyperpage}{159}
+\indexentry{double-inverted pendulum|hyperxindexformat{\see{DIP}}}{160}
+\indexentry{double-inverted pendulum|hyperxindexformat{\see{DIP}}}{160}
+\indexentry{boundary layer|hyperpage}{160}
+\indexentry{boundary layer|hyperpage}{160}
+\indexentry{performance metrics!settling time|hyperpage}{160}
+\indexentry{performance metrics!settling time|hyperpage}{160}
+\indexentry{Python implementation|hyperpage}{163}
+\indexentry{Python implementation|hyperpage}{163}
+\indexentry{sliding mode control|hyperxindexformat{\see{SMC}}}{163}
+\indexentry{sliding mode control|hyperxindexformat{\see{SMC}}}{163}
+\indexentry{simulation|hyperpage}{163}
+\indexentry{double-inverted pendulum|hyperxindexformat{\see{DIP}}}{163}
+\indexentry{double-inverted pendulum|hyperxindexformat{\see{DIP}}}{163}
+\indexentry{Particle Swarm Optimization|hyperxindexformat{\see{PSO}}}{163}
+\indexentry{Particle Swarm Optimization|hyperxindexformat{\see{PSO}}}{163}
+\indexentry{benchmarking|hyperpage}{163}
+\indexentry{Numba optimization|hyperpage}{163}
+\indexentry{Numba optimization|hyperpage}{163}
+\indexentry{stability|hyperpage}{163}
+\indexentry{stability|hyperpage}{163}
+\indexentry{gain tuning|hyperpage}{181}
+\indexentry{performance metrics!settling time|hyperpage}{185}
+\indexentry{performance metrics!settling time|hyperpage}{185}
+\indexentry{Streamlit|hyperpage}{199}
+\indexentry{Streamlit|hyperpage}{199}
+\indexentry{real-time control|hyperpage}{203}
+\indexentry{sliding mode control|hyperxindexformat{\see{SMC}}}{215}
+\indexentry{sliding mode control|hyperxindexformat{\see{SMC}}}{215}
+\indexentry{double-inverted pendulum|hyperpage}{215}
+\indexentry{double-inverted pendulum|hyperpage}{215}
+\indexentry{Particle Swarm Optimization|hyperxindexformat{\see{PSO}}}{215}
+\indexentry{Particle Swarm Optimization|hyperxindexformat{\see{PSO}}}{215}
+\indexentry{Super-Twisting Algorithm|hyperxindexformat{\see{STA}}}{215}
+\indexentry{Super-Twisting Algorithm|hyperxindexformat{\see{STA}}}{215}
+\indexentry{real-time control|hyperpage}{215}
+\indexentry{double-inverted pendulum|hyperxindexformat{\see{DIP}}}{215}
+\indexentry{double-inverted pendulum|hyperxindexformat{\see{DIP}}}{215}
+\indexentry{Monte Carlo simulation|hyperpage}{215}
+\indexentry{Particle Swarm Optimization|hyperxindexformat{\see{PSO}}}{216}
+\indexentry{Particle Swarm Optimization|hyperxindexformat{\see{PSO}}}{216}
+\indexentry{Particle Swarm Optimization|hyperxindexformat{\see{PSO}}}{218}
+\indexentry{Particle Swarm Optimization|hyperxindexformat{\see{PSO}}}{218}
+\indexentry{Numba optimization|hyperpage}{218}
+\indexentry{stability|hyperpage}{219}
+\indexentry{stability|hyperpage}{219}
+\indexentry{robustness|hyperpage}{221}
+\indexentry{robustness|hyperpage}{221}
+\indexentry{uncertainty|hyperpage}{221}
+\indexentry{model uncertainty|hyperpage}{221}
+\indexentry{model uncertainty|hyperpage}{221}
+\indexentry{safety|hyperpage}{223}
+\indexentry{stabilization|hyperpage}{224}
+\indexentry{simulation|hyperpage}{225}
+\indexentry{hardware-in-the-loop|hyperpage}{225}
+\indexentry{real-time control|hyperpage}{225}
+\indexentry{safety|hyperpage}{226}
+\indexentry{real-time control!weakly hard|hyperpage}{227}
+\indexentry{stabilization|hyperpage}{228}
+\indexentry{disturbance rejection|hyperpage}{231}

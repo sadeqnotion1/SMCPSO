@@ -1,0 +1,1481 @@
+pdflatex: security risk: running with elevated privileges
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex.fmt)
+ restricted \write18 enabled.
+entering extended mode
+(EP001_unified.tex
+LaTeX2e <2023-11-01> patch level 1
+L3 programming layer <2024-01-04>
+(C:\Program Files\MiKTeX\tex/latex/base\article.cls
+Document Class: article 2023/05/17 v1.4n Standard LaTeX document class
+(C:\Program Files\MiKTeX\tex/latex/base\size11.clo))
+(C:\Program Files\MiKTeX\tex/latex/base\inputenc.sty)
+(C:\Program Files\MiKTeX\tex/latex/base\fontenc.sty)
+(C:\Program Files\MiKTeX\tex/latex/amsmath\amsmath.sty
+For additional information on amsmath, use the `?' option.
+(C:\Program Files\MiKTeX\tex/latex/amsmath\amstext.sty
+(C:\Program Files\MiKTeX\tex/latex/amsmath\amsgen.sty))
+(C:\Program Files\MiKTeX\tex/latex/amsmath\amsbsy.sty)
+(C:\Program Files\MiKTeX\tex/latex/amsmath\amsopn.sty))
+(C:\Program Files\MiKTeX\tex/latex/amsfonts\amssymb.sty
+(C:\Program Files\MiKTeX\tex/latex/amsfonts\amsfonts.sty))
+(C:\Users\SadeQ\AppData\Roaming\MiKTeX\tex/latex/amscls\amsthm.sty)
+(C:\Users\SadeQ\AppData\Roaming\MiKTeX\tex/latex/geometry\geometry.sty
+(C:\Program Files\MiKTeX\tex/latex/graphics\keyval.sty)
+(C:\Program Files\MiKTeX\tex/generic/iftex\ifvtex.sty
+(C:\Program Files\MiKTeX\tex/generic/iftex\iftex.sty))
+(C:\Users\SadeQ\AppData\Roaming\MiKTeX\tex/latex/geometry\geometry.cfg))
+(C:\Program Files\MiKTeX\tex/latex/graphics\graphicx.sty
+(C:\Program Files\MiKTeX\tex/latex/graphics\graphics.sty
+(C:\Program Files\MiKTeX\tex/latex/graphics\trig.sty)
+(C:\Program Files\MiKTeX\tex/latex/graphics-cfg\graphics.cfg)
+(C:\Program Files\MiKTeX\tex/latex/graphics-def\pdftex.def)))
+(C:\Users\SadeQ\AppData\Roaming\MiKTeX\tex/latex/booktabs\booktabs.sty)
+(C:\Program Files\MiKTeX\tex/latex/tools\array.sty)
+(C:\Program Files\MiKTeX\tex/latex/tools\enumerate.sty)
+(C:\Users\SadeQ\AppData\Roaming\MiKTeX\tex/latex/fancyhdr\fancyhdr.sty)
+(C:\Program Files\MiKTeX\tex/latex/xcolor\xcolor.sty
+(C:\Program Files\MiKTeX\tex/latex/graphics-cfg\color.cfg)
+(C:\Program Files\MiKTeX\tex/latex/graphics\mathcolor.ltx))
+(C:\Program Files\MiKTeX\tex/latex/listings\listings.sty
+(C:\Program Files\MiKTeX\tex/latex/listings\lstmisc.sty)
+(C:\Program Files\MiKTeX\tex/latex/listings\listings.cfg))
+(C:\Program Files\MiKTeX\tex/latex/hyperref\hyperref.sty
+! Undefined control sequence.
+l.108 \IfFormatAtLeastT
+                       {2025-11-01}
+
+! LaTeX Error: Missing \begin{document}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.108 \IfFormatAtLeastT{2
+                         025-11-01}
+! Undefined control sequence.
+l.110    \IfDocumentMetadataT
+                             
+(C:\Users\SadeQ\AppData\Roaming\MiKTeX\tex/latex/kvsetkeys\kvsetkeys.sty)
+(C:\Users\SadeQ\AppData\Roaming\MiKTeX\tex/generic/kvdefinekeys\kvdefinekeys.st
+y) (C:\Users\SadeQ\AppData\Roaming\MiKTeX\tex/generic/pdfescape\pdfescape.sty
+(C:\Users\SadeQ\AppData\Roaming\MiKTeX\tex/generic/ltxcmds\ltxcmds.sty)
+(C:\Program Files\MiKTeX\tex/generic/pdftexcmds\pdftexcmds.sty
+(C:\Users\SadeQ\AppData\Roaming\MiKTeX\tex/generic/infwarerr\infwarerr.sty)))
+(C:\Users\SadeQ\AppData\Roaming\MiKTeX\tex/latex/hycolor\hycolor.sty)
+(C:\Program Files\MiKTeX\tex/latex/hyperref\nameref.sty
+(C:\Users\SadeQ\AppData\Roaming\MiKTeX\tex/latex/refcount\refcount.sty)
+(C:\Users\SadeQ\AppData\Roaming\MiKTeX\tex/generic/gettitlestring\gettitlestrin
+g.sty (C:\Users\SadeQ\AppData\Roaming\MiKTeX\tex/latex/kvoptions\kvoptions.sty
+Overfull \hbox (320.48134pt too wide) in paragraph at lines 108--45
+[]\T1/cmr/m/n/10.95 2025-11-01                                                 
+                                                                               
+                                                                               
+                                               
+))) (C:\Program Files\MiKTeX\tex/latex/etoolbox\etoolbox.sty)
+(C:\Users\SadeQ\AppData\Roaming\MiKTeX\tex/generic/stringenc\stringenc.sty)
+(C:\Program Files\MiKTeX\tex/latex/hyperref\pd1enc.def)
+(C:\Users\SadeQ\AppData\Roaming\MiKTeX\tex/generic/intcalc\intcalc.sty)
+(C:\Program Files\MiKTeX\tex/latex/hyperref\puenc.def)
+! Undefined control sequence.
+l.4109 \IfDocumentMetadataT
+                           
+(C:\Program Files\MiKTeX\tex/latex/url\url.sty)
+(C:\Users\SadeQ\AppData\Roaming\MiKTeX\tex/generic/bitset\bitset.sty
+(C:\Users\SadeQ\AppData\Roaming\MiKTeX\tex/generic/bigintcalc\bigintcalc.sty)))
+(C:\Program Files\MiKTeX\tex/latex/hyperref\hpdftex.def
+(C:\Users\SadeQ\AppData\Roaming\MiKTeX\tex/latex/rerunfilecheck\rerunfilecheck.
+sty
+(C:\Users\SadeQ\AppData\Roaming\MiKTeX\tex/generic/uniquecounter\uniquecounter.
+sty))) (C:\Users\SadeQ\AppData\Roaming\MiKTeX\tex/latex/titlesec\titlesec.sty)
+(C:\Program Files\MiKTeX\tex/latex/pgf/frontendlayer\tikz.sty
+(C:\Program Files\MiKTeX\tex/latex/pgf/basiclayer\pgf.sty
+(C:\Program Files\MiKTeX\tex/latex/pgf/utilities\pgfrcs.sty
+(C:\Program Files\MiKTeX\tex/generic/pgf/utilities\pgfutil-common.tex)
+(C:\Program Files\MiKTeX\tex/generic/pgf/utilities\pgfutil-latex.def)
+(C:\Program Files\MiKTeX\tex/generic/pgf/utilities\pgfrcs.code.tex
+(C:\Program Files\MiKTeX\tex/generic/pgf\pgf.revision.tex)))
+(C:\Program Files\MiKTeX\tex/latex/pgf/basiclayer\pgfcore.sty
+(C:\Program Files\MiKTeX\tex/latex/pgf/systemlayer\pgfsys.sty
+(C:\Program Files\MiKTeX\tex/generic/pgf/systemlayer\pgfsys.code.tex
+(C:\Program Files\MiKTeX\tex/generic/pgf/utilities\pgfkeys.code.tex
+(C:\Program Files\MiKTeX\tex/generic/pgf/utilities\pgfkeyslibraryfiltered.code.
+tex)) (C:\Program Files\MiKTeX\tex/generic/pgf/systemlayer\pgf.cfg)
+(C:\Program Files\MiKTeX\tex/generic/pgf/systemlayer\pgfsys-pdftex.def
+(C:\Program Files\MiKTeX\tex/generic/pgf/systemlayer\pgfsys-common-pdf.def)))
+(C:\Program Files\MiKTeX\tex/generic/pgf/systemlayer\pgfsyssoftpath.code.tex)
+(C:\Program Files\MiKTeX\tex/generic/pgf/systemlayer\pgfsysprotocol.code.tex))
+(C:\Program Files\MiKTeX\tex/generic/pgf/basiclayer\pgfcore.code.tex
+(C:\Program Files\MiKTeX\tex/generic/pgf/math\pgfmath.code.tex
+(C:\Program Files\MiKTeX\tex/generic/pgf/math\pgfmathutil.code.tex)
+(C:\Program Files\MiKTeX\tex/generic/pgf/math\pgfmathparser.code.tex)
+(C:\Program Files\MiKTeX\tex/generic/pgf/math\pgfmathfunctions.code.tex)
+(C:\Program Files\MiKTeX\tex/generic/pgf/math\pgfmathfunctions.basic.code.tex)
+(C:\Program Files\MiKTeX\tex/generic/pgf/math\pgfmathfunctions.trigonometric.co
+de.tex)
+(C:\Program Files\MiKTeX\tex/generic/pgf/math\pgfmathfunctions.random.code.tex)
+
+(C:\Program Files\MiKTeX\tex/generic/pgf/math\pgfmathfunctions.comparison.code.
+tex)
+(C:\Program Files\MiKTeX\tex/generic/pgf/math\pgfmathfunctions.base.code.tex)
+(C:\Program Files\MiKTeX\tex/generic/pgf/math\pgfmathfunctions.round.code.tex)
+(C:\Program Files\MiKTeX\tex/generic/pgf/math\pgfmathfunctions.misc.code.tex)
+(C:\Program Files\MiKTeX\tex/generic/pgf/math\pgfmathfunctions.integerarithmeti
+cs.code.tex) (C:\Program Files\MiKTeX\tex/generic/pgf/math\pgfmathcalc.code.tex
+) (C:\Program Files\MiKTeX\tex/generic/pgf/math\pgfmathfloat.code.tex))
+(C:\Program Files\MiKTeX\tex/generic/pgf/math\pgfint.code.tex)
+(C:\Program Files\MiKTeX\tex/generic/pgf/basiclayer\pgfcorepoints.code.tex)
+(C:\Program Files\MiKTeX\tex/generic/pgf/basiclayer\pgfcorepathconstruct.code.t
+ex)
+(C:\Program Files\MiKTeX\tex/generic/pgf/basiclayer\pgfcorepathusage.code.tex)
+(C:\Program Files\MiKTeX\tex/generic/pgf/basiclayer\pgfcorescopes.code.tex)
+(C:\Program Files\MiKTeX\tex/generic/pgf/basiclayer\pgfcoregraphicstate.code.te
+x)
+(C:\Program Files\MiKTeX\tex/generic/pgf/basiclayer\pgfcoretransformations.code
+.tex) (C:\Program Files\MiKTeX\tex/generic/pgf/basiclayer\pgfcorequick.code.tex
+) (C:\Program Files\MiKTeX\tex/generic/pgf/basiclayer\pgfcoreobjects.code.tex)
+(C:\Program Files\MiKTeX\tex/generic/pgf/basiclayer\pgfcorepathprocessing.code.
+tex) (C:\Program Files\MiKTeX\tex/generic/pgf/basiclayer\pgfcorearrows.code.tex
+) (C:\Program Files\MiKTeX\tex/generic/pgf/basiclayer\pgfcoreshade.code.tex)
+(C:\Program Files\MiKTeX\tex/generic/pgf/basiclayer\pgfcoreimage.code.tex)
+(C:\Program Files\MiKTeX\tex/generic/pgf/basiclayer\pgfcoreexternal.code.tex)
+(C:\Program Files\MiKTeX\tex/generic/pgf/basiclayer\pgfcorelayers.code.tex)
+(C:\Program Files\MiKTeX\tex/generic/pgf/basiclayer\pgfcoretransparency.code.te
+x) (C:\Program Files\MiKTeX\tex/generic/pgf/basiclayer\pgfcorepatterns.code.tex
+) (C:\Program Files\MiKTeX\tex/generic/pgf/basiclayer\pgfcorerdf.code.tex)))
+(C:\Program Files\MiKTeX\tex/generic/pgf/modules\pgfmoduleshapes.code.tex)
+(C:\Program Files\MiKTeX\tex/generic/pgf/modules\pgfmoduleplot.code.tex)
+(C:\Program Files\MiKTeX\tex/latex/pgf/compatibility\pgfcomp-version-0-65.sty)
+(C:\Program Files\MiKTeX\tex/latex/pgf/compatibility\pgfcomp-version-1-18.sty))
+ (C:\Program Files\MiKTeX\tex/latex/pgf/utilities\pgffor.sty
+(C:\Program Files\MiKTeX\tex/latex/pgf/utilities\pgfkeys.sty
+(C:\Program Files\MiKTeX\tex/generic/pgf/utilities\pgfkeys.code.tex))
+(C:\Program Files\MiKTeX\tex/latex/pgf/math\pgfmath.sty
+(C:\Program Files\MiKTeX\tex/generic/pgf/math\pgfmath.code.tex))
+(C:\Program Files\MiKTeX\tex/generic/pgf/utilities\pgffor.code.tex))
+(C:\Program Files\MiKTeX\tex/generic/pgf/frontendlayer/tikz\tikz.code.tex
+(C:\Program Files\MiKTeX\tex/generic/pgf/libraries\pgflibraryplothandlers.code.
+tex) (C:\Program Files\MiKTeX\tex/generic/pgf/modules\pgfmodulematrix.code.tex)
+
+(C:\Program Files\MiKTeX\tex/generic/pgf/frontendlayer/tikz/libraries\tikzlibra
+rytopaths.code.tex)))
+(C:\Program Files\MiKTeX\tex/generic/pgf/frontendlayer/tikz/libraries\tikzlibra
+ryarrows.code.tex
+(C:\Program Files\MiKTeX\tex/generic/pgf/libraries\pgflibraryarrows.code.tex))
+(C:\Program Files\MiKTeX\tex/generic/pgf/frontendlayer/tikz/libraries\tikzlibra
+rycalc.code.tex)
+(C:\Program Files\MiKTeX\tex/generic/pgf/frontendlayer/tikz/libraries\tikzlibra
+rypositioning.code.tex)
+(C:\Program Files\MiKTeX\tex/latex/l3backend\l3backend-pdftex.def)
+(EP001_unified.aux)
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+(C:\Program Files\MiKTeX\tex/context/base/mkii\supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+) (C:\Program Files\MiKTeX\tex/latex/epstopdf-pkg\epstopdf-base.sty
+(C:\Program Files\MiKTeX\tex/latex/00miktex\epstopdf-sys.cfg))
+(EP001_unified.out) (EP001_unified.out) [1{C:/Users/SadeQ/AppData/Local/MiKTeX/
+fonts/map/pdftex/pdftex.map}]
+(C:\Program Files\MiKTeX\tex/latex/amsfonts\umsa.fd)
+(C:\Program Files\MiKTeX\tex/latex/amsfonts\umsb.fd) [2] (EP001_unified.toc)
+[3]
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {section}\bool_lazy_and:nnT {\l__hyp_target_cre...
+l.118 \section{Introduction}
+                            
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.118 \section{Introduction}
+                            
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.118 \section{Introduction}
+                            
+
+! Package titlesec Error: Entered in horizontal mode.
+
+See the titlesec package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.118 \section{Introduction}
+                            
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {subsection}\bool_lazy_and:nnT {\l__hyp_target_...
+l.120 \subsection{Overview}
+                           
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.120 \subsection{Overview}
+                           
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.120 \subsection{Overview}
+                           
+
+! Package titlesec Error: Entered in horizontal mode.
+
+See the titlesec package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.120 \subsection{Overview}
+                           
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {subsection}\bool_lazy_and:nnT {\l__hyp_target_...
+l.131 \subsection{System Characteristics}
+                                         
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.131 \subsection{System Characteristics}
+                                         
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.131 \subsection{System Characteristics}
+                                         
+
+! Package titlesec Error: Entered in horizontal mode.
+
+See the titlesec package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.131 \subsection{System Characteristics}
+                                         
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {\@listctr }\bool_lazy_and:nnT {\l__hyp_target_...
+l.136     \item \textbf
+                       {Nonlinearity}: Coupled, nonlinear differential equat...
+
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {\@listctr }\bool_lazy_and:nnT {\l__hyp_target_...
+l.137     \item \textbf
+                       {Underactuation}: 2 degrees of freedom, 1 control input
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {\@listctr }\bool_lazy_and:nnT {\l__hyp_target_...
+l.138     \item \textbf
+                       {Unstable equilibrium}: Open-loop unstable at upright...
+
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {\@listctr }\bool_lazy_and:nnT {\l__hyp_target_...
+l.139     \item \textbf
+                       {Non-minimum phase}: Zero dynamics exhibit unstable b...
+
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {\@listctr }\bool_lazy_and:nnT {\l__hyp_target_...
+l.140     \item \textbf
+                       {Strong coupling}: Significant nonlinear coupling bet...
+
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {section}\bool_lazy_and:nnT {\l__hyp_target_cre...
+l.151 \section{Physical System Description}
+                                           
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.151 \section{Physical System Description}
+                                           
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.151 \section{Physical System Description}
+                                           
+
+! Package titlesec Error: Entered in horizontal mode.
+
+See the titlesec package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.151 \section{Physical System Description}
+                                           
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {subsection}\bool_lazy_and:nnT {\l__hyp_target_...
+l.153 \subsection{System Configuration}
+                                       
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.153 \subsection{System Configuration}
+                                       
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.153 \subsection{System Configuration}
+                                       
+
+! Package titlesec Error: Entered in horizontal mode.
+
+See the titlesec package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.153 \subsection{System Configuration}
+                                       
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {subsection}\bool_lazy_and:nnT {\l__hyp_target_...
+l.165 \subsection{Physical Constraints}
+                                       
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.165 \subsection{Physical Constraints}
+                                       
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.165 \subsection{Physical Constraints}
+                                       
+
+! Package titlesec Error: Entered in horizontal mode.
+
+See the titlesec package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.165 \subsection{Physical Constraints}
+                                       
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {section}\bool_lazy_and:nnT {\l__hyp_target_cre...
+l.177 \section{Mathematical Model}
+                                  
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.177 \section{Mathematical Model}
+                                  
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.177 \section{Mathematical Model}
+                                  
+
+! Package titlesec Error: Entered in horizontal mode.
+
+See the titlesec package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.177 \section{Mathematical Model}
+                                  
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {subsection}\bool_lazy_and:nnT {\l__hyp_target_...
+l.179 \subsection{State Vector Definition}
+                                          
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.179 \subsection{State Vector Definition}
+                                          
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.179 \subsection{State Vector Definition}
+                                          
+
+! Package titlesec Error: Entered in horizontal mode.
+
+See the titlesec package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.179 \subsection{State Vector Definition}
+                                          
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {equation}\bool_lazy_and:nnT {\l__hyp_target_cr...
+l.183 \begin{equation}
+                      
+[4]
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {subsection}\bool_lazy_and:nnT {\l__hyp_target_...
+l.195 \subsection{Equations of Motion}
+                                      
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.195 \subsection{Equations of Motion}
+                                      
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.195 \subsection{Equations of Motion}
+                                      
+
+! Package titlesec Error: Entered in horizontal mode.
+
+See the titlesec package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.195 \subsection{Equations of Motion}
+                                      
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {equation}\bool_lazy_and:nnT {\l__hyp_target_cr...
+l.199 \begin{equation}
+                      
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {subsection}\bool_lazy_and:nnT {\l__hyp_target_...
+l.205 \subsection{Inertia Matrix}
+                                 
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.205 \subsection{Inertia Matrix}
+                                 
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.205 \subsection{Inertia Matrix}
+                                 
+
+! Package titlesec Error: Entered in horizontal mode.
+
+See the titlesec package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.205 \subsection{Inertia Matrix}
+                                 
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {equation}\bool_lazy_and:nnT {\l__hyp_target_cr...
+l.209 \begin{equation}
+                      
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {equation}\bool_lazy_and:nnT {\l__hyp_target_cr...
+l.225 \end{align}
+                 
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {equation}\bool_lazy_and:nnT {\l__hyp_target_cr...
+l.225 \end{align}
+                 
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {equation}\bool_lazy_and:nnT {\l__hyp_target_cr...
+l.225 \end{align}
+                 
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {equation}\bool_lazy_and:nnT {\l__hyp_target_cr...
+l.225 \end{align}
+                 
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {equation}\bool_lazy_and:nnT {\l__hyp_target_cr...
+l.225 \end{align}
+                 
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {equation}\bool_lazy_and:nnT {\l__hyp_target_cr...
+l.225 \end{align}
+                 
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {subsection}\bool_lazy_and:nnT {\l__hyp_target_...
+l.229 \subsection{Coriolis and Centrifugal Matrix}
+                                                  
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.229 \subsection{Coriolis and Centrifugal Matrix}
+                                                  
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.229 \subsection{Coriolis and Centrifugal Matrix}
+                                                  
+
+! Package titlesec Error: Entered in horizontal mode.
+
+See the titlesec package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.229 \subsection{Coriolis and Centrifugal Matrix}
+                                                  
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {subsection}\bool_lazy_and:nnT {\l__hyp_target_...
+l.237 \subsection{Gravity and Friction Terms}
+                                             
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.237 \subsection{Gravity and Friction Terms}
+                                             
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.237 \subsection{Gravity and Friction Terms}
+                                             
+
+! Package titlesec Error: Entered in horizontal mode.
+
+See the titlesec package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.237 \subsection{Gravity and Friction Terms}
+                                             
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {equation}\bool_lazy_and:nnT {\l__hyp_target_cr...
+l.239 \begin{equation}
+                      
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {section}\bool_lazy_and:nnT {\l__hyp_target_cre...
+l.256 \section{Nonlinearity Analysis}
+                                     
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.256 \section{Nonlinearity Analysis}
+                                     
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.256 \section{Nonlinearity Analysis}
+                                     
+
+! Package titlesec Error: Entered in horizontal mode.
+
+See the titlesec package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.256 \section{Nonlinearity Analysis}
+                                     
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {subsection}\bool_lazy_and:nnT {\l__hyp_target_...
+l.258 \subsection{Configuration-Dependent Inertia}
+                                                  
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.258 \subsection{Configuration-Dependent Inertia}
+                                                  
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.258 \subsection{Configuration-Dependent Inertia}
+                                                  
+
+! Package titlesec Error: Entered in horizontal mode.
+
+See the titlesec package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.258 \subsection{Configuration-Dependent Inertia}
+                                                  
+[5]
+! Undefined control sequence.
+\Hy@theorem@refstepcounter #1->\H@refstepcounter 
+                                                 {#1}\hyper@makecurrent {#1}...
+l.268 \begin{theorem}
+                     
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.269 T
+       he inertia matrix $\mathbf{M}(\mathbf{q})$ for the DIP system satisfies:
+
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.269 T
+       he inertia matrix $\mathbf{M}(\mathbf{q})$ for the DIP system satisfies:
+
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.269 T
+       he inertia matrix $\mathbf{M}(\mathbf{q})$ for the DIP system satisfies:
+
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.271     \item $
+                 \mathbf{M}(\mathbf{q}) = \mathbf{M}^T(\mathbf{q})$ (symmetric)
+
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {\@listctr }\bool_lazy_and:nnT {\l__hyp_target_...
+l.271     \item $
+                 \mathbf{M}(\mathbf{q}) = \mathbf{M}^T(\mathbf{q})$ (symmetric)
+
+! Undefined control sequence.
+<argument> ...ref }}\group_end: \UseTaggingSocket 
+                                                  {recordtarget}
+l.271     \item $
+                 \mathbf{M}(\mathbf{q}) = \mathbf{M}^T(\mathbf{q})$ (symmetric)
+
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {\@listctr }\bool_lazy_and:nnT {\l__hyp_target_...
+l.272     \item $
+                 \mathbf{M}(\mathbf{q}) > 0$ (positive definite)
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {\@listctr }\bool_lazy_and:nnT {\l__hyp_target_...
+l.273     \item $
+                 \dot{\mathbf{M}}(\mathbf{q}) - 2\mathbf{C}(\mathbf{q}, \dot...
+
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {subsection}\bool_lazy_and:nnT {\l__hyp_target_...
+l.277 \subsection{Trigonometric Nonlinearity}
+                                             
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.277 \subsection{Trigonometric Nonlinearity}
+                                             
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.277 \subsection{Trigonometric Nonlinearity}
+                                             
+
+! Package titlesec Error: Entered in horizontal mode.
+
+See the titlesec package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.277 \subsection{Trigonometric Nonlinearity}
+                                             
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {equation}\bool_lazy_and:nnT {\l__hyp_target_cr...
+l.288 \begin{equation}
+                      
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {section}\bool_lazy_and:nnT {\l__hyp_target_cre...
+l.305 \section{System Parameters}
+                                 
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.305 \section{System Parameters}
+                                 
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.305 \section{System Parameters}
+                                 
+
+! Package titlesec Error: Entered in horizontal mode.
+
+See the titlesec package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.305 \section{System Parameters}
+                                 
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {subsection}\bool_lazy_and:nnT {\l__hyp_target_...
+l.307 \subsection{Nominal Parameter Values}
+                                           
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.307 \subsection{Nominal Parameter Values}
+                                           
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.307 \subsection{Nominal Parameter Values}
+                                           
+
+! Package titlesec Error: Entered in horizontal mode.
+
+See the titlesec package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.307 \subsection{Nominal Parameter Values}
+                                           
+! Undefined control sequence.
+\caption ...fter \@gobble \else \H@refstepcounter 
+                                                  \@captype \let \Hy@tempa \...
+l.330 \caption
+              {Nominal DIP System Parameters}
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {subsection}\bool_lazy_and:nnT {\l__hyp_target_...
+l.334 \subsection{Parameter Uncertainty}
+                                        
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.334 \subsection{Parameter Uncertainty}
+                                        
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.334 \subsection{Parameter Uncertainty}
+                                        
+
+! Package titlesec Error: Entered in horizontal mode.
+
+See the titlesec package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.334 \subsection{Parameter Uncertainty}
+                                        
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {section}\bool_lazy_and:nnT {\l__hyp_target_cre...
+l.351 \section{Linearized Model}
+                                
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.351 \section{Linearized Model}
+                                
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.351 \section{Linearized Model}
+                                
+
+! Package titlesec Error: Entered in horizontal mode.
+
+See the titlesec package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.351 \section{Linearized Model}
+                                
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {subsection}\bool_lazy_and:nnT {\l__hyp_target_...
+l.353 \subsection{Equilibrium Points}
+                                     
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.353 \subsection{Equilibrium Points}
+                                     
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.353 \subsection{Equilibrium Points}
+                                     
+
+! Package titlesec Error: Entered in horizontal mode.
+
+See the titlesec package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.353 \subsection{Equilibrium Points}
+                                     
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {\@listctr }\bool_lazy_and:nnT {\l__hyp_target_...
+l.358     \item \textbf
+                       {Upright-Upright:} $(\theta_1, \theta_2) = (0, 0)$ --...
+
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {\@listctr }\bool_lazy_and:nnT {\l__hyp_target_...
+l.359     \item \textbf
+                       {Upright-Down:} $(\theta_1, \theta_2) = (0, \pi)$ -- ...
+
+[6]
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {\@listctr }\bool_lazy_and:nnT {\l__hyp_target_...
+l.360     \item \textbf
+                       {Down-Down:} $(\theta_1, \theta_2) = (\pi, \pi)$ -- s...
+
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {subsection}\bool_lazy_and:nnT {\l__hyp_target_...
+l.363 ...on{Linearized State-Space Representation}
+                                                  
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.363 ...on{Linearized State-Space Representation}
+                                                  
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.363 ...on{Linearized State-Space Representation}
+                                                  
+
+! Package titlesec Error: Entered in horizontal mode.
+
+See the titlesec package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.363 ...on{Linearized State-Space Representation}
+                                                  
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {equation}\bool_lazy_and:nnT {\l__hyp_target_cr...
+l.367 \begin{equation}
+                      
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {equation}\bool_lazy_and:nnT {\l__hyp_target_cr...
+l.378 \end{align}
+                 
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {equation}\bool_lazy_and:nnT {\l__hyp_target_cr...
+l.378 \end{align}
+                 
+! Undefined control sequence.
+\Hy@theorem@refstepcounter #1->\H@refstepcounter 
+                                                 {#1}\hyper@makecurrent {#1}...
+l.380 \begin{proposition}
+                         
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.381 T
+       he linearized system $(\mathbf{A}, \mathbf{B})$ is \textbf{controllab...
+
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.381 T
+       he linearized system $(\mathbf{A}, \mathbf{B})$ is \textbf{controllab...
+
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.381 T
+       he linearized system $(\mathbf{A}, \mathbf{B})$ is \textbf{controllab...
+
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.382 \end{proposition}
+                       
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {section}\bool_lazy_and:nnT {\l__hyp_target_cre...
+l.388 \section{Numerical Properties}
+                                    
+! Undefined control sequence.
+<argument> ...ref }}\group_end: \UseTaggingSocket 
+                                                  {recordtarget}
+l.388 \section{Numerical Properties}
+                                    
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.388 \section{Numerical Properties}
+                                    
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.388 \section{Numerical Properties}
+                                    
+
+! Package titlesec Error: Entered in horizontal mode.
+
+See the titlesec package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.388 \section{Numerical Properties}
+                                    
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {subsection}\bool_lazy_and:nnT {\l__hyp_target_...
+l.390 \subsection{State Scaling}
+                                
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.390 \subsection{State Scaling}
+                                
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.390 \subsection{State Scaling}
+                                
+
+! Package titlesec Error: Entered in horizontal mode.
+
+See the titlesec package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.390 \subsection{State Scaling}
+                                
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {subsection}\bool_lazy_and:nnT {\l__hyp_target_...
+l.399 \subsection{Time Scaling}
+                               
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.399 \subsection{Time Scaling}
+                               
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.399 \subsection{Time Scaling}
+                               
+
+! Package titlesec Error: Entered in horizontal mode.
+
+See the titlesec package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.399 \subsection{Time Scaling}
+                               
+[7]
+! Undefined control sequence.
+\Hy@theorem@refstepcounter #1->\H@refstepcounter 
+                                                 {#1}\hyper@makecurrent {#1}...
+l.407 \begin{lemma}
+                   
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.408 T
+       he DIP system exhibits \textbf{stiff behavior} near the upright posit...
+
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.408 T
+       he DIP system exhibits \textbf{stiff behavior} near the upright posit...
+
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.408 T
+       he DIP system exhibits \textbf{stiff behavior} near the upright posit...
+
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.410     \item S
+                 mall integration steps for accurate simulation
+! Undefined control sequence.
+<argument> ...ref }}\group_end: \UseTaggingSocket 
+                                                  {recordtarget}
+l.410     \item S
+                 mall integration steps for accurate simulation
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {section}\bool_lazy_and:nnT {\l__hyp_target_cre...
+l.420 \section{Summary and Key Takeaways}
+                                         
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.420 \section{Summary and Key Takeaways}
+                                         
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.420 \section{Summary and Key Takeaways}
+                                         
+
+! Package titlesec Error: Entered in horizontal mode.
+
+See the titlesec package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.420 \section{Summary and Key Takeaways}
+                                         
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {subsection}\bool_lazy_and:nnT {\l__hyp_target_...
+l.422 \subsection{System Overview}
+                                  
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.422 \subsection{System Overview}
+                                  
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.422 \subsection{System Overview}
+                                  
+
+! Package titlesec Error: Entered in horizontal mode.
+
+See the titlesec package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.422 \subsection{System Overview}
+                                  
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {subsection}\bool_lazy_and:nnT {\l__hyp_target_...
+l.426 \subsection{Control Implications}
+                                       
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.426 \subsection{Control Implications}
+                                       
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.426 \subsection{Control Implications}
+                                       
+
+! Package titlesec Error: Entered in horizontal mode.
+
+See the titlesec package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.426 \subsection{Control Implications}
+                                       
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {subsection}\bool_lazy_and:nnT {\l__hyp_target_...
+l.433 \subsection{Key Challenges}
+                                 
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.433 \subsection{Key Challenges}
+                                 
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.433 \subsection{Key Challenges}
+                                 
+
+! Package titlesec Error: Entered in horizontal mode.
+
+See the titlesec package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.433 \subsection{Key Challenges}
+                                 
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {\@listctr }\bool_lazy_and:nnT {\l__hyp_target_...
+l.436     \item \textbf
+                       {Nonlinear coupling} between pendulum links
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {\@listctr }\bool_lazy_and:nnT {\l__hyp_target_...
+l.437     \item \textbf
+                       {Parameter uncertainty} in mass and friction
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {\@listctr }\bool_lazy_and:nnT {\l__hyp_target_...
+l.438     \item \textbf
+                       {Actuator constraints} (force limits, bandwidth)
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {\@listctr }\bool_lazy_and:nnT {\l__hyp_target_...
+l.439     \item \textbf
+                       {Disturbance rejection} requirements
+! Undefined control sequence.
+\Hy@theorem@refstepcounter #1->\H@refstepcounter 
+                                                 {#1}\hyper@makecurrent {#1}...
+l.450 \begin{theorem}
+                     
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.451 C
+       ontrol design for the DIP involves trade-offs between:
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.451 C
+       ontrol design for the DIP involves trade-offs between:
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.451 C
+       ontrol design for the DIP involves trade-offs between:
+
+! LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.453     \item P
+                 erformance vs. robustness
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {\@listctr }\bool_lazy_and:nnT {\l__hyp_target_...
+l.453     \item P
+                 erformance vs. robustness
+! Undefined control sequence.
+<argument> ...ref }}\group_end: \UseTaggingSocket 
+                                                  {recordtarget}
+l.453     \item P
+                 erformance vs. robustness
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {\@listctr }\bool_lazy_and:nnT {\l__hyp_target_...
+l.454     \item C
+                 omplexity vs. implementability
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {\@listctr }\bool_lazy_and:nnT {\l__hyp_target_...
+l.455     \item L
+                 inear vs. nonlinear approaches
+! Undefined control sequence.
+<argument> \H@refstepcounter 
+                             {\@listctr }\bool_lazy_and:nnT {\l__hyp_target_...
+l.456     \item M
+                 odel-based vs. data-driven methods
+[8] (EP001_unified.aux) )
+(see the transcript file for additional information) <C:\Users\SadeQ\AppData\Lo
+cal\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbi1095.pk> <C:\Users\SadeQ\AppD
+ata\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecti1095.pk> <C:\Users\Sade
+Q\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm0800.pk> <C:\User
+s\SadeQ\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm1095.pk> <C
+:\Users\SadeQ\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1095.
+pk> <C:\Users\SadeQ\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecb
+x1200.pk> <C:\Users\SadeQ\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi6
+00\ecrm1000.pk> <C:\Users\SadeQ\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/e
+c/dpi600\ecrm1200.pk> <C:\Users\SadeQ\AppData\Local\MiKTeX\fonts/pk/ljfour/jkna
+ppen/ec/dpi600\ecbx1440.pk> <C:\Users\SadeQ\AppData\Local\MiKTeX\fonts/pk/ljfou
+r/jknappen/ec/dpi600\ecrm1095.pk><C:/Program Files/MiKTeX/fonts/type1/public/am
+sfonts/cm/cmbx10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cm
+bx8.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/
+Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Program File
+s/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Program Files/MiKTeX/font
+s/type1/public/amsfonts/cm/cmr10.pfb><C:/Program Files/MiKTeX/fonts/type1/publi
+c/amsfonts/cm/cmr8.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/
+cmsy10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C
+:/Program Files/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
+Output written on EP001_unified.pdf (8 pages, 254058 bytes).
+Transcript written on EP001_unified.log.
+pdflatex: major issue: User/administrator updates are out-of-sync.

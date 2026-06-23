@@ -1,0 +1,77 @@
+# Byte-compiled / optimized / DLL files
+**/__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+*.pyo
+
+# Cache directories
+.cache/
+.benchmarks/
+.numba_cache/
+.pytest_cache/
+.ruff_cache/
+.hypothesis/
+.mypy_cache/
+.tox/
+*.cover
+*.coverage
+.htmlcov/
+
+# Build and distribution
+build/
+dist/
+*.egg-info/
+
+# Environment and configs
+.env
+.venv
+venv/
+ENV/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS specific
+.DS_Store
+Thumbs.db
+desktop.ini
+*.lnk
+
+# Backup and temp files
+*.bak
+*.backup
+*.tmp
+*.temp
+tmp/
+*.log
+*.log.*
+report.log
+
+# LaTeX Build Artifacts
+*.aux
+*.bbl
+*.blg
+*.lof
+*.lot
+*.nlo
+*.out
+*.toc
+*.fdb_latexmk
+*.fls
+*.synctex.gz
+pdflatex_output.txt
+*.tar.gz
+
+# Claude/Agent specific (DO NOT COMMIT)
+.project/
+.mcp.json
+.clinerules
+settings.local.json
+.ai/
+.claude/
+.ai_workspace/

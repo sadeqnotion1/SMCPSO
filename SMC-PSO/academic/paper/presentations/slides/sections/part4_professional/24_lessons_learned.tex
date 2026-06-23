@@ -1,0 +1,131 @@
+% ============================================================================
+% SECTION 19: WORKSPACE ORGANIZATION
+% ============================================================================
+\section{Workspace Organization}
+
+\begin{frame}{Three-Category Workspace Structure}
+    \textbf{Reorganization (December 29, 2025):}
+
+    \vspace{0.3cm}
+
+    \textbf{New Structure: \texttt{academic/} (THREE-CATEGORY)}
+
+    \vspace{0.3cm}
+
+    \begin{enumerate}
+        \item \textbf{\texttt{academic/paper/} [~203 MB]}
+        \begin{itemize}
+            \item Research papers, thesis, documentation
+            \item \texttt{sphinx\_docs/} (64 MB), \texttt{thesis/} (98 MB)
+            \item \texttt{publications/} (13 MB), \texttt{experiments/} (16 MB)
+            \item Controller-based experiments + cross-controller studies
+        \end{itemize}
+
+        \item \textbf{\texttt{academic/logs/} [~13 MB]}
+        \begin{itemize}
+            \item Runtime and development logs
+            \item \texttt{benchmarks/} (10 MB), \texttt{pso/} (978 KB)
+            \item \texttt{docs\_build/} (352 KB), \texttt{archive/} (214 KB)
+        \end{itemize}
+
+        \item \textbf{\texttt{academic/dev/} [~46 MB]}
+        \begin{itemize}
+            \item Development artifacts (QA audits, coverage reports)
+            \item \texttt{quality/} (46 MB), \texttt{caches/} (133 KB)
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{Workspace Hygiene Rules}
+    \textbf{MANDATORY Professional Cleanup Policy:}
+
+    \vspace{0.3cm}
+
+    \textbf{Cleanup Triggers:}
+    \begin{itemize}
+        \item \statuserror \textbf{MANDATORY:} After multi-file creation
+        \item \statuserror \textbf{MANDATORY:} After PDF/LaTeX compilation
+        \item \statuserror \textbf{MANDATORY:} Before committing to repository
+        \item \statuswarning \textbf{RECOMMENDED:} Weekly during active development
+    \end{itemize}
+
+    \vspace{0.3cm}
+
+    \textbf{Cleanup Actions:}
+    \begin{enumerate}
+        \item Archive old versions → \texttt{academic/archive/}
+        \item Remove intermediate build files
+        \item Add \texttt{README.md} to document final deliverables
+        \item Target: ≤5 active files at folder root
+    \end{enumerate}
+
+    \vspace{0.3cm}
+
+    \textbf{Current Status:}
+    \begin{itemize}
+        \item \textbf{Root visible items:} 14/19 (target: ≤19) \statusok
+        \item \textbf{academic/logs/:} 13 MB (target: <100 MB) \statusok
+        \item \textbf{Hidden dirs:} 9 (target: ≤9) \statusok
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Directory Protection Rules}
+    \textbf{NEVER Delete These Files:}
+
+    \vspace{0.3cm}
+
+    \begin{alertblock}{Protected External Tools}
+        \texttt{D:\textbackslash Tools\textbackslash Claude\textbackslash Switch-ClaudeAccount.ps1} \\
+        Multi-account switcher for Claude Code (EXTERNAL LOCATION)
+    \end{alertblock}
+
+    \vspace{0.3cm}
+
+    \textbf{Deprecated Aliases (DO NOT USE):}
+    \begin{itemize}
+        \item \statuserror \texttt{.project/} → Migrated to \texttt{.ai\_workspace/} (Dec 29, 2025)
+        \item \statuserror \texttt{.ai/} → Migrated to \texttt{.ai\_workspace/} or \texttt{academic/archive/}
+        \item \statuserror \texttt{.artifacts/} → Migrated to \texttt{academic/}
+        \item \statuserror \texttt{.logs/} → Migrated to \texttt{academic/logs/}
+    \end{itemize}
+
+    \vspace{0.3cm}
+
+    \textbf{Centralized Configuration (CANONICAL):}
+    \begin{itemize}
+        \item \statusok \texttt{.ai\_workspace/} -- AI operation configs, tools, guides (HIDDEN)
+        \item \statusok \texttt{academic/} -- Academic outputs (VISIBLE, three-category structure)
+        \item \statusok \texttt{.cache/} -- Project root ephemeral data (pytest, benchmarks)
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Weekly Health Check}
+    \textbf{Automated Workspace Validation:}
+
+    \vspace{0.3cm}
+
+    \begin{lstlisting}[language=bash]
+# Visible root items (target: <=19)
+ls | wc -l  # Current: 14 [OK]
+
+# Hidden directories (target: <=9)
+find . -maxdepth 1 -type d -name ".*" | wc -l  # Current: 9 [OK]
+
+# Cache size (target: <50 MB)
+du -sh .cache/  # Current: ~15 MB [OK]
+
+# Logs size (target: <100 MB)
+du -sh academic/logs/  # Current: 13 MB [OK]
+
+# Academic outputs (target: <300 MB)
+du -sh academic/  # Current: ~262 MB [OK]
+    \end{lstlisting}
+
+    \vspace{0.3cm}
+
+    \textbf{Automated Cleanup Script:}
+    \begin{lstlisting}[language=bash]
+bash scripts/utils/workspace_health_check.sh
+# Generates report with warnings for any violations
+    \end{lstlisting}
+\end{frame}

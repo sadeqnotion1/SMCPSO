@@ -1,0 +1,360 @@
+% ==============================================================================
+% EPISODE 015: ARCHITECTURAL STANDARDS AND PATTERNS
+% ==============================================================================
+\input{../templates/master_template.tex}
+\input{../templates/tikz_components.tex}
+
+% Episode-specific title
+\renewcommand{\episodetitle}{E015: Architectural Standards}
+
+\begin{document}
+
+% ==============================================================================
+% TITLE PAGE
+% ==============================================================================
+\makeepisodetitle{E015: Architectural Standards \& Patterns}{Intentional Patterns, Design Decisions, Quality Gates, File Naming Conventions}{3}{15-20 minutes}
+
+% ==============================================================================
+% PAGE 1: WHY STANDARDS MATTER
+% ==============================================================================
+\learningobjective{Understand architectural invariants (never "fix" these!), design patterns (factory/strategy/DI), code conventions (naming/structure), and quality gates enforcement}
+
+\section*{Why Architectural Standards Matter}
+
+\begin{keypoint}
+\textbf{Problem:} Without standards, these look like BUGS:
+\begin{itemize}
+    \item \texttt{simulation\_context.py} in 3 locations (duplication?)
+    \item 8 different dynamics files (redundant?)
+    \item \texttt{src/optimizer/} + \texttt{src/optimization/} (typo?)
+\end{itemize}
+
+\textbf{Reality:} All INTENTIONAL architectural patterns!
+
+\textbf{Solution:} Document standards so patterns become FEATURES, not mistakes
+\end{keypoint}
+
+\subsection*{Codebase Without Standards = City Without Zoning Laws}
+
+\begin{warning}
+\textbf{Chaos Example:}
+\begin{itemize}
+    \item \texttt{controller.py}
+    \item \texttt{Controller\_v2.py}
+    \item \texttt{CONTROLLER\_NEW.py}
+    \item \texttt{my\_controller\_final\_FINAL.py}
+    \item \texttt{temp\_controller\_backup\_old\_2.py}
+\end{itemize}
+
+Which is production? Which is safe to delete? \textbf{Nobody knows!}
+\end{warning}
+
+\subsection*{With Standards: Clean Organization}
+
+\begin{tcolorbox}[colback=primary!5, colframe=primary, title=\faFolderOpen\ Zoning Laws for Code]
+\textbf{Controllers District:} \texttt{src/controllers/}
+\begin{itemize}
+    \item \texttt{classical\_smc.py}
+    \item \texttt{sta\_smc.py}
+    \item \texttt{adaptive\_smc.py}
+    \item No version suffixes, no "final" labels
+\end{itemize}
+
+\textbf{Standards Answer 4 Questions:}
+\begin{itemize}
+    \item \textbf{1.} \textbf{WHERE} to put code (directory structure)
+    \item \textbf{2.} \textbf{HOW} to name things (files, classes, functions)
+    \item \textbf{3.} \textbf{WHAT} patterns to use (factory, not if-else chains)
+    \item \textbf{4.} \textbf{WHEN} to deviate (documented exceptions only)
+\end{itemize}
+\end{tcolorbox}
+
+\section*{Intentional Architectural Patterns (DO NOT "FIX"!)}
+
+\begin{keypoint}
+\textbf{Critical:} These patterns look like mistakes to newcomers but are DELIBERATE design decisions
+\end{keypoint}
+
+\subsection*{Pattern 1: Compatibility Layers}
+
+\begin{example}
+\textbf{Observed:} Both \texttt{src/optimizer/} AND \texttt{src/optimization/} exist
+
+\textbf{Looks Like:} Typo or inconsistency
+
+\textbf{Reality:} Backward compatibility layer!
+
+\textbf{Reason:} Legacy code uses \texttt{from src.optimizer import PSOTuner}
+
+New code uses \texttt{from src.optimization import PSOTuner}
+
+\texttt{src/optimizer/\_\_init\_\_.py} re-exports from \texttt{src/optimization/}
+
+\textbf{DO NOT DELETE} \texttt{src/optimizer/} - breaks backward compatibility!
+\end{example}
+
+\subsection*{Pattern 2: Re-Export Chains}
+
+\begin{example}
+\textbf{Observed:} \texttt{simulation\_context.py} in 3 locations:
+\begin{itemize}
+    \item \texttt{src/core/simulation\_context.py} (implementation)
+    \item \texttt{src/simulation\_context.py} (re-export)
+    \item \texttt{src/interfaces/simulation\_context.py} (alias)
+\end{itemize}
+
+\textbf{Reason:} Import path flexibility - all these work:
+\begin{lstlisting}[style=python, numbers=none]
+from src.core import SimulationContext
+from src import SimulationContext
+from src.interfaces import SimulationContext
+\end{lstlisting}
+
+\textbf{Benefit:} Users can import from convenient location without knowing internal structure
+\end{example}
+
+% ==============================================================================
+% PAGE 2: MODEL VARIANTS & FRAMEWORK FILES
+% ==============================================================================
+\newpage
+
+\subsection*{Pattern 3: Model Variants (8 Dynamics Files)}
+
+\begin{tcolorbox}[colback=secondary!10, colframe=secondary, title=\faFlask\ Accuracy/Performance Tradeoffs]
+\textbf{NOT Redundant - Each Serves Different Use Case:}
+
+\begin{tabular}{lll}
+\toprule
+\textbf{File} & \textbf{Compute Time} & \textbf{Accuracy} \\
+\midrule
+\texttt{simplified\_dynamics.py} & 5 µs & Linear approx \\
+\texttt{full\_nonlinear\_dynamics.py} & 50 µs & Full physics \\
+\texttt{lowrank\_dynamics.py} & 15 µs & Reduced model \\
+\texttt{coriolis\_dynamics.py} & 60 µs & With Coriolis \\
++ 4 more variants & varies & Specialized \\
+\bottomrule
+\end{tabular}
+
+\textbf{Strategy:} Develop with simplified (fast), validate with full (accurate)
+
+\textbf{PSO Example:} 5,000 evaluations with simplified = 3 minutes, full = 30 minutes
+\end{tcolorbox}
+
+\subsection*{Pattern 4: Framework Files (NOT Test Files!)}
+
+\begin{warning}
+\textbf{Common Mistake:} Moving \texttt{src/interfaces/hil/test\_automation.py} to \texttt{tests/}
+
+\textbf{Why It's WRONG:}
+\begin{itemize}
+    \item Has pytest imports BUT is PRODUCTION code
+    \item Provides test automation FRAMEWORK for HIL validation
+    \item Used by actual deployed systems, not just CI
+\end{itemize}
+
+\textbf{Rule:} File location determined by PURPOSE, not imports!
+
+\textbf{Classification Checklist:}
+\begin{itemize}
+    \item \textbf{1.} Exported in \_\_init\_\_.py? → Production (\texttt{src/})
+    \item \textbf{2.} Imported by production code? → Production (\texttt{src/})
+    \item \textbf{3.} Framework/infrastructure? → Production (\texttt{src/})
+    \item \textbf{4.} Has \texttt{test\_*} name AND only for pytest? → Test (\texttt{tests/})
+\end{itemize}
+\end{warning}
+
+\section*{Design Patterns Used}
+
+\begin{center}
+\begin{tikzpicture}[node distance=2cm, auto]
+    \node[block, fill=primary!30] (need) {\textbf{Need}\\Architecture\\decision};
+    \node[decision, below=of need] (type) {\textbf{Type?}\\What to\\create};
+    \node[process, below left=1.5cm and 2cm of type] (factory) {\textbf{Factory}\\Controller\\creation};
+    \node[process, below=of type] (strategy) {\textbf{Strategy}\\Swappable\\dynamics};
+    \node[process, below right=1.5cm and 2cm of type] (di) {\textbf{DI}\\Testable\\code};
+
+    \draw[arrow] (need) -- (type);
+    \draw[arrow] (type) -| node[left, near start] {Objects} (factory);
+    \draw[arrow] (type) -- node[right] {Behavior} (strategy);
+    \draw[arrow] (type) -| node[right, near start] {Testing} (di);
+\end{tikzpicture}
+\end{center}
+
+\begin{tcolorbox}[colback=accent!10, colframe=accent, title=\faCogs\ Core Design Patterns]
+\textbf{1. Factory Pattern (Controller Creation)}
+\begin{lstlisting}[style=python, numbers=none]
+# BAD: Giant if-else chain
+if ctrl_type == "classical":
+    return ClassicalSMC(gains)
+elif ctrl_type == "sta":
+    return STASMC(gains)
+# ... 5 more elif branches
+
+# GOOD: Factory pattern
+controller = create_controller(ctrl_type, config, gains)
+\end{lstlisting}
+
+\textbf{2. Strategy Pattern (Swappable Dynamics)}
+\begin{lstlisting}[style=python, numbers=none]
+# Use different dynamics without changing controller
+dynamics = SimplifiedDynamics()  # Fast
+# OR
+dynamics = FullNonlinearDynamics()  # Accurate
+
+controller.simulate(dynamics)  # Same interface
+\end{lstlisting}
+
+\textbf{3. Dependency Injection (Testable Code)}
+\begin{lstlisting}[style=python, numbers=none]
+# Inject dependencies, not hardcode
+def run_simulation(controller, dynamics, config):
+    # Easy to test with mock objects
+    pass
+\end{lstlisting}
+\end{tcolorbox}
+
+% ==============================================================================
+% PAGE 3: FILE NAMING & QUALITY GATES
+% ==============================================================================
+\newpage
+
+\section*{File Naming Conventions}
+
+\begin{tcolorbox}[colback=primary!5, colframe=primary, title=\faFileCode\ Naming Standards]
+\textbf{Production Code (\texttt{src/}):}
+\begin{itemize}
+    \item \texttt{lowercase\_with\_underscores.py}
+    \item \texttt{ClassNameInPascalCase}
+    \item \texttt{function\_name\_in\_snake\_case()}
+\end{itemize}
+
+\textbf{Test Files (\texttt{tests/}):}
+\begin{itemize}
+    \item \texttt{test\_*.py} (prefix with "test\_")
+    \item Mirror structure: \texttt{src/controllers/classical\_smc.py} → \texttt{tests/test\_controllers/test\_classical\_smc.py}
+\end{itemize}
+
+\textbf{Scripts (\texttt{scripts/}):}
+\begin{itemize}
+    \item Executable tools (not imported)
+    \item \texttt{generate\_figures.py}, \texttt{analyze\_results.py}
+\end{itemize}
+
+\textbf{NEVER Create:}
+\begin{itemize}
+    \item Directories with braces: \texttt{\{dir\}/}
+    \item Spaces in names: \texttt{my folder/}
+    \item Windows device names: \texttt{nul}, \texttt{con}, \texttt{prn}
+\end{itemize}
+\end{tcolorbox}
+
+\section*{Directory Placement Rules}
+
+\begin{multicols}{2}
+
+\textbf{\texttt{src/} - Production Code}
+\begin{itemize}
+    \item Controllers, models, utils
+    \item Frameworks (even with pytest imports!)
+    \item Anything imported by production
+\end{itemize}
+
+\textbf{\texttt{scripts/} - Dev Tools}
+\begin{itemize}
+    \item Executed, not imported
+    \item One-off analysis scripts
+    \item Figure generators
+\end{itemize}
+
+\columnbreak
+
+\textbf{\texttt{tests/} - Pytest Tests}
+\begin{itemize}
+    \item \texttt{test\_*.py} files
+    \item Unit, integration, system tests
+    \item Mirror \texttt{src/} structure
+\end{itemize}
+
+\textbf{Root - Essentials Only}
+\begin{itemize}
+    \item Target: ≤19 visible items
+    \item Currently: 14 items [OK]
+    \item No temporary files!
+\end{itemize}
+
+\end{multicols}
+
+\section*{Quality Gates Enforcement}
+
+\begin{tcolorbox}[colback=warning!10, colframe=warning, title=\faCheckSquare\ Mandatory Quality Gates]
+\textbf{Gate 1: Critical Issues = 0 [MANDATORY]}
+
+Any P0 bug blocks merge
+
+\textbf{Gate 2: High-Priority Issues ≤ 3 [REQUIRED]}
+
+P1 issues tracked, must have timeline
+
+\textbf{Gate 3: Test Pass Rate = 100\% [MANDATORY]}
+
+4,563/4,563 tests must pass
+
+\textbf{Gate 4: Root Items ≤ 19 [REQUIRED]}
+
+Currently 14 [OK] - prevents root clutter
+
+\textbf{Gate 5: Malformed Names = 0 [MANDATORY]}
+
+No braces, spaces, device names in paths
+\end{tcolorbox}
+
+\section*{Key Takeaways}
+
+\begin{summary}
+\textbf{Architectural Invariants:} Patterns that LOOK like bugs but are INTENTIONAL (document these!)
+
+\textbf{Compatibility Layers:} \texttt{src/optimizer/} → \texttt{src/optimization/} (backward compat, don't delete!)
+
+\textbf{Re-Export Chains:} \texttt{simulation\_context.py} in 3 locations (import flexibility)
+
+\textbf{Model Variants:} 8 dynamics files = different accuracy/speed tradeoffs (NOT redundant)
+
+\textbf{Framework Files:} \texttt{test\_automation.py} has pytest imports BUT is production code (\texttt{src/}, not \texttt{tests/})
+
+\textbf{Design Patterns:} Factory (controller creation), Strategy (swappable dynamics), Dependency Injection (testable)
+
+\textbf{File Naming:} \texttt{lowercase\_underscore.py}, \texttt{test\_*.py} prefix, mirror structure
+
+\textbf{Directory Rules:} \texttt{src/} (production), \texttt{scripts/} (dev tools), \texttt{tests/} (pytest), Root (≤19 items)
+
+\textbf{Quality Gates:} 5 mandatory checks (critical bugs=0, test pass=100\%, malformed names=0, root items≤19, high-priority≤3)
+
+\textbf{Classification Checklist:} Exported? Imported by production? Framework? → Determines location
+\end{summary}
+
+\subsection*{Quick Reference: Architecture Commands}
+
+\quickref{Validate Architecture}{
+\begin{lstlisting}[style=yaml, numbers=none]
+# Check for architectural violations
+python scripts/architecture/validate_structure.py
+
+# List files without corresponding tests
+python scripts/architecture/find_untested.py
+
+# Check naming conventions
+python scripts/architecture/check_naming.py
+\end{lstlisting}
+}
+
+\subsection*{What's Next?}
+
+\begin{keypoint}
+\textbf{E016: Attribution \& Citations}
+
+Dependency licenses, academic citations, contributor acknowledgments, compliance requirements
+
+\textbf{Remember:} Document intentional patterns - what looks like a bug might be a feature!
+\end{keypoint}
+
+\end{document}

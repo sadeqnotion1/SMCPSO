@@ -1,0 +1,216 @@
+% ============================================================================
+% Speaker Scripts Configuration
+% ============================================================================
+% Shared configuration for comprehensive speaker scripts
+% Provides: packages, custom commands, formatting for academic lecture style
+% ============================================================================
+
+% Document class configured in main file
+
+% Encoding and fonts
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+
+% Page layout
+\usepackage[margin=1in]{geometry}
+\usepackage{fancyhdr}
+
+% Typography
+\usepackage{microtype}
+\usepackage{parskip}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.5em}
+
+% Colors
+\usepackage{xcolor}
+\definecolor{sectioncolor}{RGB}{0,102,204}
+\definecolor{subsectioncolor}{RGB}{0,153,76}
+\definecolor{sliderefcolor}{RGB}{102,102,102}
+\definecolor{insightcolor}{RGB}{153,0,153}
+\definecolor{transitioncolor}{RGB}{204,102,0}
+
+% Lists
+\usepackage{enumitem}
+\setlist[itemize]{leftmargin=*, topsep=0.3em, itemsep=0.2em}
+\setlist[enumerate]{leftmargin=*, topsep=0.3em, itemsep=0.2em}
+
+% Math
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+
+% Tables
+\usepackage{booktabs}
+\usepackage{tabularx}
+
+% Graphics
+\usepackage{graphicx}
+
+% Simple code block environment using alltt (works inside command arguments)
+\usepackage{alltt}
+
+% Define a simple code environment that works everywhere
+\newenvironment{codeblock}{%
+    \begin{quote}
+    \small\ttfamily
+    \obeylines
+    \obeyspaces
+}{%
+    \end{quote}
+}
+
+% Hyperlinks - using basic url package to avoid hyperref compatibility issues
+\usepackage{url}
+\urlstyle{same}
+
+% ============================================================================
+% CUSTOM COMMANDS - STRUCTURAL
+% ============================================================================
+
+% Part divider
+\newcommand{\speakerpart}[1]{%
+    \newpage
+    \part*{\textcolor{sectioncolor}{#1}}
+    \addcontentsline{toc}{part}{#1}
+}
+
+% Section divider
+\newcommand{\speakersection}[2]{%
+    \newpage
+    \section*{\textcolor{sectioncolor}{Section #1: #2}}
+    \addcontentsline{toc}{section}{Section #1: #2}
+}
+
+% Slide reference header
+\newcommand{\slideref}[2]{%
+    \subsection*{\textcolor{sliderefcolor}{[Slide #1]} \textcolor{subsectioncolor}{#2}}
+    \addcontentsline{toc}{subsection}{Slide #1: #2}
+}
+
+% Time estimate
+\newcommand{\speakertime}[1]{%
+    \textit{\textcolor{sliderefcolor}{[Estimated speaking time: #1 minutes]}}
+}
+
+% ============================================================================
+% CUSTOM COMMANDS - CONTENT BLOCKS
+% ============================================================================
+
+% Context block (why this slide matters)
+\newcommand{\context}[1]{%
+    \textbf{\textcolor{subsectioncolor}{Context:}}
+
+    #1
+}
+
+% Main content block (detailed explanation)
+\newcommand{\maincontent}[1]{%
+    \textbf{\textcolor{subsectioncolor}{Main Content:}}
+
+    #1
+}
+
+% Key insights block (deep understanding)
+\newcommand{\insights}[1]{%
+    \textbf{\textcolor{insightcolor}{Key Insights:}}
+
+    #1
+}
+
+% Connections block (links to other content)
+\newcommand{\connections}[1]{%
+    \textbf{\textcolor{subsectioncolor}{Connections:}}
+
+    #1
+}
+
+% Anticipated Q&A block
+\newcommand{\anticipatedqa}[1]{%
+    \textbf{\textcolor{subsectioncolor}{Anticipated Questions:}}
+
+    #1
+}
+
+% Transition to next slide
+\newcommand{\transition}[1]{%
+    \textbf{\textcolor{transitioncolor}{Transition:}}
+
+    \textit{#1}
+}
+
+% ============================================================================
+% CUSTOM COMMANDS - INLINE FORMATTING
+% ============================================================================
+
+% Emphasize key terms
+\newcommand{\term}[1]{\textbf{#1}}
+
+% Mathematical notation shortcuts
+\newcommand{\slidingsurf}{s}
+\newcommand{\lyap}{V}
+\newcommand{\ctrl}{u}
+\newcommand{\state}{\mathbf{x}}
+\newcommand{\gains}{\mathbf{k}}
+
+% Code reference (robust version for use in moving arguments)
+\DeclareRobustCommand{\code}[1]{\texttt{#1}}
+
+% Research task reference
+\newcommand{\taskref}[1]{\textcolor{sliderefcolor}{[Task #1]}}
+
+% File path reference
+\newcommand{\filepath}[1]{\texttt{\small #1}}
+
+% ============================================================================
+% CUSTOM COMMANDS - SPECIAL BLOCKS
+% ============================================================================
+
+% Important note box
+\newenvironment{importantnote}{%
+    \begin{quote}
+    \textbf{\textcolor{insightcolor}{Important Note:}}
+    \itshape
+}{%
+    \end{quote}
+}
+
+% Technical detail box
+\newenvironment{technicaldetail}{%
+    \begin{quote}
+    \textbf{\textcolor{subsectioncolor}{Technical Detail:}}
+    \small
+}{%
+    \end{quote}
+}
+
+% Example box
+\newenvironment{speakerexample}{%
+    \begin{quote}
+    \textbf{\textcolor{subsectioncolor}{Example:}}
+}{%
+    \end{quote}
+}
+
+% ============================================================================
+% HEADER/FOOTER SETUP
+% ============================================================================
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small DIP-SMC-PSO Speaker Scripts}
+\fancyhead[R]{\small \leftmark}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% ============================================================================
+% TABLE OF CONTENTS FORMATTING
+% ============================================================================
+
+\setcounter{tocdepth}{3}
+\setcounter{secnumdepth}{0}
+
+% ============================================================================
+% END OF CONFIGURATION
+% ============================================================================

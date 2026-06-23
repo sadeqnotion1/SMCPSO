@@ -1,0 +1,119 @@
+\section{Code and Data Availability}
+\label{app:code}
+
+\subsection{Source Code Repository}
+All source code, simulation scripts, and documentation are publicly available under the MIT License at:
+
+\begin{center}
+\url{https://github.com/theSadeQ/dip-smc-pso}
+\end{center}
+
+The repository contains the complete implementation of all controllers, PSO optimization, simulation framework, and analysis tools described in this report.
+
+\subsection{Repository Structure}
+The codebase is organized into the following modules:
+
+\begin{itemize}
+\item \texttt{src/controllers/} - SMC controller implementations
+  \begin{itemize}
+  \item \texttt{classical\_smc.py} - Classical SMC (Section \ref{sec:controllers})
+  \item \texttt{sta\_smc.py} - Super-Twisting Algorithm SMC
+  \item \texttt{adaptive\_smc.py} - Adaptive SMC with online gain tuning
+  \item \texttt{hybrid\_adaptive\_sta\_smc.py} - Hybrid controller (best performance)
+  \item \texttt{factory.py} - Controller factory for instantiation
+  \end{itemize}
+
+\item \texttt{src/plant/} - System dynamics and plant models
+  \begin{itemize}
+  \item \texttt{simplified\_dynamics.py} - Simplified DIP model
+  \item \texttt{full\_dynamics.py} - Full nonlinear DIP model (Section \ref{sec:model})
+  \end{itemize}
+
+\item \texttt{src/optimizer/} - PSO optimization framework
+  \begin{itemize}
+  \item \texttt{pso\_optimizer.py} - PSO implementation (Algorithm \ref{alg:pso})
+  \end{itemize}
+
+\item \texttt{src/utils/} - Analysis, visualization, and utilities
+  \begin{itemize}
+  \item \texttt{visualization/} - Plotting tools for all figures
+  \item \texttt{analysis/} - Statistical analysis and benchmark tools
+  \end{itemize}
+
+\item \texttt{thesis/scripts/} - Figure generation and data processing
+  \begin{itemize}
+  \item \texttt{generate\_figures.py} - Generates all figures in this report
+  \end{itemize}
+\end{itemize}
+
+\subsection{Simulation Results and Data}
+All experimental data presented in Section \ref{sec:results} is reproducible via:
+
+\begin{lstlisting}[language=bash, caption=Reproduce Benchmark Results]
+# Run comprehensive benchmarks
+python simulate.py --ctrl classical_smc --run-pso --save gains_classical.json
+python simulate.py --ctrl sta_smc --run-pso --save gains_sta.json
+python simulate.py --ctrl adaptive_smc --run-pso --save gains_adaptive.json
+python simulate.py --ctrl hybrid_adaptive_sta_smc --run-pso --save gains_hybrid.json
+
+# Generate all figures
+python thesis/scripts/generate_figures.py
+\end{lstlisting}
+
+Raw simulation data files:
+\begin{itemize}
+\item \texttt{optimization\_results/} - PSO convergence data (Figure \ref{fig:pso_convergence})
+\item \texttt{benchmarks/} - Performance benchmark results (Tables \ref{tab:comprehensive_part1}--\ref{tab:comprehensive_part2})
+\item \texttt{thesis/figures/} - Generated figures (Figures \ref{fig:pso_swarm}--\ref{fig:performance_radar})
+\end{itemize}
+
+\subsection{Controller Implementation Examples}
+
+\subsubsection{Classical SMC Implementation}
+\begin{lstlisting}[language=Python, caption=Classical SMC Controller (src/controllers/classical\_smc.py)]
+def compute_control(self, state, last_control, history):
+    """Classical SMC control computation."""
+    s = self.compute_sliding_variable(state)
+    u = -self.gains * np.sign(s)
+    return self.saturate(u)
+\end{lstlisting}
+
+\subsubsection{PSO Optimization}
+\begin{lstlisting}[language=Python, caption=PSO Gain Tuning (src/optimizer/pso\_optimizer.py)]
+optimizer = PSOTuner(
+    bounds=gain_bounds,
+    swarm_size=30,
+    max_iter=100,
+    cost_function=evaluate_performance
+)
+optimal_gains, best_cost = optimizer.optimize()
+\end{lstlisting}
+
+\subsection{Running the Simulation}
+Basic usage examples for reproducing results:
+
+\begin{lstlisting}[language=bash, caption=Simulation Commands]
+# Single controller simulation with plots
+python simulate.py --ctrl classical_smc --plot
+
+# Load pre-tuned gains and simulate
+python simulate.py --load tuned_gains.json --plot
+
+# Run PSO optimization for a controller
+python simulate.py --ctrl hybrid_adaptive_sta_smc --run-pso --save gains_hybrid.json
+
+# Web interface (interactive)
+streamlit run streamlit_app.py
+\end{lstlisting}
+
+\subsection{Software Requirements}
+The implementation requires Python 3.9+ with the following dependencies:
+\begin{itemize}
+\item NumPy 1.21+ (numerical computation)
+\item SciPy 1.7+ (ODE integration)
+\item Matplotlib 3.4+ (visualization)
+\item PySwarms 1.3+ (PSO optimization)
+\item Streamlit 1.10+ (web interface)
+\end{itemize}
+
+Complete installation instructions and dependencies are listed in \texttt{requirements.txt} in the repository root.

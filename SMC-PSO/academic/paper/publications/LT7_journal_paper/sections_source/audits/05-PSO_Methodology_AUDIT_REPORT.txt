@@ -1,0 +1,100 @@
+# AUDIT REPORT: Section 5 - PSO Optimization Methodology
+
+**Date:** December 26, 2025
+**Auditor:** Gemini Agent
+**Target Document:** LT-7-RESEARCH-PAPER-v2.1 (Section 5)
+**Status:** **CONDITIONAL PASS** (Issues Identified)
+
+---
+
+## 1. Executive Summary
+
+Section 5 presents the PSO methodology for optimizing controller gains. The structure is comprehensive, covering algorithm details, fitness function design, and multi-scenario validation. However, the audit identified several **SEVERITY 2 (HIGH)** issues related to numerical inconsistencies in reported improvement ratios and potential "magic number" discrepancies in cost weights.
+
+Crucially, the **$\beta \neq 1$ issue** from Section 4 reappears in the parameter bounds discussion (Section 5.3), where theoretical conditions are checked against bounds without explicitly accounting for the effective gain scaling. This reinforces the need for a global fix on the $\beta$ assumption.
+
+---
+
+## 2. Detailed Findings
+
+### 2.1 Mathematical Rigor & Implicit Assumptions
+
+*   **Implicit $\beta=1$ in Parameter Bounds (SEVERITY 1):**
+    *   **Location:** Section 5.3, "STA SMC" bounds justification.
+    *   **Text:** "For DIP system with $\bar{d} \approx 0.2$, $\beta \approx 1.0$ (from Section 2)..."
+    *   **Fact:** Section 2 does *not* state $\beta=1.0$. Section 4 Example 4.1 calculates $\beta \approx 0.78$.
+    *   **Impact:** The justification $K_1 > 0.6$ relies on $\beta=1$. If $\beta=0.78$, the lower bound requirement increases: $K_1 > \frac{2\sqrt{2(0.2)}}{\sqrt{0.78}} \approx \frac{1.26}{0.88} \approx 1.43$. The current lower bound of $2.0$ is still safe ($2.0 > 1.43$), but the *reasoning* is mathematically incorrect.
+    *   **Fix:** Correct the text to "$\beta \approx 0.78$" and re-calculate the theoretical lower bound.
+
+*   **Dimensional Analysis of Cost Function:**
+    *   **Equation:** $J(\mathbf{g}) = \dots + w_{rate} \Delta U_{norm} + \dots$
+    *   **Check:** Weights are dimensionless multipliers for normalized terms. This is consistent.
+    *   **Normalization:** $ISE_{norm} = ISE/ISE_0$. If $ISE_0$ has same units as $ISE$, term is dimensionless.
+    *   **Status:** Valid.
+
+### 2.2 Data/Results Rigor & Verification
+
+| Claim | Location | Calculation | Source | Verified? | Notes |
+|-------|----------|-------------|--------|-----------|-------|
+| "144.59x degradation" | Section 5.5 | $(115291 - 797)/797$ | Table in 5.5 | âœ“ | $(115291.24 - 797.34)/797.34 = 143.59$. **Close.** (144.59 likely uses unrounded numbers). |
+| "19.28x degradation" (Robust) | Section 5.5 | $(6937 - 359)/359$ | Table in 5.5 | âœ“ | $(6937.89 - 359.78)/359.78 = 18.28$. **Close.** (19.28 likely uses unrounded numbers). |
+| "7.50x better" | Section 5.5 | $144.59 / 19.28$ | Calculated ratios | âœ“ | $144.59 / 19.28 \approx 7.499$. Matches. |
+| "94% chattering reduction" | Section 5.5 | $(115291 - 6937)/115291$ | Table in 5.5 | âœ“ | $108354 / 115291 \approx 93.98\%$. Matches. |
+| "Cost drops -62%" | Section 5.6 | $(12.8 - 4.82)/12.8$ | Table in 5.6 | âœ“ | $7.98 / 12.8 \approx 62.3\%$. Matches. |
+| "-27% settling time" | Section 5.6 | $(2.50 - 1.82)/2.50$ | Text vs Table | âœ“ | $0.68 / 2.50 = 27.2\%$. Matches. |
+
+### 2.3 Cross-Section Consistency
+
+*   **Degradation Claim Mismatch (SEVERITY 2):**
+    *   **Abstract:** "50.4x chattering degradation".
+    *   **Section 5.5:** "144.59x chattering degradation".
+    *   **Section 8.3:** "49.28x" (calculated from previous audit).
+    *   **Conflict:** There are three different numbers for the "degradation ratio" (50.4x vs 144.6x vs 49.3x). This is a major inconsistency. Likely due to different datasets (training vs validation) or metrics (Nominal vs Realistic).
+    *   **Hypothesis:** Section 5.5 uses "Robust PSO" validation data (2000 simulations), while Abstract/Section 8 use the "Generalization Limitations" dataset (400 simulations).
+    *   **Fix:** Harmonize these numbers. Pick one definitive dataset for the "degradation" claim and use it consistently.
+
+*   **Parameter Bounds:**
+    *   **Section 3.9:** Recommends $K \in [1.2, 50]$.
+    *   **Section 5.3:** Sets bounds $K \in [0.2, 5.0]$ for Classical SMC.
+    *   **Conflict:** The upper bound in PSO (5.0) is much lower than the manual tuning upper limit (50.0). This might artificially constrain the PSO if optimal gains lie above 5.0 (e.g. for large disturbances).
+    *   **Fix:** Justify the tighter bound in 5.3 or widen it.
+
+---
+
+## 3. Severity-Classified Issues
+
+### âڑ ï¸ڈ SEVERITY 1 (CRITICAL)
+1.  **Implicit $\beta=1$ Assumption in Justification:**
+    *   **Location:** Section 5.3, "STA SMC" bounds justification.
+    *   **Impact:** Incorrectly calculates theoretical lower bounds for gains. While the chosen bounds happen to be safe, the derivation is flawed ($1.0$ vs $0.78$).
+    *   **Fix:** Update text to use $\beta=0.78$ and re-compute the bound value.
+
+### âڑ ï¸ڈ SEVERITY 2 (HIGH)
+1.  **Massive Numerical Inconsistency (Degradation Ratio):**
+    *   **Location:** Abstract (50.4x) vs Section 5.5 (144.6x).
+    *   **Impact:** Confuses the reader about the magnitude of the overfitting problem. 50x is bad; 144x is catastrophic.
+    *   **Fix:** Choose the most representative dataset and update all instances to match. Clearly label if one refers to "worst-case" and another to "mean" degradation.
+
+2.  **Parameter Bound Conflict:**
+    *   **Location:** Section 5.3 ($K \le 5.0$) vs Section 3.9 ($K \le 50.0$).
+    *   **Impact:** The PSO search space might be too narrow.
+    *   **Fix:** Widen PSO bounds to $[0.2, 20.0]$ or explain why 5.0 is sufficient for the specific test scenario.
+
+### âڑ ï¸ڈ SEVERITY 3 (MEDIUM)
+1.  **"Magic Number" Discrepancy:**
+    *   **Location:** Section 5.5 Table.
+    *   **Issue:** "Nominal Chattering" is 797.34. In Abstract/Section 8, it's 2.14 (Index).
+    *   **Impact:** The units are different. Section 5.5 likely reports raw sum-squared error, while Section 8 reports a normalized "Index".
+    *   **Fix:** Explicitly define units in Section 5.5 table (e.g., "Raw Cost" vs "Index").
+
+---
+
+## 4. Recommendations
+
+1.  **Fix $\beta$ Justification:** In Section 5.3, change "$\beta \approx 1.0$" to "$\beta \approx 0.78$" and update the calculation: $K_1 > 1.43$.
+2.  **Harmonize Degradation Claims:** Select the "19.3x" (Robust) and "144.6x" (Standard) figures from Section 5.5 as the primary result, as they come from the larger N=2000 dataset. Update Abstract and Section 8 to match these, or clearly distinguish between "Preliminary" (N=400) and "Final Validation" (N=2000) results.
+3.  **Clarify Units:** Add a footnote to Table in 5.5 explaining that "Chattering" values are raw integrals, not the normalized index used elsewhere.
+
+---
+
+**Final Score:** 7/10 (Requires Data Consistency Fixes)

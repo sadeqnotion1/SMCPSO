@@ -1,0 +1,28 @@
+{
+  "controller_name": "adaptive_smc",
+  "original_gains": [
+    2.142207994033271,
+    3.355938383745894,
+    7.200505646106438,
+    0.3374379808658892,
+    0.2852044368386544
+  ],
+  "optimized_gains": [
+    1.1818169932494254,
+    3.4611625953336524,
+    7.493099068690231,
+    0.38381204933804214,
+    0.34968668834712635
+  ],
+  "energy_before": 0.0,
+  "energy_after": 0.0,
+  "rmse_before": 8.513831406947817,
+  "rmse_after": 8.513831406947817,
+  "fitness_before": 2.554149422084345,
+  "fitness_after": 2.554149422084345,
+  "improvement_pct": 0.0,
+  "n_iterations": 50,
+  "n_particles": 30,
+  "converged": true,
+  "optimization_time_sec": 1796.818039
+}

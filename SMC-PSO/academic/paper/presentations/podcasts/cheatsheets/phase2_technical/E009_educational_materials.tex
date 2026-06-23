@@ -1,0 +1,882 @@
+% ==============================================================================
+% EPISODE 009: EDUCATIONAL MATERIALS AND LEARNING PATHS
+% ==============================================================================
+\input{../templates/master_template.tex}
+\input{../templates/tikz_components.tex}
+
+% Episode-specific title
+\renewcommand{\episodetitle}{E009: Educational Materials}
+
+\begin{document}
+
+% ==============================================================================
+% TITLE PAGE
+% ==============================================================================
+\makeepisodetitle{E009: Educational Materials \& Learning Paths}{From Zero to Research: 5 Paths, 44 Episodes, 985 Files}{2}{15-20 minutes}
+
+% ==============================================================================
+% PAGE 1: THE EDUCATIONAL CHALLENGE
+% ==============================================================================
+\learningobjective{Understand the 5 learning paths (Path 0-4), beginner roadmap (125-150 hrs), NotebookLM podcast series (44 episodes), documentation navigation (985 files), and educational philosophy}
+
+\section*{The Educational Challenge: Audience Diversity}
+
+\begin{keypoint}
+\textbf{Question:} How do you teach DIP-SMC to complete beginners AND advanced researchers?
+
+\textbf{Answer:} Five learning paths for five user types, each with tailored documentation
+\end{keypoint}
+
+\subsection*{Five User Personas}
+
+\begin{tcolorbox}[colback=primary!5, colframe=primary, title=\faUsers\ User Types \& Entry Points]
+\textbf{The Student (Path 0):}
+\begin{itemize}
+    \item \textbf{Background:} Zero coding/control theory knowledge
+    \item \textbf{Need:} ~125 hours of prerequisite study (about a semester)
+    \item \textbf{Entry:} \texttt{.ai\_workspace/edu/beginner-roadmap.md}
+\end{itemize}
+
+\textbf{The Experimenter (Path 1):}
+\begin{itemize}
+    \item \textbf{Background:} Knows Python, wants quick results
+    \item \textbf{Need:} Run first simulation in 1-2 hours
+    \item \textbf{Entry:} \texttt{docs/guides/tutorial\_01\_first\_simulation.md}
+\end{itemize}
+
+\textbf{The Engineer (Path 2):}
+\begin{itemize}
+    \item \textbf{Background:} Understands basic control theory
+    \item \textbf{Need:} Compare controllers, tune gains (4-8 hours)
+    \item \textbf{Entry:} Tutorials 02-03 (comparison \& PSO)
+\end{itemize}
+
+\textbf{The Researcher (Path 3):}
+\begin{itemize}
+    \item \textbf{Background:} Wants to implement custom algorithms
+    \item \textbf{Need:} Research workflows, experiment design (8-12 hours)
+    \item \textbf{Entry:} Tutorials 04-05 (custom controllers \& research)
+\end{itemize}
+
+\textbf{The Expert (Path 4):}
+\begin{itemize}
+    \item \textbf{Background:} Experienced developer, wants to contribute
+    \item \textbf{Need:} Architectural mastery (12+ hours)
+    \item \textbf{Entry:} \texttt{docs/architecture/} + source code
+\end{itemize}
+\end{tcolorbox}
+
+\begin{warning}
+\textbf{Common Mistake:} Forcing everyone through the same linear path
+
+\textbf{Reality:} Learners arrive with different backgrounds - need multiple entry points!
+\end{warning}
+
+% ==============================================================================
+% PAGE 2: PATH 0 - BEGINNER ROADMAP
+% ==============================================================================
+\newpage
+
+\section*{Path 0: Complete Beginner Roadmap}
+
+\begin{keypoint}
+\textbf{Target:} ZERO prerequisites (never coded, never seen physics/control theory)
+
+\textbf{Duration:} 125-150 hours over 4-6 months (about a semester)
+
+\textbf{Location:} \texttt{.ai\_workspace/edu/beginner-roadmap.md}
+\end{keypoint}
+
+\subsection*{Five Phases: Foundation to Mastery}
+
+\begin{tcolorbox}[colback=secondary!10, colframe=secondary, title=\faGraduationCap\ Phase 1: Foundations (40 hours)]
+\textbf{Module 1: Computing Basics (10 hours)}
+\begin{itemize}
+    \item What is an OS? File systems, command line fundamentals
+    \item Text editors vs IDEs
+\end{itemize}
+
+\textbf{Module 2: Python Programming (15 hours)}
+\begin{itemize}
+    \item Variables, loops, functions, data structures
+    \item NumPy arrays and slicing
+    \item Matplotlib for plotting
+\end{itemize}
+
+\textbf{Module 3: Physics Review (10 hours)}
+\begin{itemize}
+    \item Newton's laws, force and torque
+    \item Energy and momentum
+\end{itemize}
+
+\textbf{Module 4: Mathematics (5 hours)}
+\begin{itemize}
+    \item Linear algebra: vectors, matrices, dot products
+    \item Trigonometry for angles
+\end{itemize}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=accent!10, colframe=accent, title=\faBook\ Phase 2: Core Concepts (30 hours)]
+\textbf{Module 1: Control Theory Fundamentals (15 hours)}
+\begin{itemize}
+    \item What is a control system? Open-loop vs closed-loop
+    \item PID control, stability concepts
+\end{itemize}
+
+\textbf{Module 2: Sliding Mode Control (10 hours)}
+\begin{itemize}
+    \item Why SMC? Reaching law and sliding surface design
+    \item Chattering problem, super-twisting algorithm
+\end{itemize}
+
+\textbf{Module 3: Optimization Basics (5 hours)}
+\begin{itemize}
+    \item What is optimization? Cost functions and constraints
+    \item Introduction to PSO (particle swarms, global vs local search)
+\end{itemize}
+\end{tcolorbox}
+
+\subsection*{Phases 3-5: Practice to Mastery}
+
+\begin{multicols}{2}
+
+\textbf{Phase 3: Hands-On Practice (25 hours)}
+\begin{itemize}
+    \item Run first DIP simulation
+    \item Experiment with controller parameters
+    \item Visualize results, understand metrics
+\end{itemize}
+
+\textbf{Phase 4: Advancing Skills (30 hours)}
+\begin{itemize}
+    \item Advanced Python (OOP, typing, testing)
+    \item Reading source code
+    \item Understanding simulation engine
+\end{itemize}
+
+\columnbreak
+
+\textbf{Phase 5: Mastery \& Specialization (25-75 hours, branching)}
+
+\textbf{Track A: Research}
+\begin{itemize}
+    \item Paper reading, experiment design
+\end{itemize}
+
+\textbf{Track B: Development}
+\begin{itemize}
+    \item Custom controllers, new features
+\end{itemize}
+
+\textbf{Track C: Deployment}
+\begin{itemize}
+    \item Embedded systems, HIL
+\end{itemize}
+
+\end{multicols}
+
+\begin{tip}
+\textbf{Status:} Phases 1-2 complete (~2,000 lines), Phases 3-5 outlined (500 lines)
+
+\textbf{Graduation:} Phase 5 completion → Path 1 (Tutorial 01)
+\end{tip}
+
+% ==============================================================================
+% PAGE 3: PATHS 1-4 & TUTORIALS
+% ==============================================================================
+\newpage
+
+\section*{Learning Paths 1-4: Progressive Mastery}
+
+\begin{tcolorbox}[colback=primary!5, colframe=primary, title=\faRoad\ Four Progressive Paths]
+\textbf{Path 1: Quick Start (1-2 hours)}
+\begin{itemize}
+    \item \textbf{Target:} Knows Python, wants immediate results
+    \item \textbf{Material:} Tutorial 01 - First Simulation
+    \item \textbf{Steps:} Install → Run \texttt{python simulate.py --ctrl classical\_smc --plot} → Interpret results
+    \item \textbf{Outcome:} See DIP stabilize in 10 seconds, high-level understanding
+\end{itemize}
+
+\textbf{Path 2: Intermediate (4-8 hours)}
+\begin{itemize}
+    \item \textbf{Target:} Understands basic control theory, wants to compare/tune
+    \item \textbf{Material:} Tutorials 02-03
+    \item Tutorial 02: Controller comparison (7 controllers × 4 metrics, understand tradeoffs)
+    \item Tutorial 03: PSO optimization (define cost function, run PSO, validate)
+\end{itemize}
+
+\textbf{Path 3: Advanced (8-12 hours)}
+\begin{itemize}
+    \item \textbf{Target:} Wants to implement custom controllers or run research
+    \item \textbf{Material:} Tutorials 04-05
+    \item Tutorial 04: Custom controller (extend base class, factory integration, tests)
+    \item Tutorial 05: Research workflows (reproduce MT-5/MT-8/LT-7, experimental design, publication figures)
+\end{itemize}
+
+\textbf{Path 4: Expert (12+ hours)}
+\begin{itemize}
+    \item \textbf{Target:} Understand architecture, contribute to project
+    \item \textbf{Material:} Source code deep dive, \texttt{docs/architecture/}
+    \item Design patterns, testing standards, contribution guidelines
+\end{itemize}
+\end{tcolorbox}
+
+\subsection*{Tutorial System: Five Tutorials}
+
+\begin{tabular}{lll}
+\toprule
+\textbf{Tutorial} & \textbf{Hours} & \textbf{What You Learn} \\
+\midrule
+01: First Sim & 1-2 & Run simulation with zero theory. Observe stabilization, modify initial conditions \\
+02: Comparison & 4 & Run all 7 controllers, compare metrics (settling time, overshoot, energy, chattering). Understand tradeoffs. \\
+03: PSO Tuning & 4 & Tune controller gains automatically. Observe PSO convergence, validate results. \\
+04: Custom Ctrl & 8 & Implement new controller from scratch. Integrate with codebase, add tests. \\
+05: Research & 12 & Reproduce MT-5 benchmark. Understand experimental design, generate publication figures. \\
+\bottomrule
+\end{tabular}
+
+\begin{tip}
+\textbf{Cross-References:} Each path links to next level
+
+Path 0 Phase 5 → Tutorial 01 (Path 1) → Tutorial 02-03 (Path 2) → Tutorial 04-05 (Path 3) → Architecture docs (Path 4)
+\end{tip}
+
+% ==============================================================================
+% PAGE 4: NOTEBOOKLM PODCAST SERIES
+% ==============================================================================
+\newpage
+
+\section*{NotebookLM Podcast Series: Audio Learning}
+
+\begin{keypoint}
+\textbf{Purpose:} Convert 125-hour beginner roadmap to podcast audio for commute/exercise learning
+
+\textbf{Series:} 44 episodes, ~40 hours audio, ~125 hours content (3× compression)
+
+\textbf{Status:} All episodes complete (November 2025)
+\end{keypoint}
+
+\subsection*{Series Structure by Phase}
+
+\begin{tcolorbox}[colback=secondary!10, colframe=secondary, title=\faHeadphones\ 44 Episodes Across 4 Phases]
+\textbf{Phase 1: Foundations (11 episodes, 4 hours audio, 40 hours content)}
+\begin{itemize}
+    \item E001: Computing Basics
+    \item E002-E003: Python Fundamentals Parts 1-2 (variables, loops, functions, classes)
+    \item E004: NumPy and Matplotlib
+    \item E005: Physics Review (Newton's laws)
+    \item E006: Linear Algebra
+    \item E007: Trigonometry for Angles
+    \item E008-E011: Practice exercises, Q\&A, walkthroughs
+\end{itemize}
+
+\textbf{Phase 2: Core Concepts (12 episodes, 5 hours audio, 30 hours content)}
+\begin{itemize}
+    \item Control systems intro, PID control, stability
+    \item SMC fundamentals, super-twisting, adaptive control
+    \item PSO basics, cost functions
+\end{itemize}
+
+\textbf{Phase 3: Hands-On (8 episodes, 2.5 hours audio, 25 hours content)}
+\begin{itemize}
+    \item First simulation walkthrough
+    \item Parameter experimentation
+    \item Visualization techniques
+    \item Performance metrics interpretation
+\end{itemize}
+
+\textbf{Phase 4: Advancing Skills (13 episodes, 12-15 hours audio, 30 hours content)}
+\begin{itemize}
+    \item OOP Python, type hints, testing
+    \item Reading source code
+    \item Simulation engine deep dive
+    \item Controller architecture
+\end{itemize}
+\end{tcolorbox}
+
+\begin{warning}
+\textbf{Phase 5 Excluded:} Branching structure (3 tracks) incompatible with linear podcast format
+
+\textbf{Solution:} Phase 5 is documentation-only with specific papers, code examples, advanced tutorials
+\end{warning}
+
+\subsection*{TTS Optimization: Making Math Speakable}
+
+\begin{example}
+\textbf{Technique 1: Verbalize All Math}
+
+LaTeX: \texttt{\$v = w v + c\_1 (p - x)\$}
+
+Audio: "velocity equals inertia times velocity plus cognitive coefficient times the difference between personal best and position"
+
+\textbf{Listeners hear words, not symbols!}
+\end{example}
+
+\begin{example}
+\textbf{Technique 2: Spell Out Greek Letters}
+
+First mention: "theta (that's T-H-E-T-A), the angle of the first pendulum link"
+
+Subsequent mentions: "theta increases to 0.2 radians"
+
+\textbf{Don't assume pronunciation!}
+\end{example}
+
+\begin{example}
+\textbf{Technique 3: Enhanced Narratives}
+
+\textbf{Analogies:} "Sliding mode control is like a ball rolling down a valley. The sliding surface is the valley floor."
+
+\textbf{Progressive Revelation:} Introduce simple terms → Add details gradually
+
+\textbf{Retention:} Summarize every 5 minutes, repeat key points at episode end
+
+\textbf{Example:} Episode E002 explains variables 3 times with increasing depth
+\begin{itemize}
+    \item \textbf{1.} "Containers for values"
+    \item \textbf{2.} "Memory addresses with labels"
+    \item \textbf{3.} "Type system and mutability"
+\end{itemize}
+\end{example}
+
+% ==============================================================================
+% PAGE 5: DOCUMENTATION NAVIGATION
+% ==============================================================================
+\newpage
+
+\section*{Documentation Navigation: 985 Files System}
+
+\begin{keypoint}
+\textbf{Challenge:} How do 5 user types find relevant content among 985 files?
+
+\textbf{Solution:} Master navigation hub (\texttt{NAVIGATION.md}) as "library front desk"
+\end{keypoint}
+
+\subsection*{Master Hub: Four Entry Modes}
+
+\begin{tcolorbox}[colback=accent!10, colframe=accent, title=\faMap\ NAVIGATION.md Entry Points]
+\textbf{Mode 1: "I Want To..." (Intent-Based, 6 categories)}
+\begin{itemize}
+    \item "I want to learn the basics" → Path 0-1
+    \item "I want to compare controllers" → Tutorial 02
+    \item "I want to optimize gains" → Tutorial 03 + PSO docs
+    \item "I want to understand the code" → Architecture docs
+    \item "I want to run research experiments" → Research workflow docs
+    \item "I want to deploy on hardware" → HIL + embedded guides
+\end{itemize}
+
+\textbf{Mode 2: Persona-Based (4 user types)}
+\begin{itemize}
+    \item \textbf{Beginners} → Path 0
+    \item \textbf{Researchers} → Paths 2-3 + research tasks
+    \item \textbf{Developers} → Path 4 + architecture
+    \item \textbf{Educators} → Teaching materials + slides
+\end{itemize}
+
+\textbf{Mode 3: Category Index Directory (43 specialized indexes)}
+\begin{itemize}
+    \item Guides index (5 tutorials)
+    \item Theory index (SMC fundamentals, Lyapunov proofs)
+    \item Architecture index (design patterns, module structure)
+    \item Educational materials index
+\end{itemize}
+
+\textbf{Mode 4: Visual Navigation Tools}
+\begin{itemize}
+    \item Interactive sitemaps
+    \item Dependency graphs
+    \item Learning journey flowcharts
+\end{itemize}
+\end{tcolorbox}
+
+\begin{tip}
+\textbf{Think Library Front Desk, Not Card Catalog}
+
+\textbf{Without Master Hub:} Wander through 985 files randomly
+
+\textbf{With Master Hub:} Tell front desk what you need → Get personalized map showing 5-10 relevant files in 30 seconds
+
+Each of those 5 files links to deeper material if you want more
+\end{tip}
+
+\subsection*{Documentation Statistics}
+
+\begin{multicols}{2}
+
+\textbf{Total Files:} 985 documentation files
+\begin{itemize}
+    \item 814 files in \texttt{docs/}
+    \item 171 files in \texttt{.ai\_workspace/}
+\end{itemize}
+
+\textbf{Navigation Systems:} 11 total
+\begin{itemize}
+    \item NAVIGATION.md (master hub)
+    \item docs/index.md (Sphinx HTML)
+    \item guides/INDEX.md
+    \item README.md
+    \item 3 visual sitemaps
+    \item 2 interactive demos
+\end{itemize}
+
+\columnbreak
+
+\textbf{Category Indexes:} 43 index.md files
+\begin{itemize}
+    \item Across all documentation domains
+\end{itemize}
+
+\textbf{Learning Paths:} 5 paths
+\begin{itemize}
+    \item Path 0: 125-150 hrs (semester)
+    \item Path 1: 1-2 hrs
+    \item Path 2: 4-8 hrs
+    \item Path 3: 8-12 hrs
+    \item Path 4: 12+ hrs
+\end{itemize}
+
+\end{multicols}
+
+% ==============================================================================
+% PAGE 6: SPHINX DOCUMENTATION
+% ==============================================================================
+\newpage
+
+\section*{Sphinx Documentation System}
+
+\begin{keypoint}
+\textbf{Purpose:} Generate searchable HTML docs from 814 files in \texttt{docs/}
+
+\textbf{Build:} \texttt{sphinx-build -M html docs docs/\_build}
+
+\textbf{Serve:} \texttt{python -m http.server 9000 --directory docs/\_build/html}
+\end{keypoint}
+
+\subsection*{Five Major Sections}
+
+\begin{tcolorbox}[colback=primary!5, colframe=primary, title=\faBook\ Sphinx Structure]
+\textbf{Section 1: Guides}
+\begin{itemize}
+    \item Tutorials 01-05
+    \item Getting started, installation
+\end{itemize}
+
+\textbf{Section 2: Theory}
+\begin{itemize}
+    \item SMC fundamentals
+    \item Lyapunov stability proofs
+    \item PSO optimization theory
+    \item DIP dynamics
+\end{itemize}
+
+\textbf{Section 3: Architecture}
+\begin{itemize}
+    \item Module design
+    \item Controller factory pattern
+    \item Simulation engine internals
+    \item Testing strategy
+\end{itemize}
+
+\textbf{Section 4: API Reference}
+\begin{itemize}
+    \item Auto-generated from docstrings
+    \item Covers all 358 source files
+    \item Function signatures, parameters, return types
+\end{itemize}
+
+\textbf{Section 5: Research}
+\begin{itemize}
+    \item 72-hour roadmap
+    \item Tasks MT-5 through LT-7
+    \item Reproduction guides
+    \item Experiment documentation
+\end{itemize}
+\end{tcolorbox}
+
+\subsection*{Documentation Quality Standards}
+
+\begin{warning}
+\textbf{Quality Metric:} < 5 AI-ish patterns per file
+
+\textbf{Detection:} \texttt{python scripts/docs/detect\_ai\_patterns.py --file <file.md>}
+
+\textbf{Patterns to Avoid:}
+\begin{itemize}
+    \item "Let's explore..." (too conversational)
+    \item "comprehensive" without metrics (vague)
+    \item "delve into" (overused AI phrase)
+    \item Excessive enthusiasm (!!!)
+\end{itemize}
+
+\textbf{Target:} Direct technical writing in API docs, conversational OK in tutorials
+\end{warning}
+
+\subsection*{Auto-Rebuild Triggers}
+
+\begin{example}
+\textbf{Files That Trigger Rebuild:}
+\begin{itemize}
+    \item Sphinx source: \texttt{docs/*.md}, \texttt{docs/**/*.rst}
+    \item Static assets: \texttt{docs/\_static/*.css}, \texttt{docs/\_static/*.js}
+    \item Configuration: \texttt{docs/conf.py}, \texttt{docs/\_templates/*}
+    \item Navigation: \texttt{docs/index.rst}, any \texttt{toctree} directives
+\end{itemize}
+
+\textbf{After Changes:} Always rebuild, verify with \texttt{curl}, tell user to hard refresh browser (Ctrl+Shift+R)
+\end{example}
+
+% ==============================================================================
+% PAGE 7: AUDIENCE SEGMENTATION
+% ==============================================================================
+\newpage
+
+\section*{Audience Segmentation Strategy}
+
+\begin{keypoint}
+\textbf{Goal:} Ensure each audience type finds relevant content without drowning in 985 files
+\end{keypoint}
+
+\subsection*{Four Segmentation Mechanisms}
+
+\begin{tcolorbox}[colback=secondary!10, colframe=secondary, title=\faUsers\ Mechanism 1: Explicit Signposting]
+\textbf{In README.md:}
+\begin{itemize}
+    \item "Complete beginners: start with \texttt{.ai\_workspace/edu/beginner-roadmap.md}"
+    \item "Python users: start with \texttt{docs/guides/tutorial\_01\_first\_simulation.md}"
+    \item "Control theorists: start with \texttt{docs/theory/smc\_fundamentals.md}"
+    \item "Researchers: start with \texttt{.ai\_workspace/planning/research/72\_HOUR\_ROADMAP.md}"
+\end{itemize}
+
+\textbf{Clear entry points prevent wandering!}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=accent!10, colframe=accent, title=\faMapSigns\ Mechanism 2: Breadcrumbs in Every File]
+\textbf{Header Format:}
+\begin{itemize}
+    \item \textbf{Audience:} Beginners / Intermediate / Advanced Researchers / Developers
+    \item \textbf{Prerequisites:} Python basics, control theory / None / Lyapunov theory
+\end{itemize}
+
+\textbf{Prevents Beginners from Getting Lost in Advanced Material}
+\end{tcolorbox}
+
+\subsection*{Progressive Disclosure \& Layered Docs}
+
+\begin{multicols}{2}
+
+\textbf{Mechanism 3: Progressive Disclosure}
+
+\textbf{Tutorial 01:} How to run simulation (no math)
+
+\textbf{Tutorial 02:} Performance metrics (no derivations)
+
+\textbf{Tutorial 03:} PSO cost function (with equations)
+
+\textbf{Tutorial 04:} Full controller implementation (Lyapunov proofs)
+
+\textbf{Information density increases gradually}
+
+\columnbreak
+
+\textbf{Mechanism 4: Layered Documentation}
+
+\textbf{Layer 1:} Quick reference cards (1 page)
+
+\textbf{Layer 2:} Tutorial guides (5-10 pages)
+
+\textbf{Layer 3:} Theory deep dives (20+ pages)
+
+\textbf{Layer 4:} Source code (annotated with detailed comments)
+
+\textbf{Beginners stay in Layers 1-2, Experts read Layer 4}
+
+\end{multicols}
+
+% ==============================================================================
+% PAGE 8: INTERACTIVE LEARNING & ORGANIZATION
+% ==============================================================================
+\newpage
+
+\section*{Interactive Learning Components}
+
+\begin{tcolorbox}[colback=primary!5, colframe=primary, title=\faGamepad\ Four Interactive Components]
+\textbf{Component 1: Streamlit UI (Operational)}
+\begin{itemize}
+    \item Launch: \texttt{streamlit run streamlit\_app.py}
+    \item Web interface: DIP animation, controller parameter sliders, real-time metrics
+    \item User adjusts gains → Sees immediate effect on stabilization
+    \item \textbf{No coding required!}
+\end{itemize}
+
+\textbf{Component 2: Jupyter Notebooks (Planned)}
+\begin{itemize}
+    \item Combine code + text + visualizations
+    \item Users execute cells step-by-step, see intermediate results
+    \item Experiment with modifications
+\end{itemize}
+
+\textbf{Component 3: Practice Exercises with Solutions (Planned)}
+\begin{itemize}
+    \item Each tutorial: 5-10 exercises
+    \item Example: "Change initial angle from 0.1 to 0.3 rad, predict if controller stabilizes, run, verify"
+    \item Solutions in \texttt{docs/solutions/} with worked examples
+\end{itemize}
+
+\textbf{Component 4: Self-Assessment Quizzes (Planned)}
+\begin{itemize}
+    \item Multiple choice testing comprehension
+    \item Example: "Which controller has lowest chattering? A) Classical, B) STA, C) Adaptive, D) Hybrid Adaptive STA"
+    \item Answers with explanations
+\end{itemize}
+\end{tcolorbox}
+
+\section*{Educational Content Organization}
+
+\begin{keypoint}
+\textbf{Three Locations with Clear Separation:}
+\end{keypoint}
+
+\begin{center}
+\begin{tikzpicture}[node distance=2.5cm]
+    \node[cloud] (learner) {Learner};
+    \node[block, fill=primary!30, right=of learner] (prereq) {\textbf{Prerequisites}\\.ai\_workspace/edu/\\Path 0};
+    \node[process, right=of prereq] (tutorials) {\textbf{Tutorials}\\docs/guides/\\Paths 1-3};
+    \node[block, fill=secondary!30, right=of tutorials] (theory) {\textbf{Theory}\\docs/theory/\\Paths 3-4};
+
+    \draw[arrow] (learner) -- node[above] {Beginner} (prereq);
+    \draw[arrow] (prereq) -- node[above] {Graduate} (tutorials);
+    \draw[arrow] (tutorials) -- node[above] {Advanced} (theory);
+    \draw[arrow, dashed] (tutorials.south) -- ++(0,-0.8) -| node[below, near start] {Review} (prereq.south);
+\end{tikzpicture}
+\end{center}
+
+\begin{multicols}{2}
+
+\textbf{Location 1: \texttt{.ai\_workspace/edu/}}
+\begin{itemize}
+    \item \textbf{Content:} Prerequisite materials
+    \item beginner-roadmap.md (Path 0)
+    \item Future: intermediate roadmap, cheatsheets, video curriculum
+    \item \textbf{Audience:} Complete beginners building foundations
+\end{itemize}
+
+\textbf{Location 2: \texttt{docs/guides/}}
+\begin{itemize}
+    \item \textbf{Content:} Project-specific tutorials
+    \item tutorial\_01 through tutorial\_05
+    \item getting-started.md, installation.md
+    \item \textbf{Audience:} Users learning this specific project (Paths 1-3)
+\end{itemize}
+
+\columnbreak
+
+\textbf{Location 3: \texttt{docs/theory/}}
+\begin{itemize}
+    \item \textbf{Content:} Control theory deep dives
+    \item smc\_fundamentals.md
+    \item lyapunov\_proofs.md
+    \item pso\_theory.md
+    \item \textbf{Audience:} Users wanting rigorous math (Paths 3-4)
+\end{itemize}
+
+\end{multicols}
+
+\subsection*{Cross-Reference Structure}
+
+\begin{example}
+\textbf{Linking Between Levels:}
+\begin{itemize}
+    \item \textbf{beginner-roadmap.md} Phase 5 → \textbf{tutorial\_01} (graduation exercise)
+    \item \textbf{tutorial\_01} → \textbf{smc\_fundamentals.md} (understand the math)
+    \item \textbf{tutorial\_05} → \textbf{72\_HOUR\_ROADMAP.md} (full research workflow)
+\end{itemize}
+
+\textbf{Users can navigate up (advanced) or down (foundational) easily}
+\end{example}
+
+% ==============================================================================
+% PAGE 9: FUTURE CONTENT & PHILOSOPHY
+% ==============================================================================
+\newpage
+
+\section*{Future Educational Content (Planned)}
+
+\begin{tcolorbox}[colback=secondary!10, colframe=secondary, title=\faRocket\ Seven Categories]
+\textbf{1. Intermediate Roadmap (40 hours)}
+
+For users with Python basics wanting advanced control theory without 125-hour beginner path
+
+Covers: State-space, observability/controllability, LQR, nonlinear control, Lyapunov theory
+
+\textbf{2. Quick Reference Cheatsheets}
+
+One-page PDFs: Python syntax, Git commands, CLI usage, controller selection guide, PSO tuning tips
+
+\textbf{3. Video Curriculum}
+
+Curated YouTube playlists (not creating videos, organizing existing free resources)
+\begin{itemize}
+    \item "Learn Python in 15 hours" (MIT OpenCourseWare)
+    \item "Control systems basics" (Brian Douglas)
+    \item "Sliding mode control tutorial" (Slotine lectures)
+\end{itemize}
+
+\textbf{4. Exercise Solutions with Worked Examples}
+
+Not just answers - step-by-step derivations
+
+Example: "Why does this controller fail?" shows Lyapunov analysis proving instability
+
+\textbf{5. FAQ for Beginners}
+
+"What is a Lyapunov function?", "Why do pendulums swing up not down?", "How to choose PSO particle count?"
+
+Answers with minimal jargon
+
+\textbf{6. Interactive Demos (JavaScript)}
+
+Web page with DIP animation + sliders for mass, length, gains
+
+Runs in browser, no installation - useful for classroom teaching
+
+\textbf{7. Community Contribution Opportunities}
+
+"Good first issue" tags in GitHub, documentation improvements, controller implementation challenges
+
+Turn learners into contributors
+\end{tcolorbox}
+
+\begin{warning}
+\textbf{Why Not Implemented?}
+
+Resource constraints - Phase 5 focused on research (11 tasks)
+
+Beginner roadmap Phases 1-2 + NotebookLM podcasts are substantial solo efforts
+
+Future work depends on community interest and contributions
+\end{warning}
+
+\section*{Learning Measurement: Five Mechanisms}
+
+\begin{multicols}{2}
+
+\textbf{1. Progress Tracking Checklists}
+
+Each module has checkbox: "- [ ] Completed Python Module 2"
+
+Users check boxes, see completion percentage
+
+\textbf{2. Self-Assessment Quizzes (Planned)}
+
+Score 8/10 or higher to proceed
+
+Test prerequisite knowledge before advanced topics
+
+\textbf{3. Skill Validation Checkpoints}
+
+Tutorial 01 ends: "If you can run a simulation and interpret the plot, you completed Path 1"
+
+Tutorial 05 ends: "If you can reproduce MT-5 within 10\% error, you're ready for independent research"
+
+Clear pass/fail criteria
+
+\columnbreak
+
+\textbf{4. Common Misconception Identification}
+
+Documentation includes "Common Mistakes" sections
+
+Example: "Many beginners think theta\_1 is cart position -- it's the angle of the first link"
+
+Addresses errors proactively
+
+\textbf{5. Feedback Loop for Improvement}
+
+GitHub issues tagged "documentation feedback"
+
+Users report confusing sections, suggest improvements
+
+Maintainers update docs based on feedback
+
+\end{multicols}
+
+% ==============================================================================
+% PAGE 10: EDUCATIONAL PHILOSOPHY & KEY TAKEAWAYS
+% ==============================================================================
+\newpage
+
+\section*{Educational Philosophy: Five Principles}
+
+\begin{summary}
+\textbf{Principle 1: Understanding Over Coverage}
+
+Don't teach everything - teach foundational concepts deeply, provide references for advanced topics
+
+Better to master 20\% than superficially touch 100\%
+
+\textbf{Principle 2: Scaffolded Learning from Foundations to Mastery}
+
+Path 0 (prerequisites) → Path 1 (hands-on) → Path 2 (theory) → Path 3 (research) → Path 4 (architecture)
+
+Each level builds on previous
+
+\textbf{Principle 3: Multiple Modalities for Different Learners}
+
+Text (docs) + Audio (podcasts) + Visual (Streamlit UI) + Interactive (Jupyter) + Hands-on (tutorials)
+
+Some learn by reading, others by listening, others by doing
+
+\textbf{Principle 4: Audience-Appropriate Language}
+
+Tutorial 01: "the pendulum swings up and balances" (beginner-friendly)
+
+API reference: "state vector converges to origin under Lyapunov stability" (technical precision)
+
+\textbf{Principle 5: Practice-First Approach}
+
+Tutorial 01: Run simulation BEFORE explaining theory
+
+Tutorial 02: Compare controllers BEFORE reading equations
+
+Understanding comes from experience, not just reading
+\end{summary}
+
+\section*{Key Takeaways}
+
+\begin{tcolorbox}[colback=accent!10, colframe=accent, title=\faCheckCircle\ Summary]
+\textbf{5 Learning Paths:} Path 0 (Student, ~125 hrs, semester), Path 1 (Experimenter, 1-2 hrs), Path 2 (Engineer, 4-8 hrs), Path 3 (Researcher, 8-12 hrs), Path 4 (Expert, 12+ hrs)
+
+\textbf{Path 0 Roadmap:} 5 phases - Foundations (40 hrs), Core Concepts (30 hrs), Hands-On (25 hrs), Advancing Skills (30 hrs), Mastery/Specialization (25-75 hrs, 3 tracks)
+
+\textbf{NotebookLM Podcasts:} 44 episodes, 40 hours audio, 125 hours content (3× compression)
+
+\textbf{TTS Optimization:} (1) Verbalize all math, (2) Spell out Greek letters, (3) Enhanced narratives (analogies, progressive revelation, retention summaries)
+
+\textbf{Navigation (985 files):} Master hub (NAVIGATION.md) routes users to relevant 5-10 files via 4 entry modes (intent, persona, category, visual)
+
+\textbf{Tutorials:} 5 tutorials - 01: First Sim (1-2h), 02: Comparison (4h), 03: PSO (4h), 04: Custom Ctrl (8h), 05: Research (12h)
+
+\textbf{Sphinx Docs:} 814 files → 5 sections (Guides, Theory, Architecture, API, Research). Build: \texttt{sphinx-build}, Serve: \texttt{http.server}
+
+\textbf{Segmentation:} (1) Explicit signposting (README), (2) Breadcrumbs (audience + prerequisites in every file), (3) Progressive disclosure (Tutorial 01 no math → Tutorial 04 Lyapunov), (4) Layered docs (1-page → 20-page → source code)
+
+\textbf{Interactive:} (1) Streamlit UI (operational), (2) Jupyter notebooks (planned), (3) Practice exercises (planned), (4) Quizzes (planned)
+
+\textbf{Organization:} (1) \texttt{.ai\_workspace/edu/} (prerequisites), (2) \texttt{docs/guides/} (project tutorials), (3) \texttt{docs/theory/} (rigorous math)
+
+\textbf{Future:} Intermediate roadmap, cheatsheets, video curriculum, exercise solutions, FAQ, interactive demos, community contributions
+
+\textbf{Philosophy:} (1) Understanding > coverage, (2) Scaffolded learning, (3) Multiple modalities, (4) Audience-appropriate language, (5) Practice-first
+\end{tcolorbox}
+
+\subsection*{What's Next?}
+
+\begin{keypoint}
+\textbf{E010: Documentation System \& Navigation}
+
+985 files organized across 11 navigation systems, Sphinx HTML build process, NAVIGATION.md architecture, how documentation scales
+
+\textbf{Remember:} Education is not about transferring knowledge - it's about creating conditions for understanding to emerge!
+\end{keypoint}
+
+\end{document}

@@ -1,0 +1,160 @@
+name: 🐛 Implementation Bug
+description: Report implementation bugs and code issues (MEDIUM)
+title: "[BUG] "
+labels: ["bug", "implementation", "medium"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 🐛 Implementation Bug Report
+        Use this template for controller factory issues, SMC variant problems, or implementation bugs.
+        **Response Time**: < 16 hours
+
+  - type: dropdown
+    id: bug_category
+    attributes:
+      label: Bug Category
+      description: Select the category of implementation bug
+      options:
+        - Controller Factory Problems
+        - SMC Variant Implementation
+        - Numerical Implementation
+        - Configuration Issues
+        - HIL Communication
+        - Testing Framework
+        - Documentation Issues
+        - Other
+      default: 0
+    validations:
+      required: true
+
+  - type: dropdown
+    id: affected_component
+    attributes:
+      label: Affected Component
+      description: Which component is affected by the bug?
+      options:
+        - Classical SMC Controller
+        - Super-Twisting SMC
+        - Adaptive SMC
+        - Hybrid Adaptive STA-SMC
+        - Swing-up SMC
+        - MPC Controller
+        - PSO Optimizer
+        - Plant Dynamics
+        - Simulation Runner
+        - Configuration System
+        - HIL System
+        - Testing Framework
+        - Other
+      default: 0
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Bug Severity
+      description: How severe is this bug?
+      options:
+        - Critical - System crash or data loss
+        - High - Major functionality broken
+        - Medium - Minor functionality issues
+        - Low - Cosmetic or enhancement
+      default: 2
+    validations:
+      required: true
+
+  - type: textarea
+    id: bug_description
+    attributes:
+      label: Bug Description
+      description: Clear and concise description of the bug
+      placeholder: Describe what the bug is and what you expected to happen...
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction_steps
+    attributes:
+      label: Steps to Reproduce
+      description: Detailed steps to reproduce the bug
+      placeholder: |
+        1. Configure system with: ...
+        2. Run command: python simulate.py --ctrl ...
+        3. Observe error: ...
+        4. Expected behavior: ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: error_output
+    attributes:
+      label: Error Output
+      description: Copy and paste any error messages or stack traces
+      placeholder: |
+        Traceback (most recent call last):
+          File "simulate.py", line XX, in <module>
+            ...
+        Error: ...
+      render: shell
+    validations:
+      required: false
+
+  - type: textarea
+    id: system_info
+    attributes:
+      label: System Information
+      description: Provide system and environment details
+      placeholder: |
+        - OS: Windows 11 / Ubuntu 20.04 / macOS
+        - Python version: 3.9.x
+        - NumPy version: x.x.x
+        - SciPy version: x.x.x
+        - Other dependencies: ...
+        - Configuration file: config.yaml
+    validations:
+      required: true
+
+  - type: textarea
+    id: configuration
+    attributes:
+      label: Configuration Details
+      description: Relevant configuration settings
+      placeholder: |
+        Controller configuration:
+        controller:
+          type: "classical_smc"
+          gains: [10.0, 5.0, 8.0, 3.0, 15.0, 2.0]
+          ...
+
+        Simulation configuration:
+        simulation:
+          dt: 0.01
+          duration: 10.0
+          ...
+      render: yaml
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: impact_checklist
+    attributes:
+      label: Impact Assessment
+      description: Check all that apply
+      options:
+        - label: Prevents system operation
+        - label: Affects controller performance
+        - label: Causes simulation failures
+        - label: Breaks optimization workflow
+        - label: HIL integration issues
+        - label: Testing framework problems
+        - label: Documentation inconsistencies
+
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: Additional Context
+      description: Any additional information or context
+      placeholder: Add any other context about the problem here...

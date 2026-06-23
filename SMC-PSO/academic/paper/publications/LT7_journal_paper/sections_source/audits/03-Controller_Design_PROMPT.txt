@@ -1,0 +1,1501 @@
+========================================================================
+COPY EVERYTHING BELOW THIS LINE - ULTRA-DEEP AUDIT
+========================================================================
+
+# Comparative Analysis of Sliding Mode Control Variants for Double-Inverted Pendulum Systems: Performance, Stability, and Robustness
+
+**Authors:** [Author Names]¹*
+**Affiliation:** ¹[Institution Name, Department, City, Country]
+**Email:** [corresponding.author@institution.edu]
+**ORCID:** [0000-0000-0000-0000]
+
+---
+
+**SUBMISSION INFORMATION:**
+- **Document ID:** LT-7-RESEARCH-PAPER-v2.1
+- **Status:** SUBMISSION-READY (98% Complete)
+- **Date:** November 6, 2025
+- **Word Count:** ~13,400 words (~25 journal pages)
+- **References:** 68 citations (IEEE format)
+- **Figures:** 13 tables, 14 figures (publication-ready, 300 DPI)
+- **Supplementary Materials:** Code repository (https://github.com/theSadeQ/dip-smc-pso.git), simulation data
+- **Target Journals:** International Journal of Control (Tier 3, best length fit), IEEE TCST (Tier 1, requires condensing)
+
+**REMAINING TASKS FOR SUBMISSION:**
+1. ✅ ALL TECHNICAL CONTENT COMPLETE (Sections 1-10, References)
+2. ✅ ALL [REF] PLACEHOLDERS REPLACED WITH CITATION NUMBERS
+3. ✅ ALL FIGURES INTEGRATED (14 figures with detailed captions)
+4. ⏸️ Add author names, affiliations, emails (replace placeholders above)
+5. ⏸️ Convert Markdown → LaTeX using journal template
+6. ⏸️ Final proofread and spell check
+7. ⏸️ Prepare cover letter and suggested reviewers
+
+**Phase:** Phase 5 (Research) | **Task ID:** LT-7 (Long-Term Task 7, 20 hours invested)
+
+---
+
+## Abstract
+
+This paper presents a comprehensive comparative analysis of seven sliding mode control (SMC) variants for stabilization of a double-inverted pendulum (DIP) system. We evaluate Classical SMC, Super-Twisting Algorithm (STA), Adaptive SMC, Hybrid Adaptive STA-SMC, Swing-Up SMC, Model Predictive Control (MPC), and their combinations across multiple performance dimensions: computational efficiency, transient response, chattering reduction, energy consumption, and robustness to model uncertainty and external disturbances. Through rigorous Lyapunov stability analysis, we establish theoretical convergence guarantees for each controller variant. Performance benchmarking with 400+ Monte Carlo simulations reveals that STA-SMC achieves superior overall performance (1.82s settling time, 2.3% overshoot, 11.8J energy), while Classical SMC provides the fastest computation (18.5 microseconds). PSO-based optimization demonstrates significant performance improvements but reveals critical generalization limitations: parameters optimized for small perturbations (±0.05 rad) exhibit 50.4x chattering degradation and 90.2% failure rate under realistic disturbances (±0.3 rad). Robustness analysis with ±20% model parameter errors shows Hybrid Adaptive STA-SMC offers best uncertainty tolerance (16% mismatch before instability), while STA-SMC excels at disturbance rejection (91% attenuation). Our findings provide evidence-based controller selection guidelines for practitioners and identify critical gaps in current optimization approaches for real-world deployment.
+
+**Keywords:** Sliding mode control, double-inverted pendulum, super-twisting algorithm, adaptive control, Lyapunov stability, particle swarm optimization, robust control, chattering reduction
+
+---
+
+
+
+## 3. Controller Design
+
+This section presents the control law design for each of the seven SMC variants evaluated in this study. All controllers share a common sliding surface definition but differ in how they drive the system to and maintain it on this surface.
+
+### 3.1 Sliding Surface (Common to All SMC Variants)
+
+**Definition:**
+
+The sliding surface $\sigma: \mathbb{R}^6 \to \mathbb{R}$ combines pendulum angle errors and their derivatives:
+
+```math
+\sigma = \lambda_1 \theta_1 + \lambda_2 \theta_2 + k_1 \dot{\theta}_1 + k_2 \dot{\theta}_2
+```
+
+where:
+- $\lambda_1, \lambda_2 > 0$ - position error weights
+- $k_1, k_2 > 0$ - velocity error weights
+
+**Physical Interpretation:**
+
+The sliding surface represents a weighted combination of pendulum state errors. When $\sigma = 0$, the system evolves along a manifold in state space where angles and angular velocities satisfy the constraint $\lambda_i \theta_i + k_i \dot{\theta}_i = 0$ for $i=1,2$. This constraint enforces exponential convergence of each angle to zero with time constant $\tau_i = k_i / \lambda_i$.
+
+**Design Philosophy:**
+
+1. **Reaching Phase:** Drive system toward sliding surface ($\sigma \to 0$)
+2. **Sliding Phase:** Maintain system on surface ($\sigma = 0$), ensuring exponential convergence to equilibrium
+3. **Steady-State:** System remains at equilibrium ($\theta_1 = \theta_2 = 0$)
+
+---
+
+#### 3.1.1 Controller Architecture Overview
+
+All seven SMC variants in this study share a **common architecture pattern** but differ in specific implementation of the control law and how they handle uncertainties.
+
+**Figure 3.1:** Common SMC architecture for DIP stabilization
+
+```
+    θ₁,θ₂,θ̇₁,θ̇₂ (State Measurements)
+           │
+           ▼
+    ┌──────────────────┐
+    │  Sliding Surface │  σ = λ₁θ₁ + λ₂θ₂ + k₁θ̇₁ + k₂θ̇₂
+    │   Calculation    │
+    └─────────┬────────┘
+              │ σ
+              ▼
+    ┌─────────────────────────────┐
+    │   Controller-Specific       │
+    │   Control Law Computation   │
+    │  (Classical/STA/Adaptive)   │
+    └─────────────┬───────────────┘
+                  │ u
+                  ▼
+    ┌─────────────────────────┐
+    │  Saturation (|u|≤20N)  │
+    └─────────────┬───────────┘
+                  │ u_sat
+                  ▼
+           DIP Plant (Section 2)
+```
+
+**Controller Family Tree:**
+
+```
+SMC Variants (7 total)
+│
+├─ Classical SMC (3.2)
+│  └─ Boundary Layer + Derivative Damping
+│
+├─ Higher-Order SMC
+│  └─ STA-SMC (3.3)
+│     └─ 2nd-order sliding mode with integral state
+│
+├─ Adaptive SMC
+│  ├─ Adaptive SMC (3.4)
+│  │  └─ Time-varying gain K(t)
+│  │
+│  └─ Hybrid Adaptive STA (3.5)
+│     └─ Mode-switching between STA and Adaptive
+│
+├─ Global Control
+│  └─ Swing-Up SMC (3.6)
+│     └─ Energy-based swing-up + SMC stabilization
+│
+└─ Non-SMC Benchmark
+   └─ MPC (3.7)
+      └─ Finite-horizon optimization
+```
+
+**Architectural Differences:**
+
+| Aspect | Classical | STA | Adaptive | Hybrid |
+|--------|-----------|-----|----------|--------|
+| **Control Structure** | Single-layer | Integral state z | Gain adaptation | Dual-mode |
+| **Discontinuity** | Smoothed sign | Continuous | Smoothed sign | Mode-dependent |
+| **State Augmentation** | None | +1 (z) | +1 (K) | +1 (z) + mode |
+| **Feedback Type** | Proportional | Prop + Integral | Adaptive Prop | Switching |
+| **Computational Load** | 18.5 μs | 24.2 μs | 31.6 μs | 26.8 μs |
+
+This architectural overview provides context for understanding design tradeoffs: simplicity (Classical) vs performance (STA) vs adaptability (Adaptive/Hybrid).
+
+---
+
+### 3.2 Classical Sliding Mode Control
+
+**Control Law:**
+
+```math
+u = u_{\text{eq}} - K \cdot \text{sat}\left(\frac{\sigma}{\epsilon}\right) - k_d \cdot \sigma
+```
+
+where:
+- $u_{\text{eq}}$ - equivalent control (model-based feedforward)
+- $K > 0$ - switching gain (drives system to sliding surface)
+- $\epsilon > 0$ - boundary layer width (chattering reduction)
+- $k_d \geq 0$ - derivative gain (damping)
+- $\text{sat}(\cdot)$ - saturation function (continuous approximation of sign function)
+
+**Equivalent Control:**
+
+The equivalent control compensates for known dynamics:
+
+```math
+u_{\text{eq}} = (L M^{-1} B)^{-1} \left[ L M^{-1}(C\dot{q} + G) - \lambda_1 \dot{\theta}_1 - \lambda_2 \dot{\theta}_2 \right]
+```
+
+where:
+- $L = [0, k_1, k_2]$ - sliding surface gradient vector
+- $M, C, G$ - inertia, Coriolis, gravity matrices from Section 2
+- $B = [1, 0, 0]^T$ - control input matrix
+
+**Saturation Function (Boundary Layer):**
+
+Two options implemented:
+
+1. **Hyperbolic Tangent (Default):**
+   ```math
+   \text{sat}(\sigma/\epsilon) = \tanh(\sigma/\epsilon)
+   ```
+   Smooth transition, maintains control authority near $\sigma=0$
+
+2. **Linear Saturation:**
+   ```math
+   \text{sat}(\sigma/\epsilon) = \begin{cases}
+   \sigma/\epsilon & |\sigma| \leq \epsilon \\
+   \text{sign}(\sigma) & |\sigma| > \epsilon
+   \end{cases}
+   ```
+   Piecewise linear, sharper switching
+
+**Design Parameters:**
+
+| Parameter | Symbol | Typical Value | Purpose |
+|-----------|--------|---------------|---------|
+| Sliding gains | $k_1, k_2$ | 5.0, 3.0 | Surface gradient |
+| Convergence rates | $\lambda_1, \lambda_2$ | 10.0, 8.0 | Angle convergence speed |
+| Switching gain | $K$ | 15.0 | Reaching phase robustness |
+| Derivative gain | $k_d$ | 2.0 | Damping |
+| Boundary layer | $\epsilon$ | 0.02 | Chattering reduction |
+
+**Advantages:**
+- Simple implementation (6 gains)
+- Fastest computation (18.5 μs, Section 7.1)
+- Well-understood theory
+- Good energy efficiency (12.4 J, Section 7.4)
+
+**Disadvantages:**
+- Moderate chattering (index 8.2, Section 7.3)
+- Larger overshoot (5.8%, Section 7.2)
+- Boundary layer introduces steady-state error
+
+**Implementation Notes:**
+
+**Discretization (dt = 0.01s, 100 Hz control loop):**
+
+The continuous-time control law must be discretized for digital implementation:
+
+1. **Sliding Surface:** Direct substitution (no discretization error)
+   ```math
+   \sigma[k] = \lambda_1 \theta_1[k] + \lambda_2 \theta_2[k] + k_1 \dot{\theta}_1[k] + k_2 \dot{\theta}_2[k]
+   ```
+
+2. **Equivalent Control:** Use backward differentiation for stability
+   ```math
+   u_{\text{eq}}[k] = (L M^{-1} B)^{-1} \left[ L M^{-1}(C\dot{q}[k] + G[k]) - \lambda_1 \dot{\theta}_1[k] - \lambda_2 \dot{\theta}_2[k] \right]
+   ```
+
+3. **Saturation Function:** tanh is inherently continuous, no discretization needed
+
+**Numerical Stability:**
+
+- **Matrix Inversion:** M(q) is always invertible (positive definite) but can become ill-conditioned for large θ. Use LU decomposition (scipy.linalg.solve) instead of explicit inv(M)
+- **Overflow Prevention:** Clip intermediate calculations: u_eq limited to ±100N before adding switching term
+- **Derivative Estimation:** Use filtered backward difference for θ̇ (Butterworth 2nd-order, 20 Hz cutoff) to reduce noise amplification
+
+**Computational Breakdown (18.5 μs total):**
+
+| Operation | FLOPs | Time (μs) | % Total |
+|-----------|-------|-----------|---------|
+| M, C, G evaluation | ~120 | 8.2 | 44% |
+| M^{-1} (3×3 LU solve) | ~60 | 4.1 | 22% |
+| u_eq calculation | ~40 | 2.8 | 15% |
+| σ calculation | ~10 | 0.9 | 5% |
+| Switching term | ~5 | 1.2 | 6% |
+| Saturation | ~3 | 1.3 | 7% |
+| **TOTAL** | **~238** | **18.5** | **100%** |
+
+**Common Pitfalls:**
+
+1. **Chattering from small ε:** Setting ε<0.01 causes high-frequency switching (>50 Hz). Stay above ε≥0.02 for dt=0.01s.
+2. **Instability from large k_d:** Derivative gain k_d>5.0 can cause oscillations due to noise amplification in θ̇ estimates.
+3. **Steady-state error from large ε:** Boundary layer ε>0.1 introduces ~5% steady-state error in θ. Tune ε to balance chattering vs accuracy.
+4. **Matrix inversion failure:** For |θ|>π/2, M(q) becomes poorly conditioned. Always check condition number: cond(M) < 1000.
+
+**Figure 3.2:** Classical SMC block diagram
+
+```
+State x → [Sliding Surface σ] → [Saturation sat(σ/ε)] → [×] ← K
+                                                           │
+                                                           ▼
+State x → [Equivalent Control u_eq] ────────────────────→ [+] → u → Plant
+                                                           ▲
+Sliding Surface σ ────────────→ [×] ← k_d ────────────────┘
+```
+
+**Signal Flow:**
+1. Measure state x = [x, θ₁, θ₂, ẋ, θ̇₁, θ̇₂]ᵀ
+2. Compute sliding surface σ = λ₁θ₁ + λ₂θ₂ + k₁θ̇₁ + k₂θ̇₂
+3. Compute equivalent control u_eq (model-based feedforward)
+4. Compute switching term: -K·sat(σ/ε)
+5. Compute derivative damping: -k_d·σ
+6. Sum all terms: u = u_eq - K·sat(σ/ε) - k_d·σ
+7. Apply saturation: u_sat = clip(u, -20N, +20N)
+
+---
+
+### 3.3 Super-Twisting Algorithm (STA-SMC)
+
+**Control Law:**
+
+STA employs a continuous 2nd-order sliding mode algorithm:
+
+```math
+\begin{aligned}
+u &= u_{\text{eq}} + u_{\text{STA}} \\
+u_{\text{STA}} &= -K_1 |\sigma|^{1/2} \text{sign}(\sigma) + z \\
+\dot{z} &= -K_2 \text{sign}(\sigma)
+\end{aligned}
+```
+
+where:
+- $K_1, K_2 > 0$ - STA algorithm gains (satisfy Lyapunov conditions)
+- $z$ - integral state (provides continuous control action)
+- $\text{sign}(\sigma)$ - smoothed via saturation function: $\text{sign}(\sigma) \approx \tanh(\sigma/\epsilon)$
+
+**Key Features:**
+
+1. **Continuous Control:** Unlike classical SMC, $u_{\text{STA}}$ is continuous (no discontinuity at $\sigma=0$)
+2. **Finite-Time Convergence:** Guaranteed convergence to $\sigma=0$ in finite time (not just asymptotic)
+3. **Chattering Reduction:** Continuous action inherently eliminates chattering
+
+**Gain Selection (Lyapunov-Based):**
+
+For stability, gains must satisfy:
+
+```math
+K_2 > \frac{2 \bar{d}}{\epsilon}, \quad K_1 > \sqrt{2 K_2 \bar{d}}
+```
+
+where $\bar{d}$ is the upper bound on disturbances.
+
+**Convergence Time Estimate:**
+
+Upper bound on reaching time:
+
+```math
+T_{\text{reach}} \leq \frac{2 |\sigma(0)|^{1/2}}{K_1 - \sqrt{2 K_2 \bar{d}}}
+```
+
+**Design Parameters:**
+
+| Parameter | Symbol | Typical Value | Purpose |
+|-----------|--------|---------------|---------|
+| Algorithm gain 1 | $K_1$ | 12.0 | Proportional to $\|\sigma\|^{1/2}$ |
+| Algorithm gain 2 | $K_2$ | 8.0 | Integral term (sign of $\sigma$) |
+| Boundary layer | $\epsilon$ | 0.01 | Sign function smoothing |
+
+**Advantages:**
+- Best overall performance (1.82s settling, 2.3% overshoot)
+- Lowest chattering (index 2.1, 74% reduction vs Classical)
+- Most energy-efficient (11.8 J)
+- Finite-time convergence guarantee
+
+**Disadvantages:**
+- +31% compute overhead vs Classical (24.2 μs)
+- More complex gain tuning (Lyapunov conditions)
+- Less intuitive than classical SMC
+
+**Figure 3.3:** Super-Twisting Algorithm (STA) block diagram
+
+```
+State x → [Sliding Surface σ] → [|σ|^(1/2) · sign(σ)] → [×] ← K₁
+                  │                                       │
+                  │                                       ▼
+                  └────────→ [sign(σ)] → [Integrator z] → [+] → u_STA
+                                           ▲              ▲
+                                           │              │
+                             K₂ ───────────┘              │
+                                                          │
+State x → [Equivalent Control u_eq] ─────────────────────┘ → [+] → u → Plant
+```
+
+**Signal Flow:**
+1. Measure state x = [x, θ₁, θ₂, ẋ, θ̇₁, θ̇₂]ᵀ
+2. Compute sliding surface σ = λ₁θ₁ + λ₂θ₂ + k₁θ̇₁ + k₂θ̇₂
+3. Compute equivalent control u_eq (model-based feedforward)
+4. Compute proportional term: -K₁|σ|^(1/2)·sign(σ)
+5. Compute integral state: ż = -K₂·sign(σ)
+6. Sum STA terms: u_STA = -K₁|σ|^(1/2)·sign(σ) + z
+7. Total control: u = u_eq + u_STA
+8. Apply saturation: u_sat = clip(u, -20N, +20N)
+
+**Implementation Notes:**
+
+**Discretization (dt = 0.01s):**
+
+1. **Fractional Power Term:** |σ|^(1/2) can cause numerical issues for small σ. Use safety threshold:
+   ```math
+   |σ|^{1/2} = \begin{cases}
+   \sqrt{|\sigma|} & |\sigma| > 10^{-6} \\
+   0 & \text{otherwise}
+   \end{cases}
+   ```
+
+2. **Integral State Update:** Use backward Euler for stability:
+   ```math
+   z[k+1] = z[k] - K_2 \cdot \text{sign}(\sigma[k]) \cdot dt
+   ```
+
+3. **Sign Function Smoothing:** Replace discontinuous sign with smooth saturation:
+   ```math
+   \text{sign}(\sigma) \approx \tanh(\sigma / \epsilon), \quad \epsilon = 0.01
+   ```
+
+**Numerical Stability:**
+
+- **Integral Windup:** Clip z to prevent unbounded growth: z ∈ [-100, +100]
+- **Division by Zero:** Check |σ| > ε_min before computing fractional power
+- **Overflow Protection:** Clip u_STA before adding to u_eq: u_STA ∈ [-50N, +50N]
+
+**Common Pitfalls:**
+
+1. **Instability from violating Lyapunov conditions:** Ensure K₁² ≥ 2K₂d̄ where d̄ is disturbance bound (~1.0 for DIP)
+2. **Integral windup:** Without anti-windup (z clamping), integral state can grow unbounded during saturation
+3. **Chattering from small ε:** If ε<0.005, sign function becomes too sharp → high-frequency switching
+4. **Slow convergence from small K₁:** If K₁<8.0, reaching time increases beyond acceptable limits (>5s)
+
+---
+
+### 3.4 Adaptive Sliding Mode Control
+
+**Control Law:**
+
+```math
+\begin{aligned}
+u &= u_{\text{eq}} - K(t) \cdot \text{sat}\left(\frac{\sigma}{\epsilon}\right) - k_d \cdot \sigma \\
+\dot{K}(t) &= \begin{cases}
+\gamma |\sigma| & |\sigma| > \delta \\
+-\beta (K - K_{\text{init}}) & |\sigma| \leq \delta
+\end{cases}
+\end{aligned}
+```
+
+where:
+- $K(t)$ - time-varying adaptive gain
+- $\gamma > 0$ - adaptation rate (increase when $|\sigma|$ large)
+- $\beta > 0$ - leak rate (decay toward $K_{\text{init}}$ when $|\sigma|$ small)
+- $\delta > 0$ - dead-zone threshold
+- $K_{\text{init}}$ - nominal gain value
+
+**Adaptation Mechanism:**
+
+1. **Outside Dead-Zone ($|\sigma| > \delta$):** Gain increases proportionally to sliding surface magnitude, providing more control authority when far from surface
+2. **Inside Dead-Zone ($|\sigma| \leq \delta$):** Gain decays toward nominal value, preventing unbounded growth
+
+**Bounded Gain Constraint:**
+
+```math
+K_{\min} \leq K(t) \leq K_{\max}
+```
+
+Prevents gain saturation or underflow.
+
+**Design Parameters:**
+
+| Parameter | Symbol | Typical Value | Purpose |
+|-----------|--------|---------------|---------|
+| Adaptation rate | $\gamma$ | 5.0 | Gain increase speed |
+| Leak rate | $\beta$ | 0.1 | Decay to nominal |
+| Dead-zone | $\delta$ | 0.01 | Adaptation threshold |
+| Initial gain | $K_{\text{init}}$ | 10.0 | Nominal switching gain |
+| Gain bounds | $K_{\min}, K_{\max}$ | 5.0, 50.0 | Saturation limits |
+
+**Advantages:**
+- Adapts to model uncertainty online
+- Predicted best robustness to parameter errors (15% tolerance, Section 8.1)
+- Bounded gains prevent instability
+
+**Disadvantages:**
+- Slowest settling (2.35s, Section 7.2)
+- Highest chattering (index 9.7, Section 7.3)
+- Highest energy (13.6 J, +15% vs STA)
+- Most complex computation (31.6 μs)
+
+---
+
+### 3.5 Hybrid Adaptive STA-SMC
+
+**Control Law:**
+
+Hybrid controller switches between STA mode and Adaptive mode based on sliding surface magnitude:
+
+```math
+u = \begin{cases}
+u_{\text{STA}} & |\sigma| > \sigma_{\text{switch}} \quad \text{(Far from surface)} \\
+u_{\text{Adaptive}} & |\sigma| \leq \sigma_{\text{switch}} \quad \text{(Near surface)}
+\end{cases}
+```
+
+where:
+- $u_{\text{STA}}$ - STA control law (Section 3.3)
+- $u_{\text{Adaptive}}$ - Adaptive control law (Section 3.4)
+- $\sigma_{\text{switch}}$ - mode switching threshold
+
+**Switching Logic:**
+
+1. **Reaching Phase ($|\sigma|$ large):** Use STA for fast, chattering-free convergence
+2. **Sliding Phase ($|\sigma|$ small):** Use Adaptive for robustness to model uncertainty
+3. **Hysteresis:** Implement hysteresis band to prevent chattering between modes
+
+**Mode Transition:**
+
+```math
+\text{Mode} = \begin{cases}
+\text{STA} & |\sigma| > \sigma_{\text{switch}} + \Delta \\
+\text{Adaptive} & |\sigma| < \sigma_{\text{switch}} - \Delta \\
+\text{Previous Mode} & \sigma_{\text{switch}} - \Delta \leq |\sigma| \leq \sigma_{\text{switch}} + \Delta
+\end{cases}
+```
+
+where $\Delta$ is hysteresis margin.
+
+**Design Parameters:**
+
+| Parameter | Symbol | Typical Value | Purpose |
+|-----------|--------|---------------|---------|
+| Switch threshold | $\sigma_{\text{switch}}$ | 0.05 | Mode selection |
+| Hysteresis margin | $\Delta$ | 0.01 | Prevent mode chattering |
+| STA gains | $K_1, K_2$ | 12.0, 8.0 | Reaching phase |
+| Adaptive gains | $\gamma, \beta$ | 5.0, 0.1 | Sliding phase |
+
+**Advantages:**
+- Balanced performance (1.95s settling, 3.5% overshoot)
+- Best predicted robustness (16% model uncertainty tolerance)
+- Good disturbance rejection (89% attenuation)
+- Combines STA speed with Adaptive robustness
+
+**Disadvantages:**
+- Complex switching logic requires validation
+- Moderate compute overhead (26.8 μs)
+- Requires tuning both STA and Adaptive gains
+
+**Figure 3.4:** Hybrid Adaptive STA-SMC with mode switching
+
+```
+                                    ┌──────────────────────┐
+                                    │  Mode Selector       │
+State x → [Sliding Surface σ] ──→  │  |σ| vs σ_switch     │
+                  │                 │  with hysteresis Δ   │
+                  │                 └──────────┬───────────┘
+                  │                            │
+                  │                     ┌──────┴──────┐
+                  │                     │             │
+                  │                 Mode=STA      Mode=Adaptive
+                  │                     │             │
+                  │                     ▼             ▼
+                  ├────────→ [STA Controller] → u_STA
+                  │          (K₁, K₂, z)
+                  │
+                  └────────→ [Adaptive Controller] → u_Adaptive
+                             (K(t), γ, β, δ)
+                                     │             │
+                                     └──────┬──────┘
+                                            ▼
+                              [Switch/Select based on Mode]
+                                            │
+                                            ▼
+State x → [Equivalent Control u_eq] ──→  [+] → u → Plant
+```
+
+**Signal Flow:**
+1. Measure state x = [x, θ₁, θ₂, ẋ, θ̇₁, θ̇₂]ᵀ
+2. Compute sliding surface σ = λ₁θ₁ + λ₂θ₂ + k₁θ̇₁ + k₂θ̇₂
+3. Compute equivalent control u_eq (model-based feedforward)
+4. Evaluate mode selector:
+   - If |σ| > σ_switch + Δ → Mode = STA
+   - If |σ| < σ_switch - Δ → Mode = Adaptive
+   - Otherwise → Keep previous mode (hysteresis)
+5. Compute control based on mode:
+   - STA mode: u_sw = -K₁|σ|^(1/2)·sign(σ) + z
+   - Adaptive mode: u_sw = -K(t)·sat(σ/ε) - k_d·σ
+6. Total control: u = u_eq + u_sw
+7. Apply saturation: u_sat = clip(u, -20N, +20N)
+
+**Implementation Notes:**
+
+**Mode Switching Logic (Critical for Safety):**
+
+1. **Hysteresis Implementation:**
+   ```python
+   def select_mode(sigma, sigma_switch, delta, current_mode):
+       if abs(sigma) > sigma_switch + delta:
+           return 'STA'
+       elif abs(sigma) < sigma_switch - delta:
+           return 'ADAPTIVE'
+       else:
+           return current_mode  # Stay in current mode
+   ```
+
+2. **State Continuity:** When switching modes, ensure control continuity:
+   - Transfer integral state z from STA to Adaptive K(t)
+   - Use smooth transition: u[k] = α·u_STA + (1-α)·u_Adaptive where α ∈ [0,1] based on hysteresis position
+
+3. **Mode Initialization:**
+   - Start in STA mode (typical for large initial errors)
+   - Initialize z=0, K(t)=K_init
+   - Track mode transitions for debugging
+
+**Numerical Stability:**
+
+- **Bumpless Transfer:** During mode switch, match initial conditions:
+  - STA→Adaptive: Set K(t) = current equivalent switching gain
+  - Adaptive→STA: Set z = accumulated adaptive correction
+- **Anti-Windup:** Reset integral states (z or K) if control saturates for >100ms
+- **Mode Chattering Prevention:** Enforce minimum dwell time (50ms) in each mode
+
+**Common Pitfalls:**
+
+1. **Mode chattering:** If Δ too small (<0.005), controller oscillates between modes → instability
+2. **Discontinuous control:** Without bumpless transfer, u jumps at mode switches → excites high-frequency dynamics
+3. **Incorrect state initialization:** Forgetting to transfer integral states causes transient spikes (>20% overshoot)
+4. **Hysteresis too large:** If Δ > σ_switch/2, mode never switches → defeats hybrid design purpose
+
+---
+
+### 3.6 Swing-Up SMC
+
+**Two-Phase Control:**
+
+Swing-up SMC operates in two distinct modes:
+
+**Phase 1: Swing-Up (Energy-Based Control)**
+
+When total system energy $E < E_{\text{threshold}}$:
+
+```math
+u_{\text{swing}} = k_{\text{swing}} \cos(\theta_1) \dot{\theta}_1
+```
+
+where:
+- $k_{\text{swing}} > 0$ - swing-up gain
+- Energy pumping: Adds energy when $\cos(\theta_1) \dot{\theta}_1 > 0$ (constructive phase)
+
+**Phase 2: Stabilization (SMC)**
+
+When $E \geq E_{\text{threshold}}$ and $|\theta_1|, |\theta_2| < \theta_{\text{switch}}$:
+
+```math
+u_{\text{stabilize}} = u_{\text{SMC}}(\theta_1, \theta_2, \dot{\theta}_1, \dot{\theta}_2)
+```
+
+Uses any SMC variant (typically Classical or STA) for stabilization.
+
+**Energy Calculation:**
+
+```math
+E = \frac{1}{2}m_0 \dot{x}^2 + \frac{1}{2}I_1 \dot{\theta}_1^2 + \frac{1}{2}I_2 \dot{\theta}_2^2 - m_1 g r_1 \cos\theta_1 - m_2 g (L_1 \cos\theta_1 + r_2 \cos\theta_2)
+```
+
+**Mode Transition Logic:**
+
+```math
+\text{Mode} = \begin{cases}
+\text{Swing-Up} & E < E_{\text{target}} \text{ OR } |\theta_1| > 0.3 \text{ rad} \\
+\text{Stabilize} & E \geq E_{\text{target}} \text{ AND } |\theta_1|, |\theta_2| < 0.1 \text{ rad}
+\end{cases}
+```
+
+**Design Parameters:**
+
+| Parameter | Symbol | Typical Value | Purpose |
+|-----------|--------|---------------|---------|
+| Swing gain | $k_{\text{swing}}$ | 20.0 | Energy pumping rate |
+| Target energy | $E_{\text{target}}$ | 95% of upright energy | Transition threshold |
+| Angle threshold | $\theta_{\text{switch}}$ | 0.1 rad (5.7°) | Stabilizer activation |
+
+**Advantages:**
+- Global controller (works from any initial condition)
+- Can bring pendulum from downward to upward position
+- Combines energy-based and model-based control
+
+**Disadvantages:**
+- Complex mode logic requires careful tuning
+- Swing-up phase performance not guaranteed (heuristic energy pumping)
+- Not applicable to small perturbation stabilization (this study's focus)
+
+---
+
+### 3.7 Model Predictive Control (MPC)
+
+**Optimization Problem:**
+
+At each time step, solve finite-horizon optimal control problem:
+
+```math
+\begin{aligned}
+\min_{u(0), \ldots, u(N-1)} \quad & J = \sum_{k=0}^{N-1} \left[ \mathbf{x}(k)^T Q \mathbf{x}(k) + u(k)^T R u(k) \right] + \mathbf{x}(N)^T Q_f \mathbf{x}(N) \\
+\text{subject to} \quad & \mathbf{x}(k+1) = f(\mathbf{x}(k), u(k)) \quad k=0, \ldots, N-1 \\
+& |u(k)| \leq u_{\max} \quad k=0, \ldots, N-1 \\
+& \mathbf{x}(0) = \mathbf{x}_{\text{current}}
+\end{aligned}
+```
+
+where:
+- $N$ - prediction horizon (number of future time steps)
+- $Q, R, Q_f$ - state, input, terminal cost weight matrices
+- $f(\cdot, \cdot)$ - discretized nonlinear dynamics (Section 2)
+- $u_{\max}$ - actuator limit
+
+**Linearization (For Computational Efficiency):**
+
+Approximate nonlinear dynamics around current trajectory:
+
+```math
+\mathbf{x}(k+1) \approx A(k) \mathbf{x}(k) + B(k) u(k) + \mathbf{c}(k)
+```
+
+where $A(k), B(k)$ are Jacobians computed via finite differences.
+
+**Implementation:**
+
+Uses `cvxpy` library to solve quadratic program (QP) at each time step.
+
+**Design Parameters:**
+
+| Parameter | Symbol | Typical Value | Purpose |
+|-----------|--------|---------------|---------|
+| Horizon | $N$ | 20 steps (0.2s) | Prediction window |
+| State weight | $Q$ | $\text{diag}(1, 50, 50, 0.1, 5, 5)$ | Penalize angles heavily |
+| Input weight | $R$ | 0.01 | Control effort penalty |
+| Terminal weight | $Q_f$ | $100 \times Q$ | Final state penalty |
+
+**Advantages:**
+- Explicit handling of constraints (actuator limits, state bounds)
+- Optimal control over finite horizon
+- Can incorporate future reference trajectories
+
+**Disadvantages:**
+- Computationally expensive (requires external optimizer)
+- Not self-contained (depends on `cvxpy`)
+- Real-time feasibility questionable for 10 kHz control
+- Excluded from main comparative analysis (dependency issue)
+
+---
+
+### 3.8 Summary and Comparison
+
+**Table 3.1: Controller Characteristics Comparison**
+
+| Controller | Control Type | Continuity | Gains | Computation | Key Feature |
+|------------|-------------|------------|-------|-------------|-------------|
+| **Classical SMC** | Discontinuous (smoothed) | $C^0$ | 6 | 18.5 μs | Boundary layer chattering reduction |
+| **STA SMC** | 2nd-order sliding mode | $C^1$ | 2 + sliding | 24.2 μs | Finite-time convergence, continuous |
+| **Adaptive SMC** | Adaptive gain | $C^0$ | 5 + $K(t)$ | 31.6 μs | Online parameter estimation |
+| **Hybrid STA** | Mode-switching | $C^0$ | 8 + mode | 26.8 μs | Combines STA + Adaptive |
+| **Swing-Up SMC** | Energy + SMC | $C^0$ | 3 + stabilizer | Variable | Global control (swing-up + stabilize) |
+| **MPC** | Optimal control | $C^{\infty}$ | N/A (weights) | >>100 μs | Constrained optimization |
+
+**Convergence Guarantees:**
+
+| Controller | Stability Type | Convergence | Proof in Section 4 |
+|------------|---------------|-------------|-------------------|
+| Classical SMC | Asymptotic | Exponential ($e^{-\lambda t}$) | 4.1 |
+| STA SMC | Finite-time | Finite-time ($T < T_{\max}$) | 4.2 |
+| Adaptive SMC | Asymptotic | Exponential with adaptive gains | 4.3 |
+| Hybrid STA | ISS | Finite-time + Adaptive | 4.4 |
+| Swing-Up SMC | Multiple Lyapunov | Phase-dependent | 4.5 |
+| MPC | Optimal | Depends on horizon | (Not proven) |
+
+**Design Complexity:**
+
+1. **Simplest:** Classical SMC (6 scalar gains)
+2. **Moderate:** STA SMC (2 gains + Lyapunov conditions), Adaptive SMC (5 gains + adaptation law)
+3. **Complex:** Hybrid STA (8 gains + switching logic)
+4. **Most Complex:** Swing-Up SMC (energy calculation + mode transitions), MPC (weight matrices + optimization)
+
+
+**Computational Complexity Analysis:**
+
+**Table 3.2: Detailed Computational Breakdown**
+
+| Controller | Total (μs) | M,C,G Eval | Matrix Ops | Control Law | Overhead | FLOPs |
+|------------|-----------|------------|------------|-------------|----------|-------|
+| **Classical SMC** | 18.5 | 8.2 (44%) | 4.1 (22%) | 4.9 (26%) | 1.3 (7%) | ~238 |
+| **STA SMC** | 24.2 | 8.2 (34%) | 4.1 (17%) | 10.6 (44%) | 1.3 (5%) | ~312 |
+| **Adaptive SMC** | 31.6 | 8.2 (26%) | 4.1 (13%) | 17.8 (56%) | 1.5 (5%) | ~405 |
+| **Hybrid STA** | 26.8 | 8.2 (31%) | 4.1 (15%) | 13.2 (49%) | 1.3 (5%) | ~345 |
+| **Swing-Up SMC** | 22.1 | 8.2 (37%) | 4.1 (19%) | 8.5 (38%) | 1.3 (6%) | ~284 |
+| **MPC** | >100 | N/A | N/A | N/A | N/A | >5000 |
+
+**Common Operations (All Controllers):**
+- **M, C, G Evaluation:** 8.2 μs, ~120 FLOPs (inertia matrix, Coriolis, gravity)
+- **Matrix Inversion:** 4.1 μs, ~60 FLOPs (3×3 LU decomposition for M^{-1})
+- **Overhead:** 1.3-1.5 μs (function calls, memory access, state copying)
+
+**Controller-Specific Costs:**
+
+1. **Classical SMC (4.9 μs control law):**
+   - Sliding surface σ: 0.9 μs (10 FLOPs: 4 multiplies + 3 adds)
+   - Equivalent control u_eq: 2.8 μs (40 FLOPs: matrix-vector products)
+   - Switching term: 1.2 μs (5 FLOPs: saturation + multiply)
+   - **Bottleneck:** u_eq calculation (58% of control law time)
+
+2. **STA SMC (10.6 μs control law):**
+   - Sliding surface σ: 0.9 μs (same as Classical)
+   - Equivalent control u_eq: 2.8 μs (same as Classical)
+   - Fractional power |σ|^{1/2}: 3.2 μs (sqrt operation ~50 cycles)
+   - Integral state update ż: 2.1 μs (sign function + integration)
+   - Sign smoothing (tanh): 1.6 μs (~40 cycles for tanh approximation)
+   - **Bottleneck:** Fractional power term (30% of control law time)
+
+3. **Adaptive SMC (17.8 μs control law):**
+   - Sliding surface σ: 0.9 μs
+   - Equivalent control u_eq: 2.8 μs
+   - Switching term: 1.2 μs (same as Classical)
+   - Gain adaptation update: 8.4 μs (dead-zone check, conditional update, bounds checking)
+   - State history management: 4.5 μs (circular buffer for derivative estimation)
+   - **Bottleneck:** Gain adaptation (47% of control law time)
+
+4. **Hybrid STA (13.2 μs control law):**
+   - Sliding surface σ: 0.9 μs
+   - Equivalent control u_eq: 2.8 μs
+   - Mode selector logic: 2.1 μs (hysteresis check, mode transitions)
+   - Dual control law computation: 6.2 μs (compute both STA and Adaptive in parallel)
+   - Bumpless transfer: 1.2 μs (state continuity during mode switch)
+   - **Bottleneck:** Dual control law (47% of control law time)
+
+5. **Swing-Up SMC (8.5 μs control law):**
+   - Energy calculation: 3.8 μs (kinetic + potential energy terms)
+   - Mode selector: 0.8 μs (energy threshold check)
+   - Swing-up term: 1.4 μs (k_swing * cos(θ₁) * θ̇₁)
+   - SMC stabilizer: 2.5 μs (simplified Classical SMC)
+   - **Bottleneck:** Energy calculation (45% of control law time)
+
+**Real-Time Feasibility (100 Hz Control Loop):**
+
+| Controller | Compute (μs) | Available (μs) | Margin (%) | Real-Time Safe? |
+|------------|--------------|----------------|------------|-----------------|
+| Classical SMC | 18.5 | 10,000 | 99.81% | ✓ Yes |
+| STA SMC | 24.2 | 10,000 | 99.76% | ✓ Yes |
+| Adaptive SMC | 31.6 | 10,000 | 99.68% | ✓ Yes |
+| Hybrid STA | 26.8 | 10,000 | 99.73% | ✓ Yes |
+| Swing-Up SMC | 22.1 | 10,000 | 99.78% | ✓ Yes |
+| MPC | >100 | 10,000 | <99% | ⚠ Marginal |
+
+**Notes:**
+- All SMC variants have >99.6% timing margin → safe for 100 Hz deployment
+- MPC requires optimization solver (10-50 iterations) → not real-time feasible without warm-start
+- Worst-case timing (Adaptive SMC): 31.6 μs << 10 ms deadline (0.32% utilization)
+
+**Scalability to Faster Control Loops:**
+
+| Target Frequency | Loop Time (μs) | Fastest Controller | Slowest SMC | MPC Feasible? |
+|------------------|----------------|-------------------|-------------|---------------|
+| 100 Hz | 10,000 | Classical (18.5 μs) | Adaptive (31.6 μs) | ⚠ Marginal |
+| 500 Hz | 2,000 | Classical (18.5 μs) | Adaptive (31.6 μs) | ✗ No |
+| 1 kHz | 1,000 | Classical (18.5 μs) | Adaptive (31.6 μs) | ✗ No |
+| 5 kHz | 200 | Classical (18.5 μs) | Adaptive (31.6 μs) | ✗ No |
+| 10 kHz | 100 | Classical (18.5 μs) | Adaptive (31.6 μs) | ✗ No |
+
+**Observations:**
+- SMC variants scale to 5 kHz (200 μs budget) with >84% margin (Classical) or >84% margin (Adaptive)
+- Classical SMC fastest → best for high-frequency applications (robotics: 1-10 kHz)
+- MPC limited to <100 Hz without hardware acceleration (GPU, FPGA)
+
+
+### 3.9 Parameter Tuning Guidelines
+
+This section provides step-by-step tuning procedures for each controller, based on system characteristics and performance requirements.
+
+**General Tuning Principles:**
+
+1. **Start Conservative:** Begin with small gains, increase gradually until performance meets requirements
+2. **One Parameter at a Time:** Change single parameter, observe response, iterate
+3. **Measure Performance:** Track settling time, overshoot, chattering index after each change
+4. **Document Baseline:** Record initial parameters and performance for comparison
+
+**System Characterization (Required Before Tuning):**
+
+Before tuning any controller, characterize the DIP system:
+- **Mass ratios:** m₁/m₀, m₂/m₀ (affects inertia coupling)
+- **Length ratios:** L₁/L_cart, L₂/L₁ (affects angular dynamics)
+- **Natural frequencies:** ω₁ ≈ √(g/L₁), ω₂ ≈ √(g/L₂) (sets response timescales)
+- **Disturbance levels:** Measure typical external force magnitudes d̄ (wind, friction)
+- **Actuator limits:** u_max (typically ±20N for DIP)
+
+---
+
+**3.9.1 Classical SMC Tuning Procedure**
+
+**Step 1: Design Sliding Surface (λ₁, λ₂, k₁, k₂)**
+
+1. Choose convergence rates based on natural frequencies:
+   ```
+   λ₁ = 2ω₁ = 2√(g/L₁) ≈ 10.0  [rad/s]
+   λ₂ = 2ω₂ = 2√(g/L₂) ≈ 8.0   [rad/s]
+   ```
+   **Rule:** 2× natural frequency provides good damping without excessive speed
+
+2. Choose sliding gains for critically damped surface:
+   ```
+   k₁ = λ₁/2 ≈ 5.0  [s]
+   k₂ = λ₂/2 ≈ 3.0  [s]
+   ```
+   **Rule:** k_i = λ_i/2 gives critically damped sliding variable dynamics
+
+**Step 2: Tune Switching Gain K**
+
+1. Estimate disturbance bound: d̄ = max observed |disturbance| (typically 0.5-1.5 for DIP)
+2. Set initial K = 1.5·d̄ (50% margin)
+3. Simulate and observe:
+   - If oscillations persist → increase K by 20%
+   - If chattering excessive → decrease K by 10%, increase ε
+4. Final K typically 1.2-2.0× disturbance bound
+
+**Step 3: Tune Boundary Layer ε**
+
+1. Start with ε = 0.05 (large boundary layer, low chattering)
+2. Gradually decrease ε while monitoring chattering index:
+   ```
+   Target: Chattering index < 10 (acceptable), < 5 (good)
+   ```
+3. If chattering index > 15 → stop, increase ε
+4. Final ε typically 0.02-0.05 for DIP (balance accuracy vs chattering)
+
+**Step 4: Tune Derivative Gain k_d**
+
+1. Start with k_d = 0 (no damping)
+2. Increase k_d in steps of 0.5 until overshoot < 5%
+3. Typical range: k_d ∈ [1.0, 3.0]
+4. Warning: k_d > 5.0 amplifies sensor noise → instability
+
+**Expected Performance (after tuning):**
+- Settling time: 2.0-2.5s
+- Overshoot: 5-8%
+- Chattering index: 7-10
+- Computation: 18.5 μs
+
+---
+
+**3.9.2 STA-SMC Tuning Procedure**
+
+**Step 1: Estimate Disturbance Bound d̄**
+
+Same as Classical SMC (typically 0.5-1.5 for DIP)
+
+**Step 2: Apply Lyapunov Conditions**
+
+1. Choose K₂ to dominate disturbances:
+   ```
+   K₂ > 2d̄/ε
+   ```
+   For d̄=1.0, ε=0.01 → K₂ > 200
+   Practical choice: K₂ = 250 (25% margin)
+
+2. Choose K₁ to satisfy stability:
+   ```
+   K₁ > √(2K₂d̄)
+   ```
+   For K₂=250, d̄=1.0 → K₁ > √(500) ≈ 22.4
+   Practical choice: K₁ = 30 (34% margin)
+
+**Step 3: Tune for Performance**
+
+1. Start with Lyapunov-based values (K₁=30, K₂=250)
+2. If convergence too slow → increase K₁ by 20%
+3. If chattering observed → decrease K₁ by 10%, increase ε
+4. Final gains typically: K₁ ∈ [12, 20], K₂ ∈ [8, 15] (after PSO optimization)
+
+**Step 4: Adjust Sign Function Smoothing ε**
+
+1. Start with ε = 0.01 (tight smoothing)
+2. If chattering index > 5 → increase ε to 0.02
+3. STA should achieve chattering index < 3 with ε=0.01
+
+**Expected Performance (after tuning):**
+- Settling time: 1.8-2.0s
+- Overshoot: 2-4%
+- Chattering index: 1-3
+- Computation: 24.2 μs
+
+---
+
+**3.9.3 Adaptive SMC Tuning Procedure**
+
+**Step 1: Set Initial Gain K_init**
+
+Choose K_init = 1.2·d̄ (similar to Classical SMC switching gain)
+
+**Step 2: Tune Adaptation Rate γ**
+
+1. Start with γ = 5.0 (moderate adaptation)
+2. Simulate with large disturbance (e.g., 50% parameter error)
+3. If tracking error persists → increase γ by 50%
+4. If gain K(t) oscillates → decrease γ by 25%
+5. Final γ typically 3.0-7.0
+
+**Step 3: Tune Leak Rate β**
+
+1. Start with β = 0.1 (slow decay)
+2. If K(t) grows unbounded → increase β to 0.2
+3. If K(t) doesn't adapt fast enough → decrease β to 0.05
+4. Final β typically 0.05-0.15
+
+**Step 4: Set Dead-Zone δ**
+
+1. Choose δ = 2ε (twice boundary layer width)
+2. Ensures adaptation stops when on sliding surface
+3. Typical δ = 0.01-0.02
+
+**Step 5: Set Gain Bounds**
+
+1. Lower bound: K_min = 0.5·K_init (prevent gain collapse)
+2. Upper bound: K_max = 5·K_init (prevent excessive control effort)
+3. Typical: K_min=5.0, K_max=50.0
+
+**Expected Performance (after tuning):**
+- Settling time: 2.3-2.5s
+- Overshoot: 4-6%
+- Chattering index: 9-11
+- Robustness: 15% model uncertainty tolerance
+
+---
+
+**3.9.4 Hybrid Adaptive STA-SMC Tuning Procedure**
+
+**Step 1: Tune STA and Adaptive Controllers Independently**
+
+Follow Sections 3.9.2 and 3.9.3 to obtain nominal gains for both modes.
+
+**Step 2: Set Switching Threshold σ_switch**
+
+1. Analyze typical sliding variable range during transient response
+2. Choose σ_switch at 50-70% of peak |σ| during reaching phase
+3. Typical: σ_switch = 0.05 (5% of initial error)
+
+**Step 3: Set Hysteresis Margin Δ**
+
+1. Start with Δ = σ_switch/5 (20% hysteresis band)
+2. If mode chattering observed → increase Δ by 50%
+3. If mode switches too infrequently → decrease Δ by 25%
+4. Final Δ typically 0.01-0.02 (10-20% of σ_switch)
+
+**Step 4: Verify Bumpless Transfer**
+
+1. Simulate mode transitions and check control discontinuity:
+   ```
+   Δu = |u[k] - u[k-1]| during mode switch
+   ```
+2. If Δu > 0.2·u_max → adjust state initialization logic
+3. Target: Δu < 0.1·u_max (bumpless transfer)
+
+**Step 5: Test Robustness Across Modes**
+
+1. Simulate with:
+   - Large initial errors (test STA mode)
+   - Model uncertainty (test Adaptive mode)
+   - Mode transitions (test hysteresis)
+2. Verify no chattering at mode boundaries
+
+**Expected Performance (after tuning):**
+- Settling time: 1.9-2.1s
+- Overshoot: 3-5%
+- Chattering index: 4-6
+- Robustness: 16% model uncertainty tolerance
+
+---
+
+**3.9.5 Common Tuning Pitfalls**
+
+| Pitfall | Symptom | Solution |
+|---------|---------|----------|
+| **Gains too high** | Chattering, oscillations, high control effort | Reduce gains by 20-30%, increase ε |
+| **Gains too low** | Slow response, large steady-state error | Increase gains by 30-50%, verify stability |
+| **ε too small** | High-frequency chattering (>50 Hz) | Increase ε to ≥0.02 |
+| **ε too large** | Large steady-state error (>5%) | Decrease ε to 0.02-0.03, increase K |
+| **Violating Lyapunov conditions (STA)** | Instability, divergence | Recalculate K₁, K₂ using Lyapunov inequalities |
+| **No hysteresis (Hybrid)** | Mode chattering | Add Δ ≥ 0.01 |
+| **Sensor noise** | High-frequency oscillations in control | Add low-pass filter (20 Hz), reduce k_d |
+| **Actuator saturation** | Integral windup, overshoot | Enable anti-windup, reduce K_max |
+
+---
+
+**3.9.6 PSO-Based Automated Tuning (Recommended)**
+
+Manual tuning can be labor-intensive. PSO optimization (Section 5) automates the process:
+
+**Advantages:**
+- Explores parameter space systematically (swarm-based search)
+- Optimizes multi-objective cost (settling time + overshoot + chattering)
+- Finds near-optimal gains in 50-100 iterations (~10 minutes)
+
+**Procedure:**
+1. Define parameter bounds (e.g., K ∈ [5, 30], ε ∈ [0.01, 0.1])
+2. Choose cost function: J = w₁·t_settle + w₂·overshoot + w₃·chattering
+3. Run PSO with 20 particles, 50 iterations
+4. Verify performance on validation scenarios (different initial conditions)
+
+**Typical Results:**
+- Classical SMC: K=15.0, ε=0.02, k_d=2.0 → 18% better than manual tuning
+- STA SMC: K₁=12.0, K₂=8.0, ε=0.01 → 22% better performance
+- Hybrid STA: σ_switch=0.05, Δ=0.01 → optimal mode switching
+
+**See Section 5 for complete PSO methodology.**
+
+
+---
+
+
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+AUDIT INSTRUCTIONS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+You are auditing Section 3 (Controller Design) covering 7 SMC variants.
+
+**AUDIT SCOPE:**
+1. Technical Accuracy: Verify controller equations, sliding surfaces, reaching laws, parameter definitions
+2. Writing Quality: Check clarity of design rationale, equation presentation, design trade-offs
+3. Completeness: Verify all 7 controllers are fully described with equations and parameters
+
+**SPECIFIC CHECKS:**
+- Are all 7 controllers described (Classical, STA, Adaptive, Hybrid, Swing-Up, MPC, combinations)?
+- Are sliding surface definitions clear and mathematically correct?
+- Are control laws properly formulated?
+- Are design parameters (gains, boundary layers) specified?
+- Is the rationale for each controller variant explained?
+- Are differences between variants clearly articulated?
+
+**OUTPUT FORMAT:**
+Provide a structured audit report with scores, strengths, issues, and recommendations.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ENHANCED RIGOR SUPPLEMENT - ADD THIS TO EVERY REMAINING AUDIT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+CRITICAL CONTEXT:
+
+Section 4 (Lyapunov Stability) audit found a CRITICAL mathematical error:
+- Theorem 4.3 proof assumed β=1 implicitly (control authority)
+- Actual value: β≈0.78 from Example 4.1
+- Result: Proof claimed $(−β\tilde{K}|s|) + (\tilde{K}|s|) = 0$
+- Reality: Sum = $(1-β)\tilde{K}|s| = 0.22\tilde{K}|s| ≠ 0$ (destabilizing!)
+- Impact: Proof is INVALID for any system with β≠1
+
+Apply the SAME level of scrutiny to THIS section to catch similar errors.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ENHANCED AUDIT REQUIREMENTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. MATHEMATICAL RIGOR (For equations, proofs, derivations):
+
+   a) List ALL implicit assumptions
+      - Don't assume β=1, d=0, or any parameter = nominal value
+      - Check if "obviously" canceling terms actually cancel
+      - Verify algebra holds for general case, not just examples
+
+   b) Dimensional analysis
+      - Check units on both sides of EVERY equation
+      - Flag any dimensionally inconsistent terms
+
+   c) Numerical verification
+      - Plug example values into theoretical inequalities
+      - Verify claimed bounds are satisfied by numerical data
+      - Check if examples are representative or cherry-picked
+
+   d) Edge case analysis
+      - What if parameters → 0? What if parameters → ∞?
+      - What if β≠1? What if disturbances ≠ 0?
+      - Are inequalities valid at stated domain boundaries?
+
+2. DATA/RESULTS RIGOR (For numerical claims, statistics, tables):
+
+   a) Trace EVERY numerical claim to source
+      - "50.4x degradation" → Show exact calculation
+      - "90.2% failure rate" → Verify from raw data
+      - "1.82s settling time" → Confirm appears in tables
+
+   b) Statistical validity
+      - Sample size sufficient for claimed CI?
+      - p-values corrected for multiple comparisons?
+      - Effect sizes match "significant" claims?
+      - Test assumptions satisfied (normality, etc.)?
+
+   c) Cross-check values
+      - Compare numbers in text vs. tables vs. figures
+      - Verify percentages sum to 100% where applicable
+      - Check mean ± CI makes sense (positive quantities)
+
+   d) Consistency with theory
+      - Do experimental results match theoretical predictions?
+      - Are controller rankings consistent with Section 4 proofs?
+      - Do numerical values satisfy derived bounds?
+
+3. CLAIM VERIFICATION:
+
+   For EVERY claim marked as "critical" in the original audit prompt:
+
+   - Provide step-by-step verification or counterexample
+   - If you cannot verify: FLAG AS CRITICAL ISSUE
+   - If claim depends on unstated assumption: FLAG IT
+   - If calculation method unclear: REQUEST CLARIFICATION
+
+4. CROSS-SECTION CONSISTENCY:
+
+   Check this section against:
+   - Section 4 (Lyapunov Stability): Do results match theoretical predictions?
+   - Section 6 (Experimental Setup): Do methods match stated protocol?
+   - Other sections: Any contradictions in values, terminology, claims?
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+OUTPUT REQUIREMENTS (Enhanced)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+In addition to standard audit format, include:
+
+**MATHEMATICAL RIGOR SECTION:**
+- List of ALL implicit assumptions found
+- List of ALL equations verified dimensionally
+- List of ALL numerical values verified against examples
+- List of ALL claims traced to source data
+
+**CRITICAL ISSUES (Enhanced):**
+For each critical issue, provide:
+1. Exact location (section, equation number, line number if possible)
+2. What is claimed vs. what is actually true
+3. Impact on paper validity (does this invalidate a theorem/result?)
+4. Suggested fix (at least 2 options if possible)
+
+**VERIFICATION TABLE:**
+Create a table like this:
+
+| Claim | Source | Verified? | Notes |
+|-------|--------|-----------|-------|
+| "50.4x degradation" | Table X | ❌ / ✅ | Calculation: ... |
+| "β=0.78" | Example 4.1 | ✅ | Matches stated value |
+| ... | ... | ... | ... |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SEVERITY CLASSIFICATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+**SEVERITY 1 (CRITICAL):** Invalidates proof/result (like Theorem 4.3 β error)
+- Mathematical error in proof
+- Claim contradicted by data
+- Statistical test assumption violated
+
+**SEVERITY 2 (HIGH):** Reduces confidence but doesn't invalidate
+- Unclear methodology
+- Missing verification for key claim
+- Inconsistency between sections
+
+**SEVERITY 3 (MEDIUM):** Quality issue, doesn't affect validity
+- Notation inconsistency
+- Missing units
+- Unclear writing
+
+Flag SEVERITY 1 issues with: ⚠️ CRITICAL - MUST FIX BEFORE SUBMISSION
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+REMEMBER: The goal is to catch errors BEFORE publication. Be skeptical.
+Question every "obvious" claim. Verify every number. Check every assumption.
+
+If something looks too good to be true, it probably needs deeper scrutiny.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ULTRA-DEEP AUDIT PROTOCOL - MANDATORY DEEP ANALYSIS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+CRITICAL INSTRUCTION: This audit MUST be thorough and take 3-5 minutes minimum.
+If you complete this in under 2 minutes, you are NOT doing it correctly.
+
+PROVEN ERROR FOUND: Section 4 audit found Theorem 4.3 proof assumes β=1 but β=0.78.
+This invalidated an entire proof. YOU MUST find similar errors in THIS section.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+MANDATORY CHECKLIST - ANSWER EVERY QUESTION EXPLICITLY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+You MUST answer EVERY question below with step-by-step verification.
+DO NOT say "appears correct" or "looks reasonable" - SHOW YOUR WORK.
+
+FOR EVERY NUMERICAL CLAIM:
+
+Example: "50.4x degradation"
+
+Q1: Where is this claim stated? (exact paragraph, sentence)
+    → Answer: "Section 8.3, paragraph 2, sentence 1"
+
+Q2: What is the exact calculation?
+    → Answer: degradation_ratio = (value_disturbance - value_nominal) / value_nominal
+    → Show: (107.61 - 2.14) / 2.14 = 105.47 / 2.14 = 49.28x ≠ 50.4x
+    → CRITICAL ERROR: Claimed 50.4x but calculation gives 49.28x!
+
+Q3: Can you trace this to source data (table/figure)?
+    → Answer: "Table 8.3, row 'Classical SMC', columns 'Nominal' and 'Disturbance'"
+    → Values: nominal=2.14, disturbance=107.61
+    → Verify calculation matches claim: [YES/NO with explanation]
+
+Q4: Are there ANY implicit assumptions?
+    → Answer: "Assumes β=1 in controller equations (check Section 3)"
+    → If β≠1, does this invalidate the result? [Explain]
+
+Q5: Cross-check with theoretical predictions
+    → Section 4 predicts: [state prediction]
+    → This result shows: [state result]
+    → Consistency: [MATCH / MISMATCH with explanation]
+
+REPEAT THIS FOR EVERY CLAIM:
+- List ALL numerical claims (make a table)
+- Answer Q1-Q5 for EACH claim
+- If you cannot verify ANY claim, FLAG IT AS CRITICAL
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+FOR EVERY EQUATION/PROOF:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Example: Equation showing settling time calculation
+
+Q1: Write out the equation EXACTLY as stated
+    → Answer: "t_s = 4/ζω_n where ζ=damping, ω_n=natural frequency"
+
+Q2: Check dimensional consistency
+    → Left side: [time] in seconds
+    → Right side: 4 (dimensionless) / (dimensionless × rad/s) = [time] ✓
+    → OR: Dimensional mismatch! [Explain]
+
+Q3: Plug in example values and verify
+    → Example gives: ζ=0.7, ω_n=2.5 rad/s
+    → Calculate: t_s = 4/(0.7×2.5) = 4/1.75 = 2.29s
+    → Text claims: [what value?]
+    → Match: [YES/NO]
+
+Q4: List ALL implicit assumptions
+    → Assumes: second-order system
+    → Assumes: ζ < 1 (underdamped)
+    → Assumes: β=1 in control gain
+    → If ANY assumption violated, what happens? [Explain]
+
+Q5: What if parameters change?
+    → If ζ→0, then t_s→∞ (equation valid? YES)
+    → If ω_n→0, then t_s→∞ (equation valid? YES)
+    → If β≠1, does equation still hold? [CRITICAL - Explain]
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+FOR EVERY STATISTICAL CLAIM:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Example: "Welch's t-test shows p<0.05, thus STA significantly better than Classical"
+
+Q1: What test was used?
+    → Answer: "Welch's t-test (unequal variances t-test)"
+
+Q2: Are test assumptions satisfied?
+    → Normality: Check if claimed. If not checked, FLAG AS ISSUE.
+    → Independence: Are samples independent? [Verify]
+    → Sample size: n=400 stated. Is this adequate?
+      → For 95% CI with margin ±0.1s and σ~0.5s: n = (1.96×0.5/0.1)² = 96
+      → 400 > 96, so YES adequate
+
+Q3: Is multiple comparison correction applied?
+    → How many comparisons? 7 controllers = 7×6/2 = 21 pairwise comparisons
+    → Bonferroni correction: α = 0.05/21 = 0.0024
+    → Text claims p<0.05. Is this p<0.0024? [Check]
+    → If not corrected: FLAG AS CRITICAL (inflated Type I error)
+
+Q4: What is the effect size?
+    → Text claims Cohen's d = 2.14
+    → Verify: d = (mean1 - mean2) / pooled_SD
+    → Given means: mean_STA=1.82s, mean_Classical=2.15s, SD_pooled=?
+    → If SD_pooled not stated, cannot verify d=2.14. FLAG AS ISSUE.
+
+Q5: Practical significance vs statistical significance
+    → Difference: 2.15 - 1.82 = 0.33s
+    → Is 0.33s practically significant for this application? [Discuss]
+    → Can be statistically significant (p<0.05) but practically irrelevant!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CROSS-SECTION VERIFICATION (MANDATORY)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+For EVERY result in this section, check against other sections:
+
+1. Does this match Section 4 (Lyapunov Stability) predictions?
+   → Section 4 predicts STA has finite-time convergence with T < 2.1s
+   → This section shows settling time = 1.82s
+   → Is 1.82s < 2.1s? YES ✓
+   → BUT: Does β=0.78 affect this? Section 4 proof assumes β=1!
+   → CRITICAL: Recheck if T<2.1s bound valid for β=0.78
+
+2. Does this match Section 6 (Experimental Setup) methodology?
+   → Section 6 claims 400-500 Monte Carlo runs
+   → This section shows results from how many runs? [Verify]
+   → Sample sizes match? [YES/NO]
+
+3. Does this match Section 3 (Controller Design) equations?
+   → Controllers use gains: K_classical = [values from Section 3]
+   → This section uses gains: [values from results]
+   → Do they match? [Verify]
+
+Create table:
+
+| Value | This Section | Section 3 | Section 4 | Section 6 | Consistent? |
+|-------|-------------|-----------|-----------|-----------|-------------|
+| β | 0.78 (implicit?) | ? | 1.0 (assumed) | ? | ❌ MISMATCH |
+| K_1 | ... | ... | ... | ... | ✓/❌ |
+| ... | ... | ... | ... | ... | ... |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+MANDATORY OUTPUT STRUCTURE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Your audit MUST include:
+
+1. VERIFICATION TABLE (for ALL numerical claims):
+
+| Claim | Location | Calculation | Source Table | Verified? | Issues |
+|-------|----------|-------------|--------------|-----------|--------|
+| "50.4x degradation" | Sec 8.3, para 2 | (107.61-2.14)/2.14 | Table 8.3 | ❌ | Calc gives 49.28x, not 50.4x |
+| "1.82s settling" | Sec 7.2, para 1 | (stated) | Table 7.1 | ✓ | Matches table |
+| ... | ... | ... | ... | ... | ... |
+
+2. ASSUMPTION LIST (for ALL implicit assumptions):
+
+| Assumption | Where Used | Valid? | Impact if Violated |
+|------------|-----------|--------|-------------------|
+| β=1 | Throughout | ❌ NO | β=0.78 from Ex 4.1, invalidates calculations |
+| d=0 | Nominal case | ✓ YES | Only for nominal scenario |
+| Normality | Statistical tests | ⚠️ UNCHECKED | Can't validate t-test results |
+| ... | ... | ... | ... |
+
+3. DIMENSIONAL ANALYSIS TABLE:
+
+| Equation | LHS Units | RHS Units | Consistent? | Notes |
+|----------|-----------|-----------|-------------|-------|
+| t_s = 4/ζω_n | [s] | [dimensionless]/([dimensionless]×[rad/s]) = [s] | ✓ | OK |
+| ... | ... | ... | ... | ... |
+
+4. SEVERITY-CLASSIFIED ISSUES:
+
+⚠️ SEVERITY 1 (CRITICAL - Invalidates result):
+  - Issue 1: [Exact description with location]
+  - Impact: [How this invalidates result]
+  - Fix: [At least 2 options]
+
+⚠️ SEVERITY 2 (HIGH - Reduces confidence):
+  - Issue 1: [...]
+
+⚠️ SEVERITY 3 (MEDIUM - Quality issue):
+  - Issue 1: [...]
+
+5. DETAILED STEP-BY-STEP VERIFICATION:
+
+For each critical claim, show:
+```
+CLAIM: "50.4x degradation in PSO-optimized gains under realistic disturbances"
+
+STEP 1: Locate claim
+  → Section 8.3, paragraph 2, sentence 1
+
+STEP 2: Find source data
+  → Table 8.3, row "Classical SMC", columns "Nominal" and "Realistic"
+  → Nominal chattering index: 2.14 ± 0.13
+  → Realistic chattering index: 107.61 ± 5.48
+
+STEP 3: Verify calculation
+  → Degradation = (Realistic - Nominal) / Nominal
+  → = (107.61 - 2.14) / 2.14
+  → = 105.47 / 2.14
+  → = 49.28x
+
+STEP 4: Compare to claim
+  → Claim: 50.4x
+  → Calculated: 49.28x
+  → Discrepancy: 50.4 - 49.28 = 1.12x (2.2% error)
+
+STEP 5: Determine if critical
+  → 2.2% error is small but claim is PRECISE (50.4x, not "~50x")
+  → Should be 49.3x rounded, not 50.4x
+  → SEVERITY 2: High - Undermines precision claims
+
+STEP 6: Check for implicit assumptions
+  → Does this assume β=1? [Check equations in Section 3]
+  → If β≠1, does degradation change? [Verify]
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TIME CHECK
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+If you completed this audit in under 2 minutes, you did NOT follow instructions.
+
+A proper audit of this section should take 3-5 minutes and include:
+  - Verification table with 10+ claims
+  - Assumption list with 5+ implicit assumptions
+  - Dimensional analysis for all equations
+  - Step-by-step verification for at least 3 critical claims
+  - Cross-section consistency checks
+  - At least 2 SEVERITY 1 issues found (or explain why none exist)
+
+If your output is under 500 lines, it's too brief.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+FINAL REMINDER
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+This paper is being submitted to a peer-reviewed journal. Reviewers WILL catch errors.
+
+Section 4 already has a CRITICAL error (Theorem 4.3 β≠1).
+There ARE likely errors in this section too.
+
+Your job is to find them BEFORE reviewers do.
+
+Be skeptical. Question everything. Show your work. Take your time.
+
+
+========================================================================
+END OF PROMPT - EXPECT 3-5 MINUTE AUDIT
+========================================================================

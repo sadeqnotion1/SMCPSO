@@ -1,0 +1,221 @@
+% ==============================================================================
+% CHAPTER TEMPLATE - Reusable Chapter Structure
+% ==============================================================================
+% Copy this template for each new chapter.
+% Replace placeholders with your content.
+% ==============================================================================
+
+\chapter{Chapter Title Here}
+\label{chap:chapter-name}
+
+% ==============================================================================
+% CHAPTER INTRODUCTION (1-2 paragraphs)
+% ==============================================================================
+
+This chapter introduces [topic]. The main objectives are:
+\begin{itemize}
+    \item Objective 1: [Brief description]
+    \item Objective 2: [Brief description]
+    \item Objective 3: [Brief description]
+\end{itemize}
+
+The chapter is organized as follows: \cref{sec:section1} presents [topic 1], \cref{sec:section2} discusses [topic 2], and \cref{sec:section3} concludes with [topic 3].
+
+% ==============================================================================
+% SECTION 1
+% ==============================================================================
+
+\section{First Section Title}
+\label{sec:section1}
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. This is an example of citing a reference~\cite{Utkin1977}. Multiple citations can be grouped~\cite{Utkin1977,Khalil2002,Slotine1991}.
+
+% Subsection 1.1
+\subsection{First Subsection}
+\label{subsec:subsection1-1}
+
+Content for subsection 1.1. Here is an example of a mathematical equation:
+\begin{equation}
+    \dot{\vect{x}} = \mat{A}\vect{x} + \mat{B}\vect{u}
+    \label{eq:state-space}
+\end{equation}
+where $\vect{x} \in \Real^n$ is the state vector, $\vect{u} \in \Real^m$ is the control input, and $\mat{A}$, $\mat{B}$ are system matrices.
+
+% Subsection 1.2
+\subsection{Second Subsection}
+\label{subsec:subsection1-2}
+
+Content for subsection 1.2. Example of referencing an equation: As shown in \cref{eq:state-space}, the system dynamics...
+
+% Example: Multi-line equation
+\begin{align}
+    \dot{x}_1 &= x_2 \label{eq:system-1} \\
+    \dot{x}_2 &= f(\vect{x}) + g(\vect{x})u \label{eq:system-2}
+\end{align}
+
+% ==============================================================================
+% SECTION 2 - With Figure Example
+% ==============================================================================
+
+\section{Second Section Title}
+\label{sec:section2}
+
+This section discusses [topic]. \cref{fig:example-figure} illustrates the concept.
+
+% Single figure example
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/example_figure.pdf}
+    \caption{Example figure caption. Describe what the figure shows and its significance.}
+    \label{fig:example-figure}
+\end{figure}
+
+% Subsection 2.1 - With subfigures
+\subsection{Comparison Analysis}
+\label{subsec:comparison}
+
+\cref{fig:comparison} compares two approaches.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/approach_a.pdf}
+        \caption{Approach A}
+        \label{fig:approach-a}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/approach_b.pdf}
+        \caption{Approach B}
+        \label{fig:approach-b}
+    \end{subfigure}
+    \caption{Comparison of two approaches. (a) Approach A shows... (b) Approach B demonstrates...}
+    \label{fig:comparison}
+\end{figure}
+
+% ==============================================================================
+% SECTION 3 - With Table Example
+% ==============================================================================
+
+\section{Third Section Title}
+\label{sec:section3}
+
+This section presents results summarized in \cref{tab:example-table}.
+
+% Table example with booktabs
+\begin{table}[htbp]
+    \centering
+    \caption{Example table caption. Describe the data and its source.}
+    \label{tab:example-table}
+    \begin{tabular}{lcccc}
+        \toprule
+        \textbf{Controller} & \textbf{Settling Time (s)} & \textbf{Overshoot (\%)} & \textbf{Energy (J)} \\
+        \midrule
+        Classical SMC       & 3.45                       & 12.3                    & 245                 \\
+        STA-SMC            & 2.78                       & 8.5                     & 198                 \\
+        Adaptive SMC       & 2.91                       & 9.2                     & 210                 \\
+        Hybrid             & 2.62                       & 7.8                     & 185                 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+% Subsection 3.1 - With algorithm
+\subsection{Algorithm Description}
+\label{subsec:algorithm}
+
+\cref{alg:example-algorithm} presents the pseudocode.
+
+\begin{algorithm}[htbp]
+    \caption{Example Algorithm}
+    \label{alg:example-algorithm}
+    \begin{algorithmic}[1]
+        \Require State $\vect{x}$, Gains $\vect{K}$
+        \Ensure Control input $u$
+        \State Compute sliding surface: $s = \vect{c}^T \vect{x}$
+        \If{$|s| > \phi$}
+            \State $u = -K \cdot \sign(s)$
+        \Else
+            \State $u = -K \cdot s / \phi$
+        \EndIf
+        \Return $u$
+    \end{algorithmic}
+\end{algorithm}
+
+% ==============================================================================
+% SECTION 4 - With Code Listing
+% ==============================================================================
+
+\section{Implementation Details}
+\label{sec:implementation}
+
+The implementation in Python is shown in \cref{lst:example-code}.
+
+\begin{lstlisting}[language=Python, caption={Example Python code}, label={lst:example-code}, style=python]
+def compute_control(state, gains):
+    """
+    Compute SMC control input.
+
+    Args:
+        state: State vector [x1, x2, ...]
+        gains: Control gains [c1, c2, ..., K]
+
+    Returns:
+        u: Control input
+    """
+    # Compute sliding surface
+    s = np.dot(gains[:-1], state)
+
+    # Compute control (sign function)
+    u = -gains[-1] * np.sign(s)
+
+    return u
+\end{lstlisting}
+
+% ==============================================================================
+% SECTION 5 - With Theorem/Proof
+% ==============================================================================
+
+\section{Theoretical Analysis}
+\label{sec:theory}
+
+\begin{theorem}[Stability of Sliding Mode]
+\label{thm:smc-stability}
+Consider the system described by \cref{eq:state-space}. If the sliding surface is designed such that $s = \vect{c}^T \vect{x} = 0$ is stable, and the control law satisfies $s\dot{s} < 0$, then the system converges to the sliding surface in finite time.
+\end{theorem}
+
+\begin{proof}
+Consider the Lyapunov function candidate:
+\begin{equation}
+    V = \frac{1}{2}s^2
+\end{equation}
+
+Taking the time derivative:
+\begin{align}
+    \dot{V} &= s\dot{s} \\
+    &< 0 \quad \text{(by assumption)}
+\end{align}
+
+Thus, $V$ is strictly decreasing, proving convergence to $s = 0$.
+\end{proof}
+
+% ==============================================================================
+% CHAPTER SUMMARY (1-2 paragraphs)
+% ==============================================================================
+
+\section{Summary}
+\label{sec:summary}
+
+This chapter presented [summary of key points]:
+\begin{itemize}
+    \item Key finding 1: [Brief description]
+    \item Key finding 2: [Brief description]
+    \item Key finding 3: [Brief description]
+\end{itemize}
+
+The next chapter will discuss [preview of next chapter].
+
+% ==============================================================================
+% END OF CHAPTER
+% ==============================================================================

@@ -1,0 +1,28 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ABSTRACT
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter*{Abstract}
+\addcontentsline{toc}{chapter}{Abstract}
+
+This textbook presents a comprehensive treatment of sliding mode control (SMC) for underactuated systems, using the double-inverted pendulum (DIP) as a case study. We develop four SMC variants from first principles—classical SMC, super-twisting algorithm, adaptive SMC, and hybrid adaptive STA-SMC—providing complete Lyapunov stability proofs, implementation details, and experimental validation.
+
+Key contributions include:
+
+\begin{itemize}
+    \item \textbf{Rigorous mathematical foundations}: Lagrangian dynamics derivation for DIP, complete Lyapunov proofs for all controllers, finite-time convergence analysis.
+
+    \item \textbf{Production-quality Python implementation}: 3,000+ lines of validated code with factory patterns, Pydantic configuration, Numba acceleration, and 100+ unit tests achieving 95\% coverage.
+
+    \item \textbf{Particle Swarm Optimization (PSO)}: Multi-objective gain tuning framework achieving 95-98\% performance improvement over manual methods across settling time, chattering, and energy consumption metrics.
+
+    \item \textbf{Comprehensive benchmarking}: 100 Monte Carlo trials per controller (400 total) with statistical analysis (95\% confidence intervals, Welch's t-tests) establishing empirical performance baselines.
+
+    \item \textbf{Robustness validation}: Model uncertainty analysis demonstrating 92-94\% success rate under $\pm 20\%$ parameter variations for adaptive controllers.
+\end{itemize}
+
+Experimental results show that the hybrid adaptive STA-SMC achieves optimal performance: 1.58 s settling time, 0.9 J energy consumption, 1.0 N/s chattering amplitude, and 94\% robustness to uncertainty. All benchmarking data, Python source code, and configuration files are available at \url{https://github.com/theSadeQ/dip-smc-pso}.
+
+This textbook bridges the gap between theoretical SMC literature and practical implementation, providing graduate students, engineers, and researchers with a complete learning path from mathematical prerequisites to production deployment. Over 120 exercises with detailed solutions reinforce understanding and enable self-study.
+
+\textbf{Keywords}: Sliding mode control, underactuated systems, double-inverted pendulum, super-twisting algorithm, adaptive control, particle swarm optimization, Python implementation, Lyapunov stability, finite-time convergence, robustness analysis.

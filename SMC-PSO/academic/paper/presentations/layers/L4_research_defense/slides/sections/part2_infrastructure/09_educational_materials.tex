@@ -1,0 +1,191 @@
+% ============================================================================
+% SECTION 4: OPTIMIZATION SYSTEM (PSO)
+% ============================================================================
+\section{Optimization System (PSO)}
+
+\begin{frame}{Particle Swarm Optimization: Overview}
+    \textbf{Inspiration:} Social behavior of bird flocking, fish schooling
+
+    \vspace{0.3cm}
+
+    \textbf{Algorithm:} Population-based stochastic optimization
+    \begin{itemize}
+        \item \textbf{Particles:} Candidate solutions in search space
+        \item \textbf{Velocity:} Direction and speed of movement
+        \item \textbf{Personal best:} Best solution found by each particle
+        \item \textbf{Global best:} Best solution found by entire swarm
+    \end{itemize}
+
+    \vspace{0.3cm}
+
+    \textbf{Update Equations:}
+    \begin{align}
+        v_i^{(t+1)} &= w v_i^{(t)} + c_1 r_1 (p_i - x_i^{(t)}) + c_2 r_2 (g - x_i^{(t)}) \\
+        x_i^{(t+1)} &= x_i^{(t)} + v_i^{(t+1)}
+    \end{align}
+
+    where:
+    \begin{itemize}
+        \item $w$ -- Inertia weight (0.729)
+        \item $c_1, c_2$ -- Cognitive/social coefficients (1.494 each)
+        \item $r_1, r_2$ -- Random numbers $\in [0,1]$
+        \item $p_i$ -- Personal best, $g$ -- Global best
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{PSO for Controller Gain Tuning}
+    \textbf{Objective:} Find optimal controller gains to minimize cost function
+
+    \vspace{0.3cm}
+
+    \textbf{Search Space:} Controller gains (6-dimensional for classical SMC)
+    \begin{equation}
+        \mathbf{x} = [k_1, k_2, \lambda_1, \lambda_2, K, \epsilon]
+    \end{equation}
+
+    \vspace{0.3cm}
+
+    \textbf{Cost Function (Multi-Objective):}
+    \begin{equation}
+        J = w_1 \cdot ISE + w_2 \cdot t_{settle} + w_3 \cdot \int u^2 dt + w_4 \cdot \text{chattering}
+    \end{equation}
+
+    where:
+    \begin{itemize}
+        \item $ISE = \int (\theta_1^2 + \theta_2^2) dt$ -- Integral squared error
+        \item $t_{settle}$ -- Settling time
+        \item $\int u^2 dt$ -- Control effort
+        \item chattering -- High-frequency energy metric
+    \end{itemize}
+
+    \vspace{0.3cm}
+
+    \begin{exampleblock}{QW-3: PSO Visualization Tools}
+        \success{Complete} -- Convergence curves, particle trajectories, fitness landscapes
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}{PSO Algorithm Parameters}
+    \textbf{Default Configuration:}
+
+    \vspace{0.3cm}
+
+    \begin{tabular}{ll}
+        \toprule
+        \textbf{Parameter} & \textbf{Value} \\
+        \midrule
+        Number of particles & 30 \\
+        Generations & 50-100 \\
+        Inertia weight ($w$) & 0.729 \\
+        Cognitive coefficient ($c_1$) & 1.494 \\
+        Social coefficient ($c_2$) & 1.494 \\
+        \midrule
+        \multicolumn{2}{l}{\textit{Convergence Criteria:}} \\
+        Fitness tolerance & $10^{-6}$ \\
+        Max stagnation generations & 10 \\
+        \bottomrule
+    \end{tabular}
+
+    \vspace{0.3cm}
+
+    \begin{block}{MT-7: Robust PSO Validation}
+        \success{Complete} -- Tested across 100 seeds, validated convergence reliability \\
+        Integrated into LT-7 research paper
+    \end{block}
+\end{frame}
+
+\begin{frame}{PSO Convergence Analysis}
+    \textbf{Typical Convergence Curve:}
+
+    \vspace{0.3cm}
+
+    \begin{tikzpicture}
+        \begin{axis}[
+            width=0.9\textwidth,
+            height=0.5\textheight,
+            xlabel={Generation},
+            ylabel={Best Fitness},
+            grid=major,
+            legend pos=north east,
+            ymode=log
+        ]
+            \addplot[dipblue, thick] coordinates {
+                (0, 100) (10, 50) (20, 25) (30, 12) (40, 6) (50, 3) (60, 1.5) (70, 0.8) (80, 0.5) (90, 0.3) (100, 0.2)
+            };
+            \addplot[dipred, dashed] coordinates {
+                (0, 0.2) (100, 0.2)
+            };
+            \legend{Best Fitness, Convergence Threshold}
+        \end{axis}
+    \end{tikzpicture}
+
+    \vspace{0.3cm}
+
+    \textbf{Characteristics:}
+    \begin{itemize}
+        \item \textbf{Rapid initial decrease:} Exploration phase (generations 0-30)
+        \item \textbf{Gradual refinement:} Exploitation phase (generations 30-100)
+        \item \textbf{Convergence:} Fitness plateau indicates optimal solution found
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Optimization Results: Controller Comparison}
+    \textbf{Optimized Gains (MT-5 Benchmark):}
+
+    \vspace{0.3cm}
+
+    \begin{tabular}{lccc}
+        \toprule
+        \textbf{Controller} & \textbf{Settling Time (s)} & \textbf{ISE} & \textbf{Energy (J)} \\
+        \midrule
+        Classical SMC & 2.5 & 0.45 & 12.3 \\
+        STA-SMC & 2.1 & 0.38 & 10.8 \\
+        Adaptive SMC & 2.3 & 0.41 & 11.5 \\
+        Hybrid Adaptive STA & \textbf{2.0} & \textbf{0.35} & \textbf{10.2} \\
+        \bottomrule
+    \end{tabular}
+
+    \vspace{0.3cm}
+
+    \begin{exampleblock}{Key Findings}
+        \begin{itemize}
+            \item \textbf{Best overall:} Hybrid Adaptive STA-SMC
+            \item \textbf{Lowest chattering:} STA-SMC
+            \item \textbf{Fastest convergence:} PSO typically converges in 60-80 generations
+            \item \textbf{Repeatability:} 95\% success rate across 100 random seeds
+        \end{itemize}
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Alternative Optimization Algorithms}
+    \textbf{Implemented but not primary:}
+
+    \vspace{0.3cm}
+
+    \begin{enumerate}
+        \item \textbf{CMA-ES} (Covariance Matrix Adaptation Evolution Strategy)
+        \begin{itemize}
+            \item Better for high-dimensional problems
+            \item \texttt{src/optimization/algorithms/cma\_es.py}
+        \end{itemize}
+
+        \item \textbf{Differential Evolution (DE)}
+        \begin{itemize}
+            \item Simple, robust global optimizer
+            \item \texttt{src/optimization/algorithms/differential\_evolution.py}
+        \end{itemize}
+
+        \item \textbf{Genetic Algorithm (GA)}
+        \begin{itemize}
+            \item Classic evolutionary approach
+            \item \texttt{src/optimization/algorithms/genetic\_algorithm.py}
+        \end{itemize}
+    \end{enumerate}
+
+    \vspace{0.3cm}
+
+    \begin{alertblock}{Status}
+        \statuswarning PSO is primary method (best performance for this application) \\
+        Other algorithms available for research/comparison
+    \end{alertblock}
+\end{frame}

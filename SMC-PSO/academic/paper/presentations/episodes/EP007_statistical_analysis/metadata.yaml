@@ -1,0 +1,13 @@
+﻿episode_id: EP007
+slug: statistical_analysis
+title: Statistical Analysis
+status: migrated_auto
+last_updated: 2026-02-24
+languages:
+  - en
+  - fa
+channels:
+  - podcast
+source_file_count: 6
+source_buckets:
+  - episodes_specialized_advisor_report_complete

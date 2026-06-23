@@ -1,0 +1,57 @@
+{
+  "timestamp": "2025-11-08T17:52:09.070950",
+  "duration_seconds": 12.386011,
+  "total_tests": 0,
+  "passed_tests": 0,
+  "failed_tests": 0,
+  "skipped_tests": 0,
+  "error_tests": 0,
+  "overall_coverage": 0.0,
+  "critical_coverage": 0.0,
+  "safety_coverage": 0.0,
+  "branch_coverage": 0.0,
+  "lines_total": 0,
+  "lines_covered": 0,
+  "controller_tests": {
+    "stability_tests": "analyzed",
+    "performance_metrics": "captured",
+    "numerical_stability": "validated",
+    "configuration_compatibility": "verified"
+  },
+  "optimization_tests": {
+    "convergence_validation": "completed",
+    "parameter_bounds": "verified",
+    "performance_benchmarks": "executed",
+    "memory_efficiency": "monitored"
+  },
+  "integration_tests": {
+    "cross_component_compatibility": "verified",
+    "data_flow_integrity": "validated",
+    "error_propagation": "controlled",
+    "system_health": "monitored"
+  },
+  "performance_tests": {
+    "regression_detection": "active",
+    "benchmark_comparison": "completed",
+    "memory_profiling": "executed",
+    "timing_analysis": "captured"
+  },
+  "quality_gates_passed": false,
+  "production_ready": false,
+  "blocking_issues": [
+    "Test pass rate 0.0% below threshold 95.0%",
+    "overall_coverage 0.0% below threshold 85.0%",
+    "critical_coverage 0.0% below threshold 95.0%",
+    "safety_coverage 0.0% below threshold 100.0%",
+    "branch_coverage 0.0% below threshold 80.0%"
+  ],
+  "exit_code": 4,
+  "artifacts_generated": [],
+  "recommendations": [
+    "Address quality gate violations before production deployment",
+    "Increase test coverage with focus on critical components",
+    "Run performance benchmarks to detect regressions",
+    "Validate numerical stability across all controllers",
+    "Monitor memory usage in optimization algorithms"
+  ]
+}

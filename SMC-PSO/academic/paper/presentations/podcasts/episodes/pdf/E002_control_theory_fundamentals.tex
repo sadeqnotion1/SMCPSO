@@ -1,0 +1,310 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{E002}
+\lhead{DIP-SMC-PSO Learning Episode}
+\rfoot{\thepage}
+
+\title{\Large\textbf{E002: Control Theory Fundamentals}}
+\author{DIP-SMC-PSO Educational Series}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section*{Overview}
+
+This episode covers control theory fundamentals from the DIP-SMC-PSO project.
+
+\textbf{Part:} Part1 Foundations
+
+\textbf{Duration:} 15-20 minutes
+
+\textbf{Source:} Comprehensive Presentation Materials
+
+\newpage
+
+\section{Seven Controller Types: Overview}
+
+- **Classical SMC** -- Boundary layer for chattering reduction
+        
+            - Simplest implementation, robust to uncertainties
+            - `src/controllers/classical\_smc.py`
+
+        - **Super-Twisting Algorithm (STA)** -- Continuous higher-order SMC
+        
+            - Second-order sliding mode, finite-time convergence
+            - `src/controllers/sta\_smc.py`
+
+        - **Adaptive SMC** -- Online parameter estimation
+        
+            - Adapts to unknown system parameters
+            - `src/controllers/adaptive\_smc.py`
+
+        - **Hybrid Adaptive STA-SMC** -- Combines adaptive + super-twisting
+        
+            - Best of both approaches
+            - `src/controllers/hybrid\_adaptive\_sta\_smc.py`
+
+\section{Seven Controller Types: Advanced \& Experimental}
+
+\setcounter{enumi}{4}
+        - **Swing-Up SMC** -- Large-angle stabilization
+        
+            - Energy-based swing-up + SMC balance
+            - `src/controllers/swing\_up\_smc.py`
+
+        - **Model Predictive Control (MPC)** -- Experimental optimization-based
+        
+            - Predicts future states, optimizes control sequence
+            - `src/controllers/mpc.py`
+
+        - **Factory Pattern** -- Thread-safe controller registry
+        
+            - Unified interface for all controllers
+            - `src/controllers/factory.py`
+
+        [OK] All 7 controllers validated with:
+        
+            - Lyapunov stability proofs (LT-4)
+            - 100 Monte Carlo runs (MT-5)
+            - Model uncertainty analysis (LT-6)
+            - Disturbance rejection testing (MT-8)
+
+\section{Sliding Mode Control: Fundamental Concept}
+
+**Core Idea:** Design a sliding surface $\slidingsurf = 0$ such that:
+    
+        - System trajectories converge to the surface (reaching phase)
+        - System slides along the surface to equilibrium (sliding phase)
+
+    **Sliding Surface Design for DIP:**
+    \begin{equation}
+        \slidingsurf = k_1 \theta_1 + k_2 \dot{\theta}_1 + \lambda_1 \theta_2 + \lambda_2 \dot{\theta}_2
+    \end{equation}
+
+    where:
+    
+        - $\theta_1, \theta_2$ -- Angular positions of poles 1 and 2
+        - $\dot{\theta}_1, \dot{\theta}_2$ -- Angular velocities
+        - $k_1, k_2, \lambda_1, \lambda_2$ -- Design gains (tuned by PSO)
+
+            - **Robustness:** Insensitive to matched uncertainties
+            - **Finite-time convergence:** Reaches $\slidingsurf=0$ in finite time
+            - **Invariance:** Dynamics on surface independent of disturbances
+
+\section{Classical SMC: Control Law}
+
+**Control Law with Boundary Layer:**
+    \begin{equation}
+        u = -K \cdot \tanh\left(\frac{\slidingsurf}{\epsilon}\right)
+    \end{equation}
+
+    where:
+    
+        - $K$ -- Control gain (determines reaching speed)
+        - $\epsilon$ -- Boundary layer thickness (chattering reduction)
+        - $\tanh(\cdot)$ -- Smooth approximation of $\sign(\cdot)$
+
+    **Chattering Phenomenon:**
+    
+        - **Cause:** Discontinuous control switching across $\slidingsurf=0$
+        - **Effect:** High-frequency oscillations, actuator wear
+        - **Solution:** Boundary layer $\epsilon$ trades precision for smoothness
+
+        Adaptive boundary layer: $\epsilon(t) = \epsilon_0 + \alpha \abs{\slidingsurf}$ \\
+        Result: Marginal 3.7\
+
+\section{Super-Twisting Algorithm (STA)}
+
+**Second-Order Sliding Mode:**
+    \begin{align}
+        u &= u_1 + u_2 \\
+        u_1 &= -\alpha \abs{\slidingsurf}^{1/2} \sign(\slidingsurf) \\
+        \dot{u}_2 &= -\beta \sign(\slidingsurf)
+    \end{align}
+
+    where:
+    
+        - $\alpha, \beta$ -- STA gains (positive constants)
+        - $u_1$ -- Continuous proportional term
+        - $u_2$ -- Integral term (eliminates steady-state error)
+
+    **Key Advantages:**
+    
+        - **Continuous control:** $u(t)$ is continuous (no chattering)
+        - **Finite-time convergence:** Both $\slidingsurf$ and $\dot{\slidingsurf}$ reach zero
+        - **Robustness:** Handles Lipschitz disturbances
+
+        STA achieves **lowest chattering frequency** among all 7 controllers
+
+\section{Adaptive SMC: Parameter Estimation}
+
+**Motivation:** System parameters $(m, \ell, g)$ may be unknown or time-varying
+
+    **Adaptive Law:**
+    \begin{align}
+        u &= -\hat{\theta} \cdot \Phi(\statevec) - K \sign(\slidingsurf) \\
+        \dot{\hat{\theta}} &= \gamma \Phi(\statevec) \slidingsurf
+    \end{align}
+
+    where:
+    
+        - $\hat{\theta}$ -- Estimated parameter vector
+        - $\Phi(\statevec)$ -- Regressor vector (known functions of state)
+        - $\gamma > 0$ -- Adaptation rate
+
+    **Lyapunov-Based Stability:**
+    \begin{equation}
+        \lyap = \frac{1}{2} \slidingsurf^2 + \frac{1}{2\gamma} \tilde{\theta}^T \tilde{\theta}
+    \end{equation}
+
+    where $\tilde{\theta} = \theta^* - \hat{\theta}$ (parameter error)
+
+        $\dot{\lyap} \leq -\eta \abs{\slidingsurf}$ ensures asymptotic convergence
+
+\section{Hybrid Adaptive STA-SMC}
+
+**Combines:**
+    
+        - Adaptive parameter estimation (handles uncertainties)
+        - Super-twisting algorithm (continuous control, no chattering)
+
+    **Control Law:**
+    \begin{align}
+        u &= -\hat{\theta} \cdot \Phi(\statevec) + u_{STA} \\
+        u_{STA} &= -\alpha \abs{\slidingsurf}^{1/2} \sign(\slidingsurf) + u_2 \\
+        \dot{u}_2 &= -\beta \sign(\slidingsurf) \\
+        \dot{\hat{\theta}} &= \gamma \Phi(\statevec) \slidingsurf
+    \end{align}
+
+    **Performance Characteristics:**
+    
+        - **Best robustness** -- Adapts to parameter variations
+        - **Low chattering** -- STA provides continuous control
+        - **Fast convergence** -- Second-order sliding mode
+        - **Complexity tradeoff** -- More states, higher computational cost
+
+        Hybrid controller shows **smallest performance degradation** \\
+        under ±20\
+
+\section{Swing-Up SMC: Energy-Based Control}
+
+**Two-Phase Strategy:**
+
+    **Phase 1: Energy-Based Swing-Up** (large angles)
+    \begin{equation}
+        u = k_e (E^* - E) \sign(\dot{\theta}_1 \cos\theta_1)
+    \end{equation}
+
+    where:
+    
+        - $E = \frac{1}{2} m \ell^2 \dot{\theta}_1^2 + m g \ell (1 - \cos\theta_1)$ -- Total energy
+        - $E^*$ -- Target energy (upright equilibrium)
+        - $k_e$ -- Energy gain
+
+    **Phase 2: SMC Balance** (small angles)
+    \begin{equation}
+        u = -K \tanh\left(\frac{\slidingsurf}{\epsilon}\right)
+    \end{equation}
+
+    **Switching Condition:**
+    \begin{equation}
+        \text{Switch to SMC when } \abs{\theta_1} < \theta_{threshold} \text{ and } \abs{\dot{\theta}_1} < \dot{\theta}_{threshold}
+    \end{equation}
+
+\section{Model Predictive Control (MPC): Experimental}
+
+**Optimization-Based Control:**
+
+    At each time step, solve:
+    \begin{align}
+        \min_{\controlvec} \quad & J = \sum_{k=0}^{N-1} \left( \norm{\statevec_k - \statevec^*}_Q^2 + \norm{u_k}_R^2 \right) \\
+        \text{subject to:} \quad & \statevec_{k+1} = f(\statevec_k, u_k) \\
+        & u_{min} \leq u_k \leq u_{max}
+    \end{align}
+
+    where:
+    
+        - $N$ -- Prediction horizon
+        - $Q, R$ -- State and control weighting matrices
+        - $f(\cdot)$ -- Nonlinear dynamics model
+
+    **Status:**
+    
+        - \statuswarning Experimental implementation
+        - Computational cost limits real-time performance
+        - Suitable for offline trajectory planning
+
+\section{Lyapunov Stability Theory}
+
+**Fundamental Tool:** Prove controller stability mathematically
+
+    **Lyapunov Function Candidate:**
+    \begin{equation}
+        \lyap(\slidingsurf) = \frac{1}{2} \slidingsurf^2
+    \end{equation}
+
+    **Stability Condition:**
+    \begin{equation}
+        \dot{\lyap} = \slidingsurf \dot{\slidingsurf} < 0 \quad \forall \slidingsurf \neq 0
+    \end{equation}
+
+    **For Classical SMC:**
+    \begin{align}
+        \dot{\lyap} &= \slidingsurf \dot{\slidingsurf} \\
+        &= \slidingsurf \left( \pder{\slidingsurf}{\statevec} f(\statevec,u) \right) \\
+        &\leq -\eta \abs{\slidingsurf} \quad \text{(with appropriate } u \text{)}
+    \end{align}
+
+    where $\eta > 0$ (reaching rate)
+
+        Complete proofs for all 7 controllers (~1,000 lines) \\
+        `docs/theory/lyapunov\_proofs\_existing.md`
+
+\section{Chattering Analysis: Frequency Domain}
+
+**Definition:** High-frequency oscillations in control signal
+
+    **Metrics (QW-4 Task):**
+    
+        - **Zero-Crossing Rate:** Count sign changes in $u(t)$
+        \begin{equation}
+            ZCR = \frac{1}{T} \sum_{k=1}^{N-1} \mathbb{I}[\sign(u_{k+1}) \neq \sign(u_k)]
+        \end{equation}
+
+        - **FFT Analysis:** Identify dominant frequencies
+        \begin{equation}
+            U(f) = \mathcal{F}\{u(t)\}, \quad P(f) = \abs{U(f)}^2
+        \end{equation}
+
+        - **High-Frequency Energy:**
+        \begin{equation}
+            E_{HF} = \int_{f_{cutoff}}^{f_{Nyquist}} P(f) df
+        \end{equation}
+
+        **Lowest chattering:** STA-SMC \\
+        **Highest chattering:** Classical SMC (without boundary layer)
+
+\newpage
+
+\section*{{Resources}}
+
+\begin{itemize}
+    \item \textbf{Repository:} \url{https://github.com/theSadeQ/dip-smc-pso.git}
+    \item \textbf{Documentation:} See \texttt{docs/} directory
+    \item \textbf{Getting Started:} \texttt{docs/guides/getting-started.md}
+\end{itemize}
+
+\vfill
+
+\noindent\textit{Educational podcast episode generated from comprehensive presentation materials}
+
+\end{document}

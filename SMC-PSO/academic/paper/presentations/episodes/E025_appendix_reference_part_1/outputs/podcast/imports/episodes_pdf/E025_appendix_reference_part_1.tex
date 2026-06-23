@@ -1,0 +1,73 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{E025}
+\lhead{DIP-SMC-PSO Learning Episode}
+\rfoot{\thepage}
+
+\title{\Large\textbf{E025: Appendix Reference Part 1}}
+\author{DIP-SMC-PSO Educational Series}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section*{Overview}
+
+This episode covers appendix reference part 1 from the DIP-SMC-PSO project.
+
+\textbf{Part:} Appendix
+
+\textbf{Duration:} 15-20 minutes
+
+\textbf{Source:} Comprehensive Presentation Materials
+
+\newpage
+
+\section{Collaboration Workflow}
+
+**Multi-Developer Best Practices:**
+
+    **Branch Strategy (Future):**
+    
+        - **main:** Stable, production-ready code
+        - **develop:** Integration branch for features
+        - **feature/*:** Individual feature branches
+        - **hotfix/*:** Urgent bug fixes
+
+    **Pull Request Process:**
+    
+        - Create feature branch from `develop`
+        - Implement changes, write tests
+        - Run full test suite (`python run\_tests.py`)
+        - Submit PR with description, test plan
+        - Code review (≥1 approval required)
+        - Merge to `develop` (squash commits)
+
+    **Current Status:**
+    
+        - Single developer (main branch only)
+        - Future: Multi-developer branching strategy
+
+\newpage
+
+\section*{{Resources}}
+
+\begin{itemize}
+    \item \textbf{Repository:} \url{https://github.com/theSadeQ/dip-smc-pso.git}
+    \item \textbf{Documentation:} See \texttt{docs/} directory
+    \item \textbf{Getting Started:} \texttt{docs/guides/getting-started.md}
+\end{itemize}
+
+\vfill
+
+\noindent\textit{Educational podcast episode generated from comprehensive presentation materials}
+
+\end{document}

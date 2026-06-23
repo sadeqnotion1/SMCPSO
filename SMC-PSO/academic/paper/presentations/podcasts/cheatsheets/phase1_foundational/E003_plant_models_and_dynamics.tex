@@ -1,0 +1,520 @@
+% ==============================================================================
+% EPISODE 003: PLANT MODELS AND DYNAMICS
+% ==============================================================================
+\input{../templates/master_template.tex}
+\input{../templates/tikz_components.tex}
+
+% Episode-specific title
+\renewcommand{\episodetitle}{E003: Plant Models \& Dynamics}
+
+\begin{document}
+
+% ==============================================================================
+% TITLE PAGE
+% ==============================================================================
+\makeepisodetitle{E003: Plant Models and Dynamics}{The Physics Behind the Double Broomstick}{1}{30-35 minutes}
+
+% ==============================================================================
+% PAGE 1: PLANT OVERVIEW & LAGRANGIAN MECHANICS
+% ==============================================================================
+\learningobjective{Understand DIP physics, Lagrangian mechanics approach, and the three model variants for different speed/accuracy tradeoffs}
+
+\section*{What is the Plant?}
+
+\begin{keypoint}
+The "plant" is the physical system you're trying to control - the body that control decisions act upon.
+
+\textbf{Key Question:} "If I push the cart with force $F$ right now, how will angles and velocities change in the next millisecond?"
+\end{keypoint}
+
+\subsection*{Physical System Description}
+
+\begin{center}
+\dipphysical
+\end{center}
+
+\begin{multicols}{2}
+
+\textbf{Components:}
+\begin{itemize}
+    \item \textbf{Cart}: 1.5 kg (like a laptop), slides on track with friction
+    \item \textbf{Pendulum 1}: 0.2 kg, 40 cm (wooden ruler weight/length)
+    \item \textbf{Pendulum 2}: 0.15 kg, 30 cm (slightly lighter/shorter)
+\end{itemize}
+
+\columnbreak
+
+\textbf{Three Coordinates:}
+\begin{itemize}
+    \item \textbf{1.} $x$ - Cart position (left/right)
+    \item \textbf{2.} $\theta_1$ - First pendulum angle (from vertical)
+    \item \textbf{3.} $\theta_2$ - Second pendulum angle (from vertical)
+\end{itemize}
+
+\begin{tip}
+Based on actual control lab rigs - not arbitrary!
+\end{tip}
+
+\end{multicols}
+
+\section*{Lagrangian Mechanics: The Elegant Shortcut}
+
+\subsection*{Why NOT Use Newton's $F=ma$ Directly?}
+
+\begin{warning}
+Newton's approach would require:
+\begin{itemize}
+    \item \textbf{1.} Free-body diagrams for cart + both pendulums
+    \item \textbf{2.} All internal forces (pin forces, constraint forces)
+    \item \textbf{3.} Coupled force balance equations
+    \item \textbf{4.} Solving for dozen+ variables you don't care about!
+\end{itemize}
+
+\textbf{Result:} Nightmare of algebra with unknown internal forces
+\end{warning}
+
+\subsection*{The Lagrangian Shortcut: Ignore Internal Glue}
+
+\begin{keypoint}
+\textbf{Key Insight (1700s):} You don't need internal constraint forces if you focus on energy!
+
+\textbf{Recipe:}
+\begin{itemize}
+    \item \textbf{1.} Calculate total kinetic energy (motion)
+    \item \textbf{2.} Calculate total potential energy (gravity)
+    \item \textbf{3.} Form Lagrangian: $\mathcal{L} = T - V$
+    \item \textbf{4.} Apply Euler-Lagrange equations (systematic calculus)
+    \item \textbf{5.} Get equations of motion - NO internal forces!
+\end{itemize}
+\end{keypoint}
+
+\subsection*{The Beautiful Result}
+
+\begin{tcolorbox}[colback=primary!5, colframe=primary, title=\faCode\ Matrix Equation of Motion]
+\begin{equation*}
+\mathbf{M}(q) \ddot{q} + \mathbf{C}(q, \dot{q}) \dot{q} + \mathbf{G}(q) = \mathbf{B} u + d
+\end{equation*}
+
+\textbf{Physical Meaning:}
+\begin{itemize}
+    \item $\mathbf{M}(q)$ - Mass matrix: "How mass/inertia distributed at these angles?"
+    \item $\mathbf{C}(q, \dot{q})$ - Spinning forces: Coriolis \& centrifugal effects
+    \item $\mathbf{G}(q)$ - Gravity: "How hard does gravity pull at these angles?"
+    \item $\mathbf{B}$ - Input distribution: "Force only pushes cart directly"
+    \item $u$ - Control force, $d$ - Disturbances
+\end{itemize}
+\end{tcolorbox}
+
+% ==============================================================================
+% PAGE 2: MATRICES & SINGULARITIES
+% ==============================================================================
+\newpage
+
+\section*{Mass Matrix Structure: Action and Reaction}
+
+\begin{multicols}{2}
+
+\subsection*{Diagonal Elements}
+
+\textbf{"Self-inertia":}
+\begin{itemize}
+    \item $M_{11}$ = Total mass (cart + pendulums)
+    \item $M_{22}$ = Rotational inertia of Pendulum 1
+    \item $M_{33}$ = Rotational inertia of Pendulum 2
+\end{itemize}
+
+\columnbreak
+
+\subsection*{Off-Diagonal Elements}
+
+\textbf{Coupling terms:}
+\begin{itemize}
+    \item $M_{12}$ = "Cart acceleration $\rightarrow$ Pendulum 1 torque"
+    \item Depend on $\cos(\theta_i)$
+    \item Strongest when vertical
+\end{itemize}
+
+\end{multicols}
+
+\begin{keypoint}
+\textbf{Key Property - Symmetry:} $M_{12} = M_{21}$, $M_{13} = M_{31}$, $M_{23} = M_{32}$
+
+This is Newton's Third Law: \textbf{Action = Reaction}
+
+Effect of Link 1 on Link 2 = Effect of Link 2 on Link 1 (opposite directions)
+\end{keypoint}
+
+\subsection*{Coriolis \& Centrifugal Terms}
+
+\begin{example}
+\textbf{Coriolis Force:} Apparent force due to rotation
+\begin{itemize}
+    \item Example: Walk straight on spinning merry-go-round $\Rightarrow$ path curves
+    \item Term: $-c_{12} \sin(\theta_1 - \theta_2) \dot{\theta}_2$ couples pendulum velocities
+\end{itemize}
+
+\textbf{Centrifugal Force:} Outward push from rotation
+\begin{itemize}
+    \item Example: Car turn $\Rightarrow$ pushed against door
+    \item Term: $-c_1 \sin(\theta_1) \dot{\theta}_1^2$ pushes cart sideways
+\end{itemize}
+\end{example}
+
+\subsection*{Gravity Vector}
+
+\begin{tcolorbox}[colback=secondary!5, colframe=secondary]
+\begin{equation*}
+\mathbf{G}(q) = \begin{bmatrix}
+0 \\ -g_1 g \sin(\theta_1) \\ -g_2 g \sin(\theta_2)
+\end{bmatrix}
+\end{equation*}
+
+\begin{itemize}
+    \item No gravity on cart (horizontal motion)
+    \item Pendulum torques: $g \approx 9.81$ m/s²
+    \item \textbf{Sign:} Upright ($\theta=0$) is unstable - gravity torque pushes away!
+\end{itemize}
+\end{tcolorbox}
+
+\subsection*{Singularities: When Math Locks Up}
+
+\begin{multicols}{2}
+
+\textbf{Physical Analogy:}
+
+Your arm fully extended with locked elbow - can't push further. Geometry "locks up."
+
+Same happens with pendulums in specific configurations.
+
+\columnbreak
+
+\textbf{Condition Number ($\kappa$):}
+
+Health score for mass matrix:
+\begin{itemize}
+    \item $\kappa = 1$-100: Healthy \iconKey
+    \item $\kappa > 10^6$: Sick \iconWarning
+    \item $\kappa \to \infty$: Singular \iconWarning
+\end{itemize}
+
+\end{multicols}
+
+\begin{warning}
+\textbf{Singularity Occurs:} Both pendulums horizontal (lying flat)
+
+\textbf{How We Handle:}
+\begin{itemize}
+    \item \textbf{1.} Check $\kappa$ before inverting $\mathbf{M}$
+    \item \textbf{2.} If $\kappa > 10^8$: Switch to pseudoinverse with regularization
+    \item \textbf{3.} Prevents division-by-near-zero crashes
+\end{itemize}
+
+\textbf{In Practice:} Near upright, $\kappa = 10$-100 (safe). Controller avoids dangerous configs.
+\end{warning}
+
+% ==============================================================================
+% PAGE 3: THREE MODEL VARIANTS
+% ==============================================================================
+\newpage
+
+\section*{Three Model Variants: The Team}
+
+\begin{keypoint}
+Trade-off: \textbf{Speed} vs. \textbf{Accuracy}
+
+Different tasks need different balances. Meet the three teammates!
+\end{keypoint}
+
+\begin{center}
+\begin{tikzpicture}[node distance=2.5cm]
+    \node[cloud] (input) {DIP\\System};
+    \node[block, fill=warning!30, right=of input] (simplified) {\textbf{Sprinter}\\Fast\\450 sims/s};
+    \node[process, right=of simplified] (full) {\textbf{Simulator}\\Accurate\\8 sims/s};
+    \node[block, fill=secondary!30, right=of full] (lowrank) {\textbf{Efficient Pro}\\Balanced\\95 sims/s};
+
+    \draw[arrow] (input) -- node[above] {Linear} (simplified);
+    \draw[arrow] (input) -- node[above] {Full NL} (full);
+    \draw[arrow] (input) -- node[above] {Low-Rank} (lowrank);
+\end{tikzpicture}
+\end{center}
+
+\subsection*{Model 1: The Sprinter (Simplified Linear)}
+
+\begin{multicols}{2}
+
+\textbf{Personality:} Fast, agile, assumes near-perfect
+
+\textbf{Assumptions:}
+\begin{itemize}
+    \item $\sin(\theta) \approx \theta$ (small angles)
+    \item $\cos(\theta) \approx 1$
+    \item Constant mass matrix
+    \item Ignores coupled effects
+\end{itemize}
+
+\textbf{Superpowers:}
+\begin{itemize}
+    \item \iconTarget\ 10-100x faster than full model
+    \item \iconTarget\ Perfect for PSO (1500 sims)
+    \item \iconTarget\ Great for teaching
+\end{itemize}
+
+\columnbreak
+
+\textbf{Kryptonite:}
+\begin{itemize}
+    \item \iconWarning\ Can't handle angles $> 10°$
+    \item \iconWarning\ Lies about nonlinear effects
+    \item \iconWarning\ Swing-up? Garbage results!
+\end{itemize}
+
+\textbf{When to Use:}
+\begin{itemize}
+    \item Initial prototyping
+    \item PSO gain optimization
+    \item Educational demos
+    \item Near-upright operation
+\end{itemize}
+
+\end{multicols}
+
+\subsection*{Model 2: The Simulator (Full Nonlinear)}
+
+\begin{multicols}{2}
+
+\textbf{Personality:} Slow, heavy, brutally honest
+
+\textbf{Reality Check:}
+\begin{itemize}
+    \item Every trig term computed exactly
+    \item All Coriolis effects
+    \item All coupling captured
+    \item Angle-dependent matrices
+\end{itemize}
+
+\textbf{Superpowers:}
+\begin{itemize}
+    \item \iconTarget\ Truth: Full operating range
+    \item \iconTarget\ Accurate: Hanging $\to$ upright
+    \item \iconTarget\ Publishable benchmark results
+\end{itemize}
+
+\columnbreak
+
+\textbf{Kryptonite:}
+\begin{itemize}
+    \item \iconWarning\ 10-100x slower
+    \item \iconWarning\ Overkill for simple tasks
+    \item \iconWarning\ Sledgehammer to crack a nut
+\end{itemize}
+
+\textbf{When to Use:}
+\begin{itemize}
+    \item Final validation
+    \item Swing-up control
+    \item Research benchmarks
+    \item Hardware deployment prep
+\end{itemize}
+
+\end{multicols}
+
+\subsection*{Model 3: The Efficient Pro (Low-Rank POD)}
+
+\begin{multicols}{2}
+
+\textbf{Personality:} Smart compromise
+
+\textbf{Clever Trick:} Proper Orthogonal Decomposition
+\begin{itemize}
+    \item \textbf{1.} Run Simulator 1000x times
+    \item \textbf{2.} Collect data snapshots
+    \item \textbf{3.} SVD: Find important patterns
+    \item \textbf{4.} Keep signal, discard noise
+\end{itemize}
+
+\textbf{Superpowers:}
+\begin{itemize}
+    \item \iconTarget\ 10-50x speedup
+    \item \iconTarget\ Preserves key dynamics
+    \item \iconTarget\ Real-time capable (HIL)
+\end{itemize}
+
+\columnbreak
+
+\textbf{Kryptonite:}
+\begin{itemize}
+    \item \iconWarning\ Needs training (run Simulator first)
+    \item \iconWarning\ Can miss rare edge cases
+    \item \iconWarning\ Not drop-in replacement
+\end{itemize}
+
+\textbf{When to Use:}
+\begin{itemize}
+    \item Monte Carlo (1000 sims)
+    \item Parameter sweeps
+    \item Sensitivity analysis
+    \item HIL testing
+\end{itemize}
+
+\end{multicols}
+
+\subsection*{Model Accuracy Comparison (MT-6 Benchmark)}
+
+\begin{tcolorbox}[colback=background, colframe=codeblock, title=\faChartBar\ Validation Test Results]
+\textbf{Setup:} $\theta_1 = 10°$, $\theta_2 = 5°$, Classical SMC, 10 seconds
+
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Model} & \textbf{Settling [s]} & \textbf{Overshoot [°]} & \textbf{RMS Error [°]} & \textbf{Speed [sims/s]} \\
+\midrule
+Simplified & 2.31 & 4.2 & 0.12 & 450 \\
+Full Nonlinear & 2.58 & 5.1 & 0.15 & 8 \\
+Low-Rank (k=10) & 2.54 & 4.9 & 0.14 & 95 \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.3cm}
+
+\textbf{Observations:}
+\begin{itemize}
+    \item Simplified: Optimistic (underestimates settling time)
+    \item Full: Conservative (most realistic)
+    \item Low-Rank: Sweet spot (2\% error, 12x speedup)
+\end{itemize}
+\end{tcolorbox}
+
+\begin{tip}
+\textbf{The Bottom Line:}
+\begin{itemize}
+    \item Quick prototyping? \textbf{Sprinter}
+    \item Final validation? \textbf{Simulator}
+    \item Massive data crunching? \textbf{Efficient Pro}
+\end{itemize}
+
+Like having hammer, precision screwdriver, and power drill - use the right tool!
+\end{tip}
+
+% ==============================================================================
+% PAGE 4: NUMERICAL INTEGRATION & QUICK REFERENCE
+% ==============================================================================
+\newpage
+
+\section*{Numerical Integration Methods}
+
+\subsection*{Three Integrators Available}
+
+\begin{tcolorbox}[colback=primary!5, colframe=primary, title=\faCode\ Euler (1st Order)]
+\textbf{Algorithm:}
+\begin{lstlisting}[style=python, numbers=none]
+state_dot = f(state, u)
+state_new = state + state_dot * dt
+\end{lstlisting}
+
+\textbf{Pros:} Simplest, fastest \quad \textbf{Cons:} Inaccurate (large errors)
+
+\textbf{Use:} Educational only, NOT for research
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=secondary!5, colframe=secondary, title=\faCode\ RK4 (4th Order)]
+\textbf{Algorithm:} Four slope evaluations per step
+\begin{lstlisting}[style=python, numbers=none]
+k1 = f(state, u)
+k2 = f(state + 0.5*dt*k1, u)
+k3 = f(state + 0.5*dt*k2, u)
+k4 = f(state + dt*k3, u)
+state_new = state + (dt/6) * (k1 + 2*k2 + 2*k3 + k4)
+\end{lstlisting}
+
+\textbf{Pros:} Good balance \quad \textbf{Cons:} Fixed step size
+
+\textbf{Use:} Standard choice with $dt = 0.001s$ (1 kHz)
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=accent!5, colframe=accent, title=\faCode\ RK45 (Adaptive)]
+\textbf{Algorithm:} SciPy's \texttt{solve\_ivp} with automatic step sizing
+
+\textbf{Error Control:} \texttt{rtol=1e-6}, \texttt{atol=1e-9}
+
+\textbf{Pros:} Most accurate, adaptive \quad \textbf{Cons:} Slower
+
+\textbf{Use:} High-accuracy validation, research benchmarks
+\end{tcolorbox}
+
+\subsection*{Quick Reference: Key Equations}
+
+\quickref{Equation of Motion}{
+\begin{equation*}
+\mathbf{M}(q) \ddot{q} + \mathbf{C}(q, \dot{q}) \dot{q} + \mathbf{G}(q) = \mathbf{B} u
+\end{equation*}
+
+Solve for acceleration: $\ddot{q} = \mathbf{M}^{-1} \left[ \mathbf{B} u - \mathbf{C} \dot{q} - \mathbf{G} \right]$
+}
+
+\quickref{State Vector}{
+\begin{equation*}
+x = [x, \theta_1, \theta_2, \dot{x}, \dot{\theta}_1, \dot{\theta}_2]^T
+\end{equation*}
+
+Derivative: $\dot{x} = [\dot{x}, \dot{\theta}_1, \dot{\theta}_2, \ddot{x}, \ddot{\theta}_1, \ddot{\theta}_2]^T$
+}
+
+\quickref{Condition Number Check}{
+\begin{equation*}
+\kappa(\mathbf{M}) = \frac{\sigma_{\max}}{\sigma_{\min}}
+\end{equation*}
+
+If $\kappa > 10^8$: Use pseudoinverse with regularization
+}
+
+\subsection*{Implementation Workflow}
+
+\begin{summary}
+\textbf{Full Nonlinear Model (Python):}
+\begin{itemize}
+    \item \textbf{1.} Unpack state: Extract $q = [x, \theta_1, \theta_2]$ and $\dot{q} = [\dot{x}, \dot{\theta}_1, \dot{\theta}_2]$
+    \item \textbf{2.} Build mass matrix: $\mathbf{M}(q)$ based on current angles (trig functions)
+    \item \textbf{3.} Calculate Coriolis: $\mathbf{C}(q, \dot{q})$ with velocity coupling
+    \item \textbf{4.} Calculate gravity: $\mathbf{G}(q)$ angle-dependent torques
+    \item \textbf{5.} Apply control: Force $u$ enters through $\mathbf{B}$
+    \item \textbf{6.} Solve for $\ddot{q}$: Invert $\mathbf{M}$ (check $\kappa$ first!)
+    \item \textbf{7.} Return derivative: Pack $[\dot{q}, \ddot{q}]$ for integrator
+\end{itemize}
+
+\textbf{NumPy makes it simple:} \texttt{accel = np.linalg.solve(M, B*u - C@vel - G)}
+\end{summary}
+
+\subsection*{Configuration Parameters}
+
+\begin{multicols}{2}
+
+\textbf{Physical:}
+\begin{itemize}
+    \item Cart mass: $M = 1.5$ kg
+    \item Pendulum 1: $m_1 = 0.2$ kg, $L_1 = 0.4$ m
+    \item Pendulum 2: $m_2 = 0.15$ kg, $L_2 = 0.3$ m
+    \item Gravity: $g = 9.81$ m/s²
+\end{itemize}
+
+\columnbreak
+
+\textbf{Numerical:}
+\begin{itemize}
+    \item Time step: $dt = 0.001$ s (1 kHz)
+    \item Integrator: RK4 (standard)
+    \item Singularity threshold: $\kappa > 10^8$
+    \item Duration: 10 s (typical)
+\end{itemize}
+
+\end{multicols}
+
+\subsection*{What's Next?}
+
+\begin{keypoint}
+\textbf{E004: PSO Optimization} - How to automatically tune controller gains using particle swarm intelligence
+
+\textbf{E005: Simulation Engine} - The runner, vectorized simulators, and how we achieve 100x speedups
+
+\textbf{Remember:} Now you understand the physics. Next, we optimize the control to make it work perfectly!
+\end{keypoint}
+
+\end{document}

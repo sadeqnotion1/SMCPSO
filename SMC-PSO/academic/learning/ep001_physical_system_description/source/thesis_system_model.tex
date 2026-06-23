@@ -1,0 +1,119 @@
+\section{System Model and Problem Formulation}
+\label{sec:model}
+
+% Content to be extracted from docs/theory/system_dynamics.md
+
+\subsection{Physical Description}
+The double-inverted pendulum (DIP) system consists of three main components:
+\begin{itemize}
+\item \textbf{Cart} (mass $m_0$): Moves horizontally on a frictionless track
+\item \textbf{First Pendulum} (mass $m_1$, length $l_1$): Revolute joint attached to cart
+\item \textbf{Second Pendulum} (mass $m_2$, length $l_2$): Revolute joint attached to first pendulum tip
+\end{itemize}
+
+The control objective is to stabilize both pendulums in the upright position ($\theta_1 = \theta_2 = 0$) using horizontal cart force $u$, while regulating cart position within bounds.
+
+\subsection{System Challenges}
+The DIP presents four key challenges for control design:
+
+\textbf{Underactuation}: The system has 3 degrees of freedom (DOF) but only 1 control input, requiring exploitation of dynamic coupling.
+
+\textbf{Unstable Equilibrium}: The upright position is inherently unstable—small perturbations cause pendulums to fall without active stabilization.
+
+\textbf{Nonlinear Dynamics}: Trigonometric functions in the equations of motion complicate controller design, especially for large-angle swings.
+
+\textbf{System Coupling}: Cart motion affects both pendulums, and second pendulum motion influences the first through inertial coupling.
+
+\subsection{State-Space Representation}
+The system state vector is:
+\begin{equation}
+\vect{x} = [x, \theta_1, \theta_2, \dot{x}, \dot{\theta}_1, \dot{\theta}_2]^T \in \Real^6
+\label{eq:state_vector}
+\end{equation}
+
+The nonlinear dynamics are:
+\begin{equation}
+\vect{M}(\vect{q})\ddot{\vect{q}} + \vect{C}(\vect{q}, \dot{\vect{q}}) + \vect{G}(\vect{q}) = \vect{B}u
+\label{eq:dynamics}
+\end{equation}
+
+where $\vect{q} = [x, \theta_1, \theta_2]^T$ represents generalized coordinates, $u$ is the control force applied to the cart, and $\vect{M}$, $\vect{C}$, $\vect{G}$ are inertia, Coriolis, and gravity terms.
+
+\subsection{Control Objectives}
+\begin{enumerate}
+\item Stabilization: $\lim_{t \to \infty} [\theta_1(t), \theta_2(t)] = [0, 0]$
+\item Cart regulation: $|x(t)| \leq x_{max}$
+\item Bounded control effort: $|u(t)| \leq u_{max}$
+\end{enumerate}
+
+\subsection{Lagrangian Formulation}
+The equations of motion are derived using the Euler-Lagrange approach. The Lagrangian $L = T - V$ consists of kinetic energy $T$ and potential energy $V$.
+
+\subsubsection{Kinetic Energy}
+The total kinetic energy includes contributions from the cart and both pendulums:
+\begin{equation}
+T = \frac{1}{2}m_0\dot{x}^2 + \frac{1}{2}m_1(\dot{x}_1^2 + \dot{y}_1^2) + \frac{1}{2}I_1\dot{\theta}_1^2 + \frac{1}{2}m_2(\dot{x}_2^2 + \dot{y}_2^2) + \frac{1}{2}I_2\dot{\theta}_2^2
+\label{eq:kinetic_energy}
+\end{equation}
+
+where $(x_i, y_i)$ are Cartesian coordinates of pendulum centers of mass, and $I_i$ are moments of inertia. After substituting kinematic constraints and simplifying, the kinetic energy depends only on generalized coordinates $\vect{q} = [x, \theta_1, \theta_2]^T$ and their derivatives.
+
+\subsubsection{Potential Energy}
+Gravitational potential energy (with cart height as reference):
+\begin{equation}
+V = m_1 g l_{c1}\cos(\theta_1) + m_2 g (l_1\cos(\theta_1) + l_{c2}\cos(\theta_2))
+\label{eq:potential_energy}
+\end{equation}
+
+where $l_{c1}$ and $l_{c2}$ are distances from joints to centers of mass, and $g$ is gravitational acceleration.
+
+\subsubsection{Equations of Motion}
+Applying the Euler-Lagrange equation $\frac{d}{dt}\left(\frac{\partial L}{\partial \dot{q}_i}\right) - \frac{\partial L}{\partial q_i} = Q_i$ yields the compact form:
+\begin{equation}
+\vect{M}(\vect{q})\ddot{\vect{q}} + \vect{C}(\vect{q}, \dot{\vect{q}})\dot{\vect{q}} + \vect{G}(\vect{q}) = \vect{B}u
+\label{eq:manipulator_form}
+\end{equation}
+
+The inertia matrix $\vect{M}(\vect{q}) \in \Real^{3 \times 3}$ is configuration-dependent and positive definite. The Coriolis/centrifugal matrix $\vect{C}(\vect{q}, \dot{\vect{q}})$ captures velocity-dependent forces. The gravity vector $\vect{G}(\vect{q})$ contains gravitational torques. The input matrix $\vect{B} = [1, 0, 0]^T$ maps cart force to generalized forces.
+
+\subsection{Nominal System Parameters}
+The nominal physical parameters used throughout this work are listed in Table \ref{tab:parameters}.
+
+\begin{table}[htbp]
+\centering
+\caption{Double-Inverted Pendulum Nominal Parameters}
+\label{tab:parameters}
+\begin{tabular}{lccl}
+\toprule
+Parameter & Symbol & Value & Unit \\
+\midrule
+Cart mass & $m_0$ & 1.5 & kg \\
+First pendulum mass & $m_1$ & 0.2 & kg \\
+Second pendulum mass & $m_2$ & 0.15 & kg \\
+First pendulum length & $l_1$ & 0.4 & m \\
+Second pendulum length & $l_2$ & 0.3 & m \\
+First pendulum COM & $l_{c1}$ & 0.2 & m \\
+Second pendulum COM & $l_{c2}$ & 0.15 & m \\
+First pendulum inertia & $I_1$ & 0.0081 & kg·m$^2$ \\
+Second pendulum inertia & $I_2$ & 0.0034 & kg·m$^2$ \\
+Gravitational acceleration & $g$ & 9.81 & m/s$^2$ \\
+Control force limit & $u_{max}$ & 50 & N \\
+Sampling time & $\Delta t$ & 0.01 & s \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+These parameters represent a realistic laboratory-scale DIP system. The inertias satisfy the parallel-axis theorem constraints: $I_i \geq m_i l_{ci}^2$.
+
+\subsection{Linearization and Controllability}
+To analyze controllability, the nonlinear system is linearized around the upright equilibrium $\vect{x}_0 = [0, 0, 0, 0, 0, 0]^T$. The linearized state-space representation is:
+\begin{equation}
+\dot{\vect{x}} = \mat{A}\vect{x} + \vect{b}u
+\label{eq:linearized_system}
+\end{equation}
+
+where $\mat{A} \in \Real^{6 \times 6}$ is the system matrix and $\vect{b} \in \Real^6$ is the input vector.
+
+The system is controllable if the controllability matrix $\mat{C} = [\vect{b}, \mat{A}\vect{b}, \mat{A}^2\vect{b}, \ldots, \mat{A}^5\vect{b}]$ has full rank. Numerical verification confirms $\text{rank}(\mat{C}) = 6$, establishing complete controllability.
+
+The open-loop system is unstable with two eigenvalues having positive real parts (corresponding to unstable pendulum modes). This confirms the necessity of active feedback control for stabilization.

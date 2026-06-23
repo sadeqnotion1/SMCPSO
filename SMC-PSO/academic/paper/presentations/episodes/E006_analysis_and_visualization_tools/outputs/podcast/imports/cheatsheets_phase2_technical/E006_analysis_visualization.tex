@@ -1,0 +1,520 @@
+% ==============================================================================
+% EPISODE 006: ANALYSIS AND VISUALIZATION TOOLS
+% ==============================================================================
+\input{../templates/master_template.tex}
+\input{../templates/tikz_components.tex}
+
+% Episode-specific title
+\renewcommand{\episodetitle}{E006: Analysis \& Visualization}
+
+\begin{document}
+
+% ==============================================================================
+% TITLE PAGE
+% ==============================================================================
+\makeepisodetitle{E006: Analysis and Visualization Tools}{From Gigabytes of Data to Publication Figures}{2}{15-20 minutes}
+
+% ==============================================================================
+% PAGE 1: PERFORMANCE METRICS & STATISTICAL ANALYSIS
+% ==============================================================================
+\learningobjective{Understand performance metrics, statistical validation (Monte Carlo, bootstrap), and visualization techniques for controller analysis}
+
+\section*{The Visualization Challenge}
+
+\begin{keypoint}
+\textbf{The Curation Problem:} 2,400 simulations $\to$ 105 MB JSON $\to$ 15 MB HDF5 $\to$ \textbf{14 publication figures (7 MB)}
+
+\textbf{From gigabytes of computation to 7 MB of publication-ready insights}
+
+Each figure passed 15-item quality checklist, survived peer review, tells complete story
+\end{keypoint}
+
+\subsection*{Three Challenges}
+
+\begin{warning}
+\begin{itemize}
+    \item \textbf{1.} \textbf{Choosing representation}: Time series vs phase portraits vs frequency domain vs distributions
+    \item \textbf{2.} \textbf{Avoiding misleading scales}: Y-axis at zero? Log vs linear?
+    \item \textbf{3.} \textbf{Managing complexity}: 6 states + control + metrics + disturbances = overwhelming
+\end{itemize}
+
+\textbf{Visualization is editorial} - choices change interpretation!
+\end{warning}
+
+\section*{Four Primary Performance Metrics}
+
+\begin{tcolorbox}[colback=primary!5, colframe=primary, title=\faChartBar\ Controller Performance Metrics]
+\begin{itemize}
+    \item \textbf{1.} \textbf{Settling Time ($t_{\text{settle}}$)}: How long until equilibrium?
+
+    Min time where $|\theta_1| < \epsilon$ AND $|\theta_2| < \epsilon$ for all future $t$
+
+    \item \textbf{2.} \textbf{Overshoot}: How far past equilibrium before settling?
+
+    $\text{Overshoot} = \max(\theta) - \theta_{\text{desired}}$
+
+    \item \textbf{3.} \textbf{Energy Consumption}: Total control effort
+
+    $E = \int_0^T u^2 \, dt$ (lower is better)
+
+    \item \textbf{4.} \textbf{Chattering Frequency}: High-frequency oscillations (via FFT)
+
+    Sum of energy above 10 Hz cutoff (screech vs hum)
+\end{itemize}
+\end{tcolorbox}
+
+\subsection*{Why These Four?}
+
+\begin{keypoint}
+They capture \textbf{tradeoffs}:
+\begin{itemize}
+    \item Fast settling is good, BUT uses massive energy (wear out actuators!)
+    \item Low chattering is good, BUT loses tracking accuracy (boundary layer smoothing)
+\end{itemize}
+
+\textbf{A good controller balances all four!}
+\end{keypoint}
+
+\subsection*{Pareto Frontier: The "No Free Lunch" Line}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.9]
+    % Axes
+    \draw[->] (0,0) -- (8,0) node[right] {Settling Time [s]};
+    \draw[->] (0,0) -- (0,6) node[above] {Energy [J]};
+
+    % Pareto frontier curve
+    \draw[thick, color=secondary] plot [smooth] coordinates {
+        (1,5) (2,3.5) (3,2.5) (4,2) (5,1.7) (6,1.5) (7,1.4)
+    };
+    \node[color=secondary] at (7.5,2) {\small Pareto Frontier};
+
+    % Controllers on frontier
+    \fill[color=accent] (2,3.5) circle (3pt);
+    \node[above, color=accent] at (2,3.5) {\small Hybrid STA};
+    \fill[color=primary] (4,2) circle (3pt);
+    \node[above, color=primary] at (4,2) {\small STA};
+    \fill[color=codeblock] (6,1.5) circle (3pt);
+    \node[above, color=codeblock] at (6,1.5) {\small Classical};
+
+    % Suboptimal controller
+    \fill[color=warning] (3,4.5) circle (3pt);
+    \node[above, color=warning] at (3,4.5) {\small Suboptimal};
+    \draw[dashed, color=warning] (3,4.5) -- (2.5,3);
+
+    % Impossible region
+    \fill[pattern=north east lines, pattern color=background] (0,0) -- (1,5) -- (0,5) -- cycle;
+    \node[rotate=45] at (0.5,3) {\tiny IMPOSSIBLE};
+
+    % Annotations
+    \node[color=secondary] at (4,0.5) {\small \textbf{Best tradeoffs}};
+    \node[color=warning] at (5,5) {\small Someone found better!};
+\end{tikzpicture}
+\end{center}
+
+\begin{example}
+\textbf{Interpretation:}
+\begin{itemize}
+    \item ON the frontier: Optimized (choose speed vs energy preference)
+    \item BELOW frontier: Suboptimal (dominated by others)
+    \item ABOVE frontier: Impossible (physics won't allow)
+\end{itemize}
+
+\textbf{Figure 14 result:} Hybrid Adaptive STA dominates the frontier!
+\end{example}
+
+% ==============================================================================
+% PAGE 2: STATISTICAL VALIDATION
+% ==============================================================================
+\newpage
+
+\section*{Statistical Analysis: Monte Carlo \& Bootstrap}
+
+\begin{keypoint}
+\textbf{Don't trust one simulation!} Run 100 trials with randomized:
+\begin{itemize}
+    \item Initial conditions
+    \item Sensor noise
+    \item Parameter uncertainty
+\end{itemize}
+
+\textbf{Result:} Distributions, not single numbers
+\end{keypoint}
+
+\subsection*{Bootstrap: Shuffling the Deck}
+
+\begin{example}
+\textbf{The Card Shuffling Analogy:}
+
+You ran 100 real experiments (settling times). But maybe you got lucky?
+
+\textbf{Bootstrap asks:} "What if you ran the experiment again tomorrow?"
+
+\textbf{Method:}
+\begin{itemize}
+    \item \textbf{1.} Take your 100 results (names in a hat)
+    \item \textbf{2.} Draw 100 names randomly WITH REPLACEMENT (same name can appear multiple times)
+    \item \textbf{3.} Create "virtual" set of 100 results
+    \item \textbf{4.} Repeat 10,000 times
+\end{itemize}
+
+\textbf{Result:} 10,000 "what-if" experiments simulated using only today's data!
+\end{example}
+
+\subsection*{Confidence Intervals}
+
+\begin{tcolorbox}[colback=secondary!10, colframe=secondary, title=\faChartArea\ Bootstrap Confidence Interval]
+\textbf{Classical SMC Example:}
+\begin{itemize}
+    \item Mean settling time: 2.47 seconds
+    \item Standard deviation: 0.08 seconds
+    \item 95\% confidence interval: [2.45, 2.55] seconds (via bootstrap)
+\end{itemize}
+
+\textbf{Interpretation:} If you ran 100 more trials, 95\% chance the mean falls in [2.45, 2.55]
+\end{tcolorbox}
+
+\subsection*{Why Bootstrap vs Standard Error?}
+
+\begin{multicols}{2}
+
+\textbf{Standard Error Formula} (Stat 101):
+\begin{itemize}
+    \item Assumes normal distribution (bell curve)
+    \item Fast to compute
+    \item \iconWarning\ WRONG for skewed data!
+\end{itemize}
+
+\columnbreak
+
+\textbf{Bootstrap} (Modern stats):
+\begin{itemize}
+    \item No distribution assumptions
+    \item Handles skewed data (outliers!)
+    \item Computationally intensive
+\end{itemize}
+
+\end{multicols}
+
+\begin{warning}
+\textbf{Performance metrics are NOT normally distributed!}
+
+Settling time is skewed: Most trials settle at 2.5s, but outliers take 4-5s when hitting unlucky initial conditions.
+
+Bootstrap handles real-world messiness correctly.
+\end{warning}
+
+\subsection*{Comparing Controllers: Hypothesis Testing}
+
+\begin{tcolorbox}[colback=accent!10, colframe=accent, title=\faFlask\ Statistical Tests]
+\textbf{Welch's t-test (2 controllers):}
+\begin{itemize}
+    \item Classical SMC: mean 2.5s
+    \item STA-SMC: mean 2.1s
+    \item $p$-value < 0.001 $\Rightarrow$ Less than 0.1\% chance difference is random
+    \item \textbf{Conclusion:} STA is significantly faster!
+\end{itemize}
+
+\textbf{ANOVA (all 7 controllers):}
+\begin{itemize}
+    \item Tests whether ANY controller differs
+    \item If significant $\Rightarrow$ pairwise comparisons with Bonferroni correction
+    \item \textbf{Result:} Hybrid Adaptive STA ranks 1st, STA 2nd, Adaptive 3rd, Classical 4th
+\end{itemize}
+\end{tcolorbox}
+
+\subsection*{Effect Size: Practical Importance}
+
+\begin{keypoint}
+\textbf{Cohen's d:} How many standard deviations apart are the means?
+\begin{itemize}
+    \item $d = 0.2$ - Small effect
+    \item $d = 0.5$ - Medium effect
+    \item $d = 0.8$ - Large effect
+\end{itemize}
+
+\textbf{Classical vs Hybrid Adaptive STA:} $d = 2.5$ (HUGE effect!)
+
+Not just statistically significant, but \textbf{practically important}
+\end{keypoint}
+
+% ==============================================================================
+% PAGE 3: VISUALIZATION TECHNIQUES
+% ==============================================================================
+\newpage
+
+\section*{Real-Time Animation: DIPAnimator}
+
+\begin{multicols}{2}
+
+\textbf{Usage:}
+\begin{lstlisting}[style=python, numbers=none]
+animator = DIPAnimator(
+    dt=0.01,
+    show_traces=True
+)
+
+while t < duration:
+    # Simulation step
+    animator.update(state)
+
+animator.save('sim.mp4', fps=30)
+\end{lstlisting}
+
+\columnbreak
+
+\textbf{Features:}
+\begin{itemize}
+    \item 30 FPS rendering
+    \item Trajectory traces (pendulum tip path)
+    \item Export to video (MP4)
+    \item Visual debugging
+\end{itemize}
+
+\begin{tip}
+\textbf{Tight spiral:} Quick stabilization
+
+\textbf{Loops:} Oscillations
+
+\textbf{Explosion:} Controller failure
+\end{tip}
+
+\end{multicols}
+
+\section*{Chattering Analysis: Frequency Domain}
+
+\begin{keypoint}
+\textbf{Chattering = High-frequency oscillations}
+
+\textbf{Sound analogy:}
+\begin{itemize}
+    \item Below 10 Hz: HUM (deep, steady rumble) - natural system response
+    \item Above 10 Hz: SCREECH (high-pitched whine) - chattering waste
+\end{itemize}
+
+\textbf{Measure:} FFT (Fast Fourier Transform) $\to$ Power spectral density $\to$ Sum energy above 10 Hz
+\end{keypoint}
+
+\subsection*{FFT Analysis Results}
+
+\begin{tcolorbox}[colback=background, colframe=codeblock, title=\faMusic\ Chattering by Controller]
+\begin{tabular}{lll}
+\toprule
+\textbf{Controller} & \textbf{Energy >10 Hz} & \textbf{Sound} \\
+\midrule
+Classical (no boundary) & 45\% & Loud screech \\
+Classical ($\phi=0.05$ rad) & 8\% & Faint whine \\
+STA-SMC & 2\% & Nearly silent \\
+Hybrid Adaptive STA & 1.5\% & Silent (best!) \\
+\bottomrule
+\end{tabular}
+\end{tcolorbox}
+
+\begin{example}
+\textbf{Physical Interpretation:}
+
+Pendulum natural frequency $\approx$ 5 Hz (hum of system responding)
+
+Control should be below 10 Hz (matching natural rhythm)
+
+Above 10 Hz = chattering (actuator screaming, but pendulum can't respond!)
+\end{example}
+
+\subsection*{Visualization Types}
+
+\begin{multicols}{2}
+
+\textbf{Time Series:}
+\begin{itemize}
+    \item State evolution over time
+    \item Control signal trajectory
+    \item Performance metrics
+\end{itemize}
+
+\textbf{Phase Portraits:}
+\begin{itemize}
+    \item Position vs velocity
+    \item Sliding surface behavior
+    \item Reaching $\to$ Sliding $\to$ Chattering
+\end{itemize}
+
+\textbf{Frequency Domain:}
+\begin{itemize}
+    \item FFT power spectral density
+    \item Chattering quantification
+    \item Hum vs screech analysis
+\end{itemize}
+
+\columnbreak
+
+\textbf{Statistical Distributions:}
+\begin{itemize}
+    \item Histograms of metrics
+    \item Box plots (median, quartiles)
+    \item Violin plots (distribution shape)
+\end{itemize}
+
+\textbf{Comparative:}
+\begin{itemize}
+    \item Bar charts (7 controllers)
+    \item Pareto frontiers (tradeoffs)
+    \item Heatmaps (parameter sensitivity)
+\end{itemize}
+
+\textbf{Animation:}
+\begin{itemize}
+    \item Real-time pendulum motion
+    \item Trajectory traces
+    \item Video export (30 FPS)
+\end{itemize}
+
+\end{multicols}
+
+% ==============================================================================
+% PAGE 4: PUBLICATION FIGURES & QUICK REFERENCE
+% ==============================================================================
+\newpage
+
+\section*{The 14 Publication Figures}
+
+\begin{keypoint}
+\textbf{From hundreds of exploratory plots to 14 publication-ready figures}
+
+Each figure:
+\begin{itemize}
+    \item Passed 15-item quality checklist
+    \item Survived peer review by co-authors
+    \item Tells complete story on its own
+    \item Publication-ready formatting
+\end{itemize}
+\end{keypoint}
+
+\subsection*{Figure Categories}
+
+\begin{tcolorbox}[colback=primary!5, colframe=primary, title=\faImages\ 14-Figure Breakdown]
+\textbf{System Architecture (2 figures):}
+\begin{itemize}
+    \item System diagram (7 controllers + plant + optimizer)
+    \item DIP physical schematic
+\end{itemize}
+
+\textbf{Performance Comparison (5 figures):}
+\begin{itemize}
+    \item Settling time bar chart (all 7 controllers)
+    \item Energy consumption comparison
+    \item Chattering frequency analysis (FFT)
+    \item Time series overlay (Classical vs STA vs Hybrid)
+    \item Phase portrait comparison
+\end{itemize}
+
+\textbf{Optimization Results (4 figures):}
+\begin{itemize}
+    \item PSO convergence curves (cost vs iteration)
+    \item Parameter sensitivity heatmap
+    \item Pareto frontier (speed vs energy)
+    \item Monte Carlo distributions (100 trials per controller)
+\end{itemize}
+
+\textbf{Statistical Validation (3 figures):}
+\begin{itemize}
+    \item Bootstrap confidence intervals
+    \item Effect size comparisons (Cohen's d)
+    \item ANOVA results with pairwise tests
+\end{itemize}
+\end{tcolorbox}
+
+\subsection*{Quality Checklist (15 Items)}
+
+\begin{summary}
+\textbf{Technical Accuracy:}
+\begin{itemize}
+    \item \textbf{1.} Axes labeled with units
+    \item \textbf{2.} Legends clear and complete
+    \item \textbf{3.} Error bars/confidence intervals shown
+    \item \textbf{4.} Statistical significance indicated
+\end{itemize}
+
+\textbf{Visual Design:}
+\begin{itemize}
+    \item \textbf{1.} Colorblind-friendly palette
+    \item \textbf{2.} High-resolution (300 DPI for print)
+    \item \textbf{3.} Consistent fonts/sizes
+    \item \textbf{4.} No clutter or overlapping text
+\end{itemize}
+
+\textbf{Storytelling:}
+\begin{itemize}
+    \item \textbf{1.} Caption explains key insight
+    \item \textbf{2.} Figure stands alone (no external context needed)
+    \item \textbf{3.} Comparison is fair (same scales, conditions)
+    \item \textbf{4.} Conclusion is obvious from visual inspection
+\end{itemize}
+\end{summary}
+
+\subsection*{Quick Reference: Visualization Workflow}
+
+\quickref{Performance Metrics}{
+\begin{lstlisting}[style=python, numbers=none]
+from src.utils.analysis import compute_metrics
+
+metrics = compute_metrics(
+    times, states, controls,
+    settling_threshold=0.01
+)
+# Returns: settling_time, overshoot,
+#          energy, chattering_freq
+\end{lstlisting}
+}
+
+\quickref{Statistical Analysis}{
+\begin{lstlisting}[style=python, numbers=none]
+from src.utils.analysis import bootstrap_ci
+
+mean, ci_lower, ci_upper = bootstrap_ci(
+    data, n_bootstrap=10000, alpha=0.05
+)
+# 95% confidence interval via bootstrap
+\end{lstlisting}
+}
+
+\quickref{Chattering Analysis}{
+\begin{lstlisting}[style=python, numbers=none]
+from scipy.fft import fft
+from src.utils.analysis import chattering_metric
+
+freqs, psd = compute_psd(control_signal, dt)
+chattering = chattering_metric(freqs, psd,
+                                cutoff=10)
+# Energy above 10 Hz cutoff
+\end{lstlisting}
+}
+
+\subsection*{Key Takeaways}
+
+\begin{keypoint}
+\textbf{Visualization is compression without loss of meaning:}
+\begin{itemize}
+    \item 2,400 simulations $\to$ 14 figures (gigabytes $\to$ 7 MB)
+    \item Each figure tells complete story
+    \item Statistical rigor: Monte Carlo, bootstrap, hypothesis testing
+    \item Practical insights: Pareto frontiers, effect sizes
+\end{itemize}
+
+\textbf{Tools:}
+\begin{itemize}
+    \item DIPAnimator: Real-time visualization (30 FPS)
+    \item FFT: Chattering quantification (hum vs screech)
+    \item Bootstrap: Confidence intervals without assumptions
+    \item Pareto frontier: Tradeoff visualization
+\end{itemize}
+\end{keypoint}
+
+\subsection*{What's Next?}
+
+\begin{keypoint}
+\textbf{E007: Testing \& Quality Assurance} - 250+ tests, coverage targets, property-based testing
+
+\textbf{Remember:} Visualization reveals truth when done correctly. 14 figures distilled from gigabytes of data!
+\end{keypoint}
+
+\end{document}

@@ -1,0 +1,225 @@
+% ==============================================================================
+% PREAMBLE - Package Configuration and Custom Commands
+% ==============================================================================
+% Contains all package imports, page layout, typography settings,
+% and custom LaTeX commands for the thesis.
+% ==============================================================================
+
+% ==============================================================================
+% ESSENTIAL PACKAGES
+% ==============================================================================
+
+% Document layout and geometry
+\usepackage[letterpaper,margin=1in]{geometry}
+\usepackage{setspace}
+\onehalfspacing  % 1.5 line spacing for readability
+
+% Font and typography
+\usepackage{times}           % Times New Roman font (similar to Times)
+\usepackage[T1]{fontenc}     % Font encoding
+\usepackage[utf8]{inputenc}  % Input encoding for special characters
+\usepackage{microtype}       % Improved typography (spacing, kerning)
+
+% Mathematics
+\usepackage{amsmath}         % Advanced math environments
+\usepackage{amssymb}         % Math symbols
+\usepackage{amsfonts}        % Math fonts
+\usepackage{mathtools}       % Extensions to amsmath
+\usepackage{bm}              % Bold math symbols
+
+% Figures and graphics
+\usepackage{graphicx}        % Include images
+\usepackage{float}           % Better float control ([H] option)
+\usepackage{subcaption}      % Subfigures and subtables
+\usepackage{wrapfig}         % Wrap text around figures
+
+% Tables
+\usepackage{booktabs}        % Professional table rules
+\usepackage{longtable}       % Multi-page tables
+\usepackage{multirow}        % Multi-row table cells
+\usepackage{array}           % Extended column formatting
+
+% Colors
+\usepackage[usenames,dvipsnames,table]{xcolor}
+
+% Algorithms and code listings
+\usepackage{algorithm}       % Algorithm environment
+\usepackage{algpseudocode}   % Pseudocode formatting
+\usepackage{listings}        % Source code listings
+
+% Citations and bibliography
+\usepackage{cite}            % Improved citations
+\usepackage{natbib}          % Natural sciences bibliography
+
+% Cross-references
+\usepackage{hyperref}        % Hyperlinks (load near end)
+\usepackage{cleveref}        % Intelligent cross-references (load after hyperref)
+
+% Additional utilities
+\usepackage{textcomp}        % Additional text symbols
+\usepackage{gensymb}         % Generic symbols (degree, etc.)
+\usepackage{siunitx}         % SI units formatting
+\usepackage{enumitem}        % Customize lists
+
+% ==============================================================================
+% PAGE LAYOUT
+% ==============================================================================
+
+% Header and footer
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}  % Clear all header/footer
+\fancyhead[LE,RO]{\thepage}  % Page numbers on outer edges
+\fancyhead[RE]{\leftmark}    % Chapter on even pages
+\fancyhead[LO]{\rightmark}   % Section on odd pages
+\renewcommand{\headrulewidth}{0.5pt}
+
+% Chapter and section formatting
+\usepackage{titlesec}
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries}{\chaptertitlename\ \thechapter}{20pt}{\Huge}
+\titlespacing*{\chapter}{0pt}{0pt}{40pt}
+
+% ==============================================================================
+% HYPERREF CONFIGURATION
+% ==============================================================================
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    citecolor=blue,
+    filecolor=magenta,
+    urlcolor=cyan,
+    pdftitle={Sliding Mode Control of Double-Inverted Pendulum with PSO},
+    pdfauthor={Your Name},
+    pdfsubject={Master's Thesis - Control Systems},
+    pdfkeywords={sliding mode control, double inverted pendulum, PSO, optimization},
+    bookmarksdepth=3,
+    bookmarksopen=true
+}
+
+% ==============================================================================
+% LISTINGS (CODE) CONFIGURATION
+% ==============================================================================
+
+\lstset{
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    commentstyle=\color{gray}\itshape,
+    stringstyle=\color{red},
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    stepnumber=1,
+    numbersep=8pt,
+    backgroundcolor=\color{gray!10},
+    frame=single,
+    frameround=tttt,
+    rulecolor=\color{black},
+    breaklines=true,
+    breakatwhitespace=false,
+    tabsize=4,
+    captionpos=b,
+    xleftmargin=2em,
+    framexleftmargin=1.5em
+}
+
+% Python syntax highlighting
+\lstdefinestyle{python}{
+    language=Python,
+    morekeywords={self, as, with, yield}
+}
+
+% ==============================================================================
+% CUSTOM MATH COMMANDS
+% ==============================================================================
+
+% Vectors (bold lowercase)
+\newcommand{\vect}[1]{\bm{#1}}
+
+% Matrices (bold uppercase)
+\newcommand{\mat}[1]{\bm{#1}}
+
+% Real numbers
+\newcommand{\Real}{\mathbb{R}}
+
+% Norm
+\newcommand{\norm}[1]{\left\|#1\right\|}
+
+% Absolute value
+\newcommand{\abs}[1]{\left|#1\right|}
+
+% Derivative
+\newcommand{\diff}[2]{\frac{d#1}{d#2}}
+
+% Partial derivative
+\newcommand{\pdiff}[2]{\frac{\partial#1}{\partial#2}}
+
+% Dot notation (time derivative)
+\newcommand{\ddt}[1]{\dot{#1}}
+
+% Double dot (second derivative)
+\newcommand{\dddt}[1]{\ddot{#1}}
+
+% Sign function
+\DeclareMathOperator{\sign}{sign}
+
+% Saturation function
+\DeclareMathOperator{\sat}{sat}
+
+% State vector (common notation)
+\newcommand{\state}{\vect{x}}
+\newcommand{\control}{\vect{u}}
+\newcommand{\output}{\vect{y}}
+
+% ==============================================================================
+% CUSTOM ENVIRONMENTS
+% ==============================================================================
+
+% Theorem environment
+\usepackage{amsthm}
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+
+% Definition environment
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+
+% Remark environment
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{note}[theorem]{Note}
+
+% ==============================================================================
+% SIUNITX CONFIGURATION (SI Units)
+% ==============================================================================
+
+\sisetup{
+    inter-unit-product = \ensuremath{{}\cdot{}},
+    per-mode = symbol,
+    separate-uncertainty = true,
+    uncertainty-mode = separate,
+    range-phrase = --,
+    range-units = single
+}
+
+% ==============================================================================
+% CLEVEREF CONFIGURATION (Smart Cross-References)
+% ==============================================================================
+
+\crefname{equation}{Eq.}{Eqs.}
+\Crefname{equation}{Equation}{Equations}
+\crefname{figure}{Fig.}{Figs.}
+\Crefname{figure}{Figure}{Figures}
+\crefname{table}{Tab.}{Tabs.}
+\Crefname{table}{Table}{Tables}
+\crefname{chapter}{Chapter}{Chapters}
+\crefname{section}{Section}{Sections}
+\crefname{appendix}{Appendix}{Appendices}
+\crefname{algorithm}{Algorithm}{Algorithms}
+
+% ==============================================================================
+% END OF PREAMBLE
+% ==============================================================================

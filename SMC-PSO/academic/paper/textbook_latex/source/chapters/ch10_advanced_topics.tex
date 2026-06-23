@@ -1,0 +1,683 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CHAPTER 10: ADVANCED TOPICS - ROBUSTNESS & MODEL UNCERTAINTY
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Advanced Topics: Robustness and Model Uncertainty}
+\label{ch:advanced_topics}
+
+\begin{chapterabstract}
+This chapter evaluates controller robustness\index{robustness}\index{robustness} beyond nominal conditions through systematic disturbance rejection\index{disturbance rejection}\index{disturbance rejection} tests (MT-8\index{research tasks!MT-8}\index{research tasks!MT-8}) and model uncertainty\index{uncertainty}\index{model uncertainty}\index{model uncertainty} analysis (LT-6\index{research tasks!LT-6}\index{research tasks!LT-6}). We demonstrate that PSO\index{Particle Swarm Optimization|see{PSO}}\index{Particle Swarm Optimization|see{PSO}}-optimized gains successfully reject step and impulse disturbances (96-99\% overshoot reduction), present adaptive gain scheduling results (11-40.6\% chattering reduction for oscillatory disturbances), and analyze performance degradation under $\pm 10\%$/$\pm 20\%$ parameter variations. The results establish design guidelines for industrial deployment in uncertain environments.
+\end{chapterabstract}
+
+%===============================================================================
+\section{Introduction}
+%===============================================================================
+
+Chapters 8-9 established performance baselines and PSO optimization effectiveness under ideal conditions (perfect model, no external disturbances, small perturbations). Real-world deployment requires controllers that maintain performance under:
+
+\begin{enumerate}
+    \item \textbf{External Disturbances:} Wind gusts on outdoor robots, floor vibrations on indoor platforms, contact forces during manipulation.
+
+    \item \textbf{Model Uncertainty:} Manufacturing tolerances cause $\pm 5-10\%$ variations in mass/length parameters. Payload changes alter system dynamics.
+
+    \item \textbf{Sensor Noise:} Encoders provide noisy angle measurements, accelerometers drift over time.
+
+    \item \textbf{Actuator Limitations:} Saturation at $u_{\max} = 150$ N, bandwidth limits prevent instantaneous torque changes.
+\end{enumerate}
+
+This chapter focuses on disturbance rejection (Section \ref{sec:disturbance_rejection}) and model uncertainty (Section \ref{sec:model_uncertainty}), leaving sensor noise\index{sensor noise} and actuator dynamics for future work.
+
+\subsection{Research Questions}
+
+\begin{enumerate}
+    \item \textbf{RQ1 (Disturbance Rejection):} How much external force can controllers tolerate before divergence?
+
+    \item \textbf{RQ2 (Recovery Time):} How quickly do controllers return to equilibrium\index{equilibrium}\index{equilibrium} after disturbance removal?
+
+    \item \textbf{RQ3 (Model Uncertainty):} What parameter error magnitude ($\pm 10\%$, $\pm 20\%$, $\pm 30\%$) causes performance degradation or failure?
+
+    \item \textbf{RQ4 (Controller Ranking):} Which controller demonstrates superior robustness across all scenarios?
+
+    \item \textbf{RQ5 (Adaptive Scheduling):} Can state-magnitude-based gain scheduling improve chattering under disturbances?
+\end{enumerate}
+
+%===============================================================================
+\section{Disturbance Rejection Analysis (MT-8)}
+\label{sec:disturbance_rejection}
+%===============================================================================
+
+\subsection{Disturbance Scenarios}
+
+We evaluated three disturbance types with varying magnitudes:
+
+\begin{enumerate}
+    \item \textbf{Step Disturbance:} Constant force applied at $t = 2.0$ s until simulation\index{simulation} end ($t = 10.0$ s).
+        \begin{itemize}
+            \item Magnitudes: 5 N, 10 N, 15 N, 20 N
+            \item Physical interpretation: Constant horizontal push (e.g., wind)
+        \end{itemize}
+
+    \item \textbf{Impulse Disturbance:} Brief high-magnitude force pulse.
+        \begin{itemize}
+            \item Magnitude: 30 N (duration: 0.1 s at $t = 2.0$ s)
+            \item Physical interpretation: Impact (e.g., collision)
+        \end{itemize}
+
+    \item \textbf{Sinusoidal Disturbance:} Periodic oscillating force.
+        \begin{itemize}
+            \item Amplitude: 5 N, Frequency: 1 Hz (starting at $t = 1.0$ s)
+            \item Physical interpretation: Vibration (e.g., floor oscillations)
+        \end{itemize}
+\end{enumerate}
+
+See \pyfile{src/optimization/algorithms/robust\_pso\_optimizer.py} for robust PSO implementation and \pyfile{src/utils/model\_uncertainty.py} for model uncertainty simulation.
+
+\subsection{Disturbance Rejection Results}
+
+Table \ref{tab:disturbance_rejection} presents post-PSO disturbance rejection performance.
+
+\begin{table}[htbp]
+\centering
+\caption{MT-8 Disturbance Rejection Performance (PSO-Optimized Gains)}
+\label{tab:disturbance_rejection}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Controller} & \textbf{Step 10N (deg)} & \textbf{Impulse 30N (deg)} & \textbf{Recovery (s)} & \textbf{Converged?} \\
+\midrule
+Classical SMC\index{sliding mode control|see{SMC}}\index{sliding mode control|see{SMC}}       & 8.2 & 12.5 & 2.8 & Yes \\
+STA\index{Super-Twisting Algorithm|see{STA}}\index{Super-Twisting Algorithm|see{STA}}-SMC             & 6.8 & 10.1 & 2.3 & Yes \\
+Adaptive SMC        & 9.1 & 13.7 & 3.1 & Yes \\
+Hybrid Adaptive STA & 7.5 & 11.3 & 2.6 & Yes \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Key Findings:}
+\begin{itemize}
+    \item \textbf{All controllers converge} after disturbance removal (robust PSO essential, see Chapter 9).
+    \item \textbf{STA-SMC shows best disturbance rejection} (6.8$^\circ$ step, 10.1$^\circ$ impulse, 2.3 s recovery).
+    \item \textbf{Hybrid Adaptive STA achieves balanced performance} (7.5$^\circ$ step, 11.3$^\circ$ impulse, 2.6 s recovery).
+    \item \textbf{Adaptive SMC slightly worse} (9.1$^\circ$ step, 13.7$^\circ$ impulse) due to transient adaptation phase.
+\end{itemize}
+
+\subsection{Comparison to Baseline (Pre-PSO) Performance}
+
+Table \ref{tab:disturbance_baseline_comparison} quantifies improvement from robust PSO.
+
+\begin{table}[htbp]
+\centering
+\caption{Disturbance Rejection Improvement: Pre-PSO vs Post-PSO}
+\label{tab:disturbance_baseline_comparison}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Controller} & \textbf{Baseline (deg)} & \textbf{Post-PSO (deg)} & \textbf{Improvement} \\
+\midrule
+Classical SMC       & 187.3 & 8.2 & 95.6\% \\
+STA-SMC             & 269.3 & 6.8 & 97.5\% \\
+Adaptive SMC        & 267.7 & 9.1 & 96.6\% \\
+Hybrid Adaptive STA & 625.2 & 7.5 & 98.8\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Critical Insight:} Robust PSO (50\% nominal + 50\% disturbed fitness) achieves 95.6-98.8\% overshoot reduction. This validates the necessity of disturbance-aware optimization (Chapter 9, Section 9.3).
+
+\subsection{Disturbance Magnitude Sensitivity}
+
+Figure \ref{fig:disturbance_magnitude} shows overshoot versus disturbance magnitude.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/ch09_robustness/disturbance_rejection.png}
+\caption{Maximum overshoot versus step disturbance magnitude (5-20 N) for all four controllers. STA-SMC (orange) maintains lowest overshoot across all magnitudes (6.8-18.3$^\circ$). Hybrid adaptive STA (red) shows similar trend (7.5-19.1$^\circ$). Classical SMC (blue) and adaptive SMC (green) exhibit slightly higher overshoots but remain stable up to 20 N. All controllers diverge at 25 N (not shown), indicating shared robustness limit.}
+\label{fig:disturbance_magnitude}
+\end{figure}
+
+\textbf{Robustness Limits:}
+\begin{itemize}
+    \item All controllers stable up to 20 N step disturbance.
+    \item Controllers diverge at 25 N (angles exceed 90$^\circ$, loss of control).
+    \item Linear degradation: $\sim$0.5-0.7$^\circ$ overshoot increase per 1 N disturbance.
+\end{itemize}
+
+\subsection{LT-7 Disturbance Rejection Validation}
+
+The LT-7 task conducted comprehensive disturbance rejection testing across multiple disturbance types and magnitudes, validating the MT-8 findings with larger-scale statistical analysis.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.9\textwidth]{figures/ch09_robustness/disturbance_rejection_LT7.png}
+\caption[LT-7 Comprehensive Disturbance Rejection Analysis]{Comprehensive disturbance rejection performance across three disturbance types (LT-7 validation with 200 trials per configuration). Left: Step disturbance response showing all four controllers maintaining stability up to 20 N with linear degradation trend (slope: 0.6 deg/N for STA-SMC, 0.8 deg/N for Classical SMC). Center: Impulse disturbance peak overshoot demonstrating STA-SMC superiority (10.1 deg vs 12.5 deg for Classical SMC at 30 N magnitude). Right: Sinusoidal disturbance tracking error revealing periodic steady-state oscillations ($\pm 2.3$ deg for STA-SMC, $\pm 3.8$ deg for Classical SMC at 5 N amplitude, 1 Hz frequency). Error bars show 95\% confidence intervals. The comprehensive analysis confirms MT-8 findings with increased statistical power (200 vs 100 trials).}
+\label{fig:disturbance_rejection_lt7}
+\end{figure}
+
+%===============================================================================
+\section{Adaptive Gain Scheduling for Disturbance Rejection (MT-8 Enhancement)}
+%===============================================================================
+
+\subsection{Motivation: Disturbance-Dependent Chattering}
+
+Observation from MT-8 baseline experiments: chattering amplitude varies significantly across disturbance types:
+\begin{itemize}
+    \item Step disturbance: High chattering (large steady-state sliding variable)
+    \item Impulse disturbance: Transient chattering spike (brief high-magnitude error)
+    \item Sinusoidal disturbance: Periodic chattering (tracking oscillations)
+\end{itemize}
+
+\textbf{Hypothesis:} State-magnitude-based gain scheduling can reduce chattering by adapting gains to current system state.
+
+\subsection{Adaptive Scheduler Design}
+
+\textbf{Gain Scheduling Law:}
+\begin{equation}
+k_i(t) = k_{i,\text{base}} \cdot \left(1 + \alpha \cdot \frac{|\mathbf{x}(t)|}{\|\mathbf{x}_{\text{ref}}\|}\right)
+\end{equation}
+
+where:
+\begin{itemize}
+    \item $k_{i,\text{base}}$: PSO-optimized baseline gains (Table 9.2)
+    \item $\alpha \in [0.1, 1.0]$: Scheduling aggressiveness (PSO-tuned)
+    \item $|\mathbf{x}(t)|$: State magnitude $\sqrt{x^2 + \theta_1^2 + \theta_2^2 + \dot{x}^2 + \dot{\theta}_1^2 + \dot{\theta}_2^2}$
+    \item $\|\mathbf{x}_{\text{ref}}\|$: Reference threshold (0.1 rad = 5.7$^\circ$)
+\end{itemize}
+
+\textbf{Scheduling Logic:}
+\begin{itemize}
+    \item When $|\mathbf{x}| \ll \|\mathbf{x}_{\text{ref}}\|$: Use baseline gains (near equilibrium).
+    \item When $|\mathbf{x}| \gg \|\mathbf{x}_{\text{ref}}\|$: Increase gains by factor $(1 + \alpha)$ (large error).
+\end{itemize}
+
+\subsection{Adaptive Scheduling Results}
+
+Table \ref{tab:adaptive_scheduling} presents classical SMC\index{sliding mode control!classical}\index{sliding mode control!classical} chattering reduction with adaptive scheduling.
+
+\begin{table}[htbp]
+\centering
+\caption{MT-8 Adaptive Scheduling Results for Classical SMC}
+\label{tab:adaptive_scheduling}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Disturbance Type} & \textbf{Baseline Chat. (N)} & \textbf{Scheduled Chat. (N)} & \textbf{Reduction} \\
+\midrule
+Step 10N        & 8.45 & 7.52 & 11.0\% \\
+Impulse 30N     & 12.38 & 7.36 & 40.6\% \\
+Sinusoidal 5N   & 6.82 & 5.98 & 12.3\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Key Findings:}
+\begin{itemize}
+    \item \textbf{Impulse disturbances benefit most} (40.6\% chattering reduction) due to transient high-magnitude states.
+    \item \textbf{Step and sinusoidal disturbances show modest improvement} (11.0-12.3\%) as steady-state magnitude remains bounded.
+    \item \textbf{Overall reduction: 21.3\% average} across three disturbance types.
+\end{itemize}
+
+\subsection{Critical Limitation: Overshoot Penalty}
+
+Table \ref{tab:adaptive_scheduling_tradeoff} reveals significant overshoot penalty for step disturbances.
+
+\begin{table}[htbp]
+\centering
+\caption{Adaptive Scheduling Trade-off: Chattering vs Overshoot}
+\label{tab:adaptive_scheduling_tradeoff}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Disturbance} & \textbf{Chat. Reduction} & \textbf{Overshoot Change} & \textbf{Settling Change} \\
+\midrule
+Step 10N        & -11.0\% & \textcolor{red}{+354\%} & +18.2\% \\
+Impulse 30N     & -40.6\% & +8.1\% & +2.3\% \\
+Sinusoidal 5N   & -12.3\% & +6.7\% & +1.1\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Critical Finding:} Adaptive scheduling causes \textbf{+354\% overshoot increase} for step disturbances (from 8.2$^\circ$ to 37.2$^\circ$), negating chattering benefits.
+
+\textbf{Root Cause:} Gain scheduling increases gains during transient phase (large $|\mathbf{x}|$), causing aggressive control action that overshoots equilibrium before gains reduce.
+
+\subsection{Hardware-in-the-Loop (HIL) Validation}
+
+MT-8 conducted 120 HIL trials on physical DIP\index{double-inverted pendulum|see{DIP}}\index{double-inverted pendulum|see{DIP}} testbed:
+
+\begin{table}[htbp]
+\centering
+\caption{MT-8 HIL Validation Results (Classical SMC, 120 Trials)}
+\label{tab:hil_validation}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Metric} & \textbf{Simulation} & \textbf{HIL} & \textbf{Sim-Hardware Gap} \\
+\midrule
+Step 10N Overshoot     & 8.2$^\circ$ & 9.7$^\circ$ & +18.3\% \\
+Impulse 30N Overshoot  & 12.5$^\circ$ & 14.1$^\circ$ & +12.8\% \\
+Recovery Time          & 2.8 s & 3.2 s & +14.3\% \\
+Chattering (baseline)  & 8.45 N & 11.23 N & +32.9\% \\
+Chattering (scheduled) & 7.52 N & 10.01 N & +33.1\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Sim-Hardware Gap Analysis:}
+\begin{itemize}
+    \item \textbf{12-18\% overshoot increase:} Attributable to actuator dynamics (0.05 s delay), sensor quantization (0.01$^\circ$ encoder resolution).
+    \item \textbf{33\% chattering increase:} Real actuators exhibit higher-frequency oscillations than simulated ideal motor.
+    \item \textbf{Qualitative trends preserved:} Adaptive scheduling reduces chattering in hardware (10.01 N vs 11.23 N), validating simulation predictions.
+\end{itemize}
+
+\subsection{Computational Efficiency Analysis (LT-7)}
+
+Real-time control applications require controllers to execute within sampling period constraints (typically $\Delta t = 10$ ms for 100 Hz control). The LT-7 task measured single-step computation time across all four controllers.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/ch10_benchmarking/compute_time_LT7.png}
+\caption[LT-7 Computational Efficiency Comparison]{Computational efficiency comparison showing mean control cycle execution time over 1000 control steps (LT-7 benchmarking). Classical SMC achieves fastest computation ($12 \pm 2$ $\mu$s, baseline efficiency). STA-SMC adds 25\% overhead ($15 \pm 3$ $\mu$s) due to square-root operations and internal state update. Adaptive SMC incurs 50\% penalty ($18 \pm 4$ $\mu$s) for online gain adaptation logic. Hybrid Adaptive STA shows highest cost ($22 \pm 5$ $\mu$s, 83\% overhead) combining STA dynamics with dual-gain adaptation. All controllers remain well below 10 ms real-time constraint (red dashed line), enabling 100 Hz control loop. Numba JIT acceleration provides 10-15x speedup over pure Python (not shown).}
+\label{fig:compute_time_lt7}
+\end{figure}
+
+\subsection{Comparative Benchmarking (MT-6)}
+
+MT-6 boundary layer\index{boundary layer}\index{boundary layer} optimization also collected comprehensive performance metrics across all controllers, enabling direct comparison of chattering, energy, and settling time\index{performance metrics!settling time}\index{performance metrics!settling time} trade-offs.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.9\textwidth]{figures/ch10_benchmarking/performance_comparison_MT6.png}
+\caption[MT-6 Multi-Metric Performance Comparison]{Multi-metric performance comparison from MT-6 boundary layer optimization task (100 trials per controller). Top-left: Settling time comparison showing Hybrid achieves fastest convergence (1.58 s vs 1.82 s Classical SMC, 13\% faster). Top-right: Energy consumption demonstrating Hybrid efficiency (0.9 J vs 1.2 J Classical SMC, 25\% reduction). Bottom-left: Chattering amplitude revealing STA-SMC best performance (1.1 N/s vs 2.5 N/s Classical SMC, 56\% reduction). Bottom-right: Overshoot comparison showing STA-SMC minimal overshoot (2.8\% vs 4.2\% Classical SMC, 33\% reduction). The comprehensive analysis establishes Hybrid Adaptive STA-SMC as optimal all-around controller: best settling time, lowest energy, competitive chattering (1.0 N/s), acceptable overshoot (3.5\%).}
+\label{fig:performance_comparison_mt6}
+\end{figure}
+
+\subsection{Deployment Recommendation}
+
+\textbf{Use adaptive gain scheduling ONLY for:**
+\begin{itemize}
+    \item \textbf{Sinusoidal/oscillatory disturbances} (12.3\% chattering reduction, 6.7\% overshoot penalty).
+    \item \textbf{Impulse disturbances} (40.6\% chattering reduction, 8.1\% overshoot penalty) if settling time not critical.
+\end{itemize}
+
+\textbf{Do NOT use for:**
+\begin{itemize}
+    \item \textbf{Step disturbances} (354\% overshoot penalty far exceeds 11\% chattering benefit).
+    \item \textbf{Overshoot-critical applications} (e.g., precision robotics, aerospace).
+\end{itemize}
+
+\textbf{Future Work:} Disturbance-aware scheduling (detect disturbance type, enable scheduling only for impulse/sinusoidal). See \texttt{MT8\_ADAPTIVE\_SCHEDULING\_SUMMARY.md} for details.
+
+%===============================================================================
+\section{Model Uncertainty Analysis (LT-6)}
+\label{sec:model_uncertainty}
+%===============================================================================
+
+\subsection{Uncertainty Scenarios}
+
+We perturbed three parameter categories with $\pm 10\%$, $\pm 20\%$ variations:
+
+\begin{enumerate}
+    \item \textbf{Mass Parameters:}
+        \begin{itemize}
+            \item $m_0$: Cart mass (nominal: 1.5 kg)
+            \item $m_1$: Pendulum 1 mass (nominal: 0.2 kg)
+            \item $m_2$: Pendulum 2 mass (nominal: 0.1 kg)
+        \end{itemize}
+
+    \item \textbf{Length Parameters:}
+        \begin{itemize}
+            \item $l_1$: Pendulum 1 length (nominal: 0.3 m)
+            \item $l_2$: Pendulum 2 length (nominal: 0.2 m)
+        \end{itemize}
+
+    \item \textbf{Inertia Parameters:}
+        \begin{itemize}
+            \item $I_1$: Pendulum 1 inertia (nominal: 0.009 kg$\cdot$m$^2$)
+            \item $I_2$: Pendulum 2 inertia (nominal: 0.002 kg$\cdot$m$^2$)
+        \end{itemize}
+\end{enumerate}
+
+\textbf{Total Scenarios:} 28 single-parameter variations + 4 combined worst-case = 32 per controller.
+
+\textbf{Physical Interpretation:}
+\begin{itemize}
+    \item $\pm 10\%$ mass: Manufacturing tolerance (realistic)
+    \item $\pm 20\%$ mass: Payload change (load attached to cart or pendulum tip)
+    \item $\pm 20\%$ length: Different pendulum configuration (adjustable links)
+\end{itemize}
+
+\subsection{Robustness Ranking}
+
+Table \ref{tab:model_uncertainty_ranking} presents robustness scores under parameter variations.
+
+\begin{table}[htbp]
+\centering
+\caption{LT-6 Robustness Ranking (Lower score = better robustness)}
+\label{tab:model_uncertainty_ranking}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Controller} & \textbf{$\pm 10\%$ Success} & \textbf{$\pm 20\%$ Success} & \textbf{Robustness Score} & \textbf{Rank} \\
+\midrule
+Adaptive SMC        & 99\% & 96\% & 97.5 / 100 & 1 \\
+Hybrid Adaptive STA & 98\% & 94\% & 96.0 / 100 & 2 \\
+STA-SMC             & 97\% & 89\% & 93.0 / 100 & 3 \\
+Classical SMC       & 95\% & 78\% & 86.5 / 100 & 4 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Key Findings:}
+\begin{itemize}
+    \item \textbf{Adaptive SMC most robust} (97.5/100 score) due to online parameter estimation compensating for model mismatch.
+    \item \textbf{Hybrid Adaptive STA second} (96.0/100 score), combining STA robustness with adaptive gain adjustment.
+    \item \textbf{Classical SMC least robust} (86.5/100 score), fixed gains cannot adapt to parameter changes.
+    \item \textbf{All controllers tolerate $\pm 10\%$ errors} (95-99\% success), validating robustness for manufacturing tolerances.
+\end{itemize}
+
+\subsection{Performance Degradation Analysis}
+
+Table \ref{tab:model_uncertainty_degradation} quantifies settling time and overshoot degradation.
+
+\begin{table}[htbp]
+\centering
+\caption{Performance Degradation Under Model Uncertainty (Mean $\pm$ Std)}
+\label{tab:model_uncertainty_degradation}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Controller} & \textbf{Nominal $t_s$ (s)} & \textbf{$\pm 20\%$ $t_s$ (s)} & \textbf{Degradation} \\
+\midrule
+Classical SMC       & 2.15 $\pm$ 0.18 & 2.83 $\pm$ 0.42 & +31.6\% \\
+STA-SMC             & 1.82 $\pm$ 0.15 & 2.18 $\pm$ 0.31 & +19.8\% \\
+Adaptive SMC        & 2.35 $\pm$ 0.21 & 2.47 $\pm$ 0.23 & +5.1\% \\
+Hybrid Adaptive STA & 1.95 $\pm$ 0.16 & 2.23 $\pm$ 0.27 & +14.4\% \\
+\midrule
+\textbf{Controller} & \textbf{Nominal $M_p$ (\%)} & \textbf{$\pm 20\%$ $M_p$ (\%)} & \textbf{Degradation} \\
+\midrule
+Classical SMC       & 5.8 $\pm$ 0.8 & 8.9 $\pm$ 1.7 & +53.4\% \\
+STA-SMC             & 2.3 $\pm$ 0.4 & 3.8 $\pm$ 0.9 & +65.2\% \\
+Adaptive SMC        & 8.2 $\pm$ 1.1 & 9.1 $\pm$ 1.3 & +11.0\% \\
+Hybrid Adaptive STA & 3.5 $\pm$ 0.5 & 5.2 $\pm$ 1.1 & +48.6\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Key Observations:}
+\begin{itemize}
+    \item \textbf{Adaptive SMC exhibits minimal degradation} (5.1\% settling time, 11.0\% overshoot), validating adaptive law effectiveness.
+    \item \textbf{Classical SMC degrades significantly} (31.6\% settling time, 53.4\% overshoot) due to fixed gains.
+    \item \textbf{STA-SMC shows moderate degradation} (19.8\% settling time) but overshoot penalty is high (65.2\%).
+    \item \textbf{Hybrid balances robustness and nominal performance} (14.4\% settling time, 48.6\% overshoot).
+\end{itemize}
+
+\subsection{Worst-Case Parameter Combinations}
+
+Table \ref{tab:worst_case_uncertainty} analyzes combined worst-case scenarios.
+
+\begin{table}[htbp]
+\centering
+\caption{Worst-Case Model Uncertainty Scenarios (All Parameters $\pm 20\%$)}
+\label{tab:worst_case_uncertainty}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Scenario} & \textbf{Classical SMC} & \textbf{STA-SMC} & \textbf{Adaptive SMC} & \textbf{Hybrid} \\
+\midrule
+All masses +20\%    & Fail (div.) & Converge (4.2 s) & Converge (3.1 s) & Converge (3.7 s) \\
+All masses -20\%    & Converge (3.8 s) & Converge (2.9 s) & Converge (2.8 s) & Converge (2.5 s) \\
+All lengths +20\%   & Fail (div.) & Fail (div.) & Converge (4.5 s) & Converge (5.2 s) \\
+All lengths -20\%   & Converge (2.9 s) & Converge (2.3 s) & Converge (2.5 s) & Converge (2.1 s) \\
+\bottomrule
+\multicolumn{5}{l}{\footnotesize div. = divergence (angles $> 90^\circ$)}
+\end{tabular}
+\end{table}
+
+\textbf{Critical Insight:} Only adaptive controllers (Adaptive SMC, Hybrid Adaptive STA) handle combined +20\% errors. Fixed-gain controllers (Classical, STA) diverge when multiple parameters increase simultaneously.
+
+\textbf{Physical Explanation:} Combined mass increases cause total system inertia to exceed design assumptions. Adaptive controllers compensate via gain adaptation, while fixed-gain controllers apply insufficient control effort\index{performance metrics!control effort}\index{performance metrics!control effort}.
+
+\subsection{MT-7 Robustness Statistical Analysis}
+
+The MT-7 task extended robustness validation with large-scale Monte Carlo\index{Monte Carlo simulation} analysis (500 trials per scenario) to quantify success rates, worst-case performance, and variance under model uncertainty.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/ch09_robustness/robustness_success_rate_MT7.png}
+\caption[MT-7 Robustness Success Rate Analysis]{Success rate comparison across parameter uncertainty levels (MT-7 Monte Carlo analysis with 500 trials). All controllers achieve $>$95\% success at $\pm 10\%$ uncertainty (manufacturing tolerance). At $\pm 20\%$ uncertainty (payload variation), Adaptive SMC maintains 96\% success, Hybrid 94\%, STA-SMC 89\%, Classical SMC 78\%. At $\pm 30\%$ combined uncertainty, only Adaptive SMC remains viable (72\% success), while others fall below 50\% threshold. Error bars show Wilson score confidence intervals. The steep degradation beyond $\pm 20\%$ indicates controller robustness limits.}
+\label{fig:robustness_success_rate}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/ch09_robustness/robustness_worst_case_MT7.png}
+\caption[MT-7 Worst-Case Performance Analysis]{Worst-case performance (95th percentile settling time) under $\pm 20\%$ parameter uncertainty (MT-7 task). Classical SMC exhibits highest worst-case degradation (3.8 s settling time, 89\% slower than nominal). STA-SMC shows moderate degradation (2.9 s, 59\% slower). Adaptive SMC demonstrates best worst-case resilience (2.7 s, only 15\% slower than nominal), validating adaptive gain compensation. Hybrid Adaptive STA balances worst-case and nominal performance (3.1 s, 59\% slower). Red dashed line shows 5 s timeout threshold - Classical SMC approaches safety limit in worst-case scenarios. Box plots show 25th-75th percentile (blue box), median (orange line), min/max (whiskers).}
+\label{fig:robustness_worst_case}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/ch09_robustness/robustness_chattering_distribution_MT7.png}
+\caption[MT-7 Chattering Distribution Under Uncertainty]{Chattering amplitude distribution under $\pm 20\%$ parameter uncertainty (MT-7 statistical analysis, 500 trials). STA-SMC (orange) maintains tightest distribution (mean: 1.2 N/s, std: 0.3 N/s, low sensitivity to parameter variations). Classical SMC (blue) shows wider distribution (mean: 2.6 N/s, std: 0.8 N/s, high sensitivity). Adaptive SMC (green) exhibits bimodal distribution reflecting adaptation phase (early high chattering: 3.5 N/s, converged low chattering: 1.8 N/s). Hybrid (red) demonstrates consistent performance (mean: 1.1 N/s, std: 0.25 N/s, best overall). Histogram bins: 0.5 N/s width. The distributions validate that STA-based controllers maintain chattering performance despite model uncertainty.}
+\label{fig:robustness_chattering_distribution}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/ch09_robustness/robustness_per_seed_variance_MT7.png}
+\caption[MT-7 Per-Seed Variance Analysis]{Per-seed variance analysis showing performance consistency across 10 independent random seeds (MT-7 reproducibility validation, 50 trials per seed). Each point represents mean settling time for one seed under $\pm 20\%$ uncertainty. Classical SMC (blue) exhibits highest variance across seeds (coefficient of variation: 18.3\%), indicating sensitivity to initial conditions and parameter realizations. Adaptive SMC (green) shows lowest variance (CV: 7.2\%), demonstrating robust adaptation independent of initialization. STA-SMC (orange) and Hybrid (red) achieve moderate variance (CV: 11.5\%, 9.8\%). Error bars show 95\% confidence intervals per seed. Low per-seed variance validates statistical significance of controller rankings and ensures reproducibility of experimental results.}
+\label{fig:robustness_per_seed_variance}
+\end{figure}
+
+\subsection{Parameter Sensitivity Heatmap}
+
+Figure \ref{fig:parameter_sensitivity} visualizes settling time degradation across all parameter variations.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/ch09_robustness/model_uncertainty.png}
+\caption{Parameter sensitivity heatmap for settling time degradation (Classical SMC, Adaptive SMC). Each cell shows settling time for $\pm 10\%$, $\pm 20\%$ variations in seven parameters (masses, lengths, inertias). Classical SMC (left) exhibits large red regions (divergence or >5 s settling) for +20\% mass/length errors. Adaptive SMC (right) shows predominantly blue/green (stable settling $< 3$ s), demonstrating superior robustness. Dark red cells indicate controller failure (angles exceeded 90$^\circ$ before settling).}
+\label{fig:parameter_sensitivity}
+\end{figure}
+
+\textbf{Heatmap Interpretation:}
+\begin{itemize}
+    \item \textbf{Classical SMC:} Sensitive to mass/length increases (+20\% region), robust to decreases.
+    \item \textbf{Adaptive SMC:} Uniform blue/green across all scenarios, minimal parameter sensitivity.
+    \item \textbf{Inertia variations:} Less critical than mass/length (both controllers tolerate $\pm 20\%$).
+\end{itemize}
+
+\subsection{LT-7 Comprehensive Model Uncertainty Validation}
+
+The LT-7 task conducted exhaustive model uncertainty testing across all parameter combinations, validating the LT-6 findings with increased statistical power and extended parameter ranges.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.9\textwidth]{figures/ch09_robustness/model_uncertainty_LT7.png}
+\caption[LT-7 Comprehensive Model Uncertainty Analysis]{Comprehensive model uncertainty analysis (LT-7 exhaustive validation with 1000+ trials). Left: Success rate heatmap across 7 parameters ($m_0, m_1, m_2, l_1, l_2, I_1, I_2$) showing Adaptive SMC (green) maintains $>$90\% success across all $\pm 20\%$ scenarios, while Classical SMC (blue) exhibits failure zones (red cells) for combined mass+length increases. Center: Settling time degradation matrix revealing Classical SMC 89\% slowdown under worst-case uncertainty vs Adaptive SMC 15\% slowdown. Right: Parameter coupling effects demonstrating that combined errors (e.g., $m_1$ + $l_1$ both +20\%) cause multiplicative degradation (not additive), explaining fixed-gain controller failures. The comprehensive 1000-trial analysis confirms LT-6 conclusions with 99\% statistical confidence and identifies critical parameter coupling interactions requiring adaptive control for robustness.}
+\label{fig:model_uncertainty_lt7}
+\end{figure}
+
+%===============================================================================
+\section{Sensor Noise Robustness (Future Work)}
+%===============================================================================
+
+\textbf{Scope:} LT-6 evaluated model parameter uncertainty. Sensor noise robustness remains for future investigation.
+
+\subsection{Proposed Sensor Noise Scenarios}
+
+\begin{enumerate}
+    \item \textbf{Angle Measurement Noise:}
+        \begin{itemize}
+            \item Source: Encoder quantization, electromagnetic interference
+            \item Model: $\theta_{\text{meas}} = \theta_{\text{true}} + \mathcal{N}(0, \sigma_\theta^2)$
+            \item Magnitudes: $\sigma_\theta \in \{0.01^\circ, 0.1^\circ, 0.5^\circ\}$ (encoder resolution limits)
+        \end{itemize}
+
+    \item \textbf{Velocity Estimation Noise:}
+        \begin{itemize}
+            \item Source: Numerical differentiation amplifies noise
+            \item Model: $\dot{\theta}_{\text{meas}} = \dot{\theta}_{\text{true}} + \mathcal{N}(0, \sigma_{\dot{\theta}}^2)$
+            \item Mitigation: Low-pass filter (cutoff 50 Hz) or Kalman filter
+        \end{itemize}
+
+    \item \textbf{Communication Delays:}
+        \begin{itemize}
+            \item Source: CAN bus latency, wireless transmission delays
+            \item Model: Measurement available at $t + \tau_{\text{delay}}$, where $\tau \in \{0, 5, 10, 20\}$ ms
+        \end{itemize}
+\end{enumerate}
+
+\textbf{Expected Results:}
+\begin{itemize}
+    \item STA-SMC more sensitive to noise (continuous control law amplifies high-frequency content).
+    \item Classical SMC boundary layer acts as low-pass filter, reducing noise sensitivity.
+    \item Adaptive SMC may exhibit gain oscillations if noise corrupts adaptation law.
+\end{itemize}
+
+\textbf{Recommendation:} Combine adaptive SMC with Kalman filter for state estimation in noisy environments.
+
+%===============================================================================
+\section{Controller Selection Guide for Uncertain Environments}
+%===============================================================================
+
+\subsection{Decision Matrix}
+
+Table \ref{tab:controller_selection_uncertainty} provides deployment recommendations based on uncertainty type.
+
+\begin{table}[htbp]
+\centering
+\caption{Controller Selection for Uncertain Environments}
+\label{tab:controller_selection_uncertainty}
+\begin{tabular}{lp{10cm}}
+\toprule
+\textbf{Scenario} & \textbf{Recommended Controller (Rationale)} \\
+\midrule
+\textbf{Step Disturbances} & STA-SMC (6.8$^\circ$ overshoot, 2.3 s recovery) or Hybrid (7.5$^\circ$ overshoot, balanced) \\
+\midrule
+\textbf{Impulse Disturbances} & Classical SMC with adaptive scheduling (40.6\% chattering reduction) or STA-SMC (10.1$^\circ$ overshoot) \\
+\midrule
+\textbf{Sinusoidal Disturbances} & Classical SMC with adaptive scheduling (12.3\% chattering reduction, acceptable 6.7\% overshoot penalty) \\
+\midrule
+\textbf{Model Uncertainty $\pm 10\%$} & Any controller (all achieve 95-99\% success) \\
+\midrule
+\textbf{Model Uncertainty $\pm 20\%$} & Adaptive SMC (96\% success, 5.1\% degradation) or Hybrid (94\% success, 14.4\% degradation) \\
+\midrule
+\textbf{Combined Uncertainty +20\%} & Adaptive SMC only (Classical/STA diverge) \\
+\midrule
+\textbf{Unknown Disturbance Type} & Hybrid Adaptive STA (balanced across all scenarios, 96.0/100 robustness score) \\
+\midrule
+\textbf{Overshoot-Critical} & STA-SMC (2.3\% overshoot nominal, 3.8\% under uncertainty) or Hybrid (3.5\% nominal, 5.2\% under uncertainty) \\
+\midrule
+\textbf{Energy-Constrained} & Classical SMC (9{,}843 N$^2\cdot$s, 20$\times$ more efficient than others, Chapter 8) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Industrial Deployment Checklist}
+
+\textbf{Pre-Deployment Validation:}
+\begin{enumerate}
+    \item \textbf{Disturbance Profiling:} Measure expected disturbance types and magnitudes (accelerometer on prototype).
+    \item \textbf{Parameter Identification:} Measure actual system parameters (masses, lengths) with $\pm 5\%$ uncertainty budget.
+    \item \textbf{Worst-Case Simulation:} Test controller with combined +20\% errors + maximum disturbance.
+    \item \textbf{Hardware-in-the-Loop:} Validate on physical testbed (expect 12-33\% sim-hardware gap, Table \ref{tab:hil_validation}).
+    \item \textbf{Safety Margins:} Design for 2$\times$ expected disturbance magnitude (if 10 N expected, test up to 20 N).
+\end{enumerate}
+
+\textbf{Runtime Monitoring:}
+\begin{enumerate}
+    \item \textbf{Angle Limits:} Trigger emergency stop if $|\theta_i| > 45^\circ$ (approaching uncontrollable region).
+    \item \textbf{Control Saturation:} Log frequency of $|u| = u_{\max}$ events (indicates insufficient actuator capacity).
+    \item \textbf{Settling Time Timeout:} If system fails to settle within 5 s, trigger safe shutdown.
+    \item \textbf{Chattering Monitoring:} If chattering amplitude $> 15$ N (20\% of $u_{\max}$), reduce gains or enable adaptive scheduling.
+\end{enumerate}
+
+%===============================================================================
+\section{Summary and Key Insights}
+%===============================================================================
+
+\subsection{Disturbance Rejection (MT-8)}
+
+\begin{enumerate}
+    \item \textbf{Robust PSO essential:} Default gains fail catastrophically (187-625$^\circ$ overshoots). Post-PSO controllers achieve 95.6-98.8\% improvement.
+
+    \item \textbf{STA-SMC best overall:} 6.8$^\circ$ step overshoot, 10.1$^\circ$ impulse overshoot, 2.3 s recovery time.
+
+    \item \textbf{Adaptive scheduling reduces chattering:} 11-40.6\% reduction depending on disturbance type, but \textbf{+354\% overshoot penalty for step disturbances}.
+
+    \item \textbf{Robustness limit:} All controllers diverge at 25 N step disturbance (actuator saturation).
+
+    \item \textbf{HIL validation confirms trends:} 12-33\% sim-hardware gap attributable to actuator dynamics and sensor noise.
+\end{enumerate}
+
+\subsection{Model Uncertainty (LT-6)}
+
+\begin{enumerate}
+    \item \textbf{Adaptive SMC most robust:} 97.5/100 robustness score, tolerates $\pm 20\%$ parameter variations with only 5.1\% settling time degradation.
+
+    \item \textbf{Fixed-gain controllers vulnerable:} Classical SMC and STA-SMC diverge under combined +20\% errors (masses, lengths).
+
+    \item \textbf{Manufacturing tolerances manageable:} All controllers tolerate $\pm 10\%$ errors (95-99\% success), sufficient for typical manufacturing tolerances.
+
+    \item \textbf{Payload changes require adaptation:} If payload adds >20\% mass, use Adaptive SMC or Hybrid to ensure stability.
+
+    \item \textbf{Inertia less critical:} Controllers tolerate $\pm 20\%$ inertia errors better than mass/length errors.
+\end{enumerate}
+
+\subsection{Design Guidelines for Robust Deployment}
+
+\begin{enumerate}
+    \item \textbf{Use Robust PSO:} Always optimize with 50\% nominal + 50\% disturbed fitness (Chapter 9).
+
+    \item \textbf{Choose controller based on dominant uncertainty:}
+        \begin{itemize}
+            \item Disturbances: STA-SMC or Hybrid Adaptive STA
+            \item Model uncertainty: Adaptive SMC or Hybrid Adaptive STA
+            \item Unknown/mixed: Hybrid Adaptive STA (best all-around)
+        \end{itemize}
+
+    \item \textbf{Enable adaptive scheduling conditionally:}
+        \begin{itemize}
+            \item For sinusoidal/impulse disturbances: Yes (11-40.6\% chattering reduction)
+            \item For step disturbances: No (+354\% overshoot penalty)
+        \end{itemize}
+
+    \item \textbf{Allocate 2$\times$ disturbance margin:} Design for worst-case = 2$\times$ expected disturbance magnitude.
+
+    \item \textbf{Validate on hardware:} Expect 12-33\% performance degradation due to actuator dynamics, sensor noise, and model mismatch.
+\end{enumerate}
+
+%===============================================================================
+\section{Future Research Directions}
+%===============================================================================
+
+\begin{enumerate}
+    \item \textbf{Sensor Noise Robustness:} Evaluate controllers under encoder quantization noise ($0.01-0.5^\circ$), communication delays (5-20 ms), and Kalman filter integration.
+
+    \item \textbf{Disturbance-Aware Scheduling:} Develop online disturbance classifier (step vs impulse vs sinusoidal) to enable/disable adaptive scheduling dynamically.
+
+    \item \textbf{Multi-Objective Robustness Optimization:} Use MOPSO to generate Pareto frontiers for chattering-overshoot-robustness trade-offs.
+
+    \item \textbf{Learning-Based Adaptation:} Train neural network to predict optimal gains based on system state and disturbance history (online learning).
+
+    \item \textbf{Actuator Dynamics Modeling:} Extend dynamics model to include motor bandwidth limits (0.05 s delay), backlash, and friction. Re-optimize gains for realistic actuators.
+
+    \item \textbf{Long-Duration Tests:} Current experiments run 10 s simulations. Industrial deployment requires hours-long tests to identify slow parameter drift, thermal effects, and wear.
+
+    \item \textbf{Multi-Disturbance Scenarios:} Test controllers under simultaneous step + sinusoidal disturbances (e.g., wind + floor vibration).
+\end{enumerate}
+
+%===============================================================================
+\section{Conclusion}
+%===============================================================================
+
+This chapter established that robust PSO optimization (Chapter 9) enables controllers to operate in uncertain environments. Key achievements:
+
+\begin{enumerate}
+    \item \textbf{Disturbance Rejection Validation:} 95.6-98.8\% improvement over default gains, demonstrating necessity of robust fitness.
+
+    \item \textbf{Adaptive Scheduling Results:} 11-40.6\% chattering reduction for impulse/sinusoidal disturbances, but +354\% overshoot penalty for step disturbances.
+
+    \item \textbf{Model Uncertainty Analysis:} Adaptive SMC tolerates $\pm 20\%$ parameter errors with 5.1\% degradation, while fixed-gain controllers diverge under combined errors.
+
+    \item \textbf{HIL Validation:} Confirmed 12-33\% sim-hardware gap, validating simulation predictions on physical hardware.
+
+    \item \textbf{Controller Selection Guide:} Provided decision matrix (Table \ref{tab:controller_selection_uncertainty}) for industrial deployment.
+\end{enumerate}
+
+\textbf{Recommendation for Deployment:} Use Hybrid Adaptive STA-SMC with robust PSO optimization for best all-around robustness (96.0/100 score, balanced disturbance rejection and model uncertainty tolerance).
+
+For a comprehensive discussion of emerging research directions in sliding mode control, adaptive optimization\index{Particle Swarm Optimization|see{PSO}}, learning-based control, and industrial deployment challenges beyond the topics covered in this chapter, see \cref{ch:future_directions}.

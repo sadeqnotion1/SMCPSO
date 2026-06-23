@@ -1,0 +1,18 @@
+﻿episode_id: E005
+slug: simulation_engine_architecture
+title: Simulation Engine Architecture
+status: migrated_auto
+last_updated: 2026-02-24
+languages:
+  - en
+  - fa
+channels:
+  - beautiful_ai
+  - podcast
+source_file_count: 10
+source_buckets:
+  - archive_part1_foundations
+  - cheatsheets_phase1_foundational
+  - episodes_markdown
+  - episodes_pdf
+  - phase1_foundations

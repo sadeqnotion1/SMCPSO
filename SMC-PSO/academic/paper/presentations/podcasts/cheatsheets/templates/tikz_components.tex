@@ -1,0 +1,292 @@
+% ==============================================================================
+% REUSABLE TIKZ COMPONENTS FOR PODCAST CHEATSHEETS
+% ==============================================================================
+% Purpose: Common diagrams, flowcharts, and visual elements
+% Usage: \input{../templates/tikz_components.tex} in each episode file
+% ==============================================================================
+
+\usepackage{tikz}
+\usetikzlibrary{shapes, arrows, positioning, calc, shadows, decorations.pathreplacing, backgrounds, fit}
+
+% ------------------------------------------------------------------------------
+% SYSTEM ARCHITECTURE DIAGRAM (7 Controllers + Plant + Optimizer)
+% ------------------------------------------------------------------------------
+\newcommand{\systemarchitecture}{%
+\begin{tikzpicture}[node distance=2cm, auto]
+    % Define styles
+    \tikzstyle{component} = [rectangle, draw, fill=primary!20, text width=3.5cm, text centered, rounded corners, minimum height=1.2cm, drop shadow]
+    \tikzstyle{controller} = [rectangle, draw, fill=secondary!20, text width=2.8cm, text centered, rounded corners, minimum height=1cm]
+    \tikzstyle{arrow} = [thick,->,>=stealth, color=primary!70]
+
+    % Central components
+    \node[component] (sim) {\textbf{Simulation Engine}\\Runner + Context};
+    \node[component, below=1cm of sim] (plant) {\textbf{Plant Model}\\DIP Dynamics};
+    \node[component, right=2.5cm of sim] (opt) {\textbf{PSO Optimizer}\\Gain Tuner};
+
+    % Controllers (left side, vertical stack)
+    \node[controller, left=2.5cm of sim, yshift=2.5cm] (ctrl1) {Classical SMC};
+    \node[controller, below=0.3cm of ctrl1] (ctrl2) {STA-SMC};
+    \node[controller, below=0.3cm of ctrl2] (ctrl3) {Adaptive SMC};
+    \node[controller, below=0.3cm of ctrl3] (ctrl4) {Hybrid STA};
+    \node[controller, below=0.3cm of ctrl4] (ctrl5) {Swing-Up};
+    \node[controller, below=0.3cm of ctrl5] (ctrl6) {PID};
+    \node[controller, below=0.3cm of ctrl6] (ctrl7) {MPC (Exp)};
+
+    % Controller factory box (grouping)
+    \node[draw, dashed, fit=(ctrl1) (ctrl7), fill=secondary!5, rounded corners, inner sep=5pt, label=above:\textbf{Controller Factory}] (factory) {};
+
+    % Monitoring & Visualization
+    \node[component, right=2.5cm of plant] (mon) {\textbf{Monitoring}\\Metrics + Latency};
+    \node[component, above=0.5cm of mon] (viz) {\textbf{Visualization}\\Plots + Animation};
+
+    % Arrows
+    \draw[arrow] (factory) -- node[above] {state} (sim);
+    \draw[arrow] (sim) -- node[right] {control} (plant);
+    \draw[arrow] (plant) -- (sim);
+    \draw[arrow] (opt) -- node[above] {tuned gains} (sim);
+    \draw[arrow] (sim) -- (mon);
+    \draw[arrow] (mon) -- (viz);
+
+\end{tikzpicture}
+}
+
+% ------------------------------------------------------------------------------
+% DOUBLE INVERTED PENDULUM PHYSICAL DIAGRAM
+% ------------------------------------------------------------------------------
+\newcommand{\dipphysical}{%
+\begin{tikzpicture}[scale=0.8]
+    % Cart
+    \draw[fill=primary!30, draw=primary, thick] (-1,0) rectangle (1,0.6);
+    \node at (0,0.3) {\small Cart};
+
+    % Wheels
+    \draw[fill=codeblock, draw=codeblock] (-0.6,-0.2) circle (0.2);
+    \draw[fill=codeblock, draw=codeblock] (0.6,-0.2) circle (0.2);
+
+    % Track
+    \draw[thick, <->] (-3,-0.5) -- (3,-0.5);
+    \node at (0,-0.8) {\small Track (x-axis)};
+
+    % First pendulum (link 1)
+    \draw[thick, color=secondary] (0,0.6) -- ++(60:2.5) coordinate (p1);
+    \draw[fill=secondary!30, draw=secondary] (p1) circle (0.3);
+    \node[color=secondary] at (p1) {$m_1$};
+    \node[color=secondary] at (0.8,1.5) {$\theta_1$};
+
+    % Second pendulum (link 2)
+    \draw[thick, color=accent] (p1) -- ++(50:2) coordinate (p2);
+    \draw[fill=accent!30, draw=accent] (p2) circle (0.25);
+    \node[color=accent] at (p2) {$m_2$};
+    \node[color=accent] at ($(p1)+(0.6,1.2)$) {$\theta_2$};
+
+    % Force arrow
+    \draw[->, ultra thick, color=warning] (-1.5,0.3) -- (-2.5,0.3);
+    \node[color=warning] at (-2,-0.2) {$u$ (Force)};
+
+    % Gravity arrow
+    \draw[->, thick, color=codeblock] (3.5,2) -- (3.5,0.5);
+    \node at (4,1.2) {$g$};
+
+    % Annotations
+    \node[color=secondary] at (-2,2) {Link 1: $\ell_1, m_1, I_1$};
+    \node[color=accent] at (-2,1.4) {Link 2: $\ell_2, m_2, I_2$};
+    \node[color=primary] at (-2,0.8) {Cart: $M, x$};
+
+\end{tikzpicture}
+}
+
+% ------------------------------------------------------------------------------
+% PHASE PORTRAIT (Reaching → Sliding → Chattering)
+% ------------------------------------------------------------------------------
+\newcommand{\phaseportrait}{%
+\begin{tikzpicture}[scale=0.9]
+    % Axes
+    \draw[->] (-3,0) -- (3,0) node[right] {$x_1$ (position)};
+    \draw[->] (0,-2.5) -- (0,2.5) node[above] {$x_2$ (velocity)};
+
+    % Sliding surface (diagonal line)
+    \draw[thick, color=secondary, dashed] (-2.5,-2) -- (2.5,2);
+    \node[color=secondary] at (2.8,2.2) {$s=0$};
+    \node[color=secondary] at (2.5,1.3) {\small Sliding Surface};
+
+    % Reaching phase trajectory
+    \draw[thick, color=primary, ->] (-2.5,1.5) .. controls (-1.5,0.8) and (-1,0.3) .. (-0.5,0);
+    \node[color=primary] at (-2.2,1.8) {\textbf{1. Reaching}};
+
+    % Sliding phase trajectory
+    \draw[thick, color=accent, ->] (-0.5,0) -- (0.5,0.5);
+    \node[color=accent] at (0,0.8) {\textbf{2. Sliding}};
+
+    % Chattering region (zigzag near origin)
+    \draw[thick, color=warning, decoration={zigzag, segment length=2mm, amplitude=0.5mm}, decorate] (0.5,0.5) -- (1.5,1.5);
+    \node[color=warning] at (1.8,1.2) {\textbf{3. Chattering}};
+
+    % Equilibrium point
+    \fill[color=codeblock] (0,0) circle (3pt);
+    \node[below right] at (0,0) {\small Equilibrium};
+
+\end{tikzpicture}
+}
+
+% ------------------------------------------------------------------------------
+% PSO CONVERGENCE FLOWCHART
+% ------------------------------------------------------------------------------
+\newcommand{\psoflowchart}{%
+\begin{tikzpicture}[node distance=1.5cm]
+    \node[block, fill=primary!30] (init) {\textbf{Initialize}\\50 particles\\Random positions};
+    \node[process, below of=init] (eval) {\textbf{Evaluate}\\Fitness (cost)};
+    \node[process, below of=eval] (update) {\textbf{Update}\\Velocity + Position};
+    \node[decision, below of=update, yshift=-0.5cm] (conv) {\textbf{Converged?}};
+    \node[block, fill=secondary!30, below of=conv, yshift=-0.5cm] (done) {\textbf{Done}\\Return best gains};
+
+    \draw[arrow] (init) -- (eval);
+    \draw[arrow] (eval) -- (update);
+    \draw[arrow] (update) -- (conv);
+    \draw[arrow] (conv) -- node[right] {Yes} (done);
+    \draw[arrow] (conv.west) -- ++(-2,0) |- node[near start, above] {No} (eval.west);
+
+    % Annotations
+    \node[right=1.5cm of eval, text width=3cm, align=left, color=codeblock] {
+        \small Run simulation\\
+        Calculate settling time\\
+        Compute cost = $f(gains)$
+    };
+    \node[right=1.5cm of update, text width=3cm, align=left, color=codeblock] {
+        \small $v \leftarrow w \cdot v + c_1 r_1 (p - x) + c_2 r_2 (g - x)$\\
+        $x \leftarrow x + v$
+    };
+\end{tikzpicture}
+}
+
+% ------------------------------------------------------------------------------
+% CONTROL LOOP TIMING (10ms cycle)
+% ------------------------------------------------------------------------------
+\newcommand{\controllooptiming}{%
+\begin{tikzpicture}[scale=1.2]
+    % Timeline
+    \draw[thick, ->] (0,0) -- (11,0) node[right] {Time (ms)};
+
+    % Time markers
+    \foreach \x in {0,1,2,5,10}
+        \draw (\x,0.1) -- (\x,-0.1) node[below] {\x};
+
+    % Sensor read (0-0.1ms)
+    \draw[fill=primary!30, draw=primary] (0,0.3) rectangle (0.1,0.8);
+    \node[above, color=primary] at (0.05,0.8) {\tiny Sensor};
+
+    % Controller compute (0.1-1.0ms)
+    \draw[fill=secondary!30, draw=secondary] (0.1,0.3) rectangle (1.0,0.8);
+    \node[above, color=secondary] at (0.55,0.8) {\small Controller};
+
+    % Actuation (1.0-1.1ms)
+    \draw[fill=accent!30, draw=accent] (1.0,0.3) rectangle (1.1,0.8);
+    \node[above, color=accent] at (1.05,0.8) {\tiny Act};
+
+    % Plant integration (1.1-10ms)
+    \draw[fill=warning!20, draw=warning] (1.1,0.3) rectangle (10,0.8);
+    \node[above, color=warning] at (5.5,0.8) {\small Plant Integration (RK45)};
+
+    % Annotations
+    \draw[dashed] (0,-0.5) -- (0,0.3);
+    \draw[dashed] (10,-0.5) -- (10,0.3);
+    \draw[<->, thick] (0,-0.5) -- (10,-0.5);
+    \node[below] at (5,-0.5) {\textbf{10ms deadline (100 Hz)}};
+
+\end{tikzpicture}
+}
+
+% ------------------------------------------------------------------------------
+% FACTORY PATTERN (Vending Machine Analogy)
+% ------------------------------------------------------------------------------
+\newcommand{\factorypattern}{%
+\begin{tikzpicture}[scale=0.9]
+    % Vending machine frame
+    \draw[thick, fill=background, rounded corners] (-0.5,-2) rectangle (3.5,3);
+    \node at (1.5,2.5) {\textbf{Controller Factory}};
+
+    % Selection buttons
+    \foreach \y/\name/\color in {1.5/Classical/primary, 0.8/STA-SMC/secondary, 0.1/Adaptive/accent, -0.6/Hybrid/warning} {
+        \node[circle, draw=\color, fill=\color!30, minimum size=0.6cm] at (0.5,\y) {};
+        \node[right, color=codeblock] at (1,\y) {\small \name};
+    }
+
+    % Output slot
+    \draw[fill=codeblock!20] (0.5,-1.5) rectangle (2.5,-1);
+    \node[color=codeblock] at (1.5,-1.8) {\small Output};
+
+    % User and controller object
+    \node[left=1cm of 0.5,1.5] (user) {\faUser};
+    \node[right=1cm of 2.5,-1.2, block, fill=primary!30] (controller) {Controller\\Object};
+
+    % Arrows
+    \draw[->, thick, color=primary] (user) -- (0.3,1.5);
+    \draw[->, thick, color=secondary] (2.5,-1.2) -- (controller);
+
+    % Annotation
+    \node[below, color=codeblock, text width=5cm, align=center] at (1.5,-2.5) {
+        \small Press button $\rightarrow$ Get controller instance
+    };
+
+\end{tikzpicture}
+}
+
+% ------------------------------------------------------------------------------
+% GIT WORKFLOW (Time Machine)
+% ------------------------------------------------------------------------------
+\newcommand{\gittimeline}{%
+\begin{tikzpicture}[scale=0.8]
+    % Timeline
+    \draw[thick, ->] (0,0) -- (10,0) node[right] {Time};
+
+    % Commits (save points)
+    \foreach \x/\label in {1/Oct 2024, 3/Dec 2024, 5/Mar 2025, 7/Nov 2025} {
+        \fill[color=primary] (\x,0) circle (3pt);
+        \node[above] at (\x,0.3) {\small \label};
+        \draw[->, dashed, color=secondary] (\x,-0.3) -- (\x,-1);
+        \node[below, color=secondary, text width=1.5cm, align=center] at (\x,-1.3) {\tiny Snapshot};
+    }
+
+    % Current position
+    \fill[color=warning] (7,0) circle (5pt);
+    \node[below=0.5cm, color=warning] at (7,0) {\textbf{You are here}};
+
+    % Time travel arrows
+    \draw[<-, ultra thick, color=accent] (7,-2) -- (3,-2);
+    \node[below, color=accent] at (5,-2) {\small Time travel to Dec 2024};
+
+    % Annotation
+    \node[color=codeblock, text width=8cm, align=center] at (5,-3) {
+        \small Git lets you travel to any save point in project history
+    };
+
+\end{tikzpicture}
+}
+
+% ------------------------------------------------------------------------------
+% DIRECTORY STRUCTURE (Zoning Laws)
+% ------------------------------------------------------------------------------
+\newcommand{\directoryzoning}{%
+\begin{tikzpicture}[
+    level 1/.style={sibling distance=4cm, level distance=2cm},
+    level 2/.style={sibling distance=2cm, level distance=1.5cm},
+    every node/.style={draw, rounded corners, font=\small}
+]
+    \node[fill=primary!20] {Root (Project)}
+        child {node[fill=secondary!20] {src/ \faBuilding\\Business District}
+            child {node[fill=secondary!10] {controllers/}}
+            child {node[fill=secondary!10] {plant/}}
+        }
+        child {node[fill=accent!20] {scripts/ \faWrench\\Workshop}
+            child {node[fill=accent!10] {benchmarks/}}
+            child {node[fill=accent!10] {testing/}}
+        }
+        child {node[fill=warning!20] {tests/ \faCheckCircle\\QA District}
+            child {node[fill=warning!10] {unit/}}
+            child {node[fill=warning!10] {integration/}}
+        };
+\end{tikzpicture}
+}
+
+% ==============================================================================
+% END OF TIKZ COMPONENTS
+% ==============================================================================

@@ -1,0 +1,97 @@
+{
+  "classical_smc": {
+    "gains": [
+      23.068200752497802,
+      12.853586891155206,
+      5.514970338688094,
+      3.487196490326416,
+      2.2331074770549435,
+      0.14834799545581934
+    ],
+    "validation": {
+      "fixed_gains": {
+        "step_10N": {
+          "settling_time_mean": 8.990000000000002,
+          "settling_time_std": 1.7763568394002505e-15,
+          "overshoot_mean": 1104.2051560117598,
+          "overshoot_std": 1.08236482522747,
+          "chattering_mean": 0.07597588831183291,
+          "chattering_std": 0.0007736057990340515,
+          "control_effort_mean": 5.665992301642637,
+          "tracking_error_mean": 11.037697516750915,
+          "convergence_rate": 0.0,
+          "num_trials": 20
+        },
+        "impulse_30N": {
+          "settling_time_mean": 8.990000000000002,
+          "settling_time_std": 1.7763568394002505e-15,
+          "overshoot_mean": 160.65731817530653,
+          "overshoot_std": 1.0191978371556696,
+          "chattering_mean": 0.10240001504946006,
+          "chattering_std": 0.0008519762805743665,
+          "control_effort_mean": 4.844653674867227,
+          "tracking_error_mean": 1.915006364600106,
+          "convergence_rate": 0.0,
+          "num_trials": 20
+        },
+        "sinusoidal_5N": {
+          "settling_time_mean": 8.990000000000002,
+          "settling_time_std": 1.7763568394002505e-15,
+          "overshoot_mean": 127.26054984758532,
+          "overshoot_std": 0.9947642954503048,
+          "chattering_mean": 0.12706008030844768,
+          "chattering_std": 0.0012022014468570528,
+          "control_effort_mean": 4.6971123497193,
+          "tracking_error_mean": 1.0934990864005942,
+          "convergence_rate": 0.0,
+          "num_trials": 20
+        }
+      },
+      "adaptive_scheduling": {
+        "step_10N": {
+          "settling_time_mean": 8.990000000000002,
+          "settling_time_std": 1.7763568394002505e-15,
+          "overshoot_mean": 5011.355625067454,
+          "overshoot_std": 0.7016220597643151,
+          "chattering_mean": 0.045158172207243975,
+          "chattering_std": 0.0005431927972505061,
+          "control_effort_mean": 6.468347962833498,
+          "tracking_error_mean": 61.16756694881449,
+          "convergence_rate": 0.0,
+          "num_trials": 20
+        },
+        "impulse_30N": {
+          "settling_time_mean": 8.990000000000002,
+          "settling_time_std": 1.7763568394002505e-15,
+          "overshoot_mean": 225.0047109752,
+          "overshoot_std": 1.3156736234137159,
+          "chattering_mean": 0.08792305179243932,
+          "chattering_std": 0.0005560345809668138,
+          "control_effort_mean": 3.6560099668095325,
+          "tracking_error_mean": 2.6519453456229503,
+          "convergence_rate": 0.0,
+          "num_trials": 20
+        },
+        "sinusoidal_5N": {
+          "settling_time_mean": 8.990000000000002,
+          "settling_time_std": 1.7763568394002505e-15,
+          "overshoot_mean": 160.88384395820802,
+          "overshoot_std": 1.0338121459942375,
+          "chattering_mean": 0.11299025081335605,
+          "chattering_std": 0.0006133111492871761,
+          "control_effort_mean": 3.841553677255063,
+          "tracking_error_mean": 1.7187136569366757,
+          "convergence_rate": 0.0,
+          "num_trials": 20
+        }
+      },
+      "hil_config": {
+        "latency_ms": 0.0,
+        "sensor_noise_std": 0.001,
+        "num_trials": 20
+      }
+    },
+    "num_trials": 20,
+    "seed": 42
+  }
+}

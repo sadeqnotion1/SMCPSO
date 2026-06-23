@@ -1,0 +1,532 @@
+% ============================================================================
+% APPENDIX - SPEAKER SCRIPTS
+% ============================================================================
+% Quick reference materials, bibliography, repository structure, and contact
+% Sections: 5 total (~40 slides)
+% Time: ~30-45 minutes
+% ============================================================================
+
+\speakerpart{Appendix}
+
+% ============================================================================
+% APPENDIX SECTION 1: QUICK REFERENCE
+% ============================================================================
+
+\speakersection{A1}{Quick Reference \& Essential Commands}
+
+\slideref{A1.1}{Essential Simulation Commands}
+\speakertime{5-7}
+
+\context{%
+The appendix provides practical reference material that users will consult frequently. This slide gives the most common simulation commands in a quick-reference format for easy lookup.
+}
+
+\maincontent{%
+``Welcome to the Appendix. This section provides quick-reference materials for common tasks.
+
+Let's start with essential simulation commands. These are the commands you'll use most often when working with the framework.
+
+\textbf{Basic Simulation:}
+\begin{codeblock}
+python simulate.py --ctrl classical_smc --plot
+\end{codeblock}
+This runs a simulation with the Classical SMC controller and displays the results in plots.
+
+\textbf{Different Controllers:}
+\begin{codeblock}
+python simulate.py --ctrl sta_smc --plot          # Super-Twisting
+python simulate.py --ctrl adaptive_smc --plot     # Adaptive
+python simulate.py --ctrl hybrid_adaptive_sta_smc --plot  # Hybrid
+\end{codeblock}
+
+\textbf{PSO Optimization:}
+\begin{codeblock}
+python simulate.py --ctrl classical_smc --run-pso --save gains_classical.json
+\end{codeblock}
+This runs PSO to find optimal gains and saves them to a JSON file.
+
+\textbf{Load Pre-tuned Gains:}
+\begin{codeblock}
+python simulate.py --load gains_classical.json --plot
+\end{codeblock}
+
+\textbf{Hardware-in-the-Loop:}
+\begin{codeblock}
+python simulate.py --run-hil --plot
+\end{codeblock}
+
+\textbf{Custom Configuration:}
+\begin{codeblock}
+python simulate.py --config my_config.yaml --ctrl sta_smc --plot
+\end{codeblock}
+
+\textbf{Testing:}
+\begin{codeblock}
+python run_tests.py                                # All tests
+python -m pytest tests/test_controllers/ -v       # Controller tests only
+python -m pytest --benchmark-only                  # Benchmarks only
+\end{codeblock}
+
+\textbf{Web Interface:}
+\begin{codeblock}
+streamlit run streamlit_app.py
+\end{codeblock}
+
+These commands cover 90\% of typical usage. For advanced usage, refer to the full documentation.''
+}
+
+\insights{%
+\begin{itemize}
+    \item The command structure is designed to be intuitive: \code{--ctrl} selects controller, \code{--plot} shows results, \code{--run-pso} optimizes, \code{--save} persists gains. This pattern reduces cognitive load.
+
+    \item Saving gains to JSON allows reproducibility. You can publish your paper with the JSON file, and others can replicate your exact results by loading those gains.
+
+    \item The testing commands use pytest directly instead of a custom test runner. This follows industry standards and allows pytest plugins to work without modification.
+
+    \item Streamlit is invoked with its own command (\code{streamlit run}) rather than integrated into \code{simulate.py}. This separation keeps the CLI and web UI independent.
+\end{itemize}
+}
+
+\connections{%
+This slide connects to:
+\begin{itemize}
+    \item \textbf{Section 1} -- These commands operate the components described in project overview
+    \item \textbf{Section 4} -- \code{--run-pso} invokes the PSO optimizer
+    \item \textbf{Section 5} -- \code{simulate.py} is the simulation engine entry point
+    \item \textbf{Section 7} -- Testing commands run the 668-test suite
+    \item \textbf{Section 12} -- \code{--run-hil} starts the Hardware-in-the-Loop system
+\end{itemize}
+}
+
+\anticipatedqa{%
+\textbf{Q: Can you run multiple controllers in one command?}
+
+A: ``Not directly from the CLI, but you can write a Python script that imports the simulation runner and loops over controllers. Alternatively, use bash: \code{for ctrl in classical\_smc sta\_smc adaptive\_smc; do python simulate.py --ctrl \$ctrl --plot; done}''
+
+\textbf{Q: How do you pass custom initial conditions?}
+
+A: ``Create a custom config YAML file with your initial conditions, then: \code{python simulate.py --config my\_config.yaml}. The YAML structure is documented in \filepath{config.yaml} (template) and \filepath{docs/guides/configuration.md}.''
+}
+
+\transition{%
+``We've covered simulation commands. Now let's reference the HIL-specific commands for hardware experiments.''
+}
+
+% ============================================================================
+% APPENDIX SECTION 2: BIBLIOGRAPHY
+% ============================================================================
+
+\speakersection{A2}{Bibliography \& References}
+
+\slideref{A2.1}{Academic Citations (39 sources)}
+\speakertime{5-7}
+
+\context{%
+Research builds on prior work. This slide acknowledges the academic foundations of our project and provides references for users who want to dive deeper into the theory.
+}
+
+\maincontent{%
+``All research stands on the shoulders of giants. Our project is no exception.
+
+We cite \term{39 academic sources} across control theory, optimization, and robotics:
+
+\textbf{Sliding Mode Control Theory:}
+\begin{itemize}
+    \item Utkin (1977) -- ``Variable Structure Systems with Sliding Modes'' -- the foundational SMC paper
+    \item Edwards \& Spurgeon (1998) -- ``Sliding Mode Control: Theory and Applications'' -- comprehensive textbook
+    \item Levant (2003) -- ``Higher-order Sliding Modes'' -- super-twisting algorithm
+    \item Shtessel et al. (2014) -- ``Sliding Mode Control and Observation'' -- modern treatment
+\end{itemize}
+
+\textbf{Inverted Pendulum Control:}
+\begin{itemize}
+    \item Åström \& Furuta (2000) -- ``Swinging up a pendulum by energy control'' -- swing-up strategies
+    \item Zhong \& Rock (2001) -- ``Energy and passivity based control of the double inverted pendulum'' -- energy methods
+    \item Prasad et al. (2014) -- ``State dependent Riccati equation based tracking control of a double inverted pendulum'' -- SDRE approach
+\end{itemize}
+
+\textbf{Particle Swarm Optimization:}
+\begin{itemize}
+    \item Kennedy \& Eberhart (1995) -- ``Particle swarm optimization'' -- original PSO paper
+    \item Shi \& Eberhart (1998) -- ``A modified particle swarm optimizer'' -- inertia weight introduction
+    \item Clerc \& Kennedy (2002) -- ``The particle swarm: explosion, stability, and convergence'' -- theoretical analysis
+\end{itemize}
+
+\textbf{Robustness \& Uncertainty:}
+\begin{itemize}
+    \item Slotine \& Li (1991) -- ``Applied Nonlinear Control'' -- Lyapunov stability, robustness analysis
+    \item Khalil (2002) -- ``Nonlinear Systems'' -- rigorous stability theory
+\end{itemize}
+
+These citations are in BibTeX format in \filepath{references.bib}, with DOIs and URLs for easy access.''
+}
+
+\insights{%
+\begin{itemize}
+    \item The 1977 Utkin paper is the ``ground zero'' for SMC. Everything we do traces back to that work. It's a 50-year-old idea that's still cutting-edge for robotic control.
+
+    \item The Kennedy \& Eberhart 1995 PSO paper was inspired by bird flocking behavior. It's remarkable that a biological metaphor leads to an effective optimization algorithm for engineering.
+
+    \item Levant's 2003 super-twisting paper was a breakthrough: it showed you could eliminate chattering while maintaining finite-time convergence. That's why STA-SMC is one of our seven controllers.
+
+    \item Having comprehensive citations isn't just academic courtesy -- it provides the theoretical foundation readers need to understand \textit{why} our design choices are valid.
+\end{itemize}
+}
+
+\connections{%
+This slide connects to:
+\begin{itemize}
+    \item \textbf{Section 2} -- Control theory foundations based on Utkin, Edwards, Levant, Slotine
+    \item \textbf{Section 4} -- PSO implementation based on Kennedy, Eberhart, Shi, Clerc
+    \item \textbf{Section 8} -- LT-7 research paper includes these citations
+    \item \textbf{Section 16} -- Attribution \& citations section (detailed bibliography)
+\end{itemize}
+}
+
+\anticipatedqa{%
+\textbf{Q: Are all these citations freely accessible?}
+
+A: ``Many are paywalled (IEEE, Elsevier journals). However, most authors have preprints on their websites or arXiv. We provide DOIs and URLs in \filepath{references.bib}. For paywalled papers, check the author's homepage or email them directly -- academics usually share preprints freely.''
+
+\textbf{Q: How do you manage citations in code?}
+
+A: ``Docstrings reference key papers where algorithms are implemented. For example, the STA controller docstring cites Levant (2003) and includes the equations. This makes the code self-documenting for users who want to understand the theory.''
+}
+
+\transition{%
+``Academic citations provide theoretical grounding. Now let's reference the software dependencies that make implementation possible.''
+}
+
+% ============================================================================
+% APPENDIX SECTION 3: REPOSITORY STRUCTURE
+% ============================================================================
+
+\speakersection{A3}{Repository Structure \& Navigation}
+
+\slideref{A3.1}{Directory Walkthrough}
+\speakertime{6-8}
+
+\context{%
+New users need to understand the repository layout to navigate effectively. This slide provides a guided tour of the directory structure.
+}
+
+\maincontent{%
+``Let's walk through the repository structure so you can navigate confidently.
+
+\textbf{Top-Level Directories:}
+\begin{codeblock}
+dip-smc-pso/
+├── src/              # Production code (328 Python files)
+├── tests/            # Test suite (668 tests in 11 modules)
+├── docs/             # Sphinx documentation (814 files)
+├── academic/         # Research outputs (paper, logs, dev)
+├── scripts/          # Utility scripts (benchmarks, analysis)
+├── data/             # Sample datasets, experiment results
+├── benchmarks/       # Performance benchmarks, figures
+├── optimization_results/  # PSO output files
+├── .ai_workspace/    # AI dev tools, session continuity
+├── .cache/           # Pytest, hypothesis, coverage caches
+└── [9 core files]    # README, CLAUDE.md, config, requirements, etc.
+\end{codeblock}
+
+\textbf{Inside src/:}
+\begin{codeblock}
+src/
+├── controllers/      # 7 SMC controllers + factory
+├── plant/            # 3 dynamics models (Simplified, Full, Low-rank)
+├── core/             # Simulation engine, vectorized runners
+├── optimizer/        # PSO tuner
+├── utils/            # Validation, control primitives, monitoring
+├── hil/              # Plant server, controller client
+├── benchmarks/       # Analysis modules (moved from root)
+└── interfaces/       # Abstract base classes
+\end{codeblock}
+
+\textbf{Inside tests/:}
+\begin{codeblock}
+tests/
+├── test_controllers/  # Controller tests (7 files)
+├── test_plant/        # Dynamics tests (3 files)
+├── test_optimizer/    # PSO tests
+├── test_core/         # Simulation engine tests
+├── test_utils/        # Utility tests
+├── test_hil/          # HIL tests
+├── test_benchmarks/   # Performance regression tests
+├── test_integration/  # End-to-end tests, memory tests
+├── test_documentation/ # Doc build tests
+├── test_config/       # Config validation tests
+└── test_ui/           # Streamlit + Puppeteer tests
+\end{codeblock}
+
+\textbf{Navigation Tips:}
+
+1. Start with \filepath{README.md} at root (installation, quick start)
+2. Consult \filepath{docs/NAVIGATION.md} (master hub for all 11 navigation systems)
+3. For learning: \filepath{.ai\_workspace/edu/beginner-roadmap.md} (Path 0)
+4. For API reference: \filepath{docs/index.html} (Sphinx, open in browser)
+5. For development: \filepath{CLAUDE.md} (team memory, conventions)
+
+The structure follows the principle: \textit{If something is hard to find, the structure is wrong, not the user.}''
+}
+
+\insights{%
+\begin{itemize}
+    \item The mirror structure between \code{src/} and \code{tests/} is intentional. Every production module has a corresponding test module. This makes it trivial to locate tests: if you're editing \filepath{src/controllers/classical\_smc.py}, the tests are at \filepath{tests/test\_controllers/test\_classical\_smc.py}.
+
+    \item The \code{.ai\_workspace/} hidden directory separates AI development tools from user-facing content. Users don't need to know about session continuity or checkpoint systems -- those are for AI-assisted development workflows.
+
+    \item The \code{academic/} directory uses a three-category structure (paper, logs, dev) to separate research outputs from runtime artifacts. This is atypical (most projects dump everything in \code{results/}) but scales better for research with hundreds of experiments.
+
+    \item Documentation having 11 navigation systems might seem like overkill, but with 985 files, different users need different entry points. The 11 systems all link together, forming a navigation graph rather than a tree.
+\end{itemize}
+}
+
+\connections{%
+This slide connects to:
+\begin{itemize}
+    \item \textbf{Section 1} -- Repository overview, project scope
+    \item \textbf{Section 10} -- Documentation system details (11 navigation systems)
+    \item \textbf{Section 19} -- Workspace organization philosophy
+    \item \textbf{Appendix A1} -- Commands reference (where to run them)
+\end{itemize}
+}
+
+\anticipatedqa{%
+\textbf{Q: Why is benchmarks/ at root instead of inside src/?}
+
+A: ``Historical reasons. Originally, benchmarks contained data files and figures, which aren't source code. We later realized the analysis \textit{modules} should be in \filepath{src/benchmarks/} for proper package structure, while benchmark \textit{outputs} (figures, reports) stay at \filepath{benchmarks/}. We reorganized in December 2025 to fix this.''
+
+\textbf{Q: How do you find a specific function or class?}
+
+A: ``Three methods: (1) Use IDE search (Ctrl+Shift+F in VS Code). (2) Use Sphinx documentation search bar (indexes all docstrings). (3) Use \code{grep} from terminal: \code{grep -r "class MyClass" src/}. The modular structure means most classes are in predictable locations (controllers in \filepath{src/controllers/}, dynamics in \filepath{src/plant/}).''
+}
+
+\transition{%
+``Repository structure helps you navigate. Now let's discuss where to get help and how to collaborate.''
+}
+
+% ============================================================================
+% APPENDIX SECTION 4: CONTACT & COLLABORATION
+% ============================================================================
+
+\speakersection{A4}{Contact \& Collaboration Opportunities}
+
+\slideref{A4.1}{Repository Access \& Contribution Guidelines}
+\speakertime{5-7}
+
+\context{%
+Open-source projects thrive on community. This slide provides contact information and contribution guidelines for users who want to extend the project or report issues.
+}
+
+\maincontent{%
+``This project is open-source and welcomes collaboration.
+
+\textbf{Repository:}
+\begin{center}
+\url{https://github.com/theSadeQ/dip-smc-pso.git}
+\end{center}
+
+\textbf{How to Get Help:}
+
+\begin{enumerate}
+    \item \textbf{Documentation First:} Check \filepath{docs/NAVIGATION.md} for the master navigation hub. 985 documentation files mean your question is likely answered.
+
+    \item \textbf{GitHub Issues:} If you find a bug or have a feature request, open an issue at \url{https://github.com/theSadeQ/dip-smc-pso/issues}. Include:
+    \begin{itemize}
+        \item What you tried (exact command)
+        \item What you expected
+        \item What happened instead (error message, unexpected behavior)
+        \item Your environment (OS, Python version)
+    \end{itemize}
+
+    \item \textbf{Discussions:} For questions about usage, theory, or implementation, use GitHub Discussions rather than issues.
+
+    \item \textbf{Email:} For collaboration proposals or academic inquiries, email is appropriate.
+\end{enumerate}
+
+\textbf{Contributing Code:}
+
+We welcome contributions! Follow these steps:
+
+\begin{enumerate}
+    \item Fork the repository
+    \item Create a feature branch: \code{git checkout -b feature/your-feature-name}
+    \item Make your changes following our conventions (see \filepath{CLAUDE.md})
+    \item Add tests (coverage standards: 85\% overall, 95\% critical)
+    \item Ensure all tests pass: \code{python run\_tests.py}
+    \item Submit a pull request with a clear description
+\end{enumerate}
+
+\textbf{Collaboration Opportunities:}
+
+\begin{itemize}
+    \item \textbf{Controller Extensions:} Implement new SMC variants (terminal sliding mode, integral SMC)
+    \item \textbf{Applications:} Adapt the framework for quadcopters, bipedal robots, crane control
+    \item \textbf{Optimization:} Add alternative optimizers (genetic algorithms, CMA-ES, Bayesian optimization)
+    \item \textbf{Educational Content:} Create video tutorials, interactive Jupyter notebooks, course materials
+    \item \textbf{Research:} Use the framework for your own research and co-author papers
+\end{itemize}
+
+All contributions are credited in \filepath{academic/paper/attributions.md} and in code comments.''
+}
+
+\insights{%
+\begin{itemize}
+    \item The ``Documentation First'' guideline reduces maintainer burden. Many questions are already answered in the 985 doc files. Directing users there first empowers them and saves time.
+
+    \item GitHub Issues vs. Discussions distinction is important. Issues are for actionable bugs/features. Discussions are for open-ended questions. Conflating them makes issue tracking noisy.
+
+    \item Requiring tests for contributions isn't elitist -- it's quality assurance. Code without tests is technical debt. We help contributors write tests if they're unsure, but we don't merge untested code.
+
+    \item Crediting contributions explicitly (in CHANGELOG, attributions file, code comments) shows respect for collaborators' time and encourages future contributions.
+\end{itemize}
+}
+
+\connections{%
+This slide connects to:
+\begin{itemize}
+    \item \textbf{Section 7} -- Test requirements for contributions
+    \item \textbf{Section 16} -- Attribution system credits all contributors
+    \item \textbf{Section 20} -- Git workflows for contributors
+    \item \textbf{Section 21} -- Future work opportunities align with collaboration areas
+\end{itemize}
+}
+
+\anticipatedqa{%
+\textbf{Q: What license is the code under?}
+
+A: ``MIT License (permissive). You can use, modify, and distribute the code commercially or academically, as long as you include the original copyright notice. See \filepath{LICENSE} file in the repository root.''
+
+\textbf{Q: Can I use this for my PhD research?}
+
+A: ``Absolutely! That's a primary use case. If you do, please cite the repository and (when available) the LT-7 research paper. If you extend the framework significantly, consider co-authoring a paper -- we're open to collaboration.''
+
+\textbf{Q: How do I propose a major feature (e.g., adding MPC)?}
+
+A: ``Start with a GitHub Discussion or Issue outlining your proposal. Discuss the design with maintainers before writing code. This prevents wasted effort if the feature doesn't align with project goals. For MPC specifically, we have a basic implementation in \filepath{src/controllers/mpc\_controller.py} that could be extended.''
+}
+
+\transition{%
+``We've covered collaboration. Now let's reference additional resources for advanced users.''
+}
+
+% ============================================================================
+% APPENDIX SECTION 5: ADDITIONAL RESOURCES
+% ============================================================================
+
+\speakersection{A5}{Additional Resources \& Extended Materials}
+
+\slideref{A5.1}{Extended Learning Resources}
+\speakertime{6-8}
+
+\context{%
+Beyond the core documentation, we provide extended materials for users who want to deepen their understanding or explore advanced topics. This slide catalogs those resources.
+}
+
+\maincontent{%
+``For users who want to go deeper, we provide extended resources.
+
+\textbf{Educational Podcasts (NotebookLM Series):}
+
+We've created \term{44 podcast episodes} (approximately 40 hours of audio) using Google's NotebookLM to convert documentation into conversational audio:
+
+\begin{itemize}
+    \item \textbf{Phase 1 Episodes (10 total):} Python basics, NumPy, control theory fundamentals
+    \item \textbf{Phase 2 Episodes (12 total):} SMC theory, DIP dynamics, PSO optimization
+    \item \textbf{Phase 3 Episodes (8 total):} UI development, accessibility, browser automation
+    \item \textbf{Phase 4 Episodes (14 total):} Production readiness, testing, thread safety, quality gates
+\end{itemize}
+
+These are stored in \filepath{.ai\_workspace/edu/podcasts/} and can be listened to during commutes or exercise.
+
+\textbf{Video Tutorials (Planned):}
+
+We have scripts for 5 video tutorials:
+\begin{enumerate}
+    \item ``Getting Started: Running Your First Simulation'' (10 min)
+    \item ``Understanding PSO: Visualizing Gain Optimization'' (15 min)
+    \item ``Implementing a Custom Controller'' (20 min)
+    \item ``Hardware-in-the-Loop: Connecting Real Pendulums'' (25 min)
+    \item ``Advanced: Multi-Objective Optimization'' (30 min)
+\end{enumerate}
+
+Videos are planned for Q1 2026.
+
+\textbf{Interactive Jupyter Notebooks:}
+
+We provide notebooks for hands-on learning:
+\begin{itemize}
+    \item \filepath{notebooks/01\_first\_simulation.ipynb} -- Interactive intro
+    \item \filepath{notebooks/02\_controller\_comparison.ipynb} -- Compare all 7 controllers
+    \item \filepath{notebooks/03\_pso\_tuning.ipynb} -- Step-by-step PSO walkthrough
+    \item \filepath{notebooks/04\_custom\_cost\_function.ipynb} -- Designing custom cost functions
+\end{itemize}
+
+\textbf{Research Paper Collection:}
+
+In \filepath{academic/paper/publications/}:
+\begin{itemize}
+    \item LT-7 research paper (submission-ready v2.1)
+    \item Benchmark study reports (MT-5, MT-7, MT-8)
+    \item Lyapunov proof technical report (LT-4)
+    \item Model uncertainty analysis (LT-6)
+\end{itemize}
+
+\textbf{Thesis Materials:}
+
+The complete LaTeX thesis (98 MB) in \filepath{academic/paper/thesis/} serves as a comprehensive reference covering all theoretical and implementation details.
+
+\textbf{External Resources:}
+
+\begin{itemize}
+    \item Quanser DIP hardware: \url{https://www.quanser.com/products/double-inverted-pendulum/}
+    \item Brian Douglas Control Bootcamp: \url{https://www.youtube.com/c/BrianBDouglas}
+    \item Underactuated Robotics (MIT): \url{https://underactuated.mit.edu/}
+    \item PySwarms documentation: \url{https://pyswarms.readthedocs.io/}
+\end{itemize}
+''
+}
+
+\insights{%
+\begin{itemize}
+    \item The 44 podcasts represent a unique educational format. Traditional documentation is visual (reading). Podcasts are audio (listening during activities where reading isn't possible). This expands accessibility.
+
+    \item Jupyter notebooks bridge the gap between static documentation (explaining concepts) and interactive exploration (running code). Users learn by doing, which has higher retention than passive reading.
+
+    \item The thesis (98 MB) is comprehensive but dense. It's a reference for advanced users, not a tutorial for beginners. The distinction is important -- we provide both entry-level (Path 0 roadmap) and expert-level (thesis) materials.
+
+    \item External resources acknowledge that we can't reinvent the wheel. Brian Douglas's YouTube series is excellent for control theory -- we link to it rather than duplicate the content.
+\end{itemize}
+}
+
+\connections{%
+This slide connects to:
+\begin{itemize}
+    \item \textbf{Section 9} -- Educational materials overview (beginner roadmap, podcasts)
+    \item \textbf{Section 8} -- Research outputs (LT-7 paper, benchmarks)
+    \item \textbf{Section 10} -- Documentation system (thesis, Sphinx docs)
+    \item \textbf{Appendix A2} -- Bibliography (academic citations)
+\end{itemize}
+}
+
+\anticipatedqa{%
+\textbf{Q: Are the NotebookLM podcasts auto-generated or human-scripted?}
+
+A: ``Auto-generated by NotebookLM from our documentation. We provide curated source documents (markdown guides, research papers), and NotebookLM creates conversational audio between two AI hosts discussing the content. We review each episode for accuracy before publishing.''
+
+\textbf{Q: When will the video tutorials be released?}
+
+A: ``Planned for Q1 2026. Creating quality videos takes time: scripting, recording, editing, captioning. We're prioritizing video 01 (Getting Started) first, then the others in sequence.''
+
+\textbf{Q: Can I request specific topics for Jupyter notebooks?}
+
+A: ``Absolutely! Open a GitHub Discussion with the topic you want covered. If it's broadly useful, we'll add it to the roadmap. Popular requests so far: state-space visualization, frequency-domain analysis, comparison with MPC, real-time plotting.''
+}
+
+\transition{%
+``This concludes the Appendix. We've covered quick references, bibliography, repository structure, collaboration, and extended resources. These materials support your journey from beginner to expert. Now let's wrap up the entire presentation with closing remarks.''
+}
+
+% ============================================================================
+% END OF APPENDIX SPEAKER SCRIPTS
+% ============================================================================

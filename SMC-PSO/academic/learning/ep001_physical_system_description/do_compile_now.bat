@@ -1,0 +1,13 @@
+@echo off
+cd /d D:\Projects\main\academic\learning\ep001_physical_system_description
+del /f /q EP001_unified.pdf EP001_unified.aux EP001_unified.log 2>nul
+echo [INFO] Running pdflatex pass 1...
+"C:\Program Files\MiKTeX\miktex\bin\x64\pdflatex.exe" -interaction=nonstopmode EP001_unified.tex
+echo [INFO] Running pdflatex pass 2...
+"C:\Program Files\MiKTeX\miktex\bin\x64\pdflatex.exe" -interaction=nonstopmode EP001_unified.tex
+echo [INFO] Running pdflatex pass 3...
+"C:\Program Files\MiKTeX\miktex\bin\x64\pdflatex.exe" -interaction=nonstopmode EP001_unified.tex
+echo [INFO] Running pdflatex pass 4...
+"C:\Program Files\MiKTeX\miktex\bin\x64\pdflatex.exe" -interaction=nonstopmode EP001_unified.tex
+echo [OK] Done! Check for EP001_unified.pdf
+pause

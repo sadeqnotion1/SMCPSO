@@ -1,0 +1,330 @@
+% ==============================================================================
+% EPISODE 014: DEVELOPMENT TOOLS AND WORKFLOW
+% ==============================================================================
+\input{../templates/master_template.tex}
+\input{../templates/tikz_components.tex}
+
+% Episode-specific title
+\renewcommand{\episodetitle}{E014: Development Tools}
+
+\begin{document}
+
+% ==============================================================================
+% TITLE PAGE
+% ==============================================================================
+\makeepisodetitle{E014: Development Tools \& Workflow}{Testing Infrastructure (4563 tests), CI/CD Pipelines, Quality Gates, Contributor Guidelines}{2}{15-20 minutes}
+
+% ==============================================================================
+% PAGE 1: DEVELOPMENT INFRASTRUCTURE
+% ==============================================================================
+\learningobjective{Understand testing infrastructure (unit/integration/system/browser), CI/CD pipelines, quality gates (8 gates, 5/8 passing), code review process, and contributor workflows}
+
+\section*{The Development Challenge}
+
+\begin{keypoint}
+\textbf{Question:} How do you maintain quality in 105,000 lines across 358 files?
+
+\textbf{Answer:} Automated testing (4,563 tests), CI/CD pipelines, quality gates, code review
+
+\textbf{Principle:} Catch errors EARLY (before they reach production)
+\end{keypoint}
+
+\section*{Testing Infrastructure: 4,563 Tests in 45 Seconds}
+
+\begin{tcolorbox}[colback=primary!5, colframe=primary, title=\faFlask\ Test Pyramid Distribution]
+\begin{tabular}{llll}
+\toprule
+\textbf{Level} & \textbf{Count} & \textbf{Percent} & \textbf{Time/Test} \\
+\midrule
+Unit Tests & 3,678 & 81\% & 200 µs \\
+Integration Tests & 681 & 15\% & 50 ms \\
+System Tests & 182 & 4\% & 2 s \\
+Browser Tests & 22 & 0.5\% & 5 s \\
+\textbf{TOTAL} & \textbf{4,563} & \textbf{100\%} & \textbf{45 seconds} \\
+\bottomrule
+\end{tabular}
+\end{tcolorbox}
+
+\subsection*{Test Pyramid Philosophy}
+
+\begin{multicols}{2}
+
+\textbf{Wide Base:} Lots of fast tests
+
+Run constantly during development
+
+Immediate feedback (seconds)
+
+\textbf{Narrow Top:} Few slow tests
+
+Run before commits, in CI
+
+Comprehensive validation
+
+\columnbreak
+
+\textbf{Speed Enables Feedback:}
+
+45 seconds total → Run every few minutes
+
+10-minute tests → Developers skip → Commit broken code
+
+\textbf{Quality > Quantity:}
+
+4,563 tests BUT strategically chosen
+
+Test behavior, not implementation
+\end{multicols}
+
+\section*{CI/CD Pipeline: GitHub Actions}
+
+\begin{center}
+\begin{tikzpicture}[node distance=2cm]
+    \node[block, fill=primary!30] (code) {\textbf{Code}\\Write + Test};
+    \node[process, right=of code] (hooks) {\textbf{Pre-commit}\\Lint + Type};
+    \node[process, right=of hooks] (ci) {\textbf{CI}\\4563 tests\\45s};
+    \node[process, right=of ci] (coverage) {\textbf{Coverage}\\85/95/100\\%};
+    \node[block, fill=secondary!30, right=of coverage] (deploy) {\textbf{Deploy}\\Docs + Artifacts};
+
+    \draw[arrow] (code) -- (hooks);
+    \draw[arrow] (hooks) -- (ci);
+    \draw[arrow] (ci) -- (coverage);
+    \draw[arrow] (coverage) -- (deploy);
+\end{tikzpicture}
+\end{center}
+
+\begin{tcolorbox}[colback=secondary!10, colframe=secondary, title=\faCogs\ Three-Stage Pipeline]
+\textbf{Stage 1: Pre-Commit Hooks (Local)}
+\begin{itemize}
+    \item Lint code (flake8, black formatter)
+    \item Type checking (mypy)
+    \item Fast unit tests (< 10 seconds)
+    \item Prevents bad commits from entering repo
+\end{itemize}
+
+\textbf{Stage 2: Pull Request CI (GitHub Actions)}
+\begin{itemize}
+    \item Full test suite (4,563 tests, 45 seconds)
+    \item Coverage report (must meet 85/95/100\% gates)
+    \item Documentation build (sphinx-build -W)
+    \item Integration tests (controllers + dynamics + PSO)
+\end{itemize}
+
+\textbf{Stage 3: Main Branch CI (Post-Merge)}
+\begin{itemize}
+    \item Deploy docs to GitHub Pages
+    \item Build release artifacts
+    \item Run long-duration tests (24-hour stress test)
+    \item Update benchmarks
+\end{itemize}
+\end{tcolorbox}
+
+% ==============================================================================
+% PAGE 2: QUALITY GATES
+% ==============================================================================
+\newpage
+
+\section*{Quality Gates: 8 Gates, 5/8 Passing}
+
+\begin{keypoint}
+\textbf{Research-Ready:} 5/8 gates (can publish papers, run experiments)
+
+\textbf{Production-Ready:} 8/8 gates (can deploy to industrial plant)
+
+\textbf{Current Status:} Research-ready [OK], NOT production-ready yet
+\end{keypoint}
+
+\subsection*{Quality Gate Checklist}
+
+\begin{tcolorbox}[colback=accent!10, colframe=accent, title=\faCheckSquare\ 8 Quality Gates]
+\textbf{PASSING (5/8):}
+\begin{itemize}
+    \item \textbf{1.} Zero critical bugs (all P0 issues resolved) [OK]
+    \item \textbf{2.} 100\% test pass rate (4,563/4,563 tests) [OK]
+    \item \textbf{3.} Memory validated (10,000 sims, zero growth) [OK]
+    \item \textbf{4.} Thread-safe (11/11 parallel tests pass) [OK]
+    \item \textbf{5.} Zero high-priority issues [OK]
+\end{itemize}
+
+\textbf{FAILING (3/8):}
+\begin{itemize}
+    \setcounter{enumi}{5}
+    \item \textbf{1.} Coverage measurement broken (reports 2.86\%, real is 89\%) [ERROR]
+    \item \textbf{2.} No production CI/CD (dev pipelines only) [ERROR]
+    \item \textbf{3.} No hardware validation (never run on actual robot/PLC) [ERROR]
+\end{itemize}
+\end{tcolorbox}
+
+\begin{warning}
+\textbf{For Production Deployment:} Must pass ALL 8 gates
+
+\textbf{Blocking Issues:} Gates 6-8 prevent industrial deployment
+
+\textbf{Roadmap:} Fix coverage tool, setup production CI, validate on hardware
+\end{warning}
+
+\section*{Code Review Process}
+
+\begin{tcolorbox}[colback=primary!5, colframe=primary, title=\faCodeBranch\ Pull Request Workflow]
+\textbf{Step 1: Create Branch}
+\begin{lstlisting}[style=yaml, numbers=none]
+git checkout -b feature/new-controller
+\end{lstlisting}
+
+\textbf{Step 2: Implement + Test}
+
+Write code → Write tests (maintain coverage) → Run locally
+
+\textbf{Step 3: Pre-Commit Checks}
+
+Hooks run automatically: lint, type check, fast tests
+
+\textbf{Step 4: Open Pull Request}
+
+CI triggers: full test suite, coverage report, doc build
+
+\textbf{Step 5: Code Review}
+
+Reviewer checks: technical correctness, test quality, docs updated
+
+\textbf{Step 6: Address Feedback}
+
+Fix issues, push updates, CI re-runs
+
+\textbf{Step 7: Merge}
+
+Squash commits, merge to main, post-merge CI deploys
+\end{tcolorbox}
+
+% ==============================================================================
+% PAGE 3: CONTRIBUTOR GUIDELINES & KEY TAKEAWAYS
+% ==============================================================================
+\newpage
+
+\section*{Contributor Guidelines}
+
+\begin{tcolorbox}[colback=secondary!10, colframe=secondary, title=\faUsers\ Contributing to Project]
+\textbf{Getting Started:}
+\begin{itemize}
+    \item \textbf{1.} Read \texttt{docs/development/contributing.md}
+    \item \textbf{2.} Setup dev environment: \texttt{pip install -r requirements-dev.txt}
+    \item \textbf{3.} Install pre-commit hooks: \texttt{pre-commit install}
+    \item \textbf{4.} Find "good first issue" label on GitHub
+\end{itemize}
+
+\textbf{Coding Standards:}
+\begin{itemize}
+    \item Type hints everywhere (mypy strict mode)
+    \item NumPy-style docstrings (for Sphinx autodoc)
+    \item Black formatter (auto-format on save)
+    \item Informal, explanatory code comments
+\end{itemize}
+
+\textbf{Testing Requirements:}
+\begin{itemize}
+    \item Every new function needs unit test
+    \item Critical modules: maintain 95\%+ coverage
+    \item Integration test for new features
+    \item Update docs if API changes
+\end{itemize}
+\end{tcolorbox}
+
+\section*{Development Tools Stack}
+
+\begin{multicols}{2}
+
+\textbf{Testing:}
+\begin{itemize}
+    \item pytest (test framework)
+    \item pytest-cov (coverage)
+    \item pytest-benchmark (performance)
+    \item Hypothesis (property-based testing)
+\end{itemize}
+
+\textbf{Code Quality:}
+\begin{itemize}
+    \item black (formatter)
+    \item flake8 (linter)
+    \item mypy (type checker)
+    \item pre-commit (hook manager)
+\end{itemize}
+
+\columnbreak
+
+\textbf{Documentation:}
+\begin{itemize}
+    \item Sphinx (HTML docs)
+    \item sphinx-autodoc (API reference)
+    \item myst-parser (markdown support)
+\end{itemize}
+
+\textbf{CI/CD:}
+\begin{itemize}
+    \item GitHub Actions (CI pipelines)
+    \item GitHub Pages (doc deployment)
+    \item codecov.io (coverage reports)
+\end{itemize}
+
+\end{multicols}
+
+\section*{Key Takeaways}
+
+\begin{summary}
+\textbf{Testing Infrastructure:} 4,563 tests (81\% unit, 15\% integration, 4\% system) in 45 seconds
+
+\textbf{Test Pyramid:} Wide base (fast, many) → Narrow top (slow, few)
+
+\textbf{CI/CD Pipeline:} 3 stages (pre-commit hooks → PR CI → main branch CI)
+
+\textbf{Quality Gates:} 8 gates total, 5/8 passing (research-ready), need 8/8 for production
+
+\textbf{PASSING:} Zero critical bugs, 100\% test pass, memory validated, thread-safe, zero high-priority
+
+\textbf{FAILING:} Coverage measurement broken, no production CI, no hardware validation
+
+\textbf{Code Review:} Branch → Implement+Test → Pre-commit → PR → Review → Merge
+
+\textbf{Contributor Guidelines:} Type hints, NumPy docstrings, Black formatter, coverage requirements
+
+\textbf{Tools Stack:} pytest (testing), black/flake8/mypy (quality), Sphinx (docs), GitHub Actions (CI)
+
+\textbf{Speed Matters:} 45-second tests → Run every few minutes → Fast feedback → Catch errors early
+\end{summary}
+
+\subsection*{Quick Reference: Development Commands}
+
+\quickref{Common Dev Commands}{
+\begin{lstlisting}[style=yaml, numbers=none]
+# Run all tests
+pytest tests/
+
+# With coverage
+pytest tests/ --cov=src --cov-report=html
+
+# Run specific test file
+pytest tests/test_controllers/test_classical_smc.py -v
+
+# Format code
+black src/ tests/
+
+# Type check
+mypy src/
+
+# Install pre-commit hooks
+pre-commit install
+\end{lstlisting}
+}
+
+\subsection*{Phase 2 Complete!}
+
+\begin{keypoint}
+\textbf{Congratulations!} Phase 2 Technical Infrastructure complete (9 episodes)
+
+\textbf{Next:} Phase 3 Professional Practice (E015-E021, 7 episodes)
+
+\textbf{Topics:} Architecture standards, attribution, memory management, browser testing, workspace organization, Git workflow, roadmap
+
+\textbf{Remember:} Quality tools enable velocity - invest in infrastructure early!
+\end{keypoint}
+
+\end{document}

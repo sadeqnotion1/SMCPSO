@@ -1,0 +1,123 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% APPENDIX C: API REFERENCE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Python API Reference}
+\label{app:api}
+
+This appendix documents the main Python API for controllers, optimization, and simulation.
+
+%===============================================================================
+\section{Controller Factory}
+%===============================================================================
+
+\subsection{create\_controller Function}
+
+\begin{lstlisting}[language=Python]
+from src.controllers.factory import create_controller
+
+controller = create_controller(
+    controller_type='classical_smc',  # or 'sta_smc', 'adaptive_smc', 'hybrid_adaptive_sta_smc'
+    config=config_dict,
+    gains=[k1, k2, lam1, lam2, K, kd]  # 6 gains for classical
+)
+\end{lstlisting}
+
+\textbf{Parameters}:
+\begin{itemize}
+    \item \texttt{controller\_type}: String identifier ('classical\_smc', 'sta\_smc', etc.)
+    \item \texttt{config}: Configuration dictionary (from \texttt{config.yaml})
+    \item \texttt{gains}: Sequence of controller gains (length depends on controller type)
+\end{itemize}
+
+\textbf{Returns}: Controller instance with \texttt{compute\_control(state, state\_vars, history)} method.
+
+%===============================================================================
+\section{PSO Optimizer}
+%===============================================================================
+
+\subsection{PSOTuner Class}
+
+\begin{lstlisting}[language=Python]
+from src.optimizer.pso_optimizer import PSOTuner
+
+tuner = PSOTuner(
+    controller_type='classical_smc',
+    bounds=[(0.1, 50.0)] * 6,  # Gain bounds
+    n_particles=30,
+    max_iter=50,
+    config=config_dict
+)
+
+best_gains, best_cost = tuner.optimize()
+\end{lstlisting}
+
+\textbf{Key Methods}:
+\begin{itemize}
+    \item \texttt{optimize()}: Run PSO and return best gains + cost
+    \item \texttt{\_compute\_cost\_from\_traj()}: Multi-objective cost function
+\end{itemize}
+
+%===============================================================================
+\section{Simulation Runner}
+%===============================================================================
+
+\subsection{run\_simulation Function}
+
+\begin{lstlisting}[language=Python]
+from src.core.simulation_runner import run_simulation
+
+result = run_simulation(
+    controller=controller,
+    dynamics=dynamics_model,
+    initial_state=[0, 0.2, 0.15, 0, 0, 0],  # [x, th1, th2, xdot, th1dot, th2dot]
+    dt=0.01,
+    t_final=10.0
+)
+
+# Access results
+times = result['time']
+states = result['state']  # Shape: (n_steps, 6)
+controls = result['control']
+\end{lstlisting}
+
+%===============================================================================
+\section{Dynamics Models}
+%===============================================================================
+
+\subsection{FullDIPDynamics Class}
+
+\begin{lstlisting}[language=Python]
+from src.plant.models.full_dynamics import FullDIPDynamics
+
+dynamics = FullDIPDynamics(config=config_dict)
+
+# Compute acceleration
+state = np.array([x, th1, th2, xdot, th1dot, th2dot])
+control = u
+acceleration = dynamics.compute_acceleration(state, control)
+
+# Get physics matrices
+M, C, G = dynamics._compute_physics_matrices(state)
+\end{lstlisting}
+
+%===============================================================================
+\section{Configuration Management}
+%===============================================================================
+
+\subsection{load\_config Function}
+
+\begin{lstlisting}[language=Python]
+from src.config import load_config
+
+config = load_config("config.yaml", allow_unknown=False)
+
+# Access parameters
+m1 = config.physics.m1
+L1 = config.physics.L1
+epsilon = config.controllers.classical_smc.boundary_layer
+\end{lstlisting}
+
+%===============================================================================
+% END OF APPENDIX C
+%===============================================================================

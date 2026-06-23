@@ -1,0 +1,374 @@
+/**
+ * Collapsible Code Blocks Styling
+ * Curtain-style collapse/expand animations
+ */
+
+/* ============================================================================
+   Master Controls (Collapse All / Expand All)
+   ============================================================================ */
+
+.code-controls-master {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    margin: 1.5rem 0;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(99, 102, 241, 0.05));
+    border: 2px solid rgba(59, 130, 246, 0.3);
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    flex-wrap: wrap;
+}
+
+.code-controls-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-text-primary, #1f2937);
+    margin-right: auto;
+}
+
+.code-control-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 6px rgba(59, 130, 246, 0.3);
+}
+
+.code-control-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.5);
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+}
+
+.code-control-btn:active {
+    transform: translateY(0);
+}
+
+.code-control-btn span {
+    font-size: 1rem;
+}
+
+/* ============================================================================
+   Individual Collapse Buttons
+   ============================================================================ */
+
+.code-collapse-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px; /* Simplified - sibling positioning via CSS */
+    z-index: 100;
+    padding: 4px 8px; /* Match copybutton size */
+    background: transparent; /* Minimal like copybutton */
+    border: none; /* No border like copybutton */
+    border-radius: 4px;
+    color: inherit; /* Inherit text color */
+    font-size: 1rem; /* Match icon size */
+    font-weight: 400; /* Normal weight */
+    cursor: pointer;
+    transition: all 0.2s ease;
+    opacity: 0.3; /* Subtle like copybutton */
+}
+
+.code-collapse-btn:hover {
+    background: rgba(128, 128, 128, 0.1); /* Subtle background on hover */
+    opacity: 1; /* Full visibility on hover */
+    transform: none; /* No transform like copybutton */
+}
+
+.code-collapse-btn:active {
+    opacity: 0.5;
+}
+
+.code-collapse-btn:focus {
+    outline: 2px solid rgba(59, 130, 246, 0.5);
+    outline-offset: 2px;
+}
+
+.collapse-icon {
+    display: inline-block;
+    font-size: 0.9rem; /* Slightly smaller icon */
+    line-height: 1;
+}
+
+/* Position collapse button to the left of copy button when they're siblings */
+.copybtn + .code-collapse-btn {
+    position: absolute;
+    top: 8px;
+    /* Copy button: right: 8px, width: ~20px
+       Gap: 8px
+       Collapse button right edge should be at: 8 + 20 + 8 = 36px from right */
+    right: 36px;
+    transform: none;
+}
+
+/* ============================================================================
+   Code Block Styling
+   ============================================================================ */
+
+/* Add relative positioning to code blocks for button placement */
+/* Plus layout containment to prevent reflow outside container */
+div[class*="highlight"] {
+    position: relative;
+    contain: layout; /* CSS Containment - prevents layout shifts */
+}
+
+/* GPU acceleration for inner highlight */
+div.highlight {
+    transform: translateZ(0); /* Force GPU layer */
+    backface-visibility: hidden; /* Smoother rendering */
+}
+
+/* Smooth transition for pre elements with GPU hints */
+div[class*="highlight"] pre {
+    transition: max-height 0.35s cubic-bezier(0.4, 0.0, 0.2, 1),
+                opacity 0.35s cubic-bezier(0.4, 0.0, 0.2, 1);
+    overflow: visible;
+    will-change: max-height, opacity; /* Performance hint to browser */
+}
+
+/* Collapsed state */
+div[class*="highlight"].code-collapsed pre {
+    max-height: 0 !important;
+    opacity: 0;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+/* Transitioning state (during animation) - prevent interaction */
+div[class*="highlight"].code-collapsing {
+    pointer-events: none; /* Prevent clicks during animation */
+}
+
+div[class*="highlight"].code-collapsing pre {
+    user-select: none; /* Prevent text selection during animation */
+}
+
+/* Keep button clickable during animation - remove pointer-events block from button itself */
+div[class*="highlight"].code-collapsing .code-collapse-btn,
+div[class*="highlight"].code-collapsed .code-collapse-btn {
+    pointer-events: auto; /* Override parent's pointer-events: none */
+    z-index: 150; /* Higher than default 100 to stay above ::after pseudo-element */
+}
+
+/* Keep the header bar visible when collapsed */
+div[class*="highlight"].code-collapsed {
+    min-height: 40px;
+    margin-bottom: 1rem;
+}
+
+/* CRITICAL FIX: Keep inner highlight container tall enough to show button */
+div[class*="highlight-"].code-collapsed > div.highlight {
+    min-height: 44px; /* Taller than outer to ensure button parent stays visible */
+    position: relative; /* Ensure button positioning works */
+}
+
+/* UI-004 FIX: ARIA-accessible collapsed notice (real DOM element, not ::after pseudo-element) */
+.code-collapse-notice {
+    display: none; /* Hidden by default, shown by JavaScript when collapsed */
+    padding: 8px 16px;
+    background: var(--color-code-notice-bg, #1b2433); /* UI-003: Dark bg for contrast */
+    color: var(--color-code-notice-text, #f8fbff);    /* UI-003: Light text (12.4:1 contrast) */
+    font-size: 0.85rem;
+    font-style: italic;
+    text-align: center;
+    border-radius: 4px;
+    margin-top: 8px;
+    position: relative;
+    z-index: 1; /* Stay below button (button has z-index: 150) */
+}
+
+/* Legacy CSS ::after for browsers without JavaScript (progressive enhancement) */
+div[class*="highlight"].code-collapsed::after {
+    content: "Code hidden (click ▲ to expand)";
+    display: block;
+    padding: 8px 16px;
+    background: var(--color-code-notice-bg, #1b2433);
+    color: var(--color-code-notice-text, #f8fbff);
+    font-size: 0.85rem;
+    font-style: italic;
+    text-align: center;
+    border-radius: 4px;
+    margin-top: 8px;
+    z-index: 1;
+}
+
+/* Hide ::after when JavaScript notice element exists */
+div[class*="highlight"].code-collapsed:has(.code-collapse-notice)::after {
+    display: none;
+}
+
+/* Visual debugging - subtle background for collapsed button visibility */
+div[class*="highlight"].code-collapsed .code-collapse-btn {
+    background: rgba(59, 130, 246, 0.08); /* Very subtle blue tint */
+    opacity: 0.7; /* More visible when collapsed */
+}
+
+div[class*="highlight"].code-collapsed .code-collapse-btn:hover {
+    background: rgba(59, 130, 246, 0.15);
+    opacity: 1;
+}
+
+/* ============================================================================
+   Dark Mode Support
+   ============================================================================ */
+
+[data-theme="dark"] .code-controls-master {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(99, 102, 241, 0.1));
+    border-color: rgba(59, 130, 246, 0.4);
+}
+
+[data-theme="dark"] .code-controls-label {
+    color: #f1f5f9;
+}
+
+[data-theme="dark"] .code-collapse-btn {
+    background: transparent;
+    color: inherit;
+    opacity: 0.3;
+}
+
+[data-theme="dark"] .code-collapse-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    opacity: 1;
+}
+
+/* UI-004: Dark mode for ARIA-accessible notice element */
+[data-theme="dark"] .code-collapse-notice {
+    background: var(--color-code-notice-bg, #1b2433);
+    color: var(--color-code-notice-text, #f8fbff);
+}
+
+/* Legacy ::after for dark mode */
+[data-theme="dark"] div[class*="highlight"].code-collapsed::after {
+    background: var(--color-code-notice-bg, #1b2433);
+    color: var(--color-code-notice-text, #f8fbff);
+}
+
+/* ============================================================================
+   Furo Theme Integration
+   ============================================================================ */
+
+/* Adjust for Furo's code block structure */
+.highlight-default .code-collapse-btn,
+.highlight-python .code-collapse-btn,
+.highlight-bash .code-collapse-btn,
+.highlight-javascript .code-collapse-btn {
+    top: 10px;
+}
+
+/* Note: Sibling selector removed - buttons aren't siblings due to nested structure */
+/* Dynamic positioning handled via JavaScript instead */
+
+/* ============================================================================
+   Mobile Responsive Design
+   ============================================================================ */
+
+@media (max-width: 768px) {
+    .code-controls-master {
+        padding: 10px 12px;
+        gap: 8px;
+    }
+
+    .code-controls-label {
+        font-size: 0.8rem;
+        width: 100%;
+        margin-bottom: 4px;
+    }
+
+    .code-control-btn {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+        flex: 1;
+    }
+
+    .code-collapse-btn {
+        right: 10px;
+        padding: 3px 6px;
+        font-size: 0.9rem;
+    }
+
+    /* Mobile: tighter spacing for siblings */
+    .copybtn + .code-collapse-btn {
+        right: 33px;  /* 8 + 20 + 5 = 33px (tighter 5px gap on mobile) */
+    }
+
+    .collapse-icon {
+        font-size: 0.85rem;
+    }
+
+    /* Collapsed message smaller on mobile */
+    div[class*="highlight"].code-collapsed::after {
+        font-size: 0.75rem;
+        padding: 6px 12px;
+    }
+}
+
+/* ============================================================================
+   Print Styles
+   ============================================================================ */
+
+@media print {
+    /* Always show code when printing */
+    div[class*="highlight"].code-collapsed pre {
+        max-height: none !important;
+        opacity: 1 !important;
+        overflow: visible !important;
+    }
+
+    div[class*="highlight"].code-collapsed::after {
+        display: none;
+    }
+
+    /* Hide controls when printing */
+    .code-controls-master,
+    .code-collapse-btn {
+        display: none !important;
+    }
+}
+
+/* ============================================================================
+   Accessibility Enhancements
+   ============================================================================ */
+
+/* Keyboard focus styles */
+.code-control-btn:focus-visible {
+    outline: 3px solid #3b82f6;
+    outline-offset: 2px;
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+    div[class*="highlight"] pre,
+    .code-collapse-btn,
+    .code-control-btn,
+    .collapse-icon {
+        transition: none !important;
+        animation: none !important;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .code-controls-master {
+        border-width: 3px;
+    }
+
+    .code-collapse-btn {
+        border-width: 3px;
+    }
+
+    .code-control-btn {
+        border: 2px solid white;
+    }
+}

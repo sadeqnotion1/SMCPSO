@@ -1,0 +1,315 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% TEXTBOOK PREAMBLE: Packages, Formatting, Custom Commands
+% Extended from thesis preamble.tex with textbook-specific additions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% PAGE LAYOUT %%%
+\usepackage[
+    a4paper,
+    left=3.0cm,
+    right=2.5cm,
+    top=2.5cm,
+    bottom=2.5cm,
+    headheight=15pt,
+    footskip=30pt
+]{geometry}
+
+%%% ENCODING & FONTS %%%
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}          % Latin Modern fonts
+
+%%% CHAPTER/SECTION CUSTOMIZATION (book class specific) %%%
+\usepackage{titlesec}         % Custom chapter/section formatting
+\usepackage{titletoc}         % Custom TOC formatting
+
+% Chapter title formatting (centered, large, with rules)
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries\centering}
+  {\chaptertitlename\ \thechapter}{20pt}{\Huge}
+\titlespacing*{\chapter}{0pt}{-20pt}{40pt}
+
+%%% MATH PACKAGES %%%
+\usepackage{amsmath}          % Core math environments
+\usepackage{amsfonts}         % Math fonts (\mathbb{R})
+\usepackage{amssymb}          % Extra symbols (\therefore, \because)
+\usepackage{mathtools}        % Extensions to amsmath
+\usepackage{bm}               % Bold math symbols (\bm{x})
+
+%%% GRAPHICS & FIGURES %%%
+\usepackage{graphicx}         % \includegraphics
+\usepackage{float}            % [H] placement specifier
+\usepackage{caption}          % Caption customization
+\usepackage{subcaption}       % Subfigures (a), (b), (c)
+\usepackage{wrapfig}          % Text wrapping around figures
+
+% Caption style (small, italic)
+\captionsetup{
+    font=small,
+    labelfont=bf,
+    format=hang,
+    justification=raggedright,
+    singlelinecheck=false
+}
+
+%%% TABLES %%%
+\usepackage{booktabs}         % Professional tables (\toprule, \midrule)
+\usepackage{multirow}         % Multi-row cells
+\usepackage{array}            % Enhanced column formatting
+\usepackage{longtable}        % Multi-page tables
+\usepackage{pdflscape}        % Landscape pages
+\usepackage{afterpage}        % Defer page breaks
+
+%%% ALGORITHMS & PSEUDOCODE %%%
+\usepackage[ruled,vlined,linesnumbered]{algorithm2e}
+\usepackage{tcolorbox}        % Colored boxes for algorithms
+\tcbuselibrary{skins,breakable}
+
+% Algorithm box style (wrapped in tcolorbox)
+\newtcolorbox{algobox}[1][]{
+    colback=blue!5!white,
+    colframe=blue!75!black,
+    fonttitle=\bfseries,
+    title={#1},
+    breakable,
+    enhanced jigsaw,
+    before upper={\parindent15pt}
+}
+
+% Algorithm2e style customization
+\SetAlgoLined
+\SetKwInOut{Input}{Input}
+\SetKwInOut{Output}{Output}
+\SetKwInOut{Require}{Require}
+\SetKwInOut{Ensure}{Ensure}
+
+%%% CODE LISTINGS (Python syntax highlighting) %%%
+% Option 1: minted (requires -shell-escape, Pygments)
+% Uncomment if Pygments is installed:
+% \usepackage{minted}
+% \usemintedstyle{friendly}
+% \setminted{
+%     linenos=true,
+%     breaklines=true,
+%     fontsize=\small,
+%     frame=lines,
+%     framesep=2mm
+% }
+
+% Option 2: listings (works without external dependencies)
+\usepackage{listings}
+\usepackage{xcolor}
+
+% Define Python style
+\lstdefinestyle{pythonstyle}{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    commentstyle=\color{gray}\itshape,
+    stringstyle=\color{red},
+    showstringspaces=false,
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    numbersep=8pt,
+    frame=single,
+    frameround=tttt,
+    breaklines=true,
+    breakatwhitespace=false,
+    tabsize=4,
+    captionpos=b,
+    morekeywords={self, None, True, False, yield, with, as}
+}
+
+% Set default style
+\lstset{style=pythonstyle}
+
+% Custom environment for inline code
+\newcommand{\pyinline}[1]{\lstinline[style=pythonstyle]{#1}}
+
+%%% BIBLIOGRAPHY %%%
+\usepackage[numbers,sort&compress]{natbib}  % Numeric citations [1,2,3]
+
+%%% HEADERS & FOOTERS %%%
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}  % Clear defaults
+
+% Chapter pages (plain style)
+\fancypagestyle{plain}{
+    \fancyhf{}
+    \fancyfoot[C]{\thepage}
+    \renewcommand{\headrulewidth}{0pt}
+}
+
+% Normal pages
+\fancyhead[LE,RO]{\thepage}                      % Page number outer
+\fancyhead[RE]{\nouppercase{\leftmark}}          % Chapter name (even pages)
+\fancyhead[LO]{\nouppercase{\rightmark}}         % Section name (odd pages)
+\renewcommand{\headrulewidth}{0.5pt}
+
+%%% SI UNITS %%%
+\usepackage{siunitx}          % \SI{10}{\meter\per\second}
+
+%%% NOMENCLATURE (optional) %%%
+\usepackage{nomencl}
+\makenomenclature
+
+%%% THEOREM ENVIRONMENTS %%%
+\usepackage{amsthm}
+\usepackage{thmtools}         % Enhanced theorem tools
+
+% Define theorem styles
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[chapter]
+\newtheorem{example}{Example}[chapter]
+\newtheorem{exercise}{Exercise}[chapter]
+
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}[chapter]
+\newtheorem{note}{Note}[chapter]
+
+%%% EXERCISE SOLUTIONS (for appendix) %%%
+\newtheorem{solution}{Solution}[chapter]
+
+%%% TIKZ (for diagrams) %%%
+\usepackage{tikz}
+\usetikzlibrary{
+    arrows,
+    arrows.meta,
+    shapes,
+    shapes.geometric,
+    positioning,
+    calc,
+    decorations.pathreplacing,
+    decorations.markings,
+    patterns
+}
+
+%%% INDEX (optional) %%%
+\usepackage{makeidx}
+\makeindex
+
+%%% HYPERLINKS & CROSS-REFERENCES %%%
+% IMPORTANT: hyperref must be loaded LAST
+\usepackage[
+    colorlinks=true,
+    linkcolor=blue,       % Internal links
+    citecolor=red,        % Citations
+    urlcolor=cyan,        % URLs
+    bookmarks=true,
+    bookmarksnumbered=true,
+    pdftitle={Sliding Mode Control of Underactuated Systems},
+    pdfauthor={[Author Name]},
+    pdfsubject={Control Theory, Robotics},
+    pdfkeywords={Sliding Mode Control, PSO, Double Inverted Pendulum}
+]{hyperref}
+
+% cleveref for smart cross-references (e.g., "Figure 2.3" instead of "2.3")
+\usepackage[capitalize,nameinlink]{cleveref}
+
+% Custom cleveref labels
+\crefname{chapter}{Chapter}{Chapters}
+\crefname{section}{Section}{Sections}
+\crefname{equation}{Equation}{Equations}
+\crefname{figure}{Figure}{Figures}
+\crefname{table}{Table}{Tables}
+\crefname{algorithm}{Algorithm}{Algorithms}
+\crefname{exercise}{Exercise}{Exercises}
+\crefname{example}{Example}{Examples}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CUSTOM COMMANDS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% VECTORS & MATRICES %%%
+\newcommand{\vect}[1]{\mathbf{#1}}           % Bold vectors
+\newcommand{\mat}[1]{\mathbf{#1}}            % Bold matrices
+\newcommand{\uvect}[1]{\hat{\mathbf{#1}}}    % Unit vectors
+
+%%% NUMBER SETS %%%
+\newcommand{\Real}{\mathbb{R}}               % Real numbers
+\newcommand{\Natural}{\mathbb{N}}            % Natural numbers
+\newcommand{\Integer}{\mathbb{Z}}            % Integers
+\newcommand{\Complex}{\mathbb{C}}            % Complex numbers
+
+%%% CALCULUS SHORTCUTS %%%
+\newcommand{\diff}[2]{\frac{d #1}{d #2}}                    % Ordinary derivative
+\newcommand{\pdiff}[2]{\frac{\partial #1}{\partial #2}}    % Partial derivative
+\newcommand{\ddiff}[2]{\frac{d^2 #1}{d #2^2}}              % Second derivative
+
+%%% OPERATORS %%%
+\DeclareMathOperator{\sign}{sign}            % Sign function
+\DeclareMathOperator{\sat}{sat}              % Saturation function
+\DeclareMathOperator*{\argmin}{arg\,min}     % Argmin
+\DeclareMathOperator*{\argmax}{arg\,max}     % Argmax
+\DeclareMathOperator{\rank}{rank}            % Matrix rank
+\DeclareMathOperator{\trace}{tr}             % Matrix trace
+\DeclareMathOperator{\diag}{diag}            % Diagonal matrix
+
+%%% NORMS %%%
+\newcommand{\norm}[1]{\left\| #1 \right\|}   % Euclidean norm
+\newcommand{\abs}[1]{\left| #1 \right|}      % Absolute value
+
+%%% COMMON SYMBOLS (project-specific) %%%
+\newcommand{\thetaone}{\theta_1}             % Pendulum angle 1
+\newcommand{\thetatwo}{\theta_2}             % Pendulum angle 2
+\newcommand{\slidingsurf}{s}                 % Sliding surface
+\newcommand{\controllaw}{u}                  % Control input
+\newcommand{\lyapunov}{V}                    % Lyapunov function
+
+%%% HIGHLIGHTING (for notes during writing) %%%
+\newcommand{\TODO}[1]{\textcolor{red}{\textbf{[TODO: #1]}}}
+\newcommand{\NOTE}[1]{\textcolor{blue}{\textbf{[NOTE: #1]}}}
+
+%%% CODE REFERENCES %%%
+% For referencing Python files/functions with line numbers
+\newcommand{\coderef}[2]{%
+  \par\noindent\textcolor{blue!70!black}{\small$\triangleright$ \textbf{Implementation:} \texttt{#1:#2}}%
+}
+% For referencing Python files/functions in text
+\newcommand{\pyfile}[1]{\texttt{#1}}
+\newcommand{\pyfunc}[1]{\texttt{#1()}}
+\newcommand{\pyclass}[1]{\texttt{#1}}
+
+%%% SPECIAL BOXES %%%
+% Key concept box
+\newtcolorbox{keybox}{
+    colback=yellow!10!white,
+    colframe=orange!75!black,
+    fonttitle=\bfseries,
+    title={Key Concept},
+    breakable
+}
+
+% Important note box
+\newtcolorbox{importantbox}{
+    colback=red!5!white,
+    colframe=red!75!black,
+    fonttitle=\bfseries,
+    title={Important},
+    breakable
+}
+
+% Example box
+\newtcolorbox{examplebox}[1][]{
+    colback=green!5!white,
+    colframe=green!75!black,
+    fonttitle=\bfseries,
+    title={Example: #1},
+    breakable
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% LINE SPACING (for readability)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{setspace}
+\onehalfspacing  % 1.5 line spacing for main text
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% END OF PREAMBLE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

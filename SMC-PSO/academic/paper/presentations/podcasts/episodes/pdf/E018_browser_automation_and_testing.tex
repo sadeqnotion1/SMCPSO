@@ -1,0 +1,78 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{E018}
+\lhead{DIP-SMC-PSO Learning Episode}
+\rfoot{\thepage}
+
+\title{\Large\textbf{E018: Browser Automation and Testing}}
+\author{DIP-SMC-PSO Educational Series}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section*{Overview}
+
+This episode covers browser automation and testing from the DIP-SMC-PSO project.
+
+\textbf{Part:} Part4 Professional
+
+\textbf{Duration:} 15-20 minutes
+
+\textbf{Source:} Comprehensive Presentation Materials
+
+\newpage
+
+\section{Fault Detection \& Isolation (FDI)}
+
+**Monitoring Anomalous Behavior:**
+
+    **Detected Faults:**
+    
+        - **Sensor Faults**
+        
+            - State measurement out of physical range
+            - Sudden jumps (> 3σ from trend)
+            - Stuck sensor (constant value)
+
+        - **Actuator Faults**
+        
+            - Control saturation (persistent $|u| = u_{\max}$)
+            - Actuator deadband (zero response region)
+            - Reduced effectiveness (partial failure)
+
+        - **Controller Faults**
+        
+            - Numerical instability (NaN/Inf in control)
+            - Excessive chattering (> threshold frequency)
+            - Sliding surface divergence
+
+        - **System Faults**
+        
+            - Deadline misses exceeding threshold
+            - Memory leak detection (growing allocations)
+            - Communication timeout (HIL mode)
+
+\newpage
+
+\section*{{Resources}}
+
+\begin{itemize}
+    \item \textbf{Repository:} \url{https://github.com/theSadeQ/dip-smc-pso.git}
+    \item \textbf{Documentation:} See \texttt{docs/} directory
+    \item \textbf{Getting Started:} \texttt{docs/guides/getting-started.md}
+\end{itemize}
+
+\vfill
+
+\noindent\textit{Educational podcast episode generated from comprehensive presentation materials}
+
+\end{document}

@@ -1,0 +1,540 @@
+/* ============================================================================
+   Theme: Modern Colorful (ReactBits-Inspired)
+   Description: Bold, vibrant, animated documentation theme
+   Best For: Developer docs, tutorials, interactive guides
+   Style: Modern tech (GitHub, Vercel, Stripe aesthetic)
+
+   COLOR CUSTOMIZATION: All colors are defined in CSS variables below
+   We'll customize these colors in the next step!
+   ============================================================================ */
+
+/* ============================================================================
+   1. COLOR PALETTE - CUSTOMIZED FOR DIP-SMC-PSO
+   ============================================================================ */
+
+:root {
+    /* Primary Brand Colors - Custom DIP-SMC-PSO Dark Blue */
+    --color-primary: #0b2763;        /* DIP Dark Blue */
+    --color-primary-hover: #08204d;  /* Darker blue on hover */
+    --color-primary-light: #e6ebf5;  /* Light blue bg */
+
+    /* Status Colors - PLACEHOLDER (we'll customize) */
+    --color-success: #10b981;        /* Green */
+    --color-success-bg: #d1fae5;
+    --color-success-border: #6ee7b7;
+
+    --color-warning: #f59e0b;        /* Orange */
+    --color-warning-bg: #fef3c7;
+    --color-warning-border: #fbbf24;
+
+    --color-error: #ef4444;          /* Red */
+    --color-error-bg: #fee2e2;
+    --color-error-border: #fca5a5;
+
+    --color-info: #3b82f6;           /* Blue */
+    --color-info-bg: #dbeafe;
+    --color-info-border: #93c5fd;
+
+    --color-tip: #8b5cf6;            /* Purple */
+    --color-tip-bg: #ede9fe;
+    --color-tip-border: #c4b5fd;
+
+    /* Experimental/Beta Colors - PLACEHOLDER */
+    --color-experimental: #f97316;   /* Orange */
+    --color-beta: #06b6d4;          /* Cyan */
+    --color-deprecated: #71717a;    /* Gray */
+
+    /* Background Colors */
+    --color-bg-primary: #ffffff;
+    --color-bg-secondary: #f9fafb;
+    --color-bg-tertiary: #f3f4f6;
+
+    /* Text Colors */
+    --color-text-primary: #111827;
+    --color-text-secondary: #6b7280;
+    --color-text-muted: #9ca3af;
+
+    /* Border & Shadow */
+    --color-border: #e5e7eb;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --shadow-glow: 0 0 20px rgba(11, 39, 99, 0.4);
+}
+
+/* ============================================================================
+   2. ANIMATED ADMONITIONS (Note, Warning, Tip, etc.)
+   ============================================================================ */
+
+.admonition {
+    position: relative;
+    padding: 20px 20px 20px 60px;
+    margin: 1.5em 0;
+    border-radius: 12px;
+    border: 2px solid;
+    background: linear-gradient(135deg, var(--admonition-bg-start), var(--admonition-bg-end));
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s ease;
+}
+
+.admonition:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+/* Icon circle with animation */
+.admonition::before {
+    content: "";
+    position: absolute;
+    left: 18px;
+    top: 20px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 18px;
+    animation: iconPulse 2s ease-in-out infinite;
+}
+
+@keyframes iconPulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.1); opacity: 0.8; }
+}
+
+/* NOTE - Blue */
+.admonition.note {
+    --admonition-bg-start: var(--color-info-bg);
+    --admonition-bg-end: #ffffff;
+    border-color: var(--color-info-border);
+}
+
+.admonition.note::before {
+    content: "i";
+    background: linear-gradient(135deg, var(--color-info), var(--color-primary));
+    color: white;
+    box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
+}
+
+/* TIP - Purple */
+.admonition.tip {
+    --admonition-bg-start: var(--color-tip-bg);
+    --admonition-bg-end: #ffffff;
+    border-color: var(--color-tip-border);
+}
+
+.admonition.tip::before {
+    content: "💡";
+    background: linear-gradient(135deg, var(--color-tip), #a855f7);
+    font-size: 16px;
+    box-shadow: 0 4px 10px rgba(139, 92, 246, 0.3);
+    animation: tipGlow 2s ease-in-out infinite;
+}
+
+@keyframes tipGlow {
+    0%, 100% { box-shadow: 0 4px 10px rgba(139, 92, 246, 0.3); }
+    50% { box-shadow: 0 4px 20px rgba(139, 92, 246, 0.6); }
+}
+
+/* WARNING - Orange */
+.admonition.warning {
+    --admonition-bg-start: var(--color-warning-bg);
+    --admonition-bg-end: #ffffff;
+    border-color: var(--color-warning-border);
+}
+
+.admonition.warning::before {
+    content: "⚠";
+    background: linear-gradient(135deg, var(--color-warning), #f97316);
+    color: white;
+    font-size: 20px;
+    box-shadow: 0 4px 10px rgba(245, 158, 11, 0.4);
+    animation: warningPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes warningPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+}
+
+/* DANGER/ERROR - Red */
+.admonition.danger,
+.admonition.error {
+    --admonition-bg-start: var(--color-error-bg);
+    --admonition-bg-end: #ffffff;
+    border-color: var(--color-error-border);
+}
+
+.admonition.danger::before,
+.admonition.error::before {
+    content: "✕";
+    background: linear-gradient(135deg, var(--color-error), #dc2626);
+    color: white;
+    font-size: 22px;
+    line-height: 32px;
+    box-shadow: 0 4px 10px rgba(239, 68, 68, 0.4);
+}
+
+/* SUCCESS - Green */
+.admonition.success {
+    --admonition-bg-start: var(--color-success-bg);
+    --admonition-bg-end: #ffffff;
+    border-color: var(--color-success-border);
+}
+
+.admonition.success::before {
+    content: "✓";
+    background: linear-gradient(135deg, var(--color-success), #059669);
+    color: white;
+    font-size: 20px;
+    box-shadow: 0 4px 10px rgba(16, 185, 129, 0.4);
+}
+
+/* ============================================================================
+   3. STATUS BADGES (Stable, Experimental, Beta, Deprecated)
+   ============================================================================ */
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin: 0 6px;
+    vertical-align: middle;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.2s ease;
+}
+
+.status-badge:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+/* STABLE - Green gradient */
+.status-stable {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+    border: none;
+}
+
+.status-stable::before {
+    content: "✓";
+    font-size: 14px;
+}
+
+/* EXPERIMENTAL - Orange gradient */
+.status-experimental {
+    background: linear-gradient(135deg, #f97316, #ea580c);
+    color: white;
+    border: none;
+    animation: experimentalPulse 3s ease-in-out infinite;
+}
+
+.status-experimental::before {
+    content: "⚡";
+    font-size: 14px;
+}
+
+@keyframes experimentalPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.85; }
+}
+
+/* BETA - Cyan gradient */
+.status-beta {
+    background: linear-gradient(135deg, #06b6d4, #0891b2);
+    color: white;
+    border: none;
+}
+
+.status-beta::before {
+    content: "β";
+    font-size: 16px;
+    font-style: italic;
+}
+
+/* DEPRECATED - Gray */
+.status-deprecated {
+    background: linear-gradient(135deg, #9ca3af, #6b7280);
+    color: white;
+    border: none;
+    opacity: 0.7;
+}
+
+.status-deprecated::before {
+    content: "⊘";
+    font-size: 14px;
+}
+
+/* ============================================================================
+   4. CODE BLOCKS - Syntax Highlighting
+   ============================================================================ */
+
+/* Inline code */
+:not(pre) > code {
+    background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+    color: #dc2626;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 0.9em;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    border: 1px solid var(--color-border);
+    font-weight: 600;
+}
+
+/* Code block container */
+div[class*="highlight"] {
+    border-radius: 12px;
+    margin: 1.5em 0;
+    overflow: hidden;
+    border: 2px solid var(--color-border);
+    box-shadow: var(--shadow-md);
+    background: #1e293b;
+    position: relative;
+}
+
+div[class*="highlight"]::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 40px;
+    background: linear-gradient(90deg, #334155, #1e293b);
+    border-bottom: 1px solid #475569;
+}
+
+/* Code block content */
+div[class*="highlight"] pre {
+    padding: 50px 20px 20px 20px;
+    margin: 0;
+    overflow-x: auto;
+    background: transparent;
+}
+
+/* Line numbers */
+.linenos {
+    background: #0f172a;
+    color: #64748b;
+    padding-right: 12px;
+    border-right: 2px solid #334155;
+    user-select: none;
+}
+
+/* ============================================================================
+   5. TABLES - Modern Data Display
+   ============================================================================ */
+
+table.docutils {
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+    margin: 1.5em 0;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    border: 2px solid var(--color-border);
+}
+
+table.docutils th {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
+    color: white;
+    padding: 16px;
+    text-align: left;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.85rem;
+}
+
+table.docutils td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--color-border);
+    background: white;
+    transition: background 0.2s ease;
+}
+
+table.docutils tr:hover td {
+    background: var(--color-bg-secondary);
+}
+
+table.docutils tr:last-child td {
+    border-bottom: none;
+}
+
+/* Striped rows */
+table.docutils tr:nth-child(even) td {
+    background: var(--color-bg-tertiary);
+}
+
+table.docutils tr:nth-child(even):hover td {
+    background: #e0e7ff;
+}
+
+/* ============================================================================
+   6. BUTTONS & LINKS
+   ============================================================================ */
+
+.download-link,
+.btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
+    color: white !important;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-md);
+    border: none;
+}
+
+.download-link:hover,
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg), var(--shadow-glow);
+}
+
+.download-link::before {
+    content: "↓";
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* ============================================================================
+   7. CALLOUT BOXES
+   ============================================================================ */
+
+.callout {
+    padding: 24px;
+    margin: 1.5em 0;
+    border-left: 5px solid;
+    border-radius: 8px;
+    background: var(--callout-bg);
+    box-shadow: var(--shadow-sm);
+}
+
+.callout-info {
+    --callout-bg: linear-gradient(135deg, #dbeafe, #ffffff);
+    border-left-color: var(--color-info);
+}
+
+.callout-success {
+    --callout-bg: linear-gradient(135deg, #d1fae5, #ffffff);
+    border-left-color: var(--color-success);
+}
+
+.callout-warning {
+    --callout-bg: linear-gradient(135deg, #fef3c7, #ffffff);
+    border-left-color: var(--color-warning);
+}
+
+.callout-danger {
+    --callout-bg: linear-gradient(135deg, #fee2e2, #ffffff);
+    border-left-color: var(--color-error);
+}
+
+/* ============================================================================
+   8. DARK MODE
+   ============================================================================ */
+
+[data-theme="dark"] {
+    /* Dark mode colors */
+    --color-bg-primary: #0f172a;
+    --color-bg-secondary: #1e293b;
+    --color-bg-tertiary: #334155;
+
+    --color-text-primary: #f1f5f9;
+    --color-text-secondary: #cbd5e1;
+    --color-text-muted: #94a3b8;
+
+    --color-border: #334155;
+
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="dark"] .admonition {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), transparent);
+}
+
+[data-theme="dark"] table.docutils td {
+    background: var(--color-bg-secondary);
+    color: var(--color-text-primary);
+}
+
+[data-theme="dark"] table.docutils tr:nth-child(even) td {
+    background: var(--color-bg-tertiary);
+}
+
+[data-theme="dark"] div[class*="highlight"] {
+    border-color: var(--color-border);
+}
+
+/* ============================================================================
+   9. ANIMATIONS & INTERACTIONS
+   ============================================================================ */
+
+/* Smooth scroll */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Selection color */
+::selection {
+    background: var(--color-primary);
+    color: white;
+}
+
+/* Focus styles for accessibility */
+a:focus,
+button:focus {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* Loading skeleton animation */
+@keyframes shimmer {
+    0% { background-position: -1000px 0; }
+    100% { background-position: 1000px 0; }
+}
+
+.skeleton {
+    animation: shimmer 2s infinite linear;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 1000px 100%;
+}
+
+/* ============================================================================
+   10. PRINT STYLES
+   ============================================================================ */
+
+@media print {
+    .admonition::before {
+        animation: none !important;
+    }
+
+    .status-badge::before {
+        animation: none !important;
+    }
+
+    * {
+        box-shadow: none !important;
+        animation: none !important;
+    }
+}
+
+/* ============================================================================
+   END OF THEME
+   Next step: Customize colors in Section 1 based on your preference!
+   ============================================================================ */

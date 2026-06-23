@@ -1,0 +1,174 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CHAPTER 8: PSO Optimization Algorithms
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{algorithm}[H]
+\caption{Particle Swarm Optimization Main Loop}
+\label{alg:pso_main}
+\KwIn{Search space bounds $[\vect{b}_{\min}, \vect{b}_{\max}] \in \Real^D$}
+\KwIn{Swarm size $N_p$, max iterations $I_{\max}$}
+\KwIn{PSO parameters: $\omega, c_1, c_2$ (inertia, cognitive, social coefficients)}
+\KwIn{Controller factory $\mathcal{C}(\vect{g})$ mapping gains $\vect{g} \in \Real^D$ to controller}
+\KwOut{Best gains $\vect{g}^*$, best cost $J^*$, optimization history}
+\BlankLine
+\tcp{Initialize swarm (random uniform sampling)}
+\For{$i \leftarrow 1$ \KwTo $N_p$}{
+    $\vect{p}_i^{(0)} \leftarrow \text{Uniform}(\vect{b}_{\min}, \vect{b}_{\max})$ \tcp*{Position}
+    $\vect{v}_i^{(0)} \leftarrow \vect{0}$ \tcp*{Velocity (start at rest)}
+    $\vect{p}_i^{\text{best}} \leftarrow \vect{p}_i^{(0)}$\;
+    $J_i^{\text{best}} \leftarrow \text{EvaluateCost}(\vect{p}_i^{(0)})$ \tcp*{Algorithm 8.2}
+}
+\BlankLine
+\tcp{Find global best}
+$\vect{g}^* \leftarrow \argmin_i J_i^{\text{best}}$, $J^* \leftarrow \min_i J_i^{\text{best}}$\;
+\BlankLine
+\tcp{Iterative optimization}
+\For{$t \leftarrow 1$ \KwTo $I_{\max}$}{
+    \For{$i \leftarrow 1$ \KwTo $N_p$}{
+        \tcp{Update velocity (Equation 8.3)}
+        $\vect{r}_1, \vect{r}_2 \sim \text{Uniform}(0,1)^D$ \tcp*{Random vectors}
+        $\vect{v}_i^{(t)} \leftarrow \omega \vect{v}_i^{(t-1)} + c_1 \vect{r}_1 \odot (\vect{p}_i^{\text{best}} - \vect{p}_i^{(t-1)}) + c_2 \vect{r}_2 \odot (\vect{g}^* - \vect{p}_i^{(t-1)})$\;
+        \BlankLine
+        \tcp{Apply velocity clamping (optional)}
+        \If{velocity clamp enabled}{
+            $\vect{v}_i^{(t)} \leftarrow \text{clip}(\vect{v}_i^{(t)}, \vect{v}_{\min}, \vect{v}_{\max})$ \tcp*{Algorithm 8.3}
+        }
+        \BlankLine
+        \tcp{Update position}
+        $\vect{p}_i^{(t)} \leftarrow \vect{p}_i^{(t-1)} + \vect{v}_i^{(t)}$\;
+        $\vect{p}_i^{(t)} \leftarrow \text{clip}(\vect{p}_i^{(t)}, \vect{b}_{\min}, \vect{b}_{\max})$ \tcp*{Enforce bounds}
+        \BlankLine
+        \tcp{Evaluate cost}
+        $J_i^{(t)} \leftarrow \text{EvaluateCost}(\vect{p}_i^{(t)})$ \tcp*{Algorithm 8.2}
+        \BlankLine
+        \tcp{Update personal best}
+        \If{$J_i^{(t)} < J_i^{\text{best}}$}{
+            $\vect{p}_i^{\text{best}} \leftarrow \vect{p}_i^{(t)}$\;
+            $J_i^{\text{best}} \leftarrow J_i^{(t)}$\;
+        }
+    }
+    \BlankLine
+    \tcp{Update global best}
+    $\vect{g}^* \leftarrow \argmin_i J_i^{\text{best}}$, $J^* \leftarrow \min_i J_i^{\text{best}}$\;
+    history.append($(J^*, \vect{g}^*, t)$)\;
+}
+\BlankLine
+\Return{$(\vect{g}^*, J^*, \text{history})$}
+\end{algorithm}
+
+\textbf{Complexity}: $O(I_{\max} \cdot N_p \cdot T_{\text{sim}})$ time where $T_{\text{sim}}$ is cost evaluation time (dominated by simulation), $O(N_p \cdot D + I_{\max})$ space.
+
+\vspace{1em}
+
+\begin{algorithm}[H]
+\caption{Multi-Objective Cost Function Evaluation}
+\label{alg:pso_cost_function}
+\KwIn{Gain vector $\vect{g} \in \Real^D$, controller factory $\mathcal{C}(\cdot)$}
+\KwIn{Simulation parameters: $T_{\text{sim}}, \Delta t, \vect{x}_0, u_{\max}$}
+\KwIn{Cost weights: $w_{\text{ISE}}, w_u, w_{\Delta u}, w_{\sigma}$}
+\KwIn{Normalization constants: $N_{\text{ISE}}, N_u, N_{\Delta u}, N_{\sigma}$}
+\KwOut{Aggregate cost $J \in \Real_+$ (lower is better)}
+\BlankLine
+\tcp{Create controller from gains}
+$\text{ctrl} \leftarrow \mathcal{C}(\vect{g})$\;
+\BlankLine
+\tcp{Validate gains (optional pre-filter)}
+\If{ctrl.validate\_gains($\vect{g}$) = \textbf{False}}{
+    \Return{$J_{\text{penalty}} = 10^6$} \tcp*{Reject invalid particles}
+}
+\BlankLine
+\tcp{Batch simulation (Numba-vectorized)}
+$(t, \vect{x}(t), u(t), \sigma(t)) \leftarrow \text{BatchSimulation}(\text{ctrl}, \vect{x}_0, T_{\text{sim}}, \Delta t)$\;
+\BlankLine
+\tcp{Check for instability (early failure detection)}
+\If{$\max_t ||\vect{x}(t)|| > 10^6$ \textbf{or} $\max_t |\theta_1(t)| > \pi/2$}{
+    \Return{$J_{\text{penalty}}$} \tcp*{Divergent trajectory}
+}
+\BlankLine
+\tcp{Compute cost components (Equation 8.5)}
+$J_{\text{ISE}} \leftarrow \int_0^{T_{\text{sim}}} ||\vect{x}(t)||^2 dt$ \tcp*{State error (trapezoidal rule)}
+$J_u \leftarrow \int_0^{T_{\text{sim}}} u(t)^2 dt$ \tcp*{Control effort}
+$J_{\Delta u} \leftarrow \int_0^{T_{\text{sim}}} (\frac{du}{dt})^2 dt$ \tcp*{Control rate (chattering)}
+$J_{\sigma} \leftarrow \int_0^{T_{\text{sim}}} \sigma(t)^2 dt$ \tcp*{Sliding variable energy}
+\BlankLine
+\tcp{Normalize costs}
+$J_{\text{ISE}}^N \leftarrow J_{\text{ISE}} / N_{\text{ISE}}$\;
+$J_u^N \leftarrow J_u / N_u$\;
+$J_{\Delta u}^N \leftarrow J_{\Delta u} / N_{\Delta u}$\;
+$J_{\sigma}^N \leftarrow J_{\sigma} / N_{\sigma}$\;
+\BlankLine
+\tcp{Weighted aggregation (Equation 8.6)}
+$J \leftarrow w_{\text{ISE}} J_{\text{ISE}}^N + w_u J_u^N + w_{\Delta u} J_{\Delta u}^N + w_{\sigma} J_{\sigma}^N$\;
+\BlankLine
+\tcp{Graded instability penalty (if trajectory fails early)}
+$t_{\text{fail}} \leftarrow \text{DetectFailureTime}(\vect{x}(t))$ \tcp*{First time $|\theta_1| > \pi/2$}
+\If{$t_{\text{fail}} < T_{\text{sim}}$}{
+    $\text{penalty}_{\text{graded}} \leftarrow w_{\sigma} \frac{T_{\text{sim}} - t_{\text{fail}}}{T_{\text{sim}}} J_{\text{penalty}}$\;
+    $J \leftarrow J + \text{penalty}_{\text{graded}}$\;
+}
+\BlankLine
+\Return{$J$}
+\end{algorithm}
+
+\textbf{Complexity}: $O(T_{\text{sim}}/\Delta t)$ time for simulation (dominated by RK4 integration), $O(T_{\text{sim}}/\Delta t)$ space for trajectory storage.
+
+\vspace{1em}
+
+\begin{algorithm}[H]
+\caption{Velocity Clamping and Inertia Scheduling}
+\label{alg:pso_velocity_clamp}
+\KwIn{Current iteration $t$, max iterations $I_{\max}$}
+\KwIn{Velocity clamp factors $\delta_{\min}, \delta_{\max} \in [0,1]$}
+\KwIn{Inertia schedule $(\omega_{\text{start}}, \omega_{\text{end}})$, bounds $(\vect{b}_{\min}, \vect{b}_{\max})$}
+\KwOut{Velocity limits $(\vect{v}_{\min}, \vect{v}_{\max})$, inertia $\omega(t)$}
+\BlankLine
+\tcp{Compute per-dimension search range}
+$\vect{\Delta b} \leftarrow \vect{b}_{\max} - \vect{b}_{\min}$\;
+\BlankLine
+\tcp{Velocity clamping (prevents divergence)}
+$\vect{v}_{\min} \leftarrow \delta_{\min} \vect{\Delta b}$\;
+$\vect{v}_{\max} \leftarrow \delta_{\max} \vect{\Delta b}$\;
+\BlankLine
+\tcp{Linearly decreasing inertia (exploration $\rightarrow$ exploitation)}
+$\omega(t) \leftarrow \omega_{\text{start}} - \frac{t}{I_{\max}} (\omega_{\text{start}} - \omega_{\text{end}})$\;
+\BlankLine
+\Return{$(\vect{v}_{\min}, \vect{v}_{\max}, \omega(t))$}
+\end{algorithm}
+
+\textbf{Complexity}: $O(D)$ time, $O(D)$ space.
+
+\textbf{Note}: Typical values are $\delta_{\min} = 0.1$, $\delta_{\max} = 0.3$, $\omega_{\text{start}} = 0.9$, $\omega_{\text{end}} = 0.4$ (Shi \& Eberhart, 1998).
+
+\vspace{1em}
+
+\begin{algorithm}[H]
+\caption{Batch Simulation for PSO (Numba-Vectorized)}
+\label{alg:pso_batch_simulation}
+\KwIn{Particle matrix $P \in \Real^{N_p \times D}$ (all swarm positions)}
+\KwIn{Controller factory $\mathcal{C}(\cdot)$, simulation params $(T, \Delta t, \vect{x}_0, u_{\max})$}
+\KwOut{Cost vector $\vect{J} \in \Real^{N_p}$ (one cost per particle)}
+\BlankLine
+\tcp{Pre-validate all particles (vectorized operation)}
+$\vect{\text{valid}} \leftarrow \text{ValidateGains}(P)$ \tcp*{Boolean mask, $O(N_p)$}
+\BlankLine
+\tcp{Filter invalid particles}
+$P_{\text{valid}} \leftarrow P[\vect{\text{valid}}]$ \tcp*{Only simulate valid gains}
+\BlankLine
+\tcp{Parallel batch simulation (Numba JIT-compiled loop)}
+\For{$i \leftarrow 1$ \KwTo $|P_{\text{valid}}|$ \textbf{in parallel}}{
+    $\text{ctrl}_i \leftarrow \mathcal{C}(P_{\text{valid}}[i])$\;
+    $(t, \vect{x}_i(t), u_i(t), \sigma_i(t)) \leftarrow \text{Simulate}(\text{ctrl}_i, \vect{x}_0, T, \Delta t)$\;
+    $J_{\text{valid}}[i] \leftarrow \text{ComputeCost}(\vect{x}_i, u_i, \sigma_i)$ \tcp*{Algorithm 8.2}
+}
+\BlankLine
+\tcp{Assign penalties to invalid particles}
+$\vect{J} \leftarrow \vect{0}_{N_p}$\;
+$\vect{J}[\vect{\text{valid}}] \leftarrow J_{\text{valid}}$\;
+$\vect{J}[\neg \vect{\text{valid}}] \leftarrow J_{\text{penalty}}$\;
+\BlankLine
+\Return{$\vect{J}$}
+\end{algorithm}
+
+\textbf{Complexity}: $O(N_p \cdot T/\Delta t)$ time with parallelization factor $\approx N_{\text{cores}}$. Numba achieves $\sim$10x speedup over pure Python.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -1,0 +1,132 @@
+% ============================================================================
+% SECTION 15: ARCHITECTURAL STANDARDS
+% ============================================================================
+\section{Architectural Standards}
+
+\begin{frame}{Intentional Architectural Patterns}
+    \textbf{DO NOT "FIX" These Patterns -- They Are Intentional:}
+
+    \vspace{0.3cm}
+
+    \begin{enumerate}
+        \item \textbf{Compatibility Layers}
+        \begin{itemize}
+            \item \texttt{src/optimizer/} → \texttt{src/optimization/}
+            \item Backward compatibility for old imports
+            \item \textit{Reason:} Smooth migration, no breaking changes
+        \end{itemize}
+
+        \item \textbf{Re-export Chains}
+        \begin{itemize}
+            \item \texttt{simulation\_context.py} in 3 locations
+            \item Import path flexibility
+            \item \textit{Reason:} User convenience, multiple valid import styles
+        \end{itemize}
+
+        \item \textbf{Model Variants}
+        \begin{itemize}
+            \item 8 dynamics files (simplified, full, low-rank, etc.)
+            \item Different accuracy/performance tradeoffs
+            \item \textit{Reason:} Speed vs. accuracy based on use case
+        \end{itemize}
+
+        \item \textbf{Framework Files in \texttt{src/}}
+        \begin{itemize}
+            \item \texttt{src/interfaces/hil/test\_automation.py} is PRODUCTION code
+            \item Automation framework, not pytest tests
+            \item \textit{Reason:} Exported in \texttt{\_\_init\_\_.py}, imported by production code
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{Directory Placement Rules}
+    \textbf{File Classification Decision Tree:}
+
+    \vspace{0.3cm}
+
+    \begin{tikzpicture}[
+        node distance=1.2cm,
+        every node/.style={font=\tiny},
+        decision/.style={diamond, draw, fill=diporange!20, align=center, minimum width=2cm},
+        action/.style={rectangle, draw, fill=dipgreen!20, align=center, minimum width=2cm}
+    ]
+        \node[decision] (export) {Exported in\\\_\_init\_\_.py?};
+        \node[action, below left=of export] (prod1) {\texttt{src/}\\Production code};
+        \node[decision, below right=of export] (imported) {Imported by\\production?};
+        \node[action, below left=of imported] (prod2) {\texttt{src/}\\Production code};
+        \node[decision, below right=of imported] (framework) {Framework/\\infrastructure?};
+        \node[action, below left=of framework] (prod3) {\texttt{src/}\\Production code};
+        \node[decision, below right=of framework] (pytest) {Has pytest\\imports?};
+        \node[action, below left=of pytest] (test) {\texttt{tests/}\\Test file};
+        \node[action, below right=of pytest] (script) {\texttt{scripts/}\\Dev tool};
+
+        \draw[->, thick] (export.west) -- node[left] {Yes} (prod1);
+        \draw[->, thick] (export.east) -- node[right] {No} (imported);
+        \draw[->, thick] (imported.west) -- node[left] {Yes} (prod2);
+        \draw[->, thick] (imported.east) -- node[right] {No} (framework);
+        \draw[->, thick] (framework.west) -- node[left] {Yes} (prod3);
+        \draw[->, thick] (framework.east) -- node[right] {No} (pytest);
+        \draw[->, thick] (pytest.west) -- node[left] {Yes} (test);
+        \draw[->, thick] (pytest.east) -- node[right] {No} (script);
+    \end{tikzpicture}
+\end{frame}
+
+\begin{frame}{Quality Gates (ENFORCE STRICTLY)}
+    \textbf{Production Readiness Criteria:}
+
+    \vspace{0.3cm}
+
+    \begin{tabular}{llc}
+        \toprule
+        \textbf{Gate} & \textbf{Threshold} & \textbf{Current} \\
+        \midrule
+        Critical issues & 0 & \statusok \\
+        High-priority issues & ≤3 & \statusok \\
+        Test pass rate & 100\% & \statusok \\
+        Root visible items & ≤19 & \statusok (14) \\
+        Malformed file names & 0 & \statusok \\
+        \midrule
+        Code coverage (overall) & ≥85\% & \statuswarning (broken) \\
+        Coverage (critical) & ≥95\% & \statuswarning (broken) \\
+        Production score & ≥70/100 & \statuserror (23.9) \\
+        \bottomrule
+    \end{tabular}
+
+    \vspace{0.3cm}
+
+    \begin{alertblock}{Current Status}
+        \textbf{Research-Ready:} \statusok Single/multi-threaded operation validated \\
+        \textbf{NOT Production-Ready:} \statuserror Quality gates 1/8 passing (score: 23.9/100)
+    \end{alertblock}
+
+    \vspace{0.3cm}
+
+    \textit{See:} \texttt{.ai\_workspace/guides/phase4\_status.md}
+\end{frame}
+
+\begin{frame}{File Naming Conventions}
+    \textbf{NEVER Create These Patterns:}
+
+    \vspace{0.3cm}
+
+    \begin{alertblock}{Forbidden Patterns}
+        \begin{itemize}
+            \item \textbf{Braces/spaces:} \texttt{\{dir\}/}, \texttt{my folder/}
+            \item \textbf{Windows device names:} \texttt{nul}, \texttt{con}, \texttt{prn}, \texttt{aux}
+            \item \textbf{Unicode paths on Windows:} Use ASCII only
+            \item \textbf{Trailing dots/spaces:} \texttt{file. }, \texttt{dir.}
+        \end{itemize}
+    \end{alertblock}
+
+    \vspace{0.3cm}
+
+    \textbf{Recommended Patterns:}
+    \begin{itemize}
+        \item \textbf{Python modules:} \texttt{snake\_case.py}
+        \item \textbf{Classes:} \texttt{PascalCase}
+        \item \textbf{Functions/variables:} \texttt{snake\_case}
+        \item \textbf{Constants:} \texttt{UPPER\_SNAKE\_CASE}
+        \item \textbf{Directories:} \texttt{lowercase\_underscores/}
+        \item \textbf{Scripts:} \texttt{verb\_noun.sh} (e.g., \texttt{run\_tests.sh})
+    \end{itemize}
+\end{frame}

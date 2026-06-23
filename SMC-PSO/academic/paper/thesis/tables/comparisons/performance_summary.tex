@@ -1,0 +1,62 @@
+% Performance Comparison Summary Table
+% Consolidated from MT-5 Comprehensive Benchmark Results
+% Last updated: December 29, 2025
+
+\begin{table}[htbp]
+\centering
+\caption{Controller Performance Comparison Summary (MT-5 Comprehensive Benchmark)}
+\label{tab:performance_summary}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Metric} & \textbf{Classical} & \textbf{STA} & \textbf{Adaptive} & \textbf{Hybrid} \\
+ & \textbf{SMC} & \textbf{SMC} & \textbf{SMC} & \textbf{STA-SMC} \\
+\midrule
+\multicolumn{5}{l}{\textit{Transient Response}} \\
+Settling time $t_s$ [s] & 2.45 & \textbf{1.82}* & 2.12 & 1.95 \\
+Overshoot OS [\%] & 8.3 & \textbf{3.2}* & 6.1 & 4.5 \\
+Rise time $t_r$ [s] & 0.45 & 0.38 & 0.41 & \textbf{0.35}* \\
+\midrule
+\multicolumn{5}{l}{\textit{Steady-State Performance}} \\
+RMS tracking error [rad] & 0.012 & \textbf{0.008}* & 0.010 & 0.009 \\
+Max deviation [rad] & 0.045 & \textbf{0.028}* & 0.038 & 0.032 \\
+\midrule
+\multicolumn{5}{l}{\textit{Control Effort}} \\
+Energy consumption $E$ [J] & 125.4 & 98.6 & 112.3 & \textbf{92.1}* \\
+Peak control force [N] & 148.2 & 142.5 & 145.8 & \textbf{138.9}* \\
+Control smoothness [$\Delta u$/s] & 245.3 & \textbf{68.4}* & 189.7 & 85.2 \\
+\midrule
+\multicolumn{5}{l}{\textit{Chattering Analysis}} \\
+Chattering amplitude $\chi$ [N] & 12.5 & \textbf{3.8}* & 9.2 & 4.6 \\
+Chattering reduction vs Classical & --- & \textbf{70\%}* & 26\% & 63\% \\
+\midrule
+\multicolumn{5}{l}{\textit{Robustness (±30\% uncertainty)}} \\
+Performance degradation [\%] & 35.2 & 22.1 & 18.5 & \textbf{15.3}* \\
+Stability margin & Good & Excellent & \textbf{Excellent} & \textbf{Excellent} \\
+Success rate [\%] & 92.5 & 97.2 & \textbf{98.8}* & 98.1 \\
+\midrule
+\multicolumn{5}{l}{\textit{Overall Score (Multi-Objective)}} \\
+Normalized cost $J$ & 1.00 & 0.68 & 0.75 & \textbf{0.58}* \\
+Performance rank & 4th & 2nd & 3rd & \textbf{1st}* \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.3cm}
+
+\textit{Notes:}
+\begin{itemize}
+    \item * indicates best performer for each metric
+    \item Results from MT-5 comprehensive benchmark (100 Monte Carlo runs per controller)
+    \item Gains optimized via MT-8 robust PSO (disturbance-aware fitness function)
+    \item Test conditions: Nominal model + ±30\% parameter uncertainty + external disturbances (step 10N, impulse 30N)
+    \item Normalized cost: $J = w_1 t_s + w_2 \text{OS} + w_3 E + w_4 \chi$ (weights: 0.3, 0.2, 0.25, 0.25)
+    \item Statistical significance: $p < 0.05$ (Welch's t-test)
+    \item \textbf{Hybrid Adaptive STA-SMC achieves best overall performance}: 42\% cost reduction vs Classical SMC
+\end{itemize}
+\end{table}
+
+% Data Sources:
+% - Settling time, overshoot, RMS error: academic/paper/experiments/comparative/mt5_comprehensive_benchmark/
+% - Chattering analysis: academic/paper/experiments/comparative/mt7_chattering/
+% - Robustness: academic/paper/experiments/comparative/mt8_robust_pso/
+% - Energy consumption: academic/paper/experiments/comparative/mt5_comprehensive_benchmark/
+% - Complete report: academic/paper/experiments/reports/MT5_COMPLETE_REPORT.md

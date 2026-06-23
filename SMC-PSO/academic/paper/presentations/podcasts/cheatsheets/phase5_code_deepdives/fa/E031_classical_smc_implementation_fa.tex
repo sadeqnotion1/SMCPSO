@@ -1,0 +1,230 @@
+% ==============================================================================
+% EPISODE 031: CLASSICAL SMC IMPLEMENTATION (FA)
+% ==============================================================================
+\input{../../templates/master_template_fa.tex}
+\input{../../templates/tikz_components.tex}
+\input{episode_macros_fa.tex}
+
+% Episode-specific title
+\renewcommand{\episodetitle}{E031: Classical SMC}
+
+\begin{document}
+
+% ==============================================================================
+% TITLE PAGE
+% ==============================================================================
+\makeepisodetitle{E031: پیاده‌سازی Classical SMC}{سطح لغزش، کنترل معادل، و سوئیچینگ مقاوم}{5A}{25-30 دقیقه}
+
+% ==============================================================================
+% PAGE 1: WHY CLASSICAL SMC EXISTS
+% ==============================================================================
+\learningobjective{درک نحوه محاسبه سطح لغزش $\sigma$، کنترل معادل $u_{eq}$، و کنترل سوئیچینگ مقاوم با کاهش چترینگ در ClassicalSMC}
+
+\section*{مسئله‌ای که Classical SMC حل می‌کند}
+
+\begin{keypoint}
+\textbf{هدف:} پایدارسازی آونگ دوگانه وارونه با رساندن سطح لغزش $\sigma$ به صفر.
+
+کنترل‌گر دو بخش دارد:
+\textbf{(1) کنترل معادل} بر پایه مدل فیزیکی + \textbf{(2) کنترل سوئیچینگ مقاوم} برای عدم‌قطعیت‌ها.
+\end{keypoint}
+
+\subsection*{قانون کنترل Classical SMC}
+
+\eqbox{
+u = u_{eq} - K \, \text{sat}\left(\frac{\sigma}{\epsilon}\right) - k_d \, \sigma
+}
+
+\begin{multicols}{2}
+
+\textbf{تعاریف:}
+\begin{itemize}
+    \item $\sigma$ = سطح لغزش (خطای حالت)
+    \item $u_{eq}$ = ترم پیش‌خورِ مبتنی بر مدل
+    \item $K$ = بهره سوئیچینگ
+    \item $\epsilon$ = ضخامت لایه مرزی
+    \item $k_d$ = ترم میرایی
+\end{itemize}
+
+\columnbreak
+
+\begin{tip}
+\textbf{چرا دو ترم؟}
+\begin{itemize}
+    \item $u_{eq}$ دینامیک نامی را خنثی می‌کند
+    \item ترم سوئیچینگ عدم‌قطعیت‌ها و اغتشاشات را جبران می‌کند
+    \item لایه مرزی چترینگ را نرم می‌کند
+\end{itemize}
+\end{tip}
+
+\end{multicols}
+
+\subsection*{ترتیب حالت‌ها (حیاتی)}
+
+\begin{warning}
+\textbf{ClassicalSMC این ترتیب حالت را انتظار دارد:}
+\[
+[x, \theta_1, \theta_2, \dot{x}, \dot{\theta}_1, \dot{\theta}_2]
+\]
+
+این ترتیب مستقیما در \texttt{\_compute\_sliding\_surface()} استفاده می‌شود.
+\end{warning}
+
+\begin{example}
+\textbf{منبع:} \texttt{src/controllers/smc/classic\_smc.py}
+\begin{lstlisting}[style=python, numbers=none, basicstyle=\ttfamily\scriptsize]
+_, theta1, theta2, _, dtheta1, dtheta2 = state
+sigma = lam1*theta1 + lam2*theta2 + k1*dtheta1 + k2*dtheta2
+\end{lstlisting}
+\end{example}
+
+% ==============================================================================
+% PAGE 2: SLIDING SURFACE + SWITCHING LOGIC
+% ==============================================================================
+\newpage
+
+\section*{سطح لغزش و منطق سوئیچینگ}
+
+\subsection*{محاسبه سطح لغزش}
+
+\begin{keypoint}
+\textbf{سطح لغزش:} ترکیبی وزنی از زاویه‌ها و نرخ زاویه‌ها
+که رفتار همگرایی را تعریف می‌کند.
+\end{keypoint}
+
+\begin{lstlisting}[style=python, basicstyle=\ttfamily\tiny]
+def _compute_sliding_surface(self, state: np.ndarray) -> float:
+    _, theta1, theta2, _, dtheta1, dtheta2 = state
+    return (self.lam1 * theta1 + self.lam2 * theta2
+            + self.k1 * dtheta1 + self.k2 * dtheta2)
+\end{lstlisting}
+
+\subsection*{تابع سوئیچینگ: tanh در برابر linear}
+
+\sidebysidecomparison
+{tanh (پیشنهادی)}
+{
+\begin{itemize}
+    \item نرم در نزدیکی $\sigma=0$
+    \item شیب غیرصفر در مبدا حفظ می‌شود
+    \item عملکرد بهتر در حالت ماندگار
+\end{itemize}
+}
+{linear (با احتیاط)}
+{
+\begin{itemize}
+    \item کلیپ سخت‌تر نزدیک مبدا
+    \item افت قدرت کنترل برای خطای کوچک
+    \item امکان افزایش خطای ماندگار
+\end{itemize}
+}
+
+\subsection*{لایه مرزی + هیسترزیس}
+
+\begin{lstlisting}[style=python, basicstyle=\ttfamily\tiny]
+eps_dyn = self.epsilon0 + self.epsilon1 * float(np.linalg.norm(sigma))
+if abs(float(sigma)) < self.hysteresis_ratio * self.epsilon0:
+    sat_sigma = 0.0
+else:
+    sat_sigma = saturate(sigma, eps_dyn, method=self.switch_method)
+\end{lstlisting}
+
+\begin{tip}
+\textbf{لایه مرزی تطبیقی:} $\epsilon$ با $|\sigma|$ رشد می‌کند
+و نزدیک سطح لغزش کوچک می‌شود تا چترینگ کاهش یابد.
+\end{tip}
+
+% ==============================================================================
+% PAGE 3: EQUIVALENT CONTROL (MODEL-BASED TERM)
+% ==============================================================================
+\newpage
+
+\section*{کنترل معادل: پیش‌خور مبتنی بر مدل}
+
+\begin{keypoint}
+\textbf{هدف:} استفاده از مدل دینامیکی برای محاسبه ترم کنترلی
+که دینامیک نامی را خنثی می‌کند.
+\end{keypoint}
+
+\subsection*{ماتریس‌های فیزیکی و منظم‌سازی}
+
+\begin{lstlisting}[style=python, basicstyle=\ttfamily\tiny]
+M, C, G = self.dyn._compute_physics_matrices(state)
+M_reg = M + np.eye(3) * max(self.regularization, 0.0)
+Minv_B = np.linalg.solve(M_reg, self.B)
+L_Minv_B = float(self.L @ Minv_B)
+\end{lstlisting}
+
+\subsection*{بررسی کنترل‌پذیری}
+
+\begin{warning}
+اگر $|L M^{-1} B|$ خیلی کوچک باشد، کنترل معادل بدشرط می‌شود.
+در این حالت $u_{eq}$ برابر 0.0 برگردانده می‌شود.
+\end{warning}
+
+\begin{lstlisting}[style=python, basicstyle=\ttfamily\tiny]
+if abs(L_Minv_B) < self.eq_threshold:
+    return 0.0
+\end{lstlisting}
+
+\subsection*{فرمول کنترل معادل}
+
+\begin{lstlisting}[style=python, basicstyle=\ttfamily\tiny]
+if getattr(C, "ndim", 1) == 2:
+    rhs = C @ q_dot + G
+else:
+    rhs = C + G
+Minv_rhs = np.linalg.solve(M_reg, rhs)
+term1 = float(self.L @ Minv_rhs)
+term2 = self.k1 * self.lam1 * q_dot[1] + self.k2 * self.lam2 * q_dot[2]
+u_eq = (term1 - term2) / L_Minv_B
+\end{lstlisting}
+
+\begin{example}
+\textbf{نکته مقاومتی:} اگر محاسبه ماتریس‌ها شکست بخورد یا بدشرط باشد،
+کنترل‌گر فقط از ترم سوئیچینگ استفاده می‌کند.
+\end{example}
+
+% ==============================================================================
+% PAGE 4: FULL CONTROL PIPELINE + DESIGN SUMMARY
+% ==============================================================================
+\newpage
+
+\section*{جریان کامل کنترل}
+
+\begin{center}
+\begin{tikzpicture}[node distance=1.4cm, scale=0.9, every node/.style={scale=0.9}]
+    \node[block, fill=primary!30] (state) {\textbf{حالت}\\$[x,\theta_1,\theta_2,\dot{x},\dot{\theta}_1,\dot{\theta}_2]$};
+    \node[process, below=of state] (sigma) {\textbf{سطح لغزش}\\$\sigma$};
+    \node[process, below=of sigma] (eq) {\textbf{کنترل معادل}\\$u_{eq}$};
+    \node[process, below=of eq] (robust) {\textbf{ترم مقاوم}\\$-K \, sat(\sigma/\epsilon) - k_d \sigma$};
+    \node[block, fill=secondary!30, below=of robust] (sum) {\textbf{جمع + اشباع}\\$u = u_{eq} + u_{robust}$};
+
+    \draw[arrow] (state) -- (sigma);
+    \draw[arrow] (sigma) -- (eq);
+    \draw[arrow] (eq) -- (robust);
+    \draw[arrow] (robust) -- (sum);
+\end{tikzpicture}
+\end{center}
+
+\subsection*{هسته محاسبه کنترل}
+
+\begin{lstlisting}[style=python, basicstyle=\ttfamily\tiny]
+sigma = self._compute_sliding_surface(state)
+u_eq = self._compute_equivalent_control(state)
+u_robust = -self.K * sat_sigma - self.kd * sigma
+u = u_eq + u_robust
+u_saturated = float(np.clip(u, -self.max_force, self.max_force))
+return ClassicalSMCOutput(u_saturated, (), history)
+\end{lstlisting}
+
+\fourkeypatterns
+{\textbf{طراحی سطح لغزش}: $\sigma$ رفتار همگرایی را تعریف می‌کند}
+{\textbf{پیش‌خور مبتنی بر مدل}: $u_{eq}$ دینامیک نامی را خنثی می‌کند}
+{\textbf{سوئیچینگ مقاوم}: لایه مرزی + هیسترزیس چترینگ را کم می‌کند}
+{\textbf{ایمنی + تله‌متری}: اشباع فرمان + ثبت تاریخچه}
+
+\episodexref{E030}{Controller Base \& Factory}{برای مشاهده نحوه ساخت ClassicalSMC از رجیستری کنترل‌گرها.}
+
+\end{document}
+

@@ -1,0 +1,63 @@
+% Reaching Phase Trajectory Illustration
+% TikZ diagram for Chapter 3 - Classical SMC
+
+\begin{tikzpicture}[scale=1.0,
+    trajectory/.style={thick, ->, decoration={markings, mark=at position 0.6 with {\arrow{>}}}, postaction={decorate}}]
+
+    % Axes
+    \draw[->, thick] (-0.5, 0) -- (5.5, 0) node[right] {$x$ (state)};
+    \draw[->, thick] (0, -0.5) -- (0, 4) node[above] {$\dot{x}$ (velocity)};
+
+    % Sliding line (s = cx + dot{x} = 0)
+    \draw[blue, very thick] (0, 3.5) -- (5, 0) node[pos=0.3, above, sloped] {$s(\vect{x}) = 0$};
+
+    % Regions
+    \node[red!70] at (1, 1) {$s < 0$};
+    \node[red!70] at (4, 3) {$s > 0$};
+
+    % Multiple trajectories reaching the line from different initial conditions
+    % Trajectory 1: From upper left (s > 0)
+    \draw[green!70!black, trajectory, very thick, samples=40, smooth, domain=0:1]
+        plot ({0.5 + 1.5*\x}, {3.5 - 2*\x});
+    \node[green!70!black] at (0.3, 3.8) {IC$_1$};
+
+    % Trajectory 2: From lower right (s < 0)
+    \draw[green!70!black, trajectory, very thick, samples=40, smooth, domain=0:1]
+        plot ({4.5 - 1.8*\x}, {0.3 + 1.2*\x});
+    \node[green!70!black] at (5, 0.2) {IC$_2$};
+
+    % Trajectory 3: From upper right (s > 0)
+    \draw[green!70!black, trajectory, very thick, samples=40, smooth, domain=0:1]
+        plot ({4.0 - 1*\x}, {3.0 - 1.8*\x});
+    \node[green!70!black] at (4.3, 3.3) {IC$_3$};
+
+    % Trajectory 4: From lower left (s < 0)
+    \draw[green!70!black, trajectory, very thick, samples=40, smooth, domain=0:1]
+        plot ({1.0 + 1.2*\x}, {0.5 + 0.8*\x});
+    \node[green!70!black] at (0.7, 0.3) {IC$_4$};
+
+    % Sliding mode motion on the line (after reaching)
+    \draw[purple, very thick, ->, decoration={markings, mark=at position 0.5 with {\arrow{>}}}, postaction={decorate}]
+        (2.5, 2) -- (3.5, 1.2);
+    \node[purple, align=center] at (2.2, 2.5) {\small Sliding\\Mode};
+
+    % Equilibrium point
+    \fill[black] (4, 0.5) circle (0.08) node[below right] {$\vect{x}^*$};
+
+    % Reaching condition annotation
+    \draw[<-, thick, red] (3, 2.5) -- (3.8, 3.5)
+        node[right, align=left] {\small Reaching Condition:\\$s \cdot \dot{s} < 0$};
+
+    % Time labels along a trajectory
+    \foreach \t/\x/\y in {0.2/0.8/3.1, 0.4/1.1/2.7, 0.6/1.4/2.3, 0.8/1.7/1.9} {
+        \fill[green!70!black] (\x, \y) circle (0.05);
+    }
+    \draw[<->, thick, gray] (0.8, 3.1) -- (1.7, 1.9);
+    \node[gray, align=center] at (0.5, 2.5) {\tiny $t_{\text{reach}}$};
+
+    % Control force direction indicators
+    \draw[->, thick, orange] (2, 2.8) -- (2.3, 2.3);
+    \draw[->, thick, orange] (3.8, 1.5) -- (3.5, 2.0);
+    \node[orange] at (2.5, 3.2) {\small $u$};
+
+\end{tikzpicture}

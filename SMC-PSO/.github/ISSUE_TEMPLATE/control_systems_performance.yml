@@ -1,0 +1,122 @@
+name: 🟡 Control Systems - Performance Issue
+description: Report performance problems in control systems (HIGH)
+title: "[PERFORMANCE] "
+labels: ["enhancement", "performance", "high", "control-systems"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 🟡 Control System Performance Issue
+        Use this template for transient response problems, steady-state errors, or robustness issues.
+        **Response Time**: < 8 hours
+
+  - type: dropdown
+    id: performance_type
+    attributes:
+      label: Performance Issue Type
+      description: Select the type of performance problem
+      options:
+        - Excessive Overshoot (>20%)
+        - Extended Settling Time
+        - Slow Rise Time
+        - Non-Zero Static Error
+        - Large Tracking Error
+        - Poor Disturbance Rejection
+        - High Parameter Sensitivity
+        - Poor Model Uncertainty Handling
+        - High Noise Sensitivity
+      default: 0
+    validations:
+      required: true
+
+  - type: dropdown
+    id: controller_type
+    attributes:
+      label: Controller Type
+      description: Which controller is experiencing performance issues?
+      options:
+        - Classical SMC
+        - Super-Twisting SMC
+        - Adaptive SMC
+        - Hybrid Adaptive STA-SMC
+        - Swing-up SMC
+        - MPC Controller
+        - Other
+      default: 0
+    validations:
+      required: true
+
+  - type: textarea
+    id: performance_metrics
+    attributes:
+      label: Performance Metrics
+      description: Provide measured performance metrics
+      placeholder: |
+        - Overshoot: X% (requirement: <20%)
+        - Settling time: X seconds (requirement: <Y seconds)
+        - Rise time: X seconds (requirement: <Y seconds)
+        - Steady-state error: X (requirement: <Y)
+        - RMS tracking error: X
+        - Disturbance rejection: X dB
+    validations:
+      required: true
+
+  - type: textarea
+    id: control_gains
+    attributes:
+      label: Current Control Gains
+      description: Provide the control gains being used
+      placeholder: |
+        K = [K1, K2, K3, K4, K5, K6] = [10.0, 5.0, 8.0, 3.0, 15.0, 2.0]
+        c = [c1, c2, c3, c4] = [1.0, 1.0, 1.0, 1.0]
+        Other parameters: ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction_steps
+    attributes:
+      label: Reproduction Steps
+      description: Detailed steps to reproduce the performance issue
+      placeholder: |
+        1. Configure controller with gains: ...
+        2. Run simulation with: python simulate.py --ctrl classical_smc --plot
+        3. Observe performance issue: ...
+        4. Measurements show: ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: requirements_vs_actual
+    attributes:
+      label: Requirements vs Actual Performance
+      description: Compare required vs actual performance
+      placeholder: |
+        | Metric | Requirement | Actual | Status |
+        |--------|-------------|---------|---------|
+        | Overshoot | <20% | 35% | ❌ FAIL |
+        | Settling Time | <5s | 8.2s | ❌ FAIL |
+        | Rise Time | <2s | 1.8s | ✅ PASS |
+        | Steady-State Error | <0.1 | 0.05 | ✅ PASS |
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: impact_assessment
+    attributes:
+      label: Impact Assessment
+      description: Check all that apply
+      options:
+        - label: Specification violations
+        - label: Significant performance degradation
+        - label: Customer requirements not met
+        - label: Integration test failures
+        - label: Affects other system components
+
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: Additional Context
+      description: Any additional information, plots, data, or context
+      placeholder: Add any other context about the performance issue here...

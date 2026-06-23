@@ -1,0 +1,206 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm,amsfonts}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{fancyhdr}
+
+% IMPORTANT: load hyperref before styling packages
+\usepackage[hypertexnames=false,colorlinks=true,linkcolor=blue,filecolor=magenta,urlcolor=blue,pdftitle={EP001 Physical System Description},pdfauthor={Double-Inverted Pendulum Learning Module}]{hyperref}
+
+\geometry{left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{EP001: Physical System Description}
+\fancyhead[R]{Learning Module}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{definition}{Definition}[section]
+
+\title{\textbf{EP001: Physical System Description}\\\textit{Double-Inverted Pendulum Control Theory}}
+\author{Double-Inverted Pendulum Learning Module}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+
+\subsection{Overview}
+The double inverted pendulum is a classic benchmark in nonlinear control.
+\begin{itemize}
+    \item It is unstable in open loop.
+    \item It has coupled rotational dynamics.
+    \item It has one actuator and two rotational states.
+\end{itemize}
+
+\subsection{System Characteristics}
+The plant is nonlinear and underactuated:
+\begin{enumerate}
+    \item Non-minimum phase behavior can appear near upright equilibrium.
+    \item Full state feedback improves achievable robustness margins.
+    \item Disturbances strongly affect transient response.
+\end{enumerate}
+
+\section{Physical System Description}
+
+\subsection{System Configuration}
+The model consists of a cart, two serial rigid links, and one control force.
+\begin{itemize}
+    \item Cart mass: $m_c$
+    \item Link 1 mass: $m_1$, length: $l_1$, angle: $\theta_1$
+    \item Link 2 mass: $m_2$, length: $l_2$, angle: $\theta_2$
+\end{itemize}
+
+\subsection{Physical Constraints}
+\begin{enumerate}
+    \item Cart travel: $x \in [x_{\min}, x_{\max}]$
+    \item Force bounds: $u \in [u_{\min},u_{\max}]$
+    \item Joint limits near safe mechanical stops if present
+\end{enumerate}
+
+\section{Mathematical Model}
+
+\subsection{State Vector Definition}
+State vector choice is:
+\begin{equation}
+    x = [q,\dot q]^T = [x,\theta_1,\theta_2,\dot x,\dot{\theta}_1,\dot{\theta}_2]^T.
+\end{equation}
+
+\subsection{Equations of Motion}
+A compact form is used:
+\begin{equation}
+    M(q)\ddot q + C(q,\dot q)\dot q + G(q) = B u + d.
+\end{equation}
+
+\begin{definition}
+The equation is valid under rigid-link and rigid-joint assumptions.
+\end{definition}
+
+\subsection{Inertia Matrix}
+The inertia matrix $M(q)$ is symmetric and positive definite.
+\begin{equation}
+    M(q)=\begin{bmatrix}
+    M_{11} & M_{12} & M_{13}\\
+    M_{12} & M_{22} & M_{23}\\
+    M_{13} & M_{23} & M_{33}
+    \end{bmatrix}.
+\end{equation}
+
+\subsection{Coriolis and Centrifugal Matrix}
+Coriolis terms are configuration and velocity dependent.
+\begin{equation}
+    C(q,\dot q)\dot q = \begin{bmatrix}c_1\\ c_2\\ c_3\end{bmatrix}.
+\end{equation}
+
+\section{Nonlinearity Analysis}
+
+\subsection{Configuration-Dependent Inertia}
+The inertia changes with configuration and couples all coordinates.
+\begin{enumerate}
+    \item Dependence on $\cos\theta_1$, $\cos\theta_2$, and $\cos(\theta_1-\theta_2)$
+    \item Determinant and condition number vary with $q$
+    \item Ill-conditioning near singular alignment may occur
+\end{enumerate}
+
+\subsection{Trigonometric Nonlinearity}
+\begin{theorem}
+Gravity and coupling create trigonometrical nonlinearities.
+\end{theorem}
+The dominant terms include $\sin\theta_i$ and $\cos\theta_i$.
+
+\section{System Parameters}
+
+\subsection{Nominal Parameter Values}
+\begin{table}[h]
+\centering
+\caption{Nominal DIP System Parameters}
+\label{tab:nominal_parameters}
+\begin{tabular}{@{}ll@{}}
+\toprule
+Parameter & Value \\
+\midrule
+$m_c$ & 1.0 kg \\
+$m_1$ & 0.5 kg \\
+$m_2$ & 0.3 kg \\
+$l_1$ & 0.4 m \\
+$l_2$ & 0.3 m \\
+$g$ & 9.81 m/s$^2$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Parameter Uncertainty}
+\begin{itemize}
+    \item Mass and friction values vary with payload.
+    \item Length tolerances affect effective lever arms.
+    \item Sensing noise biases derivative terms.
+\end{itemize}
+
+\section{Linearized Model}
+
+\subsection{Equilibrium Points}
+Equilibrium near upright configuration is commonly chosen:
+\begin{equation}
+    x_e = [0,0,0,0,0,0]^T,
+\end{equation}
+with other valid equilibria depending on control objective.
+
+\subsection{Linearized State-Space Representation}
+After small-angle approximation the local model is:
+\begin{equation}
+    \dot x = A x + B u + E w.
+\end{equation}
+\begin{itemize}
+    \item Stability of $A$ determines local behavior.
+    \item Controller gains depend on performance versus robustness trade-offs.
+\end{itemize}
+
+\section{Numerical Properties}
+
+\subsection{State Scaling}
+\begin{enumerate}
+    \item Angles are typically in radians.
+    \item Velocities are in rad/s.
+    \item Scaling improves optimization conditioning.
+\end{enumerate}
+
+\subsection{Time Scaling}
+\begin{enumerate}
+    
+    \item Choose step size based on highest mode frequency.
+    \item Ensure numerical integrator accuracy near impact events.
+    \item Use fixed-step simulation for reproducibility.
+\end{enumerate}
+
+\section{Summary and Key Takeaways}
+
+\subsection{System Overview}
+The double inverted pendulum is a stiff, coupled, underactuated plant.
+
+\subsection{Key Challenges}
+\begin{enumerate}
+    \item Nonlinearity dominates wide operating ranges.
+    \item Strong coupling changes control authority with configuration.
+    \item Unmodeled disturbances degrade near-boundary stability.
+\end{enumerate}
+
+\subsection{Control Implications}
+\begin{theorem}
+Control design requires balanced trade-offs between competing objectives.
+\end{theorem}
+\begin{itemize}
+    \item Linear designs simplify synthesis.
+    \item Sliding and adaptive methods improve robustness.
+    \item Constraint-aware tuning is mandatory in hardware loops.
+\end{itemize}
+
+\end{document}

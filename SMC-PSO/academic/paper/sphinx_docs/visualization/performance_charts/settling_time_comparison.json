@@ -1,0 +1,71 @@
+{
+  "type": "bar",
+  "data": {
+    "labels": [
+      "Classical Smc",
+      "Sta Smc",
+      "Adaptive Smc",
+      "Hybrid Adaptive Sta Smc"
+    ],
+    "datasets": [
+      {
+        "label": "Settling Time (seconds)",
+        "data": [
+          2.4154866803238435,
+          3.204079479915953,
+          2.6971060402630074,
+          3.78475999504051
+        ],
+        "backgroundColor": [
+          "rgba(75, 192, 192, 0.2)",
+          "rgba(255, 99, 132, 0.2)",
+          "rgba(54, 162, 235, 0.2)",
+          "rgba(255, 206, 86, 0.2)"
+        ],
+        "borderColor": [
+          "rgb(75, 192, 192)",
+          "rgb(255, 99, 132)",
+          "rgb(54, 162, 235)",
+          "rgb(255, 206, 86)"
+        ],
+        "borderWidth": 2,
+        "errorBars": {
+          "plus": [
+            0.08196900311225974,
+            0.14720163676753462,
+            0.10550996547613689,
+            0.16085145843073834
+          ],
+          "minus": [
+            0.08196900311225974,
+            0.14720163676753462,
+            0.10550996547613689,
+            0.16085145843073834
+          ]
+        }
+      }
+    ]
+  },
+  "options": {
+    "responsive": true,
+    "plugins": {
+      "title": {
+        "display": true,
+        "text": "Settling Time Comparison with 95% Confidence Intervals"
+      },
+      "legend": {
+        "display": true,
+        "position": "top"
+      }
+    },
+    "scales": {
+      "y": {
+        "beginAtZero": true,
+        "title": {
+          "display": true,
+          "text": "Settling Time (seconds)"
+        }
+      }
+    }
+  }
+}

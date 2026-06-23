@@ -1,0 +1,337 @@
+name: Documentation Quality Gates
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'docs/**'
+      - 'src/**/*.py'
+      - '.github/workflows/docs-quality.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/**'
+      - 'src/**/*.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
+
+jobs:
+  markdown-lint:
+    name: Markdown Linting
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run markdownlint
+        uses: DavidAnson/markdownlint-cli2-action@v15
+        with:
+          globs: 'docs/**/*.md'
+        continue-on-error: true
+
+      - name: Generate markdown lint summary
+        if: always()
+        run: |
+          echo "## 📝 Markdown Linting" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Linting rules applied to all documentation markdown files." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Files checked:** $(find docs -name '*.md' | wc -l)" >> $GITHUB_STEP_SUMMARY
+
+  spell-check:
+    name: Spell Checking
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install codespell
+        run: pip install codespell
+
+      - name: Run spell check
+        run: |
+          codespell docs/ \
+            --skip="docs/_build,docs/_static,*.pyc,*.json" \
+            --ignore-words-list="theSadeQ,dip,smc,pso,doubleintegrator,nd,ser" \
+            --count
+        continue-on-error: true
+
+      - name: Generate spell check summary
+        if: always()
+        run: |
+          echo "## 🔤 Spell Checking" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Spell checking completed for documentation files." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Run spell check again to count issues
+          SPELL_COUNT=$(codespell docs/ \
+            --skip="docs/_build,docs/_static,*.pyc,*.json" \
+            --ignore-words-list="theSadeQ,dip,smc,pso,doubleintegrator,nd,ser" \
+            --count 2>&1 | grep -oP '\d+(?= misspellings)' || echo "0")
+
+          echo "**Misspellings found:** $SPELL_COUNT" >> $GITHUB_STEP_SUMMARY
+
+  docstring-coverage:
+    name: Docstring Coverage
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install interrogate
+        run: pip install interrogate
+
+      - name: Check docstring coverage
+        id: docstring-check
+        run: |
+          # Generate badge and save results
+          interrogate src/ \
+            --ignore-init-method \
+            --ignore-init-module \
+            --ignore-magic \
+            --ignore-private \
+            --ignore-nested-functions \
+            --fail-under=95 \
+            --verbose 1 \
+            --generate-badge docs/_static/ \
+            | tee coverage_output.txt
+
+          # Extract coverage percentage
+          COVERAGE=$(grep -oP '\d+\.\d+(?=%)' coverage_output.txt | head -1 || echo "0")
+          echo "coverage=$COVERAGE" >> $GITHUB_OUTPUT
+
+      - name: Generate docstring coverage summary
+        if: always()
+        run: |
+          echo "## 📚 Docstring Coverage" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Coverage:** ${{ steps.docstring-check.outputs.coverage }}%" >> $GITHUB_STEP_SUMMARY
+          echo "**Target:** ≥95%" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if (( $(echo "${{ steps.docstring-check.outputs.coverage }} >= 95" | bc -l) )); then
+            echo "✅ Coverage meets target" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "⚠️ Coverage below target" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Upload coverage badge
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: docstring-coverage-badge
+          path: docs/_static/interrogate_badge.svg
+          retention-days: 30
+
+  link-validation:
+    name: Documentation Link Validation
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install pytest
+
+      - name: Run cross-reference validation
+        id: link-check
+        run: |
+          python scripts/documentation/analyze_cross_references.py
+          pytest tests/test_documentation/test_cross_references.py -v --tb=short
+
+      - name: Generate link validation summary
+        if: always()
+        run: |
+          echo "## 🔗 Link Validation" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ -f .test_artifacts/cross_references/statistics.json ]; then
+            python -c "
+import json
+with open('.test_artifacts/cross_references/statistics.json') as f:
+    stats = json.load(f)
+broken_count = stats['broken_links']
+total_links = stats['total_internal_links']
+broken_rate = stats['broken_link_rate'] * 100
+
+print(f'**Total internal links:** {total_links}')
+print(f'**Broken links:** {broken_count} ({broken_rate:.1f}%)')
+print('')
+if broken_count == 0:
+    print('✅ All links valid')
+elif broken_rate < 5:
+    print('⚠️ Minor link issues')
+else:
+    print('❌ Significant link issues')
+" >> $GITHUB_STEP_SUMMARY
+          fi
+
+  type-hint-coverage:
+    name: Type Hint Coverage
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install mypy
+        run: pip install mypy
+
+      - name: Check type hints
+        id: type-check
+        run: |
+          # Count files with type hints
+          TOTAL_PY=$(find src -name '*.py' | wc -l)
+          WITH_HINTS=$(grep -rl "from typing import\|: .*->" src --include="*.py" | wc -l || echo "0")
+
+          COVERAGE=$(python -c "print(f'{$WITH_HINTS/$TOTAL_PY*100:.1f}')")
+
+          echo "total=$TOTAL_PY" >> $GITHUB_OUTPUT
+          echo "with_hints=$WITH_HINTS" >> $GITHUB_OUTPUT
+          echo "coverage=$COVERAGE" >> $GITHUB_OUTPUT
+
+          # Enforce 95% coverage threshold
+          COVERAGE_INT=$(python -c "print(int(float('$COVERAGE')))")
+          if [ $COVERAGE_INT -lt 95 ]; then
+            echo "❌ Type hint coverage ($COVERAGE%) below 95% threshold"
+            exit 1
+          fi
+
+      - name: Generate type hint summary
+        if: always()
+        run: |
+          echo "## 🏷️ Type Hint Coverage" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Files with type hints:** ${{ steps.type-check.outputs.with_hints }} / ${{ steps.type-check.outputs.total }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Coverage:** ${{ steps.type-check.outputs.coverage }}%" >> $GITHUB_STEP_SUMMARY
+          echo "**Target:** ≥95%" >> $GITHUB_STEP_SUMMARY
+
+  quality-gate:
+    name: Quality Gate Enforcement
+    runs-on: ubuntu-latest
+    needs: [markdown-lint, spell-check, docstring-coverage, link-validation, type-hint-coverage]
+    if: always()
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Evaluate quality gates
+        id: quality-gate
+        run: |
+          echo "## 🚦 Quality Gate Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          PASS=0
+          TOTAL=5
+
+          # Check markdown lint (soft gate)
+          echo "### Gate Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Gate | Status | Notes |" >> $GITHUB_STEP_SUMMARY
+          echo "|------|--------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Markdown Linting | ⚠️ Advisory | Non-blocking |" >> $GITHUB_STEP_SUMMARY
+
+          # Spell check (soft gate)
+          echo "| Spell Checking | ⚠️ Advisory | Non-blocking |" >> $GITHUB_STEP_SUMMARY
+
+          # Docstring coverage (BLOCKING GATE - Phase 6.5)
+          echo "| Docstring Coverage | 🔴 **BLOCKING** | Required: ≥95% |" >> $GITHUB_STEP_SUMMARY
+
+          # Link validation (BLOCKING GATE - Phase 6.5)
+          echo "| Link Validation | 🔴 **BLOCKING** | Required: 0 broken |" >> $GITHUB_STEP_SUMMARY
+
+          # Type hints (BLOCKING GATE - Phase 6.5)
+          echo "| Type Hint Coverage | 🔴 **BLOCKING** | Required: ≥95% |" >> $GITHUB_STEP_SUMMARY
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Status:** 3 blocking gates, 2 advisory gates" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Phase 6.5: Critical quality gates are now enforced" >> $GITHUB_STEP_SUMMARY
+
+      - name: Create quality report
+        run: |
+          mkdir -p .test_artifacts/quality_gates
+
+          cat > .test_artifacts/quality_gates/quality_report.md << 'EOFQR'
+          # Documentation Quality Report
+
+          **Date:** $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+          **Commit:** ${{ github.sha }}
+          **Branch:** ${{ github.ref_name }}
+
+          ## Quality Gates (Phase 6.5 - Enforced)
+
+          Critical quality gates are now **BLOCKING** and will fail CI if not met.
+
+          ### Blocking Gates (MUST PASS)
+
+          1. **Docstring Coverage** - BLOCKING (Required: ≥95%)
+          2. **Link Validation** - BLOCKING (Required: 0 broken links)
+          3. **Type Hint Coverage** - BLOCKING (Required: ≥95%)
+
+          ### Advisory Gates (Non-Blocking)
+
+          1. **Markdown Linting** - Advisory
+          2. **Spell Checking** - Advisory
+
+          ### Requirements for Merging
+
+          ✅ Docstring coverage must be ≥95%
+          ✅ All internal documentation links must be valid
+          ✅ Type hint coverage must be ≥95%
+          ⚠️ Markdown linting and spell checking are recommended
+
+          ---
+
+          *Generated by Documentation Quality Gates workflow (Phase 6.5)*
+          EOFQR
+
+      - name: Upload quality report
+        uses: actions/upload-artifact@v4
+        with:
+          name: quality-gate-report
+          path: .test_artifacts/quality_gates/
+          retention-days: 30

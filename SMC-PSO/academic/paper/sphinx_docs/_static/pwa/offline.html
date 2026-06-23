@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline - DIP SMC Documentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #2c3e50;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .offline-container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 50px 40px;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .offline-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        h1 {
+            font-size: 32px;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+        }
+
+        .message {
+            font-size: 16px;
+            color: #34495e;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .available-content {
+            background: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 20px;
+            margin: 25px 0;
+            text-align: left;
+            border-radius: 4px;
+        }
+
+        .available-content h3 {
+            color: #2c3e50;
+            margin-bottom: 12px;
+            font-size: 18px;
+        }
+
+        .available-content ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .available-content li {
+            padding: 8px 0;
+            color: #555;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .available-content li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #2ecc71;
+            font-weight: bold;
+        }
+
+        .action-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 14px 32px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 20px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .tip {
+            margin-top: 30px;
+            padding: 15px;
+            background: #fff9e6;
+            border-left: 4px solid #f39c12;
+            border-radius: 4px;
+            text-align: left;
+        }
+
+        .tip strong {
+            color: #e67e22;
+        }
+
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            }
+
+            .offline-container {
+                background: #2d2d2d;
+                color: #e0e0e0;
+            }
+
+            h1 {
+                color: #ffffff;
+            }
+
+            .subtitle {
+                color: #b0b0b0;
+            }
+
+            .message {
+                color: #d0d0d0;
+            }
+
+            .available-content {
+                background: #3a3a3a;
+                border-left-color: #3498db;
+            }
+
+            .available-content h3 {
+                color: #ffffff;
+            }
+
+            .available-content li {
+                color: #c0c0c0;
+            }
+
+            .tip {
+                background: #3a3a2a;
+                border-left-color: #f39c12;
+            }
+
+            .tip strong {
+                color: #f39c12;
+            }
+        }
+
+        /* Responsive design */
+        @media (max-width: 600px) {
+            .offline-container {
+                padding: 30px 25px;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+
+            .subtitle {
+                font-size: 16px;
+            }
+
+            .offline-icon {
+                font-size: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="offline-container">
+        <div class="offline-icon">📡</div>
+        <h1>You're Offline</h1>
+        <p class="subtitle">Don't worry, some content is still available!</p>
+
+        <div class="message">
+            <p>
+                This page requires an internet connection, but we've cached the most important
+                documentation for offline access. Check out what's available below.
+            </p>
+        </div>
+
+        <div class="available-content">
+            <h3>Available Offline:</h3>
+            <ul>
+                <li>Getting Started Guide</li>
+                <li>SMC Theory & Mathematical Foundations</li>
+                <li>Tutorial 01: First Simulation</li>
+                <li>Interactive Features (Live Python, Plotly, MathViz)</li>
+                <li>API Reference Documentation</li>
+                <li>Controller Implementation Guides</li>
+            </ul>
+        </div>
+
+        <div class="tip">
+            <strong>💡 Tip:</strong> Previously visited pages are automatically cached for offline access.
+            Try navigating back to pages you've already viewed!
+        </div>
+
+        <a href="/index.html" class="action-button">← Back to Home</a>
+
+        <div style="margin-top: 30px; font-size: 14px; color: #95a5a6;">
+            <p>Once you're back online, this page will automatically refresh.</p>
+        </div>
+    </div>
+
+    <script>
+        // Auto-refresh when connection is restored
+        window.addEventListener('online', () => {
+            console.log('Connection restored! Reloading...');
+            setTimeout(() => {
+                location.reload();
+            }, 500);
+        });
+
+        // Check connection status
+        if (navigator.onLine) {
+            console.log('Online status detected, but page failed to load. Retrying...');
+            setTimeout(() => {
+                location.reload();
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

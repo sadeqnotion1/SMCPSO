@@ -1,0 +1,150 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CHAPTER 5: Adaptive SMC Algorithms
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{algorithm}[H]
+\caption{Adaptive SMC with Dead-Zone Adaptation}
+\label{alg:adaptive_smc_control}
+\KwIn{State $\vect{x} = [x, \theta_1, \theta_2, \dot{x}, \dot{\theta}_1, \dot{\theta}_2]^T$}
+\KwIn{Gains $k_1, k_2, \lambda_1, \lambda_2, \gamma > 0$}
+\KwIn{Adaptive state $(K_{\text{prev}}, u_{\text{prev}}, t_{\text{sliding}})$ from previous step}
+\KwIn{Parameters: $K_{\min}, K_{\max}, K_{\text{init}}, \alpha, \epsilon, \delta_{\text{dz}}$}
+\KwIn{Leak rate $\mu \geq 0$, rate limit $\dot{K}_{\max}$, timestep $\Delta t$}
+\KwOut{Control $u$, updated state $(K, u, t_{\text{sliding}})$, history}
+\BlankLine
+\tcp{Compute sliding surface}
+$\sigma \leftarrow k_1(\dot{\theta}_1 + \lambda_1 \theta_1) + k_2(\dot{\theta}_2 + \lambda_2 \theta_2)$\;
+\BlankLine
+\tcp{Switching function (tanh or linear saturation)}
+$s_{\text{sw}} \leftarrow \sat(\sigma / \epsilon)$ \tcp*{Algorithm 3.3}
+\BlankLine
+\tcp{Switching control with current adaptive gain}
+$u_{\text{sw}} \leftarrow -K_{\text{prev}} \cdot s_{\text{sw}}$\;
+\BlankLine
+\tcp{Proportional damping term}
+$u_{\text{total}} \leftarrow u_{\text{sw}} - \alpha \sigma$\;
+\BlankLine
+\tcp{Saturation}
+$u \leftarrow \text{clip}(u_{\text{total}}, -u_{\max}, u_{\max})$\;
+\BlankLine
+\tcp{Update sliding mode time accumulator}
+\eIf{$|\sigma| \leq \epsilon$}{
+    $t_{\text{sliding}}^+ \leftarrow t_{\text{sliding}} + \Delta t$
+}{
+    $t_{\text{sliding}}^+ \leftarrow 0$
+}
+\BlankLine
+\tcp{Adaptive law with dead-zone (prevent wind-up)}
+\eIf{$|\sigma| \leq \delta_{\text{dz}}$}{
+    $\dot{K} \leftarrow 0$ \tcp*{Inside dead zone: freeze adaptation}
+}{
+    $\text{growth} \leftarrow \gamma |\sigma|$ \tcp*{Proportional to error}
+    $\text{leak} \leftarrow \mu (K_{\text{prev}} - K_{\text{init}})$ \tcp*{Pull to nominal}
+    $\dot{K} \leftarrow \text{growth} - \text{leak}$
+}
+\BlankLine
+\tcp{Rate limiting (prevent sudden jumps)}
+$\dot{K} \leftarrow \text{clip}(\dot{K}, -\dot{K}_{\max}, \dot{K}_{\max})$\;
+\BlankLine
+\tcp{Integration with envelope constraints}
+$K \leftarrow K_{\text{prev}} + \dot{K} \Delta t$\;
+$K \leftarrow \text{clip}(K, K_{\min}, K_{\max})$\;
+\BlankLine
+\tcp{Telemetry}
+history['K'].append($K$)\;
+history['sigma'].append($\sigma$)\;
+history['u\_sw'].append($u_{\text{sw}}$)\;
+history['dK'].append($\dot{K}$)\;
+history['time\_in\_sliding'].append($t_{\text{sliding}}^+$)\;
+\BlankLine
+\Return{$(u, (K, u, t_{\text{sliding}}^+), \text{history})$}
+\end{algorithm}
+
+\textbf{Complexity}: $O(1)$ time, $O(1)$ space for controller state. History accumulation is $O(T)$ where $T$ = number of timesteps.
+
+\vspace{1em}
+
+\begin{algorithm}[H]
+\caption{Gradient-Based Adaptation Law (Without Control Rate)}
+\label{alg:adaptive_law_gradient}
+\KwIn{Sliding surface $\sigma$, current gain $K$, parameters $\gamma, \mu, K_{\text{init}}, \delta_{\text{dz}}$}
+\KwOut{Gain rate of change $\dot{K}$}
+\BlankLine
+\tcp{Dead-zone check (prevents adaptation during chattering)}
+\If{$|\sigma| \leq \delta_{\text{dz}}$}{
+    \Return{$0$} \tcp*{Freeze gain inside dead zone}
+}
+\BlankLine
+\tcp{Proportional adaptation (increases with error magnitude)}
+$\text{growth} \leftarrow \gamma |\sigma|$\;
+\BlankLine
+\tcp{Leak term (prevents unbounded gain growth)}
+$\text{leak} \leftarrow \mu (K - K_{\text{init}})$\;
+\BlankLine
+\tcp{Combined adaptation law (no control-rate term)}
+$\dot{K} \leftarrow \text{growth} - \text{leak}$\;
+\BlankLine
+\Return{$\dot{K}$}
+\end{algorithm}
+
+\textbf{Complexity}: $O(1)$ time, $O(1)$ space.
+
+\textbf{Note}: Earlier implementations included a control-rate term $\propto |\Delta u|$, but this lacks theoretical justification and can destabilize adaptation. Roy et al. (2020) prove boundedness using only $|\sigma|$.
+
+\vspace{1em}
+
+\begin{algorithm}[H]
+\caption{Rate Limiting and Envelope Saturation}
+\label{alg:adaptive_rate_limiting}
+\KwIn{Raw gain update $\dot{K}_{\text{raw}}$, previous gain $K_{\text{prev}}$}
+\KwIn{Limits: $\dot{K}_{\max}, K_{\min}, K_{\max}$, timestep $\Delta t$}
+\KwOut{Bounded gain $K^+$}
+\BlankLine
+\tcp{Limit rate of change (prevent sudden jumps)}
+$\dot{K} \leftarrow \text{clip}(\dot{K}_{\text{raw}}, -\dot{K}_{\max}, \dot{K}_{\max})$\;
+\BlankLine
+\tcp{Forward Euler integration}
+$K_{\text{new}} \leftarrow K_{\text{prev}} + \dot{K} \Delta t$\;
+\BlankLine
+\tcp{Envelope saturation (maintain $K \in [K_{\min}, K_{\max}]$)}
+$K^+ \leftarrow \text{clip}(K_{\text{new}}, K_{\min}, K_{\max})$\;
+\BlankLine
+\Return{$K^+$}
+\end{algorithm}
+
+\textbf{Complexity}: $O(1)$ time, $O(1)$ space.
+
+\vspace{1em}
+
+\begin{algorithm}[H]
+\caption{Adaptive SMC Full Control Loop}
+\label{alg:adaptive_smc_full_loop}
+\KwIn{Initial state $\vect{x}_0$, simulation time $T$, timestep $\Delta t$}
+\KwOut{Trajectory $\{\vect{x}(t), u(t), K(t)\}_{t=0}^T$, convergence metrics}
+\BlankLine
+\tcp{Initialize controller state}
+$K \leftarrow K_{\text{init}}$, $t_{\text{sliding}} \leftarrow 0$, $u_{\text{prev}} \leftarrow 0$\;
+$\vect{x} \leftarrow \vect{x}_0$\;
+\BlankLine
+\tcp{Simulation loop}
+\For{$t \leftarrow 0$ \KwTo $T$ \KwBy $\Delta t$}{
+    \tcp{Compute adaptive control (Algorithm 5.1)}
+    $(u, (K, u, t_{\text{sliding}}), \text{hist}) \leftarrow \text{AdaptiveSMC}(\vect{x}, (K, u, t_{\text{sliding}}))$\;
+    \BlankLine
+    \tcp{Apply control to dynamics (Runge-Kutta 4)}
+    $\vect{x} \leftarrow \text{RK4}(\vect{x}, u, \Delta t)$ \tcp*{Chapter 2, Algorithm 2.2}
+    \BlankLine
+    \tcp{Record telemetry}
+    trajectory.append($(\vect{x}, u, K, t)$)\;
+}
+\BlankLine
+\tcp{Convergence analysis}
+$t_{\text{reach}} \leftarrow \text{ComputeReachingTime}(\text{trajectory})$\;
+$J_{\text{ISE}} \leftarrow \int_0^T ||\vect{x}(t)||^2 dt$\;
+\BlankLine
+\Return{(trajectory, $t_{\text{reach}}$, $J_{\text{ISE}}$)}
+\end{algorithm}
+
+\textbf{Complexity}: $O(T/\Delta t)$ time for simulation loop, $O(T/\Delta t)$ space for trajectory storage.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

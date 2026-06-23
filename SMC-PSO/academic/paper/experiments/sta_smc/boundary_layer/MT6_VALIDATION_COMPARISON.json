@@ -1,0 +1,120 @@
+{
+  "fixed_baseline": {
+    "params": {
+      "epsilon": 0.02,
+      "alpha": 0.0
+    },
+    "results": {
+      "epsilon_min": 0.02,
+      "alpha": 0.0,
+      "chattering_freq": 0.00019958725696196544,
+      "chattering_zero": 0.31299999999999994,
+      "chattering_legacy": 31.371721971022943,
+      "settling_time": 10.0,
+      "overshoot": 6.140058294152912,
+      "control_energy": 8625.668396244164,
+      "rms_control": 26.29699001003863
+    },
+    "stats": {
+      "chattering_freq": {
+        "mean": 0.00019958725696196544,
+        "std": 7.669687714878943e-05,
+        "ci95": [
+          0.0001845546690408027,
+          0.00021461984488312818
+        ]
+      },
+      "chattering_zero": {
+        "mean": 0.31299999999999994,
+        "std": 0.18420369160253006
+      },
+      "chattering_legacy": {
+        "mean": 31.371721971022943,
+        "std": 7.335823648064252
+      }
+    }
+  },
+  "set_a_corrected": {
+    "params": {
+      "epsilon_min": 0.0135,
+      "alpha": 0.171
+    },
+    "results": {
+      "epsilon_min": 0.0135,
+      "alpha": 0.171,
+      "chattering_freq": 0.00020221860947514523,
+      "chattering_zero": 0.3109999999999999,
+      "chattering_legacy": 31.25964745535855,
+      "settling_time": 10.0,
+      "overshoot": 6.120024422898201,
+      "control_energy": 8630.954182468295,
+      "rms_control": 26.466258084855923
+    },
+    "stats": {
+      "chattering_freq": {
+        "mean": 0.00020221860947514523,
+        "std": 7.75025149954973e-05,
+        "ci95": [
+          0.00018702811653602776,
+          0.0002174091024142627
+        ]
+      },
+      "chattering_zero": {
+        "mean": 0.3109999999999999,
+        "std": 0.17826665420094695
+      },
+      "chattering_legacy": {
+        "mean": 31.25964745535855,
+        "std": 7.515899223397699
+      }
+    },
+    "reduction_pct": -1.318397052614053
+  },
+  "set_b_complete": {
+    "params": {
+      "epsilon_min": 0.0025,
+      "alpha": 1.21
+    },
+    "results": {
+      "epsilon_min": 0.0025,
+      "alpha": 1.21,
+      "chattering_freq": 0.00019230076775976504,
+      "chattering_zero": 0.30699999999999994,
+      "chattering_legacy": 31.179199430541516,
+      "settling_time": 10.0,
+      "overshoot": 6.015124486145805,
+      "control_energy": 8500.239278402958,
+      "rms_control": 25.97292148650057
+    },
+    "stats": {
+      "chattering_freq": {
+        "mean": 0.00019230076775976504,
+        "std": 8.681689486310235e-05,
+        "ci95": [
+          0.00017528465636659698,
+          0.0002093168791529331
+        ]
+      },
+      "chattering_zero": {
+        "mean": 0.30699999999999994,
+        "std": 0.18179933993279512
+      },
+      "chattering_legacy": {
+        "mean": 31.179199430541516,
+        "std": 7.873145754245511
+      }
+    },
+    "reduction_pct": 3.6507787687011324
+  },
+  "gains_used": [
+    5.0,
+    5.0,
+    5.0,
+    0.5,
+    0.5,
+    0.5
+  ],
+  "n_runs": 100,
+  "seed": 42,
+  "notes": "Uses frequency-domain chattering metric (unbiased) with cutoff=20Hz"
+}

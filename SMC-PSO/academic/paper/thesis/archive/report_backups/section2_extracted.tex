@@ -1,0 +1,591 @@
+\chapter{Double-Inverted Pendulum Dynamics}
+
+\textbf{Understanding the Physics and Mathematics of the DIP System}
+
+This guide derives the mathematical model of the double-inverted pendulum from first principles. You'll learn how Lagrangian mechanics produces the equations of motion, when linearization is valid, and why the system is controllable despite underactuation.
+
+
+
+\section{Table of Contents}
+\label{section:table-of-contents}
+
+\begin{itemize}
+\item [System Overview](\#system-overview)
+\item [Lagrangian Derivation](\#lagrangian-derivation)
+\item [Equations of Motion](\#equations-of-motion)
+\item [Linearization for Control](\#linearization-for-control)
+\item [Controllability Analysis](\#controllability-analysis)
+\end{itemize}
+
+
+
+\section{System Overview}
+\label{section:system-overview}
+
+\subsection{Physical Description}
+\label{subsection:physical-description}
+
+The double-inverted pendulum (DIP) consists of:
+\begin{itemize}
+\item \textbf{Cart} (mass \texttt{m₀}): Moves horizontally on track
+\item \textbf{First Pendulum} (mass \texttt{m₁}, length \texttt{l₁}): Hinged to cart
+\item \textbf{Second Pendulum} (mass \texttt{m₂}, length \texttt{l₂}): Hinged to tip of first pendulum
+\end{itemize}
+
+\textbf{Control Objective}: Balance both pendulums upright (\texttt{θ₁ = θ₂ = 0}) using horizontal cart force \texttt{u}.
+
+\textbf{Physical System Diagram}:
+
+\begin{lstlisting}[language=mermaid]
+graph TD
+    subgraph "Double-Inverted Pendulum System"
+        CART["Cart (m₀)<br/>Position: x"] -->|Hinge| P1["First Pendulum (m₁, l₁)<br/>Angle: θ₁ from vertical"]
+        P1 -->|Hinge| P2["Second Pendulum (m₂, l₂)<br/>Angle: θ₂ from vertical"]
+
+        FORCE["Control Force u<br/>(Horizontal)"] -->|Applied to| CART
+
+        TRACK["Frictionless Track"] -.->|Constrained| CART
+    end
+
+    style CART fill:\#ccccff
+    style P1 fill:\#ffcccc
+    style P2 fill:\#ccffcc
+    style FORCE fill:\#ffffcc
+\end{lstlisting}
+
+\textbf{System Components}:
+\begin{itemize}
+\item 🔵 \textbf{Cart}: Movable platform (1 DOF: position x)
+\item 🔴 \textbf{Pendulum 1}: First link (1 DOF: angle θ₁)
+\item 🟢 \textbf{Pendulum 2}: Second link (1 DOF: angle θ₂)
+\item 🟡 \textbf{Control}: Horizontal force u (single actuator)
+\end{itemize}
+
+\subsection{State Variables}
+\label{subsection:state-variables}
+
+\textbf{Generalized Coordinates} (3 DOF):
+\begin{verbatim}
+q = [x, θ₁, θ₂]ᵀ
+\end{verbatim}yaml
+
+Where:
+\begin{itemize}
+\item \texttt{x}: Cart position (m)
+\item \texttt{θ₁}: First pendulum angle from vertical (rad, 0 = upright)
+\item \texttt{θ₂}: Second pendulum angle from vertical (rad, 0 = upright)
+\end{itemize}
+
+\textbf{Full State Vector} (6 dimensions):
+\begin{verbatim}
+state = [x, ẋ, θ₁, θ̇₁, θ₂, θ̇₂]ᵀ
+\end{verbatim}
+
+\textbf{Control Input}:
+\begin{verbatim}
+u = horizontal force on cart (N)
+\end{verbatim}
+
+\textbf{State-Space Representation}:
+
+\begin{lstlisting}[language=mermaid]
+flowchart LR
+    subgraph STATE["State Vector (6D)"]
+        direction TB
+        X["x<br/>(position)"]
+        DX["ẋ<br/>(velocity)"]
+        T1["θ₁<br/>(angle 1)"]
+        DT1["θ̇₁<br/>(angular vel 1)"]
+        T2["θ₂<br/>(angle 2)"]
+        DT2["θ̇₂<br/>(angular vel 2)"]
+    end
+
+    CONTROL["u<br/>(force)"] --> DYNAMICS["DIP Dynamics<br/>M(q)q̈ + C(q,q̇)q̇ + G(q) = Qu"]
+    STATE --> DYNAMICS
+    DYNAMICS --> NEXT["Next State<br/>(Integration)"]
+    NEXT --> STATE
+
+    style CONTROL fill:\#ffffcc
+    style DYNAMICS fill:\#ffcccc
+    style STATE fill:\#ccffcc
+\end{lstlisting}
+
+\textbf{Dimensions}:
+\begin{itemize}
+\item \textbf{State space}: 6D (position + velocity for 3 coordinates)
+\item \textbf{Control space}: 1D (horizontal force only)
+\item \textbf{Underactuated}: 6 states, 1 control → dynamic coupling essential
+\end{itemize}
+
+\subsection{Why This System is Challenging}
+\label{subsection:why-this-system-is-challenging}
+
+\textbf{Underactuated}: 3 DOF, 1 control input
+\begin{itemize}
+\item Cannot independently control all coordinates
+\item Must use dynamic coupling
+\end{itemize}
+
+\textbf{Unstable Equilibrium}: Upright position
+\begin{itemize}
+\item Small perturbations → pendulums fall
+\item Requires active stabilization
+\end{itemize}
+
+\textbf{Nonlinear Dynamics}: Trigonometric functions
+\begin{itemize}
+\item Linear control design requires approximations
+\item Full dynamics needed for large angles
+\end{itemize}
+
+\textbf{Coupled System}: Motion of one affects others
+\begin{itemize}
+\item Cart motion affects both pendulums
+\item Second pendulum motion affects first
+\end{itemize}
+
+
+
+\section{Lagrangian Derivation}
+\label{section:lagrangian-derivation}
+
+\subsection{Why Lagrangian Mechanics?}
+\label{subsection:why-lagrangian-mechanics}
+
+\textbf{Newton's Laws}: Force-based approach
+\begin{itemize}
+\item Require constraint forces (reaction forces at joints)
+\item Complex for multi-body systems
+\end{itemize}
+
+\textbf{Lagrangian Mechanics}: Energy-based approach
+\begin{itemize}
+\item Automatically handles constraints
+\item Natural for deriving equations of motion
+\item Uses \texttt{L = T - V} (kinetic - potential energy)
+\end{itemize}
+
+\textbf{Lagrangian Derivation Process}:
+
+\begin{lstlisting}[language=mermaid]
+flowchart TD
+    START["System Description<br/>(Masses, lengths, constraints)"] --> KE["Compute Kinetic Energy T<br/>½m₀ẋ² + ½m₁(ẋ₁²+ż₁²) + ½m₂(ẋ₂²+ż₂²)"]
+    KE --> PE["Compute Potential Energy V<br/>m₁gl₁cos(θ₁) + m₂g[l₁cos(θ₁)+l₂cos(θ₂)]"]
+
+    PE --> LAG["Form Lagrangian<br/>L = T - V"]
+
+    LAG --> EL["Apply Euler-Lagrange<br/>d/dt(∂L/∂q̇ᵢ) - ∂L/∂qᵢ = Qᵢ"]
+
+    EL --> EOM["Equations of Motion<br/>M(q)q̈ + C(q,q̇)q̇ + G(q) = Qu"]
+
+    style START fill:\#ccccff
+    style LAG fill:\#ffffcc
+    style EOM fill:\#ccffcc
+\end{lstlisting}
+
+\textbf{Advantages}:
+\begin{itemize}
+\item 🔵 \textbf{Systematic}: No need to derive constraint forces
+\item 🟡 \textbf{Lagrangian} L = T - V: Single scalar function
+\item 🟢 \textbf{Result}: Configuration-dependent dynamics M(q)
+\end{itemize}
+
+\subsection{Kinetic Energy}
+\label{subsection:kinetic-energy}
+
+\textbf{Cart}:
+\begin{verbatim}
+T₀ = ½m₀ẋ²
+\end{verbatim}
+
+\textbf{First Pendulum} (center of mass at \texttt{l₁/2}):
+
+Position of COM:
+\begin{verbatim}
+x₁ = x + (l₁/2)sin(θ₁)
+z₁ = (l₁/2)cos(θ₁)
+\end{verbatim}yaml
+
+Velocity:
+\begin{verbatim}
+ẋ₁ = ẋ + (l₁/2)θ̇₁cos(θ₁)
+ż₁ = -(l₁/2)θ̇₁sin(θ₁)
+\end{verbatim}
+
+Kinetic energy:
+\begin{verbatim}
+T₁ = ½m₁(ẋ₁² + ż₁²) + ½I₁θ̇₁²
+   = ½m₁[ẋ² + (l₁/2)²θ̇₁² + l₁ẋθ̇₁cos(θ₁)] + ½I₁θ̇₁²
+\end{verbatim}yaml
+
+Where \texttt{I₁ = (1/3)m₁l₁²} (inertia of rod about end)
+
+\textbf{Second Pendulum} (center of mass at \texttt{l₁ + l₂/2} from cart):
+
+Position:
+\begin{verbatim}
+x₂ = x + l₁sin(θ₁) + (l₂/2)sin(θ₂)
+z₂ = l₁cos(θ₁) + (l₂/2)cos(θ₂)
+\end{verbatim}
+
+Velocity (chain rule):
+\begin{verbatim}
+ẋ₂ = ẋ + l₁θ̇₁cos(θ₁) + (l₂/2)θ̇₂cos(θ₂)
+ż₂ = -l₁θ̇₁sin(θ₁) - (l₂/2)θ̇₂sin(θ₂)
+\end{verbatim}
+
+Kinetic energy:
+\begin{verbatim}
+T₂ = ½m₂(ẋ₂² + ż₂²) + ½I₂θ̇₂²
+\end{verbatim}
+
+\textbf{Total Kinetic Energy}:
+\begin{verbatim}
+T = T₀ + T₁ + T₂
+\end{verbatim}
+
+\subsection{Potential Energy}
+\label{subsection:potential-energy}
+
+Choose zero at cart level:
+
+\textbf{First Pendulum}:
+\begin{verbatim}
+V₁ = m₁g(l₁/2)cos(θ₁)
+\end{verbatim}
+
+\textbf{Second Pendulum}:
+\begin{verbatim}
+V₂ = m₂g[l₁cos(θ₁) + (l₂/2)cos(θ₂)]
+\end{verbatim}
+
+\textbf{Total Potential Energy}:
+\begin{verbatim}
+V = V₁ + V₂
+  = (m₁l₁/2 + m₂l₁)g·cos(θ₁) + (m₂l₂/2)g·cos(θ₂)
+\end{verbatim}
+
+\subsection{Lagrangian}
+\label{subsection:lagrangian}
+
+\begin{verbatim}
+L = T - V
+  = (kinetic energy) - (potential energy)
+\end{verbatim}
+
+After substitution and simplification:
+\begin{verbatim}
+L = ½(m₀ + m₁ + m₂)ẋ²
+  + ½(I₁ + m₁l₁²/4 + m₂l₁²)θ̇₁²
+  + ½(I₂ + m₂l₂²/4)θ̇₂²
+  + (m₁l₁/2 + m₂l₁)ẋθ̇₁cos(θ₁)
+  + (m₂l₂/2)ẋθ̇₂cos(θ₂)
+  + (m₂l₁l₂/2)θ̇₁θ̇₂cos(θ₁ - θ₂)
+  - (m₁l₁/2 + m₂l₁)g·cos(θ₁)
+  - (m₂l₂/2)g·cos(θ₂)
+\end{verbatim}
+
+\textbf{Note}: This is a complex expression due to coupling terms!
+
+
+
+\section{Equations of Motion}
+\label{section:equations-of-motion}
+
+\subsection{Euler-Lagrange Equations}
+\label{subsection:euler-lagrange-equations}
+
+For each generalized coordinate \texttt{qᵢ}:
+\begin{verbatim}
+d/dt(∂L/∂q̇ᵢ) - ∂L/∂qᵢ = Qᵢ
+\end{verbatim}
+
+Where \texttt{Qᵢ} are generalized forces.
+
+\textbf{For DIP}:
+\begin{itemize}
+\item \texttt{q₁ = x}: Generalized force = \texttt{u} (cart force)
+\item \texttt{q₂ = θ₁}: Generalized force = \texttt{0} (no direct torque)
+\item \texttt{q₃ = θ₂}: Generalized force = \texttt{0} (no direct torque)
+\end{itemize}
+
+\subsection{Matrix Form}
+\label{subsection:matrix-form}
+
+After applying Euler-Lagrange and simplifying:
+
+\begin{verbatim}
+M(q)q̈ + C(q, q̇)q̇ + G(q) = Qu
+\end{verbatim}yaml
+
+Where:
+\begin{itemize}
+\item \texttt{M(q)}: \textbf{Inertia matrix} (3×3, configuration-dependent)
+\item \texttt{C(q, q̇)}: \textbf{Coriolis/centrifugal matrix} (3×3)
+\item \texttt{G(q)}: \textbf{Gravitational vector} (3×1)
+\item \texttt{Q}: \textbf{Input matrix} (3×1)
+\item \texttt{u}: \textbf{Control force} (scalar)
+\end{itemize}
+
+\textbf{Inertia Matrix} (simplified):
+\begin{verbatim}
+M = [m_total           m_c1·cos(θ₁)      m_c2·cos(θ₂)    ]
+    [m_c1·cos(θ₁)      I_eff1            m_12·cos(θ₁-θ₂)]
+    [m_c2·cos(θ₂)      m_12·cos(θ₁-θ₂)   I_eff2          ]
+\end{verbatim}
+
+\textbf{Gravitational Vector}:
+\begin{verbatim}
+G = [    0                            ]
+    [(m₁l₁/2 + m₂l₁)g·sin(θ₁)        ]
+    [(m₂l₂/2)g·sin(θ₂)                ]
+\end{verbatim}
+
+\textbf{Input Matrix}:
+\begin{verbatim}
+Q = [1, 0, 0]ᵀ
+\end{verbatim}
+
+\subsection{Properties of the Dynamics}
+\label{subsection:properties-of-the-dynamics}
+
+\textbf{1. M(q) is Symmetric and Positive Definite}
+\begin{itemize}
+\item Always invertible (except at singularities)
+\item Energy considerations guarantee this
+\end{itemize}
+
+\textbf{2. Configuration-Dependent Inertia}
+\begin{itemize}
+\item \texttt{M} depends on \texttt{θ₁, θ₂} (not constant!)
+\item Coupling changes with pendulum angles
+\end{itemize}
+
+\textbf{3. Coriolis Matrix is Skew-Symmetric}
+\begin{itemize}
+\item \texttt{Ṁ - 2C} is skew-symmetric
+\item Important for energy-based control
+\end{itemize}
+
+
+
+\section{Linearization for Control}
+\label{section:linearization-for-control}
+
+\subsection{Small Angle Approximation}
+\label{subsection:small-angle-approximation}
+
+Near upright position (\texttt{θ₁ ≈ 0, θ₂ ≈ 0}):
+
+\textbf{Trigonometric Approximations}:
+\begin{verbatim}
+sin(θ) ≈ θ
+cos(θ) ≈ 1
+sin(θ)cos(θ) ≈ θ
+\end{verbatim}
+
+\textbf{Validity}:
+\begin{itemize}
+\item |θ| < 0.2 rad (≈ 11°): Error < 2\%
+\item |θ| < 0.3 rad (≈ 17°): Error < 5\%
+\item |θ| > 0.5 rad (≈ 29°): Approximation breaks down
+\end{itemize}
+
+\subsection{Simplified Dynamics}
+\label{subsection:simplified-dynamics}
+
+\textbf{Assumptions}:
+\begin{enumerate}
+\item Small angles: \texttt{θ₁, θ₂ ≪ 1}
+\item Small velocities: \texttt{θ̇₁, θ̇₂ ≪ 1}
+\item Neglect products: \texttt{θᵢθⱼ ≈ 0}
+\end{enumerate}
+
+\textbf{Result}: Linearized equations
+\begin{verbatim}
+M_lin·q̈ + G_lin·q = Q·u
+\end{verbatim}yaml
+
+Where:
+\begin{itemize}
+\item \texttt{M_lin}: Constant inertia matrix
+\item \texttt{G_lin}: Constant gravitational matrix (no sin/cos)
+\end{itemize}
+
+\textbf{State-Space Form}:
+\begin{verbatim}
+ẋ = Ax + Bu
+
+A = [0   I  ]    B = [  0      ]
+    [M⁻¹G 0]        [M⁻¹Q    ]
+\end{verbatim}
+
+\textbf{Control Design Benefits}:
+\begin{itemize}
+\item Linear system → linear control methods (LQR, pole placement)
+\item Constant matrices → easier analysis
+\item Superposition applies → simple design
+\end{itemize}
+
+\subsection{Limitations of Linearization}
+\label{subsection:limitations-of-linearization}
+
+\textbf{Invalid for}:
+\begin{enumerate}
+\item \textbf{Large angles}: Swing-up control (θ > 90°)
+\item \textbf{Fast motion}: Large θ̇ violates small velocity assumption
+\item \textbf{Extreme conditions}: Actuator saturation, disturbances
+\end{enumerate}
+
+\textbf{When to Use Full Nonlinear}:
+\begin{itemize}
+\item Final validation
+\item Hardware testing
+\item Large disturbance scenarios
+\item Research publications
+\end{itemize}
+
+
+
+\section{Controllability Analysis}
+\label{section:controllability-analysis}
+
+\subsection{Controllability Matrix}
+\label{subsection:controllability-matrix}
+
+\textbf{Definition}: System is controllable if we can reach any state from any initial state.
+
+\textbf{Test}: Controllability matrix has full rank:
+\begin{verbatim}
+C = [B  AB  A²B  ...  A⁵B]
+\end{verbatim}bash
+
+For 6-state system, need rank(C) = 6.
+
+\subsection{DIP Controllability}
+\label{subsection:dip-controllability}
+
+\textbf{Result}: DIP is controllable (rank = 6) despite underactuation!
+
+\textbf{Why?}
+\begin{itemize}
+\item Cart force \texttt{u} affects cart acceleration: \texttt{ẍ ∝ u}
+\item Cart motion couples to pendulums via inertia matrix
+\item Dynamic coupling propagates control to all states
+\end{itemize}
+
+\textbf{Physical Intuition}:
+\begin{itemize}
+\item Move cart right → first pendulum tilts left (inertia)
+\item First pendulum motion → affects second pendulum
+\item Clever sequencing → control all angles
+\end{itemize}
+
+\textbf{Proof Sketch}:
+\begin{enumerate}
+\item Direct effect: \texttt{u → ẍ} (cart acceleration)
+\item First-order coupling: \texttt{ẍ → θ̈₁} (first pendulum)
+\item Second-order coupling: \texttt{θ̈₁ → θ̈₂} (second pendulum)
+\item Three integration steps → reach all position states
+\item Controllability matrix full rank ✓
+\end{enumerate}
+
+\textbf{Control Propagation Diagram}:
+
+\begin{lstlisting}[language=mermaid]
+flowchart TD
+    U["Control Force u"] --> CART_ACC["Cart Acceleration ẍ<br/>(Direct effect)"]
+
+    CART_ACC --> INERTIA1["Inertial Coupling<br/>to Pendulum 1"]
+    INERTIA1 --> P1_ACC["θ̈₁<br/>(First pendulum acceleration)"]
+
+    P1_ACC --> INERTIA2["Inertial Coupling<br/>to Pendulum 2"]
+    INERTIA2 --> P2_ACC["θ̈₂<br/>(Second pendulum acceleration)"]
+
+    CART_ACC --> CART_VEL["∫ → ẋ<br/>(Cart velocity)"] --> CART_POS["∫ → x<br/>(Cart position)"]
+    P1_ACC --> P1_VEL["∫ → θ̇₁<br/>(Angular velocity 1)"] --> P1_POS["∫ → θ₁<br/>(Angle 1)"]
+    P2_ACC --> P2_VEL["∫ → θ̇₂<br/>(Angular velocity 2)"] --> P2_POS["∫ → θ₂<br/>(Angle 2)"]
+
+    style U fill:\#ffffcc
+    style CART_ACC fill:\#ccffcc
+    style P1_ACC fill:\#ffcccc
+    style P2_ACC fill:\#ccccff
+\end{lstlisting}
+
+\textbf{Key Insight}: Single control input reaches all 6 states via:
+\begin{itemize}
+\item 🟡 \textbf{Direct} effect on cart
+\item 🟢 \textbf{Inertial coupling} to pendulum 1
+\item 🔴 \textbf{Secondary coupling} to pendulum 2
+\item 🔵 \textbf{Integration} for position control
+\end{itemize}
+
+\textbf{Controllability Matrix}:
+\begin{verbatim}
+rank([B  AB  A²B  A³B  A⁴B  A⁵B]) = 6  ✓
+\end{verbatim}
+
+System is \textbf{fully controllable} despite underactuation!
+
+\subsection{Observability}
+\label{subsection:observability}
+
+\textbf{State Measurement}:
+\begin{itemize}
+\item Typically measure: \texttt{[x, θ₁, θ₂]} (positions only)
+\item Velocities: Computed from position derivatives
+\end{itemize}
+
+\textbf{Observability Test}:
+\begin{verbatim}
+O = [C  CA  CA²  ...  CA⁵]ᵀ
+\end{verbatim}
+
+Where \texttt{C = [1 0 0 0 0 0; 0 0 1 0 0 0; 0 0 0 0 1 0]} (measure positions)
+
+\textbf{Result}: Observable (rank = 6)
+
+\textbf{Meaning}: Can estimate full state from position measurements
+
+
+
+\section{Summary}
+\label{section:summary}
+
+\textbf{Key Takeaways}:
+
+\begin{enumerate}
+\item \textbf{Lagrangian Derivation}: Energy method naturally handles constraints
+\item \textbf{Matrix Form}: \texttt{M(q)q̈ + C(q,q̇)q̇ + G(q) = Qu} (configuration-dependent)
+\item \textbf{Linearization}: Valid for |θ| < 15°, enables linear control design
+\item \textbf{Controllability}: Underactuated but controllable via dynamic coupling
+\item \textbf{Observability}: Full state observable from position measurements
+\end{enumerate}
+
+\textbf{Design Implications}:
+\begin{itemize}
+\item \textbf{Small angles}: Use simplified dynamics for fast control design
+\item \textbf{Large angles}: Must use full nonlinear dynamics
+\item \textbf{Control}: Exploit coupling to control all DOFs with one input
+\item \textbf{Estimation}: State observer feasible from position measurements
+\end{itemize}
+
+\textbf{Next Steps}:
+\begin{itemize}
+\item See linearization in action: [Tutorial 01](../tutorials/tutorial-01-first-simulation.md)
+\item Implement dynamics models: [Plant Models API](../api/plant-models.md)
+\item Deep dive: [Dynamics Derivations](../../mathematical_foundations/dynamics_derivations.md)
+\end{itemize}
+
+
+
+\textbf{Further Reading}:
+\begin{itemize}
+\item Goldstein, H. (2002). \textit{Classical Mechanics}. Addison-Wesley.
+\item Spong, M. W., et al. (2006). \textit{Robot Modeling and Control}. Wiley.
+\item Khalil, H. K. (2002). \textit{Nonlinear Systems}. Prentice Hall.
+\end{itemize}
+
+
+
+\textbf{Last Updated}: October 2025

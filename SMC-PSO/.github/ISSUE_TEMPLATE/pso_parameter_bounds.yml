@@ -1,0 +1,168 @@
+name: 🟠 PSO Optimization - Parameter Bounds Issue
+description: Report PSO parameter bounds problems (HIGH)
+title: "[PSO-BOUNDS] "
+labels: ["bug", "optimization", "pso", "high", "parameter-bounds"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 🟠 PSO Parameter Bounds Issue
+        Use this template for bounds violations, restrictive bounds, or parameter space problems.
+        **Response Time**: < 6 hours
+
+  - type: dropdown
+    id: bounds_type
+    attributes:
+      label: Bounds Issue Type
+      description: Select the type of parameter bounds problem
+      options:
+        - Bounds Violation
+        - Bounds Too Restrictive
+        - Bounds Too Permissive
+        - Infeasible Parameter Space
+        - Boundary Clustering
+        - Search Space Exploration Issues
+      default: 0
+    validations:
+      required: true
+
+  - type: dropdown
+    id: affected_parameters
+    attributes:
+      label: Affected Parameters
+      description: Which parameters are experiencing bounds issues?
+      options:
+        - Control Gains (K1-K6)
+        - Sliding Surface Coefficients (c1-c4)
+        - Adaptive Parameters (γ, σ, β)
+        - PSO Hyperparameters (w, c1, c2)
+        - Velocity Bounds
+        - Mixed Parameter Set
+        - Other
+      default: 0
+    validations:
+      required: true
+
+  - type: textarea
+    id: current_bounds
+    attributes:
+      label: Current Parameter Bounds
+      description: Provide the current parameter bounds causing issues
+      placeholder: |
+        Control Gains (K):
+        - K1: [0.1, 50.0] ← Issue here
+        - K2: [0.1, 30.0]
+        - K3: [0.1, 40.0]
+        - K4: [0.1, 20.0]
+        - K5: [0.1, 60.0]
+        - K6: [0.1, 25.0]
+
+        Sliding Surface (c):
+        - c1: [0.1, 10.0]
+        - c2: [0.1, 10.0] ← Too restrictive
+        - c3: [0.1, 10.0]
+        - c4: [0.1, 10.0]
+    validations:
+      required: true
+
+  - type: textarea
+    id: bounds_violation_data
+    attributes:
+      label: Bounds Violation Data
+      description: Provide details about bounds violations or issues
+      placeholder: |
+        - Particles hitting upper bounds: N% at parameter X
+        - Particles hitting lower bounds: M% at parameter Y
+        - Boundary clustering frequency: Z iterations
+        - Violations detected: List specific cases
+        - Infeasible combinations: Describe problematic sets
+        - Performance impact: Quantify degradation
+    validations:
+      required: true
+
+  - type: textarea
+    id: stability_analysis
+    attributes:
+      label: Stability Analysis
+      description: Stability implications of parameter bounds
+      placeholder: |
+        - Stable parameter region: [X_min, X_max]
+        - Unstable region identified: [Y_min, Y_max]
+        - Stability margin analysis: ...
+        - Critical parameter thresholds: ...
+        - Lyapunov constraints: ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: performance_impact
+    attributes:
+      label: Performance Impact
+      description: How bounds issues affect optimization performance
+      placeholder: |
+        - Optimization performance degradation: X%
+        - Best fitness achieved with current bounds: Y
+        - Expected performance with correct bounds: Z
+        - Convergence rate impact: slower by N iterations
+        - Solution quality: acceptable/poor/unacceptable
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed_bounds
+    attributes:
+      label: Proposed Bounds Correction
+      description: Suggest corrected parameter bounds
+      placeholder: |
+        Control Gains (K) - Proposed:
+        - K1: [1.0, 100.0] ← Expanded from [0.1, 50.0]
+        - K2: [0.5, 50.0]
+        - K3: [1.0, 80.0]
+        - K4: [0.5, 40.0]
+        - K5: [2.0, 120.0]
+        - K6: [1.0, 50.0]
+
+        Justification:
+        - Literature review suggests: ...
+        - Stability analysis requires: ...
+        - Performance benchmarks indicate: ...
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: bounds_symptoms
+    attributes:
+      label: Observed Symptoms
+      description: Check all that apply
+      options:
+        - label: Particles frequently hit boundaries
+        - label: Poor exploration of parameter space
+        - label: Clustering at boundary values
+        - label: Unstable parameter combinations
+        - label: Performance worse than expected
+        - label: Constraint violations in solutions
+        - label: Premature convergence near boundaries
+
+  - type: textarea
+    id: reproduction_command
+    attributes:
+      label: Reproduction Command
+      description: Command to reproduce the bounds issue
+      placeholder: |
+        python simulate.py --ctrl classical_smc --run-pso --bounds-config bounds_issue.json --plot-bounds
+
+        Where bounds_issue.json contains:
+        {
+          "K": [[0.1, 50.0], [0.1, 30.0], ...],
+          "c": [[0.1, 10.0], [0.1, 10.0], ...]
+        }
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: Additional Context
+      description: Any additional information, analysis, or context
+      placeholder: Add any other context about the parameter bounds issue here...

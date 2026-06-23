@@ -1,0 +1,185 @@
+\begin{theindex}
+
+  \item benchmarking, \hyperpage{129}
+  \item boundary layer, \hyperpage{39}, \hyperpage{54}, \hyperpage{125}
+
+  \indexspace
+
+  \item cart-pole system, \hyperpage{2}
+  \item chattering, \hyperpage{1}, \hyperpage{8}, \hyperpage{12}, 
+		\hyperpage{37}, \hyperpage{39}, \hyperpage{53}, 
+		\hyperpage{64}, \hyperpage{71}, \hyperpage{83}, 
+		\hyperpage{99}, \hyperpage{181}
+  \item control input, \hyperpage{2}, \hyperpage{41}
+  \item controllability, \hyperpage{1}, \hyperpage{19}, \hyperpage{42}
+  \item convergence, \hyperpage{5}, \hyperpage{12}, \hyperpage{19}, 
+		\hyperpage{39}, \hyperpage{53}, \hyperpage{71}, 
+		\hyperpage{77, 78}, \hyperpage{80, 81}, \hyperpage{84}
+  \item Coriolis forces, \hyperpage{4}, \hyperpage{24}
+
+  \indexspace
+
+  \item degrees of freedom, \hyperpage{1}, \hyperpage{22}
+  \item disturbance rejection, \hyperpage{51}, \hyperpage{53}, 
+		\hyperpage{95}, \hyperpage{119}
+  \item double-inverted pendulum, \hyperpage{1}, 
+		\hyperxindexformat{\see{DIP}}{2}, 
+		\hyperxindexformat{\see{DIP}}{12}, \hyperpage{19}, 
+		\hyperxindexformat{\see{DIP}}{35}, \hyperpage{39}, 
+		\hyperxindexformat{\see{DIP}}{41}, 
+		\hyperxindexformat{\see{DIP}}{63}, 
+		\hyperxindexformat{\see{DIP}}{81}, \hyperpage{83}, 
+		\hyperxindexformat{\see{DIP}}{83}, 
+		\hyperxindexformat{\see{DIP}}{125}, 
+		\hyperxindexformat{\see{DIP}}{129}, \hyperpage{181}, 
+		\hyperxindexformat{\see{DIP}}{183}
+
+  \indexspace
+
+  \item equilibrium, \hyperpage{2}, \hyperpage{24}, \hyperpage{72}, 
+		\hyperpage{85}, \hyperpage{119}
+
+  \indexspace
+
+  \item feedback control, \hyperpage{2}
+  \item feedforward control, \hyperpage{39}
+
+  \indexspace
+
+  \item gain tuning, \hyperpage{11}, \hyperpage{53}, \hyperpage{77}, 
+		\hyperpage{96}, \hyperpage{99}, \hyperpage{147}
+  \item generalized coordinates, \hyperpage{22}
+  \item gravitational force, \hyperpage{4}
+
+  \indexspace
+
+  \item hardware-in-the-loop, \hyperpage{74}, \hyperpage{97}, 
+		\hyperpage{117}, \hyperpage{183}
+
+  \indexspace
+
+  \item inertia matrix, \hyperpage{4}, \hyperpage{23}
+
+  \indexspace
+
+  \item Lagrangian mechanics, \hyperpage{3}, \hyperpage{19}
+  \item linearization, \hyperpage{16}
+  \item Lyapunov stability, \hyperpage{19}, \hyperpage{39}, 
+		\hyperpage{53}, \hyperpage{63}, \hyperpage{111}
+
+  \indexspace
+
+  \item model uncertainty, \hyperpage{37}, \hyperpage{50}, 
+		\hyperpage{61}, \hyperpage{63}, \hyperpage{71}, 
+		\hyperpage{96}, \hyperpage{117}, \hyperpage{119}
+  \item Monte Carlo simulation, \hyperpage{14}, \hyperpage{83}, 
+		\hyperpage{181}
+
+  \indexspace
+
+  \item Numba optimization, \hyperpage{12}, \hyperpage{53}, 
+		\hyperpage{81}, \hyperpage{108}, \hyperpage{129}
+  \item NumPy, \hyperpage{16}, \hyperpage{84}
+
+  \indexspace
+
+  \item Particle Swarm Optimization, \hyperpage{7}, 
+		\hyperxindexformat{\see{PSO}}{7}, \hyperpage{41}, 
+		\hyperxindexformat{\see{PSO}}{41}, 
+		\hyperxindexformat{\see{PSO}}{55}, 
+		\hyperxindexformat{\see{PSO}}{74}, \hyperpage{77, 78}, 
+		\hyperxindexformat{\see{PSO}}{90}, \hyperpage{99}, 
+		\hyperxindexformat{\see{PSO}}{119}, 
+		\hyperxindexformat{\see{PSO}}{129}, 
+		\hyperxindexformat{\see{PSO}}{181}
+    \subitem exploitation, \hyperpage{1}, \hyperpage{77}, 
+		\hyperpage{79, 80}, \hyperpage{102}
+    \subitem exploration, \hyperpage{77}, \hyperpage{79, 80}, 
+		\hyperpage{96}, \hyperpage{102}
+    \subitem global best, \hyperpage{78--80}
+    \subitem inertia weight, \hyperpage{80, 81}
+    \subitem personal best, \hyperpage{78, 79}
+    \subitem velocity update, \hyperpage{77, 78}
+  \item passivity-based control, \hyperpage{25}
+  \item performance metrics
+    \subitem control effort, \hyperpage{13}, \hyperpage{40}, 
+		\hyperpage{86}
+    \subitem energy consumption, \hyperpage{43}, \hyperpage{80}, 
+		\hyperpage{83}
+    \subitem overshoot, \hyperpage{11}, \hyperpage{56}, \hyperpage{72}, 
+		\hyperpage{83}
+    \subitem settling time, \hyperpage{41}, \hyperpage{83}, 
+		\hyperpage{99}, \hyperpage{125}, \hyperpage{151}
+    \subitem tracking error, \hyperpage{6}, \hyperpage{44}, 
+		\hyperpage{59}
+  \item Python implementation, \hyperpage{10}, \hyperpage{24}, 
+		\hyperpage{39}, \hyperpage{84}, \hyperpage{129}
+
+  \indexspace
+
+  \item reaching condition, \hyperpage{45}
+  \item real-time control, \hyperpage{49}, \hyperpage{58}, 
+		\hyperpage{67}, \hyperpage{72}, \hyperpage{84}, 
+		\hyperpage{116}, \hyperpage{169}
+  \item research tasks
+    \subitem LT-6, \hyperpage{119}
+    \subitem MT-6, \hyperpage{49}, \hyperpage{84}, \hyperpage{110}
+    \subitem MT-8, \hyperpage{119}
+  \item robustness, \hyperpage{6}, \hyperpage{8}, \hyperpage{39}, 
+		\hyperpage{63}, \hyperpage{71}, \hyperpage{119}, 
+		\hyperpage{181}
+
+  \indexspace
+
+  \item saturation function, \hyperpage{43}
+  \item SciPy, \hyperpage{16}
+  \item sensor noise, \hyperpage{8}, \hyperpage{63}, \hyperpage{96}, 
+		\hyperpage{119}
+  \item simulation, \hyperpage{12}, \hyperpage{19}, \hyperpage{35}, 
+		\hyperpage{54}, \hyperpage{65}, \hyperpage{103}, 
+		\hyperpage{120}, \hyperpage{129}
+  \item sliding mode control, \hyperxindexformat{\see{SMC}}{1}, 
+		\hyperpage{39}, \hyperxindexformat{\see{SMC}}{39}, 
+		\hyperpage{63}, \hyperxindexformat{\see{SMC}}{77}, 
+		\hyperxindexformat{\see{SMC}}{99}, 
+		\hyperxindexformat{\see{SMC}}{120}, 
+		\hyperxindexformat{\see{SMC}}{129}, 
+		\hyperxindexformat{\see{SMC}}{181}
+    \subitem adaptive, \hyperpage{12}, \hyperpage{37}, \hyperpage{63}, 
+		\hyperpage{99}, \hyperpage{182}
+    \subitem classical, \hyperpage{6}, \hyperpage{44}, \hyperpage{81}, 
+		\hyperpage{99}, \hyperpage{124}
+    \subitem hybrid adaptive, \hyperpage{8}
+  \item sliding surface, \hyperpage{39}, \hyperpage{53}, \hyperpage{63}, 
+		\hyperpage{100}
+  \item stability, \hyperpage{6}, \hyperpage{19}, \hyperpage{39}, 
+		\hyperpage{55}, \hyperpage{63}, \hyperpage{72}, 
+		\hyperpage{111}, \hyperpage{129}
+  \item stabilization, \hyperpage{4}, \hyperpage{73}
+  \item state space, \hyperpage{3}, \hyperpage{39}
+  \item Streamlit, \hyperpage{13}, \hyperpage{165}
+  \item Super-Twisting Algorithm, \hyperxindexformat{\see{STA}}{8}, 
+		\hyperxindexformat{\see{STA}}{12}, 
+		\hyperxindexformat{\see{STA}}{37}, \hyperpage{53}, 
+		\hyperxindexformat{\see{STA}}{53}, 
+		\hyperxindexformat{\see{STA}}{120}, 
+		\hyperxindexformat{\see{STA}}{181}
+  \item swing-up control, \hyperpage{4}, \hyperpage{73}
+
+  \indexspace
+
+  \item trajectory tracking, \hyperpage{4}
+
+  \indexspace
+
+  \item uncertainty, \hyperpage{15}, \hyperpage{61}, \hyperpage{63}, 
+		\hyperpage{71}, \hyperpage{96}, \hyperpage{117}, 
+		\hyperpage{119}
+  \item underactuated systems, \hyperpage{1}, \hyperpage{83}
+
+  \indexspace
+
+  \item worst-case analysis, \hyperpage{15}, \hyperpage{65}, 
+		\hyperpage{111}
+
+\end{theindex}

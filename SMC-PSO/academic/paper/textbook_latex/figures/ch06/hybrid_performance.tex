@@ -1,0 +1,91 @@
+% Hybrid Controller Performance Comparison
+% TikZ diagram for Chapter 6 - Performance metrics across 4 controller types
+
+\begin{tikzpicture}[scale=1.0]
+
+    % Define bar width and spacing
+    \def\barwidth{0.6}
+    \def\groupspace{2.5}
+
+    % Axes
+    \draw[->, thick] (0, 0) -- (11, 0) node[right] {Controller Type};
+    \draw[->, thick] (0, 0) -- (0, 6) node[above] {Performance Score (0-10)};
+
+    % Grid
+    \draw[gray!20, very thin] (0, 0) grid[ystep=1] (10.5, 5.5);
+
+    % Bar groups (4 controllers x 3 metrics)
+    % Classical SMC
+    \fill[blue!60] (0.5, 0) rectangle (0.5+\barwidth, 3.5);
+    \fill[green!60] (0.5+\barwidth+0.1, 0) rectangle (0.5+2*\barwidth+0.1, 4.2);
+    \fill[red!60] (0.5+2*\barwidth+0.2, 0) rectangle (0.5+3*\barwidth+0.2, 2.8);
+
+    % STA-SMC
+    \fill[blue!60] (0.5+\groupspace, 0) rectangle (0.5+\groupspace+\barwidth, 4.5);
+    \fill[green!60] (0.5+\groupspace+\barwidth+0.1, 0) rectangle (0.5+\groupspace+2*\barwidth+0.1, 3.8);
+    \fill[red!60] (0.5+\groupspace+2*\barwidth+0.2, 0) rectangle (0.5+\groupspace+3*\barwidth+0.2, 5.2);
+
+    % Adaptive SMC
+    \fill[blue!60] (0.5+2*\groupspace, 0) rectangle (0.5+2*\groupspace+\barwidth, 4.8);
+    \fill[green!60] (0.5+2*\groupspace+\barwidth+0.1, 0) rectangle (0.5+2*\groupspace+2*\barwidth+0.1, 5.0);
+    \fill[red!60] (0.5+2*\groupspace+2*\barwidth+0.2, 0) rectangle (0.5+2*\groupspace+3*\barwidth+0.2, 3.5);
+
+    % Hybrid Adaptive STA-SMC (BEST)
+    \fill[blue!80] (0.5+3*\groupspace, 0) rectangle (0.5+3*\groupspace+\barwidth, 5.3);
+    \fill[green!80] (0.5+3*\groupspace+\barwidth+0.1, 0) rectangle (0.5+3*\groupspace+2*\barwidth+0.1, 5.4);
+    \fill[red!80] (0.5+3*\groupspace+2*\barwidth+0.2, 0) rectangle (0.5+3*\groupspace+3*\barwidth+0.2, 5.5);
+
+    % Star marker for best overall
+    \node[star, star points=5, star point ratio=2.5, fill=yellow, draw=orange, thick, minimum size=0.8cm]
+        at (0.5+3*\groupspace+1.2, 5.8) {};
+
+    % Value labels on bars
+    \node[above, font=\tiny] at (0.5+\barwidth/2, 3.5) {3.5};
+    \node[above, font=\tiny] at (0.5+1.5*\barwidth+0.1, 4.2) {4.2};
+    \node[above, font=\tiny] at (0.5+2.5*\barwidth+0.2, 2.8) {2.8};
+
+    \node[above, font=\tiny] at (0.5+\groupspace+\barwidth/2, 4.5) {4.5};
+    \node[above, font=\tiny] at (0.5+\groupspace+1.5*\barwidth+0.1, 3.8) {3.8};
+    \node[above, font=\tiny] at (0.5+\groupspace+2.5*\barwidth+0.2, 5.2) {5.2};
+
+    \node[above, font=\tiny] at (0.5+2*\groupspace+\barwidth/2, 4.8) {4.8};
+    \node[above, font=\tiny] at (0.5+2*\groupspace+1.5*\barwidth+0.1, 5.0) {5.0};
+    \node[above, font=\tiny] at (0.5+2*\groupspace+2.5*\barwidth+0.2, 3.5) {3.5};
+
+    \node[above, font=\tiny, font=\bfseries] at (0.5+3*\groupspace+\barwidth/2, 5.3) {5.3};
+    \node[above, font=\tiny, font=\bfseries] at (0.5+3*\groupspace+1.5*\barwidth+0.1, 5.4) {5.4};
+    \node[above, font=\tiny, font=\bfseries] at (0.5+3*\groupspace+2.5*\barwidth+0.2, 5.5) {5.5};
+
+    % X-axis labels
+    \node[below, align=center, font=\small] at (0.5+1.2, -0.5) {Classical\\SMC};
+    \node[below, align=center, font=\small] at (0.5+\groupspace+1.2, -0.5) {STA-\\SMC};
+    \node[below, align=center, font=\small] at (0.5+2*\groupspace+1.2, -0.5) {Adaptive\\SMC};
+    \node[below, align=center, font=\small, font=\bfseries] at (0.5+3*\groupspace+1.2, -0.5) {Hybrid\\Adaptive STA};
+
+    % Y-axis ticks
+    \foreach \y in {0, 1, 2, 3, 4, 5}
+        \draw (-0.1, \y) -- (0.1, \y) node[left, xshift=-2mm] {$\y$};
+
+    % Legend
+    \begin{scope}[xshift=0.5cm, yshift=5.5cm]
+        \fill[blue!60] (0, 0) rectangle (0.3, 0.3);
+        \node[right, font=\small] at (0.35, 0.15) {Tracking Accuracy};
+
+        \fill[green!60] (3.5, 0) rectangle (3.8, 0.3);
+        \node[right, font=\small] at (3.85, 0.15) {Robustness};
+
+        \fill[red!60] (6.5, 0) rectangle (6.8, 0.3);
+        \node[right, font=\small] at (6.85, 0.15) {Chattering Reduction};
+    \end{scope}
+
+    % Summary box
+    \node[draw, thick, fill=yellow!10, align=left, font=\small] at (8.5, 3.5) {
+        \textbf{Hybrid Advantages:}\\
+        \quad$\bullet$ Best overall performance\\
+        \quad$\bullet$ Combines adaptive gains\\
+        \quad\quad with finite-time convergence\\
+        \quad$\bullet$ Minimal chattering\\
+        \quad$\bullet$ High robustness
+    };
+
+\end{tikzpicture}

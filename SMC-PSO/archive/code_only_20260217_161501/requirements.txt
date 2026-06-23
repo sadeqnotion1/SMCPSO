@@ -1,0 +1,75 @@
+#==========================================================================================\\\
+#================================ requirements.txt ========================================\\\
+#==========================================================================================\\\
+
+
+# Core Scientific Computing libraries
+# Note: numpy is pinned to <2.0.0. Numba is incompatible with numpy 2.0, and upgrading numpy would prevent fast simulations from running.
+numpy>=1.21.0,<2.0.0      # Provides core numerical computing and array support.
+scipy>=1.10.0,<1.14.0      # Offers scientific algorithms.
+matplotlib>=3.6.0,<4.0.0  # Used for plotting and data visualization.
+pandas>=1.5.0,<3.0.0      # Manages and analyzes simulation results.
+
+# Optimization and Control tools
+pymodbus>=3.6.0,<4.0.0    # Modbus communication library
+pyswarms>=1.3.0,<2.0.0    # Main PSO tool for tuning controller gains.
+cma>=3.2.0,<4.0.0         # CMA-ES optimizer for controller tuning (state-of-the-art).
+h5py>=3.11.0,<4.0.0      # HDF5 file format support.
+optuna>=3.0.0,<4.0.0      # An alternative hyperparameter optimization framework.
+cvxpy>=1.3.0,<2.0.0       # For experimental Model Predictive Control (MPC) ideas.
+
+# Performance and Compilation
+# Critical: Numba and numpy versions must be compatible.
+numba>=0.56.0,<0.60.0     # JIT compiler to accelerate Python simulations.
+
+# Configuration and Data Handling
+pyyaml>=6.0,<7.0          # Parses YAML files, used for `config.yaml`.
+pydantic>=2.5.0,<3.0.0    # Validates and structures configuration data.
+pydantic-settings>=2.1.0,<3.0.0  # Extension for Pydantic to manage application settings.
+jsonschema>=4.17.0,<5.0.0 # Validates JSON research plans against a schema.
+
+# Testing Framework
+pytest>=7.4.0,<9.0.0      # Core framework for writing and running tests.
+pytest-benchmark>=4.0.0,<5.0.0  # Pytest plugin for performance benchmarking.
+hypothesis>=6.70.0,<7.0.0 # Property-based testing tool to find edge cases.
+
+# Web Interface (Streamlit)
+streamlit>=1.28.0,<2.0.0  # Framework for the interactive web dashboard.
+plotly>=5.15.0,<6.0.0     # Interactive plotting library for the web UI.
+altair>=4.2.0,<6.0.0      # Declarative statistical visualization library.
+watchdog>=3.0.0,<4.0.0    # Monitors file system events for Streamlit hot-reloading.
+aiohttp>=3.9.0,<4.0.0    # Asynchronous HTTP client/server.
+pyzmq>=26.0.0,<27.0.0    # Python bindings for ZeroMQ.
+aio-pika>=9.4.0,<10.0.0  # RabbitMQ client for asyncio.
+
+# Documentation Dependencies
+sphinx>=5.0.0,<8.0.0            # Core documentation generator.
+sphinx-rtd-theme>=1.3.0,<3.0.0  # "Read the Docs" theme for Sphinx documentation.
+beautifulsoup4>=4.9.0,<5.0.0    # HTML parsing for search index generation.
+
+# Advanced Documentation Extensions
+sphinxcontrib-bibtex>=2.5.0,<3.0.0   # Provides bibliography support for Sphinx.
+sphinx-copybutton>=0.5.0,<1.0.0      # Adds a copy button to code blocks in documentation.
+sphinx-math-dollar>=1.2.0,<2.0.0     # Enables LaTeX-style math formulas using $...$ in documentation.
+sphinx-design>=0.4.0,<1.0.0          # Provides responsive web components for documentation (grids, cards).
+sphinx-togglebutton>=0.3.0,<1.0.0    # Creates collapsible content sections in documentation.
+sphinxcontrib-mermaid>=0.8.0,<1.0.0  # Renders Mermaid diagrams within documentation.
+sphinxcontrib-plantuml>=0.24,<1.0.0  # Renders PlantUML diagrams within documentation.
+myst-parser>=1.0.0,<3.0.0            # Allows Sphinx to parse Markdown files (.md).
+
+# Scientific Documentation
+sympy>=1.11.0,<2.0.0             # Symbolic mathematics library for equations in documentation.
+
+# Interactive Documentation (Jupyter Integration)
+nbsphinx>=0.9.0,<1.0.0           # Integrates Jupyter notebooks into Sphinx documentation.
+jupyter>=1.0.0,<2.0.0            # Metapackage for Jupyter ecosystem.
+ipykernel>=6.20.0,<7.0.0         # IPython kernel for Jupyter notebooks.
+ipywidgets>=8.0.0,<9.0.0         # Interactive widgets for Jupyter notebooks (sliders, dropdowns).
+nbconvert>=7.0.0,<8.0.0          # Converts notebooks to various formats (HTML, LaTeX, etc.).
+jupyter-cache>=0.6.0,<1.0.0      # Caches notebook execution results for faster Sphinx rebuilds.
+
+# Code Quality Tools
+pygments>=2.14.0,<3.0.0          # Provides syntax highlighting for code blocks.
+black>=23.0.0,<25.0.0            # Uncompromising Python code formatter for consistency.
+linkchecker>=10.0.0,<11.0.0      # Checks for broken links in documentation.
+psutil>=5.9.0,<6.0.0             # System monitoring and process utilities.

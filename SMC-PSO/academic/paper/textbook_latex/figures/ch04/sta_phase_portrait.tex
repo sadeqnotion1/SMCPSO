@@ -1,0 +1,49 @@
+% Super-Twisting Algorithm Phase Portrait
+% TikZ diagram for Chapter 4 - STA convergence behavior
+
+\begin{tikzpicture}[scale=1.0,
+    trajectory/.style={thick, ->, decoration={markings, mark=at position 0.7 with {\arrow{>}}}, postaction={decorate}}]
+
+    % Axes
+    \draw[->, thick] (-3, 0) -- (3, 0) node[right] {$s$ (sliding variable)};
+    \draw[->, thick] (0, -3) -- (0, 3) node[above] {$\dot{s}$ (derivative)};
+
+    % Origin (equilibrium)
+    \fill[green!70!black] (0, 0) circle (0.1) node[below right, black] {$(0, 0)$};
+
+    % Grid
+    \draw[gray!20, very thin] (-2.5, -2.5) grid (2.5, 2.5);
+
+    % Spiral trajectories converging to origin (finite-time)
+    % Trajectory 1: From upper right
+    \draw[blue, trajectory, very thick, samples=60, smooth, domain=0:1]
+        plot ({2.5*(1-\x)^1.5*cos(180*\x)}, {2.3*(1-\x)^1.5*sin(180*\x)});
+
+    % Trajectory 2: From lower left
+    \draw[blue, trajectory, very thick, samples=60, smooth, domain=0:1]
+        plot ({-2.0*(1-\x)^1.5*cos(180*\x + 180)}, {-2.2*(1-\x)^1.5*sin(180*\x + 180)});
+
+    % Trajectory 3: From upper left
+    \draw[red, trajectory, very thick, samples=60, smooth, domain=0:1]
+        plot ({-1.8*(1-\x)^1.5*cos(180*\x + 90)}, {2.0*(1-\x)^1.5*sin(180*\x + 90)});
+
+    % Trajectory 4: From lower right
+    \draw[red, trajectory, very thick, samples=60, smooth, domain=0:1]
+        plot ({2.2*(1-\x)^1.5*cos(180*\x - 90)}, {-1.9*(1-\x)^1.5*sin(180*\x - 90)});
+
+    % Finite-time convergence region (near origin)
+    \draw[dashed, green!70!black, thick] (0, 0) circle (0.3);
+    \node[green!70!black, align=center] at (1.8, -2.5) {\small Finite-Time\\Convergence};
+
+    % Spiral direction annotation
+    \node[blue, align=center] at (2.2, 2.5) {\small Twisting\\Trajectories};
+
+    % Phase regions
+    \node[gray] at (1.5, 1.5) {\small $s > 0, \dot{s} > 0$};
+    \node[gray] at (-1.5, -1.5) {\small $s < 0, \dot{s} < 0$};
+
+    % Convergence rate annotation
+    \draw[<-, thick, purple] (0.8, 0.8) -- (1.5, 1.8)
+        node[right, align=left] {\small Super-twisting effect:\\rapid convergence\\without chattering};
+
+\end{tikzpicture}

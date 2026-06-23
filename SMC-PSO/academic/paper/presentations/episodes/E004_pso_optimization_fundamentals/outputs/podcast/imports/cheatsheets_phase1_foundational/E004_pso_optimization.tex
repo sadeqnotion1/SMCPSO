@@ -1,0 +1,530 @@
+% ==============================================================================
+% EPISODE 004: PSO OPTIMIZATION FOR CONTROLLER TUNING
+% ==============================================================================
+\input{../templates/master_template.tex}
+\input{../templates/tikz_components.tex}
+
+% Episode-specific title
+\renewcommand{\episodetitle}{E004: PSO Optimization}
+
+\begin{document}
+
+% ==============================================================================
+% TITLE PAGE
+% ==============================================================================
+\makeepisodetitle{E004: PSO Optimization}{Automatic Controller Gain Tuning}{1}{30-35 minutes}
+
+% ==============================================================================
+% PAGE 1: PSO INTRODUCTION
+% ==============================================================================
+\learningobjective{Understand Particle Swarm Optimization algorithm, cost function design, and how PSO achieves 6-21\% performance improvements}
+
+\section*{The Million-Dollar Question}
+
+\begin{warning}
+\textbf{Problem:} Controllers have 6-12 gain parameters ($\lambda_1, \lambda_2, k_1, ...$)
+
+How do we pick those numbers? Can't just guess!
+
+\textbf{Search Space:} If each gain has 10 possible values: $10^{12}$ combinations (1 trillion!)
+\end{warning}
+
+\begin{keypoint}
+\textbf{Solution:} Particle Swarm Optimization (PSO)
+
+Nature-inspired algorithm that finds near-optimal solutions in \textbf{minutes}, not years!
+\end{keypoint}
+
+\section*{PSO: The Bird Flocking Analogy}
+
+\subsection*{Biological Inspiration (Kennedy \& Eberhart, 1995)}
+
+\begin{multicols}{2}
+
+\textbf{Scenario:} Flock of birds searching for food in a huge field
+
+\textbf{Each bird knows:}
+\begin{itemize}
+    \item \textbf{1.} Best spot THEY found (personal memory)
+    \item \textbf{2.} Best spot ANYONE found (social/global info)
+    \item \textbf{3.} Current flight direction (momentum)
+\end{itemize}
+
+\columnbreak
+
+\textbf{Every few seconds:} Adjust direction using all three signals
+\begin{itemize}
+    \item "I found good food over there!" (cognitive)
+    \item "Flock found great food that way!" (social)
+    \item "I'm flying this direction" (inertia)
+\end{itemize}
+
+\end{multicols}
+
+\subsection*{Translation to Optimization}
+
+\begin{tcolorbox}[colback=background, colframe=codeblock, title=\faRandom\ Bird $\leftrightarrow$ Optimization]
+\begin{tabular}{ll}
+\toprule
+\textbf{Bird Flocking} & \textbf{PSO Optimization} \\
+\midrule
+Bird & Particle (candidate solution) \\
+Position in field & Controller gains $[\lambda_1, \lambda_2, k_1, ...]$ \\
+Food quality & Cost function value (lower = better) \\
+Flight direction & Velocity vector (parameter updates) \\
+Best food I found & Personal best position ($p_i$) \\
+Best food anyone found & Global best position ($g$) \\
+\bottomrule
+\end{tabular}
+\end{tcolorbox}
+
+\subsection*{Concrete Example: Classical SMC (6 Gains)}
+
+\begin{example}
+\textbf{Particle 1 at Iteration 10:}
+
+\textbf{Current Position:} $[\lambda_1=15.2, \lambda_2=8.3, \lambda_3=12.1, \lambda_4=5.7, k_1=20.4, k_2=3.9]$
+
+\textbf{Velocity:} $[\Delta\lambda_1=0.5, \Delta\lambda_2=-0.3, \Delta\lambda_3=0.8, ...]$ (drifting right on $\lambda_1$)
+
+\textbf{Personal Best:} $[14.8, 8.5, 12.0, 5.5, 21.0, 4.0]$ with cost = 7.2
+
+\textbf{Global Best:} $[14.5, 8.2, 11.8, 5.4, 20.5, 3.8]$ with cost = 6.9
+
+\textbf{Particle thinks:} "Move toward MY best (14.8) AND toward GLOBAL best (14.5), while keeping momentum!"
+\end{example}
+
+\subsection*{Why PSO for Control Systems?}
+
+\begin{multicols}{2}
+
+\iconKey\ \textbf{Gradient-free}: SMC cost functions are non-smooth (no derivatives)
+
+\iconKey\ \textbf{Global search}: Explores whole space, not just local hills
+
+\columnbreak
+
+\iconTarget\ \textbf{Parallelizable}: Evaluate 30 particles simultaneously
+
+\iconTarget\ \textbf{Robust}: Works with noisy cost evaluations
+
+\end{multicols}
+
+% ==============================================================================
+% PAGE 2: PSO EQUATIONS & MECHANICS
+% ==============================================================================
+\newpage
+
+\section*{PSO Update Equations}
+
+\begin{keypoint}
+Only \textbf{TWO equations} in PSO - both mirror the bird analogy!
+\end{keypoint}
+
+\quickref{Position Update (Simple Physics)}{
+\begin{equation*}
+\mathbf{x}_i(t+1) = \mathbf{x}_i(t) + \mathbf{v}_i(t+1)
+\end{equation*}
+
+\textbf{Interpretation:} New position = old position + velocity
+
+Just like physics: if at $x$ moving with velocity $v$, next step you're at $x + v$
+}
+
+\quickref{Velocity Update (The Heart of PSO)}{
+\begin{equation*}
+\mathbf{v}_i(t+1) = w \cdot \mathbf{v}_i(t) + c_1 r_1 (\mathbf{p}_i - \mathbf{x}_i) + c_2 r_2 (\mathbf{g} - \mathbf{x}_i)
+\end{equation*}
+
+\textbf{Parameters:}
+\begin{itemize}
+    \item $w$ = inertia weight (0.4-0.9) - momentum damping
+    \item $c_1$ = cognitive coefficient ($\approx$ 2.0) - personal memory strength
+    \item $c_2$ = social coefficient ($\approx$ 2.0) - social attraction strength
+    \item $r_1, r_2$ = random numbers $\in [0,1]$ - stochasticity
+    \item $\mathbf{p}_i$ = personal best of particle $i$
+    \item $\mathbf{g}$ = global best (all particles)
+\end{itemize}
+}
+
+\subsection*{Three Terms Explained}
+
+\begin{multicols}{2}
+
+\textbf{Term 1: Inertia ($w \cdot \mathbf{v}_i$)}
+\begin{itemize}
+    \item Fraction of current velocity
+    \item Keep moving in current direction
+    \item \textit{Momentum} - bird doesn't instantly stop
+    \item $w=0.9$: High exploration
+    \item $w=0.4$: Focus on refinement
+\end{itemize}
+
+\textbf{Term 2: Cognitive ($c_1 r_1 (\mathbf{p}_i - \mathbf{x}_i)$)}
+\begin{itemize}
+    \item Vector toward personal best
+    \item Pull toward own best discovery
+    \item \textit{"I found good food at $\mathbf{p}_i$!"}
+    \item $c_1=0$: Ignore personal history
+    \item $c_1=3$: Strongly trust yourself
+\end{itemize}
+
+\columnbreak
+
+\textbf{Term 3: Social ($c_2 r_2 (\mathbf{g} - \mathbf{x}_i)$)}
+\begin{itemize}
+    \item Vector toward global best
+    \item Pull toward swarm's best
+    \item \textit{"Someone found amazing food at $\mathbf{g}$!"}
+    \item $c_2=0$: No cooperation
+    \item $c_2=3$: Strongly trust swarm
+\end{itemize}
+
+\begin{tip}
+\textbf{Random numbers ($r_1, r_2$):} Crucial for diversity! Without randomness, particles deterministically converge to same point - no exploration!
+\end{tip}
+
+\end{multicols}
+
+\subsection*{Worked Example: The Force Battle}
+
+\begin{example}
+\textbf{Particle 3, Iteration 5, First Gain ($\lambda_1$):}
+
+\textbf{Setup:}
+\begin{itemize}
+    \item Current position: $\lambda_1 = 15.2$ (particle is HERE)
+    \item Current velocity: $\Delta\lambda_1 = +0.5$ (drifting RIGHT, toward higher values)
+    \item Personal best: $\lambda_1 = 14.8$ (own best is LOWER, to the LEFT)
+    \item Global best: $\lambda_1 = 14.5$ (swarm best is even LOWER, further LEFT)
+\end{itemize}
+
+\textbf{Three Forces:}
+\begin{itemize}
+    \item \textbf{1.} \textbf{Inertia:} Small push RIGHT ($+0.35$) - 70\% of current momentum
+    \item \textbf{2.} \textbf{Cognitive:} Moderate pull LEFT (toward 14.8) - random factor 0.42
+    \item \textbf{3.} \textbf{Social:} STRONG pull LEFT (toward 14.5) - random factor 0.78 (nearly max!)
+\end{itemize}
+
+\textbf{Who Wins?} Peer pressure dominates! Combined leftward forces (cognitive + social) overpower rightward momentum.
+
+\textbf{Outcome:}
+\begin{itemize}
+    \item New velocity: $\approx -1.0$ (was drifting right +0.5, now speeding left -1.0)
+    \item New position: Moves from 15.2 $\to$ 14.1 (jumped left by 1.0)
+    \item \textbf{Particle reversed direction!} Listened to collective wisdom: "Smaller $\lambda_1$ works better"
+\end{itemize}
+\end{example}
+
+\subsection*{Convergence Behavior Over Time}
+
+\begin{center}
+\psoflowchart
+\end{center}
+
+\begin{summary}
+\textbf{Early iterations (1-10):} Large velocities, particles spread out (\textit{exploration})
+
+\textbf{Middle iterations (10-30):} Velocities moderate, converge toward promising regions (\textit{convergence})
+
+\textbf{Late iterations (30-50):} Small velocities, fine-tune around optimum (\textit{exploitation})
+\end{summary}
+
+% ==============================================================================
+% PAGE 3: COST FUNCTION DESIGN
+% ==============================================================================
+\newpage
+
+\section*{Cost Function: The Weighted Report Card}
+
+\begin{keypoint}
+\textbf{Four objectives to balance:}
+\begin{itemize}
+    \item \textbf{1.} \textbf{Accuracy}: Keep angles at zero (tracking grade)
+    \item \textbf{2.} \textbf{Efficiency}: Minimize force/energy (energy grade)
+    \item \textbf{3.} \textbf{Smoothness}: Avoid chattering (smoothness grade)
+    \item \textbf{4.} \textbf{Stability}: Don't blow up! (Pass/Fail test)
+\end{itemize}
+\end{keypoint}
+
+\subsection*{The Report Card Formula}
+
+\begin{tcolorbox}[colback=primary!5, colframe=primary, title=\faCalculator\ Total Cost]
+\begin{equation*}
+J_{\text{total}} = 0.6 \cdot J_{\text{state}} + 0.3 \cdot J_{\text{control}} + 0.1 \cdot J_{\text{rate}} + J_{\text{stability}}
+\end{equation*}
+
+\textbf{Weights:} 60\% accuracy, 30\% efficiency, 10\% smoothness, + death penalty
+\end{tcolorbox}
+
+\subsection*{Component 1: State Error (60\%)}
+
+\begin{multicols}{2}
+
+\textbf{Measures:} Tracking performance - how well pendulum stays upright
+
+\textbf{Math:}
+\begin{equation*}
+J_{\text{state}} = \sum_{i=1}^{N} (\theta_1^2 + \theta_2^2 + x^2) \Delta t
+\end{equation*}
+
+\textbf{Why square?}
+\begin{itemize}
+    \item Large errors hurt more
+    \item $\theta=10° \Rightarrow$ cost = 100
+    \item $\theta=20° \Rightarrow$ cost = 400
+\end{itemize}
+
+\columnbreak
+
+\textbf{Example Values:}
+\begin{itemize}
+    \item Good: $J_{\text{state}} = 2.3$ (angles $< 2°$)
+    \item Mediocre: $J_{\text{state}} = 15.7$ (oscillates to $5°$)
+    \item Bad: $J_{\text{state}} = 89.2$ (large swings)
+\end{itemize}
+
+\begin{tip}
+Squaring ensures positive/negative errors both count: $\theta=-5°$ same as $\theta=+5°$
+\end{tip}
+
+\end{multicols}
+
+\subsection*{Component 2: Control Effort (30\%)}
+
+\begin{multicols}{2}
+
+\textbf{Measures:} How much force/energy used
+
+\textbf{Math:}
+\begin{equation*}
+J_{\text{control}} = \sum_{i=1}^{N} u_i^2 \Delta t
+\end{equation*}
+
+\textbf{Why minimize?}
+\begin{itemize}
+    \item \textbf{1.} Hardware limits (motors have max torque)
+    \item \textbf{2.} Energy efficiency (battery life)
+    \item \textbf{3.} Safety (aggressive control damages equipment)
+    \item \textbf{4.} Overfitting prevention
+\end{itemize}
+
+\columnbreak
+
+\textbf{Example Values:}
+\begin{itemize}
+    \item Efficient: $J_{\text{control}} = 45.2$ (smooth, moderate)
+    \item Aggressive: $J_{\text{control}} = 180.3$ (wasteful)
+\end{itemize}
+
+\begin{example}
+Don't use sledgehammer when feather will do!
+\end{example}
+
+\end{multicols}
+
+\subsection*{Component 3: Chattering (10\%)}
+
+\begin{multicols}{2}
+
+\textbf{Measures:} High-frequency oscillations in control signal (SMC's Achilles' heel)
+
+\textbf{Math:}
+\begin{equation*}
+J_{\text{rate}} = \sum_{i=1}^{N} \left( \frac{u_i - u_{i-1}}{\Delta t} \right)^2 \Delta t
+\end{equation*}
+
+\textbf{Chattering Causes:}
+\begin{itemize}
+    \item Mechanical wear
+    \item Heat generation
+    \item Acoustic noise (high-pitched whine)
+    \item Measurement noise amplification
+\end{itemize}
+
+\columnbreak
+
+\textbf{Example:}
+
+Good (smooth):
+\begin{equation*}
+u = [10.0, 10.2, 10.1, 9.9, 10.0]
+\end{equation*}
+$J_{\text{rate}} = 0.02$
+
+Chattering (bad):
+\begin{equation*}
+u = [10.0, -8.0, 12.0, -9.0, 11.0]
+\end{equation*}
+$J_{\text{rate}} = 284.0$
+
+\end{multicols}
+
+\subsection*{Component 4: The Death Penalty (Stability)}
+
+\begin{warning}
+\textbf{Hard Constraint:} Pass/Fail test
+
+\begin{equation*}
+J_{\text{stability}} = \begin{cases}
+0 & \text{if } |\theta_1| < 45° \text{ AND } |\theta_2| < 45° \text{ for all } t \\
+1000 & \text{otherwise (system fell/diverged)}
+\end{cases}
+\end{equation*}
+
+\textbf{Why 1000?} Much larger than typical $J_{\text{state}} + J_{\text{control}} + J_{\text{rate}}$ (5-50)
+
+PSO immediately rejects unstable controllers!
+\end{warning}
+
+\subsection*{Example Report Cards}
+
+\begin{multicols}{2}
+
+\textbf{Good Controller:}
+\begin{itemize}
+    \item Accuracy: $2.3 \times 0.6 = 1.38$
+    \item Efficiency: $45.2 \times 0.3 = 13.56$
+    \item Smoothness: $0.02 \times 0.1 = 0.002$
+    \item Death Penalty: $0$ (stable!)
+    \item \textbf{Total: 14.94} (Low is good!)
+\end{itemize}
+
+\columnbreak
+
+\textbf{Unstable Controller:}
+\begin{itemize}
+    \item Accuracy: $0.5 \times 0.6 = 0.30$
+    \item Efficiency: $30.0 \times 0.3 = 9.00$
+    \item Smoothness: $0.01 \times 0.1 = 0.001$
+    \item Death Penalty: \textbf{1000} (UNSTABLE!)
+    \item \textbf{Total: 1009.30} (Terrible!)
+\end{itemize}
+
+\end{multicols}
+
+% ==============================================================================
+% PAGE 4: REAL RESULTS & QUICK REFERENCE
+% ==============================================================================
+\newpage
+
+\section*{Real Performance Improvements (MT-8 Benchmark)}
+
+\begin{tcolorbox}[colback=secondary!10, colframe=secondary, title=\faChartLine\ PSO Results]
+\textbf{Test Setup:}
+\begin{itemize}
+    \item 50 particles, 50 iterations (2500 evaluations per controller)
+    \item Duration: 2-4 hours per controller
+    \item Controllers tested: All 7 variants
+\end{itemize}
+
+\textbf{Performance Gains:}
+\begin{tabular}{lll}
+\toprule
+\textbf{Controller} & \textbf{Before PSO} & \textbf{After PSO} \\
+\midrule
+Classical SMC & Cost = 47.2 & Cost = 12.8 (\textbf{360\% improvement!}) \\
+STA-SMC & Cost = 18.5 & Cost = 14.2 (30\% improvement) \\
+Hybrid Adaptive STA & Cost = 15.3 & Cost = 12.1 (\textbf{21.4\% improvement}) \\
+\midrule
+\textbf{Average (all 7)} & - & \textbf{6.35\% improvement} \\
+\bottomrule
+\end{tabular}
+\end{tcolorbox}
+
+\begin{keypoint}
+\textbf{Real-world impact:} These percentage improvements can be the difference between successful SpaceX rocket landing and expensive fireball!
+\end{keypoint}
+
+\subsection*{Convergence Timeline}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.9]
+    % Axes
+    \draw[->] (0,0) -- (10,0) node[right] {Iteration};
+    \draw[->] (0,0) -- (0,5) node[above] {Cost};
+
+    % Convergence curve
+    \draw[thick, color=primary] plot [smooth] coordinates {
+        (0,4.5) (1,3.8) (2,3.2) (3,2.5) (4,2.0) (5,1.7)
+        (6,1.5) (7,1.3) (8,1.2) (9,1.15) (10,1.1)
+    };
+
+    % Markers
+    \draw (0,0.1) -- (0,-0.1) node[below] {0};
+    \draw (2.5,0.1) -- (2.5,-0.1) node[below] {10};
+    \draw (5,0.1) -- (5,-0.1) node[below] {20};
+    \draw (7.5,0.1) -- (7.5,-0.1) node[below] {30};
+    \draw (10,0.1) -- (10,-0.1) node[below] {50};
+
+    % Phases
+    \node[color=primary] at (1.5,5) {\small Exploration};
+    \node[color=secondary] at (5,5) {\small Convergence};
+    \node[color=accent] at (8.5,5) {\small Fine-tuning};
+
+    % Cost drop annotations
+    \draw[dashed, color=warning] (0,4.5) -- (10,4.5);
+    \node[right, color=warning] at (10,4.5) {\small Initial (random)};
+    \draw[dashed, color=secondary] (0,1.1) -- (10,1.1);
+    \node[right, color=secondary] at (10,1.1) {\small Optimized};
+\end{tikzpicture}
+\end{center}
+
+\subsection*{Quick Reference: PSO Parameters}
+
+\quickref{Standard PSO Configuration}{
+\begin{itemize}
+    \item \textbf{Swarm size:} 30-50 particles (typical: 30)
+    \item \textbf{Max iterations:} 50-100 (typical: 50)
+    \item \textbf{Inertia weight:} $w = 0.7$ (balance exploration/exploitation)
+    \item \textbf{Cognitive coeff:} $c_1 = 2.0$ (personal memory)
+    \item \textbf{Social coeff:} $c_2 = 2.0$ (swarm cooperation)
+    \item \textbf{Bounds:} Controller-specific (e.g., $\lambda \in [1, 50]$)
+\end{itemize}
+}
+
+\quickref{Cost Function Weights}{
+\begin{itemize}
+    \item State error: $w_1 = 0.6$ (60\% - tracking priority)
+    \item Control effort: $w_2 = 0.3$ (30\% - efficiency)
+    \item Chattering: $w_3 = 0.1$ (10\% - smoothness)
+    \item Stability penalty: 1000 (death penalty)
+\end{itemize}
+}
+
+\subsection*{Implementation Tips}
+
+\begin{summary}
+\textbf{Performance:}
+\begin{itemize}
+    \item \textbf{1.} Use vectorized simulation for particle evaluation (10-100x speedup)
+    \item \textbf{2.} Parallelize across CPU cores (near-linear scaling)
+    \item \textbf{3.} Use Simplified model for PSO, validate with Full model
+\end{itemize}
+
+\textbf{Convergence:}
+\begin{itemize}
+    \item Monitor global best cost - should decrease smoothly
+    \item If stagnant after 20 iterations: Increase $w$ or swarm diversity
+    \item If oscillating: Decrease $w$ (more exploitation)
+\end{itemize}
+
+\textbf{Validation:}
+\begin{itemize}
+    \item ALWAYS re-test optimized gains with Full Nonlinear model
+    \item Test robustness: Add 10\% parameter uncertainty
+    \item Check multiple initial conditions (Monte Carlo)
+\end{itemize}
+\end{summary}
+
+\subsection*{What's Next?}
+
+\begin{keypoint}
+\textbf{E005: Simulation Engine} - The runner, vectorized simulators, and how we achieve 100x speedups for PSO
+
+\textbf{E006+: Advanced Topics} - Analysis tools, benchmarks, Lyapunov proofs, research outputs
+
+\textbf{Remember:} PSO gave us the gains. Now we need the engine to run 2500 simulations efficiently!
+\end{keypoint}
+
+\end{document}

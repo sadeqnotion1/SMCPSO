@@ -1,0 +1,141 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CHAPTER 3: Classical SMC Algorithms
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{algorithm}[H]
+\caption{Classical SMC Control Law with Boundary Layer}
+\label{alg:classical_smc_control}
+\KwIn{State $\vect{x} = [x, \theta_1, \theta_2, \dot{x}, \dot{\theta}_1, \dot{\theta}_2]^T$}
+\KwIn{Gains $\{k_1, k_2, \lambda_1, \lambda_2, K, k_d\}$}
+\KwIn{Boundary layer width $\epsilon > 0$, max force $u_{\max}$}
+\KwOut{Saturated control input $u_{\text{sat}}$}
+\BlankLine
+\tcp{Compute sliding surface (Equation 3.7)}
+$\sigma \leftarrow k_1(\dot{\theta}_1 + \lambda_1 \theta_1) + k_2(\dot{\theta}_2 + \lambda_2 \theta_2)$\;
+\BlankLine
+\tcp{Boundary layer saturation (chattering reduction)}
+\eIf{$|\sigma| > \epsilon$}{
+    $\text{sgn}(\sigma) \leftarrow \sign(\sigma)$ \tcp*{Discontinuous outside layer}
+}{
+    $\text{sgn}(\sigma) \leftarrow \sigma / \epsilon$ \tcp*{Linear inside layer}
+}
+\BlankLine
+\tcp{Switching control with damping}
+$u_{\text{sw}} \leftarrow -K \cdot \text{sgn}(\sigma) - k_d \sigma$\;
+\BlankLine
+\tcp{Model-based equivalent control (if dynamics available)}
+\eIf{dynamics model available}{
+    $u_{\text{eq}} \leftarrow \text{ComputeEquivalentControl}(\vect{x})$ \tcp*{Algorithm 3.2}
+}{
+    $u_{\text{eq}} \leftarrow 0$
+}
+\BlankLine
+\tcp{Total control and saturation}
+$u \leftarrow u_{\text{eq}} + u_{\text{sw}}$\;
+$u_{\text{sat}} \leftarrow \text{clip}(u, -u_{\max}, u_{\max})$\;
+\BlankLine
+\Return{$u_{\text{sat}}$}
+\end{algorithm}
+
+\textbf{Complexity}: $O(1)$ time for stateless computation, $O(1)$ space.
+
+\vspace{1em}
+
+\begin{algorithm}[H]
+\caption{Equivalent Control Computation (Model-Based)}
+\label{alg:equivalent_control}
+\KwIn{State $\vect{x} = [x, \theta_1, \theta_2, \dot{x}, \dot{\theta}_1, \dot{\theta}_2]^T$}
+\KwIn{Dynamics model (provides $M(\vect{q})$, $C(\vect{q}, \dot{\vect{q}})$, $G(\vect{q})$)}
+\KwIn{Regularization constant $\delta > 0$, threshold $\tau > 0$}
+\KwOut{Equivalent control $u_{\text{eq}}$ or $0$ if unreliable}
+\BlankLine
+\tcp{Extract generalized coordinates}
+$\vect{q} \leftarrow [\theta_1, \theta_2]^T$, $\dot{\vect{q}} \leftarrow [\dot{\theta}_1, \dot{\theta}_2]^T$\;
+\BlankLine
+\tcp{Compute physics matrices (Equation 2.8)}
+$M \leftarrow \text{InertiaMatrix}(\vect{q})$ \tcp*{$3 \times 3$ matrix}
+$C \leftarrow \text{CoriolisMatrix}(\vect{q}, \dot{\vect{q}})$ \tcp*{$3 \times 1$ or $3 \times 3$}
+$G \leftarrow \text{GravityVector}(\vect{q})$ \tcp*{$3 \times 1$}
+\BlankLine
+\tcp{Tikhonov regularization for numerical stability}
+$M_{\text{reg}} \leftarrow M + \delta I_3$\;
+\BlankLine
+\tcp{Check controllability scalar}
+$L \leftarrow [0, k_1, k_2]$, $B \leftarrow [1, 0, 0]^T$\;
+$M_{\text{inv}} B \leftarrow \text{solve}(M_{\text{reg}}, B)$ \tcp*{Linear solve, $O(n^3)$}
+$L M_{\text{inv}} B \leftarrow L^T \cdot (M_{\text{inv}} B)$\;
+\BlankLine
+\eIf{$|L M_{\text{inv}} B| < \tau$}{
+    \Return{$0$} \tcp*{Uncontrollable, disable feedforward}
+}{
+    \tcp{Compute equivalent control numerator}
+    $\vect{rhs} \leftarrow C \dot{\vect{q}} + G$ \tcp*{Handle matrix/vector C}
+    $M_{\text{inv}} \vect{rhs} \leftarrow \text{solve}(M_{\text{reg}}, \vect{rhs})$\;
+    $\text{term}_1 \leftarrow L^T \cdot (M_{\text{inv}} \vect{rhs})$\;
+    $\text{term}_2 \leftarrow k_1 \lambda_1 \dot{\theta}_1 + k_2 \lambda_2 \dot{\theta}_2$\;
+    \BlankLine
+    \tcp{Compute feedforward term}
+    $u_{\text{eq}} \leftarrow (\text{term}_1 - \text{term}_2) / (L M_{\text{inv}} B)$\;
+    \BlankLine
+    \Return{$u_{\text{eq}}$}
+}
+\end{algorithm}
+
+\textbf{Complexity}: $O(n^3)$ time for two linear solves (dominated by $3 \times 3$ matrix inversion), $O(n^2)$ space for physics matrices.
+
+\vspace{1em}
+
+\begin{algorithm}[H]
+\caption{Boundary Layer Saturation Function}
+\label{alg:boundary_layer_saturation}
+\KwIn{Sliding surface value $\sigma \in \Real$}
+\KwIn{Boundary layer width $\epsilon > 0$}
+\KwIn{Method: ``tanh'' or ``linear''}
+\KwOut{Saturated sign $\sat(\sigma/\epsilon)$}
+\BlankLine
+\tcp{Smooth hyperbolic tangent (default, reduces chattering)}
+\If{method = ``tanh''}{
+    \Return{$\tanh(\sigma / \epsilon)$} \tcp*{$O(1)$ transcendental function}
+}
+\BlankLine
+\tcp{Piecewise linear saturation (sharper, simpler)}
+\If{method = ``linear''}{
+    \eIf{$|\sigma| > \epsilon$}{
+        \Return{$\sign(\sigma)$}
+    }{
+        \Return{$\sigma / \epsilon$}
+    }
+}
+\end{algorithm}
+
+\textbf{Complexity}: $O(1)$ time, $O(1)$ space.
+
+\vspace{1em}
+
+\begin{algorithm}[H]
+\caption{Gain Validation for Classical SMC}
+\label{alg:classical_smc_gain_validation}
+\KwIn{Gain vector $\vect{g} = [k_1, k_2, \lambda_1, \lambda_2, K, k_d]^T \in \Real^6$}
+\KwOut{Boolean: \textbf{True} if valid, \textbf{False} otherwise}
+\BlankLine
+\tcp{Sliding-mode stability requires positive gains (Theorem 3.1)}
+\If{$k_1 \leq 0$ \textbf{or} $k_2 \leq 0$ \textbf{or} $\lambda_1 \leq 0$ \textbf{or} $\lambda_2 \leq 0$}{
+    \Return{\textbf{False}} \tcp*{Sliding surface gains must be positive}
+}
+\BlankLine
+\tcp{Switching gain must be positive to reach sliding manifold}
+\If{$K \leq 0$}{
+    \Return{\textbf{False}}
+}
+\BlankLine
+\tcp{Damping gain must be non-negative}
+\If{$k_d < 0$}{
+    \Return{\textbf{False}}
+}
+\BlankLine
+\Return{\textbf{True}}
+\end{algorithm}
+
+\textbf{Complexity}: $O(1)$ time, $O(1)$ space. Used during PSO optimization to filter invalid particles.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

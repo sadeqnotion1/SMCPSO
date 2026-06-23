@@ -1,0 +1,63 @@
+{
+  "name": "dip-smc-pso-mcp-tools",
+  "version": "1.0.0",
+  "description": "MCP debugging tools for Double Inverted Pendulum SMC with PSO optimization",
+  "private": true,
+  "scripts": {
+    "test:browser": "echo 'Use: npx @modelcontextprotocol/server-playwright'",
+    "playwright:install": "npx playwright install",
+    "playwright:server": "npx @modelcontextprotocol/server-playwright"
+  },
+  "keywords": [
+    "mcp",
+    "playwright",
+    "debugging",
+    "streamlit",
+    "control-systems"
+  ],
+  "author": "DIP-SMC-PSO Team",
+  "license": "MIT",
+  "devDependencies": {
+    "playwright": "^1.49.0",
+    "puppeteer": "^24.25.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/theSadeQ/dip-smc-pso.git"
+  },
+  "percy": {
+    "version": 2,
+    "snapshot": {
+      "widths": [
+        320,
+        768,
+        1024,
+        1440
+      ],
+      "minHeight": 1024,
+      "percyCSS": "",
+      "enableJavaScript": true
+    },
+    "discovery": {
+      "allowedHostnames": [
+        "localhost"
+      ],
+      "networkIdleTimeout": 750
+    },
+    "staticSnapshots": {
+      "baseUrl": "http://localhost:9000",
+      "snapshotFiles": "**/*.html",
+      "ignore": [
+        "**/node_modules/**",
+        "**/.git/**"
+      ]
+    },
+    "defer": {
+      "enabled": false
+    }
+  }
+}

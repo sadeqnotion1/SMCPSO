@@ -1,0 +1,88 @@
+# AUDIT REPORT: Section 6 - Experimental Setup
+
+**Date:** December 26, 2025
+**Auditor:** Gemini Agent
+**Target Document:** LT-7-RESEARCH-PAPER-v2.1 (Section 6)
+**Status:** **CONDITIONAL PASS** (Issues Identified)
+
+---
+
+## 1. Executive Summary
+
+Section 6 provides a comprehensive and detailed experimental protocol. The inclusion of specific package versions, reproducibility steps, and a pre-flight validation protocol is excellent and sets a high standard for open science.
+
+However, the audit identified **SEVERITY 2 (HIGH)** issues related to the definition of chattering metrics and potential inconsistencies in statistical power calculations. The chattering index units (N/s) are unconventional if the control is force (N) and discrete approximation is used, leading to potential interpretation errors. Furthermore, the claim of "no aliasing" with 100 Hz sampling for a switching controller (10-50 Hz) is theoretically questionable, as Nyquist requires >2x the *highest frequency component* (which is infinite for a square wave/sign function), not just the fundamental switching frequency.
+
+---
+
+## 2. Detailed Findings
+
+### 2.1 Mathematical Rigor & Implicit Assumptions
+
+*   **Chattering Index Definition (SEVERITY 2):**
+    *   **Equation:** $CI = \sqrt{\frac{1}{N}\sum (\frac{u_k - u_{k-1}}{\Delta t})^2}$
+    *   **Dimensional Check:** Units are $\sqrt{(N/\text{time})^2} = N/\text{time}$. Correct dimensionally.
+    *   **Issue:** This metric (RMS of derivative) is highly sensitive to the simulation step size $\Delta t$. If $\Delta t$ decreases, the derivative of a step change (switching) approaches infinity. Comparing CI across different simulation rates would be invalid.
+    *   **Implicit Assumption:** Assumes fixed $\Delta t = 0.01s$. If simulation rate changes, results are not comparable.
+
+*   **Nyquist Criterion / Aliasing (SEVERITY 3):**
+    *   **Claim:** "100 Hz control rate captures switching dynamics without aliasing."
+    *   **Reality:** Ideally, SMC switching is high-frequency (theoretical infinite bandwidth for ideal sign function). With boundary layer/saturation, it becomes band-limited. However, if the "switching frequency" is 50 Hz, sampling at 100 Hz is exactly the Nyquist limit, which is marginal. Aliasing of higher harmonics of the switching waveform is guaranteed.
+    *   **Impact:** Might underestimate chattering intensity.
+
+### 2.2 Data/Results Rigor & Verification
+
+| Claim | Location | Calculation | Source | Verified? | Notes |
+|-------|----------|-------------|--------|-----------|-------|
+| "Statistical power > 0.8" | Section 6.3 | G*Power calc | Text | âœ“ | With N=100 per group, d=0.5, $\alpha=0.05$, Power $\approx 0.94 > 0.8$. Valid. |
+| "Sample size n=64 required" | Section 6.3 | Power analysis | Text | âœ“ | Standard calculation confirms n~64 for d=0.5, power=0.8. |
+| "Bonferroni $\alpha \approx 0.0083$" | Section 6.4 | $0.05/6$ | Text | âœ“ | Correct. |
+| "Optimal Energy 11.8 J" | Section 6.2 | N/A | Text | âœ“ | Matches abstract. |
+| "Moderate Energy 12.4 J" | Section 6.2 | N/A | Text | âœ“ | Matches abstract implicitly (Classical). |
+
+### 2.3 Cross-Section Consistency
+
+*   **Sample Size Consistency:**
+    *   **Abstract:** "400+ Monte Carlo simulations".
+    *   **Section 6.3:** "Scenario 1: 400 trials", "Scenario 2: 500 trials". Total > 900.
+    *   **Consistency:** "400+" is technically true but conservative. Consistent.
+
+*   **Simulation Parameters:**
+    *   **Section 2:** States $u_{max} = 20$ N.
+    *   **Section 6:** Reaffirms $u_{max} = 20$ N. Consistent.
+
+---
+
+## 3. Severity-Classified Issues
+
+### âڑ ï¸ڈ SEVERITY 1 (CRITICAL)
+*   *(None identified in this section)*
+
+### âڑ ï¸ڈ SEVERITY 2 (HIGH)
+1.  **Chattering Index Step-Size Dependency:**
+    *   **Location:** Section 6.2 Metric 6.
+    *   **Issue:** The Chattering Index value is mathematically dependent on $\Delta t$. If a reader replicates with $\Delta t = 0.001$, their CI will be $\sim 10x$ higher for the same physical behavior.
+    *   **Fix:** Add a note: "Metric is valid only for $\Delta t = 0.01$s. For resolution-independent chattering metrics, use HF Energy Fraction."
+
+2.  **Aliasing Claim Inaccuracy:**
+    *   **Location:** Section 6.1 Rationale 2.
+    *   **Issue:** Claiming "no aliasing" at 2x fundamental switching frequency is signal processing heresy for square-wave-like signals.
+    *   **Fix:** Rephrase to "Captures fundamental switching frequency" or acknowledge that high-frequency harmonics are aliased but filtered by system inertia.
+
+### âڑ ï¸ڈ SEVERITY 3 (MEDIUM)
+1.  **Metric Redundancy:**
+    *   **Location:** Section 6.2.
+    *   **Issue:** "Rise Time" ($t_r$) and "Settling Time" ($t_s$) are highly correlated. "Peak Chattering Frequency" and "HF Energy" are also correlated.
+    *   **Fix:** Acceptable for completeness, but could be simplified.
+
+---
+
+## 4. Recommendations
+
+1.  **Qualify Chattering Index:** Explicitly state that the Chattering Index (CI) values reported are specific to the 100Hz simulation rate and should not be compared to results obtained at different sampling frequencies.
+2.  **Soften Aliasing Claim:** Change "without aliasing" to "with sufficient fidelity for control verification".
+3.  **Validate "Robustness Score":** The formula $R = p_{conv} \times (1 - OS/180)$ mixes probability and angle. Ensure units make sense (dimensionless). It seems ad-hoc. State clearly it is a "Defined Robustness Metric" specific to this paper.
+
+---
+
+**Final Score:** 8/10 (Strong, with minor technical caveats)

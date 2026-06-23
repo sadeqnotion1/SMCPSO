@@ -1,0 +1,11 @@
+file,line,link_text,target,resolved_path,issue
+guides\features\code-collapse\PHASE6_COMPLETION_SUMMARY.md,217,Phase 5 Validation Report,../../testing/code_collapse_validation_report.md,D:\Projects\main\docs\guides\testing\code_collapse_validation_report.md,Target file not found
+guides\features\code-collapse\PHASE6_COMPLETION_SUMMARY.md,218,Browser Testing Checklist,../../testing/BROWSER_TESTING_CHECKLIST.md,D:\Projects\main\docs\guides\testing\BROWSER_TESTING_CHECKLIST.md,Target file not found
+guides\features\code-collapse\PHASE6_COMPLETION_SUMMARY.md,219,Testing Procedures,../../testing/TESTING_PROCEDURES.md,D:\Projects\main\docs\guides\testing\TESTING_PROCEDURES.md,Target file not found
+guides\how-to\robust-pso-optimization.md,413,MT-7 Issue Tracking,.project/ai/planning/phase5/MT-7_ROBUST_PSO_IMPLEMENTATION.md,D:\Projects\main\docs\guides\how-to\.project\ai\planning\phase5\MT-7_ROBUST_PSO_IMPLEMENTATION.md,Target file not found
+guides\how-to\robust-pso-optimization.md,415,Chattering Analysis,../../analysis/chattering_analysis.md,D:\Projects\main\docs\analysis\chattering_analysis.md,Target file not found
+guides\INDEX.md,7,Path 0: Beginner Roadmap,../.project/ai/edu/beginner-roadmap.md,D:\Projects\main\docs\.project\ai\edu\beginner-roadmap.md,Target file not found
+guides\INDEX.md,335,Project Planning,../plans/index.md,D:\Projects\main\docs\plans\index.md,Target file not found
+guides\interactive\jupyter-notebooks-demo.md,390,Create Custom Notebooks,../../tutorials/tutorial-04-custom-controller.md,D:\Projects\main\docs\tutorials\tutorial-04-custom-controller.md,Target file not found
+guides\interactive\jupyter-notebooks-demo.md,391,Widget Development Guide,../../api/widgets-api.md,D:\Projects\main\docs\api\widgets-api.md,Target file not found
+guides\interactive\jupyter-notebooks-demo.md,392,Jupyter Best Practices,../../guides/jupyter-best-practices.md,D:\Projects\main\docs\guides\jupyter-best-practices.md,Target file not found

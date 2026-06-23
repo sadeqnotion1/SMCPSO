@@ -1,0 +1,134 @@
+% ============================================================================
+% SECTION 20: VERSION CONTROL
+% ============================================================================
+\section{Version Control}
+
+\begin{frame}[fragile]{Git Workflow \& Repository Management}
+    \textbf{Repository Information:}
+
+    \vspace{0.3cm}
+
+    \begin{itemize}
+        \item \textbf{Remote:} \url{https://github.com/theSadeQ/dip-smc-pso.git}
+        \item \textbf{Branch Strategy:} Main branch deployment
+        \item \textbf{Working Directory:} \texttt{D:\textbackslash Projects\textbackslash main}
+    \end{itemize}
+
+    \vspace{0.3cm}
+
+    \textbf{CRITICAL RULE - AUTONOMOUS OPERATION:}
+    \begin{alertblock}{Auto-Commit \& Push (MANDATORY)}
+        \begin{itemize}
+            \item \textbf{ALWAYS commit and push} changes automatically after completing work
+            \item \textbf{NEVER ask} for commit/push confirmation
+            \item \textbf{Action:} Complete task → Update docs → Commit → Push → Next task
+        \end{itemize}
+    \end{alertblock}
+
+    \vspace{0.3cm}
+
+    \textbf{Commit Message Format:}
+    \begin{lstlisting}[language=bash]
+<Action>: <Brief description>
+
+[AI] Generated with Claude Code
+https://claude.com/claude-code
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Automated Tracking via Git Hooks}
+    \textbf{Zero Manual Updates -- Git Hooks Auto-Detect Task IDs:}
+
+    \vspace{0.3cm}
+
+    \textbf{Example Workflow:}
+    \begin{lstlisting}[language=bash]
+# 1. Make code changes
+# 2. Commit with task ID in message
+git commit -m "feat(MT-6): Complete boundary layer optimization"
+
+# 3. Pre-commit hook auto-detects MT-6
+# 4. Updates .ai_workspace/state/project_state.json
+# 5. Marks MT-6 as completed
+
+# 6. Push changes
+git push origin main
+    \end{lstlisting}
+
+    \vspace{0.3cm}
+
+    \textbf{Hook Features:}
+    \begin{itemize}
+        \item \textbf{Task ID detection:} Regex pattern \texttt{(QW|MT|LT)-\textbackslash d+}
+        \item \textbf{State update:} Auto-marks tasks complete in project state
+        \item \textbf{Validation:} Ensures commit message format compliance
+        \item \textbf{Logging:} Records all state changes for audit trail
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Git Safety Protocol}
+    \textbf{CRITICAL RULES (NEVER VIOLATE):}
+
+    \vspace{0.3cm}
+
+    \begin{alertblock}{Forbidden Operations}
+        \begin{itemize}
+            \item \textbf{NEVER update} git config (preserve user settings)
+            \item \textbf{NEVER run} destructive commands (\texttt{push --force}, \texttt{hard reset})
+            \item \textbf{NEVER skip} hooks (\texttt{--no-verify}, \texttt{--no-gpg-sign})
+            \item \textbf{NEVER force push} to main/master (warn user if requested)
+        \end{itemize}
+    \end{alertblock}
+
+    \vspace{0.3cm}
+
+    \textbf{Amend Policy:}
+    \begin{itemize}
+        \item \textbf{ONLY amend} when:
+        \begin{enumerate}
+            \item User explicitly requests amend, OR
+            \item Adding edits from pre-commit hook
+        \end{enumerate}
+        \item \textbf{ALWAYS check} authorship before amending:
+        \begin{lstlisting}[language=bash]
+git log -1 --format='%an %ae'
+# NEVER amend other developers' commits
+        \end{lstlisting}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Collaboration Workflow}
+    \textbf{Multi-Developer Best Practices:}
+
+    \vspace{0.3cm}
+
+    \textbf{Branch Strategy (Future):}
+    \begin{itemize}
+        \item \textbf{main:} Stable, production-ready code
+        \item \textbf{develop:} Integration branch for features
+        \item \textbf{feature/*:} Individual feature branches
+        \item \textbf{hotfix/*:} Urgent bug fixes
+    \end{itemize}
+
+    \vspace{0.3cm}
+
+    \textbf{Pull Request Process:}
+    \begin{enumerate}
+        \item Create feature branch from \texttt{develop}
+        \item Implement changes, write tests
+        \item Run full test suite (\texttt{python run\_tests.py})
+        \item Submit PR with description, test plan
+        \item Code review (≥1 approval required)
+        \item Merge to \texttt{develop} (squash commits)
+    \end{enumerate}
+
+    \vspace{0.3cm}
+
+    \textbf{Current Status:}
+    \begin{itemize}
+        \item Single developer (main branch only)
+        \item Future: Multi-developer branching strategy
+    \end{itemize}
+\end{frame}

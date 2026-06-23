@@ -1,0 +1,150 @@
+name: ✨ Feature Request / Enhancement
+description: Suggest new features or enhancements (LOW)
+title: "[FEATURE] "
+labels: ["enhancement", "feature-request", "low"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## ✨ Feature Request / Enhancement
+        Use this template for new controller variants, optimization algorithms, or system enhancements.
+        **Response Time**: Next development cycle
+
+  - type: dropdown
+    id: feature_category
+    attributes:
+      label: Feature Category
+      description: What type of feature or enhancement is this?
+      options:
+        - New Controller Algorithm
+        - Optimization Enhancement
+        - Simulation Improvement
+        - HIL Feature
+        - Configuration Enhancement
+        - Testing Framework
+        - Documentation
+        - Performance Optimization
+        - User Interface
+        - Other
+      default: 0
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority Level
+      description: How important is this feature?
+      options:
+        - Low - Nice to have
+        - Medium - Would improve workflow
+        - High - Important for project success
+        - Critical - Blocking current work
+      default: 0
+    validations:
+      required: true
+
+  - type: textarea
+    id: feature_description
+    attributes:
+      label: Feature Description
+      description: Detailed description of the proposed feature
+      placeholder: |
+        Describe the feature you'd like to see implemented.
+        - What problem does it solve?
+        - How would it work?
+        - What would be the expected behavior?
+    validations:
+      required: true
+
+  - type: textarea
+    id: use_case
+    attributes:
+      label: Use Case / Motivation
+      description: Explain why this feature would be valuable
+      placeholder: |
+        - Current limitation: ...
+        - How this feature helps: ...
+        - Expected benefits: ...
+        - Who would use this: ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed_solution
+    attributes:
+      label: Proposed Solution
+      description: Describe how you envision this feature being implemented
+      placeholder: |
+        Technical approach:
+        - Implementation strategy: ...
+        - Required components: ...
+        - Integration points: ...
+        - Configuration changes: ...
+
+        Example usage:
+        python simulate.py --new-feature --param value
+    validations:
+      required: false
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Describe alternative solutions you've considered
+      placeholder: |
+        Alternative approaches:
+        1. Option A: ... (pros/cons)
+        2. Option B: ... (pros/cons)
+        3. Workaround: ... (limitations)
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: feature_scope
+    attributes:
+      label: Feature Scope
+      description: Check all areas this feature would affect
+      options:
+        - label: Controller algorithms
+        - label: Optimization methods
+        - label: Simulation engine
+        - label: Configuration system
+        - label: HIL integration
+        - label: Testing framework
+        - label: Documentation
+        - label: User interface
+        - label: Performance
+
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: Acceptance Criteria
+      description: Define what "done" looks like for this feature
+      placeholder: |
+        This feature will be complete when:
+        - [ ] Implementation meets requirements
+        - [ ] Unit tests cover new functionality
+        - [ ] Integration tests pass
+        - [ ] Documentation is updated
+        - [ ] Configuration examples provided
+        - [ ] Performance benchmarks established
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: Additional Context
+      description: Any additional information, mockups, or references
+      placeholder: |
+        References:
+        - Related papers: ...
+        - Similar implementations: ...
+        - External libraries: ...
+
+        Additional notes:
+        ...
+    validations:
+      required: false

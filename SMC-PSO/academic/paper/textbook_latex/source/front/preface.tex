@@ -1,0 +1,82 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% PREFACE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter*{Preface}
+\addcontentsline{toc}{chapter}{Preface}
+
+This textbook emerges from several years of research and teaching in sliding mode control (SMC) for underactuated systems. It bridges the gap between theoretical foundations and practical implementation, providing a complete learning path from mathematical preliminaries to production-ready Python code.
+
+\section*{Goals and Audience}
+
+This book is designed for:
+
+\begin{itemize}
+    \item \textbf{Graduate students} in control engineering, robotics, or mechatronics seeking rigorous treatment of SMC with hands-on implementation
+    \item \textbf{Engineers} transitioning from classical control to robust nonlinear techniques
+    \item \textbf{Researchers} requiring validated Python implementations for benchmarking and extension
+    \item \textbf{Self-learners} with basic control theory background (Laplace transforms, state-space models) who want to master SMC
+\end{itemize}
+
+\section*{Prerequisites}
+
+Readers should have:
+\begin{itemize}
+    \item Linear algebra (matrices, eigenvalues)
+    \item Differential equations (ODEs, linearization)
+    \item Basic control theory (stability, transfer functions)
+    \item Python programming (NumPy, basic OOP)
+\end{itemize}
+
+For complete beginners, we recommend the preparatory roadmap in \texttt{.ai\_workspace/edu/beginner-roadmap.md}, which provides 125-150 hours of foundational study before starting this textbook.
+
+\section*{How to Use This Book}
+
+\textbf{Learning Paths}:
+
+\begin{enumerate}
+    \item \textbf{Theory-First Path} (graduate students): Read Chapters 1-7 sequentially, derive all Lyapunov proofs, complete exercises, then implement in Python (Chapters 8-11).
+
+    \item \textbf{Implementation-First Path} (engineers): Skim Chapters 1-2, jump to Chapter 11 (software), run examples, then return to theory as needed.
+
+    \item \textbf{Research Path} (PhD candidates): Focus on Chapters 8-10 (benchmarking, PSO, advanced topics), extend to novel controllers, compare with provided baselines.
+\end{enumerate}
+
+\textbf{Chapter Organization}:
+\begin{itemize}
+    \item \textbf{Chapters 1-2}: Foundations (DIP dynamics, Lagrangian mechanics, Lyapunov stability)
+    \item \textbf{Chapters 3-6}: Core SMC algorithms (Classical, STA, Adaptive, Hybrid)
+    \item \textbf{Chapter 7}: PSO optimization theory and application
+    \item \textbf{Chapter 8}: Comprehensive benchmarking and experimental validation
+    \item \textbf{Chapters 9-10}: Advanced topics (robustness, benchmarking, PSO results)
+    \item \textbf{Chapter 11}: Production-quality Python implementation
+    \item \textbf{Chapter 12}: Real-world case studies
+\end{itemize}
+
+\section*{Software Repository}
+
+All Python code, configuration files, and datasets are available at:
+
+\begin{center}
+\url{https://github.com/theSadeQ/dip-smc-pso}
+\end{center}
+
+The repository includes:
+\begin{itemize}
+    \item Production controllers (\texttt{src/controllers/})
+    \item PSO optimizer (\texttt{src/optimizer/})
+    \item Dynamics models (\texttt{src/plant/})
+    \item Comprehensive test suite (\texttt{tests/}, 100+ tests)
+    \item Benchmarking data (\texttt{benchmarks/})
+    \item Streamlit web interface
+\end{itemize}
+
+\section*{Acknowledgments}
+
+This work was supported by [Institution/Grant]. We thank [Advisors, Collaborators] for invaluable feedback. Special thanks to the open-source community for NumPy, SciPy, and PySwarms libraries.
+
+\vspace{1cm}
+
+\noindent [Author Name] \\
+[Institution] \\
+January 2026

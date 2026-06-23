@@ -1,0 +1,132 @@
+% ============================================================================
+% SECTION 22: KEY STATISTICS
+% ============================================================================
+\section{Key Statistics}
+
+\begin{frame}{Codebase Statistics}
+    \textbf{Project Scale Metrics:}
+
+    \vspace{0.3cm}
+
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \textbf{Code Volume:}
+            \begin{itemize}
+                \item \textbf{Source code:} ~15,000 lines (Python)
+                \item \textbf{Tests:} ~8,000 lines
+                \item \textbf{Documentation:} ~20,000 lines (Markdown, RST)
+                \item \textbf{Total:} ~43,000 lines
+            \end{itemize}
+        \end{column}
+
+        \begin{column}{0.5\textwidth}
+            \textbf{Component Breakdown:}
+            \begin{itemize}
+                \item Controllers: 7 variants
+                \item Dynamics models: 8 variants
+                \item PSO tuner: 1 main + 3 variants
+                \item Utilities: 25+ modules
+                \item Scripts: 173 automation scripts
+            \end{itemize}
+        \end{column}
+    \end{columns}
+
+    \vspace{0.3cm}
+
+    \begin{tabular}{lrrr}
+        \toprule
+        \textbf{Category} & \textbf{Files} & \textbf{Lines} & \textbf{Size} \\
+        \midrule
+        Source (\texttt{src/}) & 120 & 15,000 & 450 KB \\
+        Tests (\texttt{tests/}) & 85 & 8,000 & 280 KB \\
+        Docs (\texttt{docs/}) & 814 & 20,000 & 3.2 MB \\
+        Scripts (\texttt{scripts/}) & 173 & 6,000 & 220 KB \\
+        \bottomrule
+    \end{tabular}
+\end{frame}
+
+\begin{frame}{Research Output Statistics}
+    \textbf{Research Phase Deliverables:}
+
+    \vspace{0.3cm}
+
+    \textbf{Phase 5 Research (October 29 - November 7, 2025):}
+    \begin{itemize}
+        \item \textbf{Tasks completed:} 11/11 (100\%)
+        \item \textbf{Quick wins:} 5 tasks (8 hours)
+        \item \textbf{Medium-term:} 4 tasks (18 hours)
+        \item \textbf{Long-term:} 2 tasks (46 hours)
+        \item \textbf{Total effort:} 72 hours over 8 weeks
+    \end{itemize}
+
+    \vspace{0.3cm}
+
+    \textbf{Research Artifacts:}
+    \begin{itemize}
+        \item \textbf{LT-7 Paper:} SUBMISSION-READY (v2.1), 14 figures, comprehensive bibliography
+        \item \textbf{Experimental data:} 16 MB (controller-based + cross-controller studies)
+        \item \textbf{Benchmark logs:} 10 MB (MT-5, MT-7, MT-8, LT-6)
+        \item \textbf{Lyapunov proofs:} ~1,000 lines (LT-4)
+        \item \textbf{Theory documentation:} ~2,000 lines (QW-1)
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Quality Metrics}
+    \textbf{Code Quality \& Testing:}
+
+    \vspace{0.3cm}
+
+    \begin{tabular}{lcc}
+        \toprule
+        \textbf{Metric} & \textbf{Target} & \textbf{Current} \\
+        \midrule
+        Test pass rate & 100\% & \statusok 100\% \\
+        Critical issues & 0 & \statusok 0 \\
+        High-priority issues & ≤3 & \statusok 0 \\
+        Code coverage (overall) & ≥85\% & \statuswarning Broken \\
+        Coverage (critical) & ≥95\% & \statuswarning Broken \\
+        Thread safety tests & 100\% & \statusok 11/11 \\
+        Browser tests & 100\% & \statusok 17/17 \\
+        \midrule
+        Documentation files & -- & 985 \\
+        Navigation systems & -- & 11 \\
+        Learning paths & -- & 5 \\
+        \bottomrule
+    \end{tabular}
+
+    \vspace{0.3cm}
+
+    \textbf{Production Readiness Score:}
+    \begin{itemize}
+        \item \textbf{Current:} 23.9/100 \statuserror (NOT production-ready)
+        \item \textbf{Status:} Research-ready \statusok, controllers functional
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Performance Benchmarks Summary}
+    \textbf{Controller Performance Rankings:}
+
+    \vspace{0.3cm}
+
+    \begin{tabular}{lrrrr}
+        \toprule
+        \textbf{Controller} & \textbf{Settle (s)} & \textbf{Energy} & \textbf{Chatter} & \textbf{Rank} \\
+        \midrule
+        Hybrid Adaptive STA & 1.8 & 45 & Low & 1 \\
+        STA SMC & 2.1 & 52 & Low & 2 \\
+        Adaptive SMC & 2.3 & 48 & Medium & 3 \\
+        Classical SMC & 2.5 & 55 & High & 4 \\
+        Swing-Up & 3.2 & 68 & Medium & 5 \\
+        MPC (experimental) & 2.8 & 42 & Low & 6 \\
+        \bottomrule
+    \end{tabular}
+
+    \vspace{0.3cm}
+
+    \textbf{PSO Optimization Results:}
+    \begin{itemize}
+        \item \textbf{Convergence:} 50-80 generations (30 particles)
+        \item \textbf{Speedup:} 3.1× (Numba JIT), 20.8× (vectorized batch)
+        \item \textbf{Robustness:} Validated across 100 random seeds (MT-7)
+    \end{itemize}
+\end{frame}

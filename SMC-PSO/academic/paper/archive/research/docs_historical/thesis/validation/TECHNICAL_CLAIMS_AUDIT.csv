@@ -1,0 +1,122 @@
+Claim_ID,Chapter,Section,Claim_Text,Evidence_Type,Location,Validation_Status,Risk_Level,Notes
+TC-001,3,3.1,Double-inverted pendulum has 3 degrees of freedom (cart x, pendulum angles θ₁ and θ₂),Mathematical,Table 3.1,Pending,Low,Fundamental system definition
+TC-002,3,3.2,Lagrangian formulation yields correct kinetic energy expression,Derivation,Eq. 3.5-3.7,Pending,High,Critical for all dynamics
+TC-003,3,3.3,Potential energy accounts for both pendulum heights,Derivation,Eq. 3.8-3.9,Pending,High,Critical for gravitational terms
+TC-004,3,3.4,Inertia matrix M(q) is symmetric and positive definite,Mathematical,Eq. 3.12,Pending,High,Required for system stability
+TC-005,3,3.5,System equations match nonlinear form ẋ = Ax + Bu + f(x),Mathematical,Eq. 3.15,Pending,Medium,System representation
+TC-006,3,3.6,System is controllable with u acting on cart,Control_Theory,Section 3.6,Pending,Medium,Control design prerequisite
+TC-007,4,4.1,Sliding surface s = Cx is a valid design choice,Control_Theory,Eq. 4.1,Pending,Medium,SMC design assumption
+TC-008,4,4.2,Equivalent control u_eq from ṡ = 0 is well-defined,Mathematical,Eq. 4.3,Pending,High,Core SMC concept
+TC-009,4,4.3,Classical SMC control law achieves asymptotic convergence,Proof,Appendix A.1,Pending,High,Fundamental stability claim
+TC-010,4,4.4,Control gain K must satisfy K > ||d|| + ||ΔA||·||x|| for robustness,Mathematical,Eq. 4.5,Pending,High,Robustness condition
+TC-011,4,4.5,Boundary layer reduces chattering but increases steady-state error,Trade-off,Section 4.5,Pending,Medium,Design trade-off
+TC-012,4,4.6,Sign function sgn(s) causes high-frequency chattering,Empirical,Figure 4.3,Pending,Medium,Chattering phenomenon
+TC-013,5,5.1,Super-twisting algorithm achieves finite-time convergence,Proof,Appendix A.2,Pending,High,STA key property
+TC-014,5,5.2,STA reduces chattering compared to classical SMC,Empirical,Figure 5.2,Pending,Medium,STA advantage claim
+TC-015,5,5.3,Adaptive SMC gain update law is stable,Proof,Appendix A.3,Pending,High,Adaptive stability
+TC-016,5,5.4,Adaptive SMC handles bounded uncertainty without gain tuning,Control_Theory,Section 5.3,Pending,Medium,Adaptation benefit
+TC-017,5,5.5,Hybrid adaptive STA-SMC combines finite-time and adaptive properties,Mathematical,Eq. 5.8,Pending,High,Hybrid novelty claim
+TC-018,6,6.1,PSO cost function is convex for controller tuning,Mathematical,Section 6.2,Pending,Medium,Optimization assumption
+TC-019,6,6.2,PSO converges to near-optimal gains within specified tolerance,Empirical,Figure 6.3,Pending,Medium,Optimization claim
+TC-020,6,6.3,Fitness function includes robustness metric (worst-case performance),Design,Eq. 6.4,Pending,Low,Objective function specification
+TC-021,7,7.1,Optimized gains improve performance vs. manual tuning,Empirical,Table 7.2,Pending,Medium,PSO benefit claim
+TC-022,7,7.2,STA gains (λ, μ) tuned via PSO are consistent across initial conditions,Empirical,Section 7.2,Pending,Medium,Reproducibility claim
+TC-023,8,8.1,Simulation validates theoretical predictions from Chapters 4-5,Empirical,Figure 8.1-8.4,Pending,Medium,Theory-experiment alignment
+TC-024,8,8.2,Classical SMC controls swing-up phase (θ₁ ≥ π) within 5 seconds,Empirical,Table 8.2,Pending,Low,Specific performance metric
+TC-025,8,8.3,STA reduces overshoot compared to classical SMC in stabilization,Empirical,Table 8.3,Pending,Low,Comparative performance
+TC-026,8,8.4,Welch's t-test (independent samples) is appropriate for controller comparison,Statistical,Section 8.2,Pending,High,Statistical validity
+TC-027,8,8.5,Normality assumption holds for all performance metrics (Shapiro-Wilk p > 0.05),Statistical,Appendix B.1,Pending,High,ANOVA prerequisite
+TC-028,8,8.6,Multiple comparison correction (Bonferroni α = 0.05/k) applied to k = 15 tests,Statistical,Section 8.3,Pending,High,False positive control
+TC-029,8,8.7,Sample size n = 30 per group provides 80% power for medium effect size,Statistical,Section 8.1,Pending,High,Statistical power
+TC-030,8,8.8,Adaptive SMC outperforms classical SMC on average by 15% (Cohen's d = 0.8),Empirical,Table 8.5,Pending,Medium,Effect size claim
+TC-031,8,8.9,Hybrid approach shows best robustness to ±20% parameter variations,Empirical,Figure 8.8,Pending,Low,Robustness ranking
+TC-032,8,8.10,Chattering frequency (classical SMC) is 50-100 Hz at boundary layer Φ = 0.1,Empirical,Figure 8.11,Pending,Low,Chattering quantification
+TC-033,8,8.11,All five research questions answered affirmatively by Chapter 8 results,Logical,Section 8.9,Pending,Medium,RQ resolution
+TC-034,9,9.1,HIL results match simulation results within ±5% error,Empirical,Table 9.2,Pending,Low,HIL validation claim
+TC-035,9,9.2,Hardware-implemented controllers are feasible in real-time,Implementation,Section 9.3,Pending,Low,Practical feasibility
+TC-036,10,10.1,Control energy (integral of u²) is minimized by PSO-tuned gains,Empirical,Table 10.1,Pending,Low,Energy efficiency claim
+TC-037,10,10.2,Boundary layer Φ = 0.1 is optimal trade-off for DIP system,Empirical,Figure 10.3,Pending,Low,Parameter selection claim
+TC-038,11,11.1,Hybrid adaptive STA-SMC is novel contribution vs. prior SMC variants,Literature,Section 11.1,Pending,Medium,Novelty claim
+TC-039,11,11.2,PSO application to SMC hybrid tuning is first of its kind for DIP,Literature,Section 11.2,Pending,Low,Application novelty
+TC-040,3,3.2,Kinetic energy of cart: T_cart = (1/2)m₀ẋ²,Derivation,Section 3.2.1,Pending,Medium,Individual component
+TC-041,3,3.2,Kinetic energy of pendulum 1: T₁ = (1/2)m₁[ẋ² + 2l₁θ̇₁ẋcos(θ₁) + l₁²θ̇₁²],Derivation,Section 3.2.2,Pending,High,Coupled kinetic energy term
+TC-042,3,3.2,Kinetic energy of pendulum 2 includes compound angle (θ₁+θ₂),Derivation,Section 3.2.3,Pending,High,Double-pendulum coupling
+TC-043,3,3.3,Potential energy of pendulum 1: V₁ = -m₁gl₁cos(θ₁),Derivation,Section 3.3.1,Pending,Medium,Individual potential
+TC-044,3,3.3,Potential energy of pendulum 2: V₂ = -m₂g[l₁cos(θ₁) + l₂cos(θ₁+θ₂)],Derivation,Section 3.3.2,Pending,High,Compound potential
+TC-045,3,3.4,Lagrangian L = T - V is correct form for mechanical system,Mathematical,Section 3.4,Pending,Low,Fundamental mechanics
+TC-046,3,3.5,M(q) element m₀₀ = m₀ + m₁ + m₂,Derivation,Section 3.5.3,Pending,Medium,Inertia matrix element
+TC-047,3,3.5,M(q) element m₁₁ = m₁l₁² + m₂[l₁² + l₂² + 2l₁l₂cos(θ₂)],Derivation,Section 3.5.3,Pending,High,Nonlinear inertia term
+TC-048,3,3.5,M(q) element m₂₂ = m₂l₂²,Derivation,Section 3.5.3,Pending,Low,Pendulum 2 moment
+TC-049,3,3.6,Coriolis/centrifugal matrix C(q,q̇) derived from Ṁ(q),Mathematical,Eq. 3.13,Pending,High,Nonlinear coupling
+TC-050,4,4.1,Sliding surface design ensures system stability on surface,Control_Theory,Section 4.1,Pending,Medium,SMC design property
+TC-051,4,4.2,Equivalent control eliminates uncertainty effects on sliding surface,Control_Theory,Section 4.2,Pending,High,Robustness mechanism
+TC-052,4,4.3,Discontinuous control u_disc = -K·sgn(s) ensures sliding condition,Control_Theory,Section 4.3,Pending,High,SMC fundamental property
+TC-053,4,4.4,Reaching time for sliding surface is finite and bounded,Proof,Section 4.4,Pending,High,Reaching phase property
+TC-054,4,4.5,Lyapunov function V = (1/2)sᵀs proves asymptotic stability,Proof,Appendix A.1,Pending,High,Classical SMC stability
+TC-055,4,4.6,Saturation function sat(s/Φ) with boundary layer Φ reduces chattering,Design,Section 4.6,Pending,Medium,Chattering mitigation
+TC-056,5,5.1,Super-twisting control law: u = -λ|s|^α sgn(s) - μ sgn(ṡ),Derivation,Eq. 5.1,Pending,High,STA definition
+TC-057,5,5.2,STA achieves finite-time convergence (time T bounded),Proof,Appendix A.2,Pending,High,STA key advantage
+TC-058,5,5.3,Non-smooth Lyapunov analysis required for STA proofs,Mathematical,Section 5.2,Pending,High,Proof technique
+TC-059,5,5.4,Adaptive gain update: γ̇ = Γ||s|| or equivalent,Derivation,Eq. 5.4,Pending,Medium,Adaptation law
+TC-060,5,5.5,Hybrid approach switches between SMC modes based on performance metric,Design,Section 5.5,Pending,Medium,Hybrid mechanism
+TC-061,6,6.1,PSO swarm dynamics: xᵢ(t+1) = xᵢ(t) + vᵢ(t+1),Mathematical,Eq. 6.1,Pending,Low,PSO update equation
+TC-062,6,6.2,Velocity update includes cognitive (c₁) and social (c₂) components,Mathematical,Eq. 6.2,Pending,Low,PSO parameters
+TC-063,6,6.3,Inertia weight w decreases from 0.9 to 0.4 over iterations,Empirical,Section 6.2,Pending,Low,PSO hyperparameter schedule
+TC-064,6,6.4,Cost function: J = w₁·ISE + w₂·ChatteRMS + w₃·RobustnessMetric,Design,Eq. 6.4,Pending,Medium,Multi-objective optimization
+TC-065,7,7.1,PSO finds gains within specified bounds: K_min ≤ K ≤ K_max,Design,Section 7.1,Pending,Low,Constraint specification
+TC-066,7,7.2,Tuning converges in ≤ 100 PSO iterations,Empirical,Section 7.2,Pending,Low,Computational efficiency
+TC-067,8,8.1,Performance metric 1: rise time (0% to 100% of setpoint),Definition,Section 8.1,Pending,Low,Metric definition
+TC-068,8,8.2,Performance metric 2: overshoot (% above reference),Definition,Section 8.1,Pending,Low,Metric definition
+TC-069,8,8.3,Performance metric 3: settling time (within 5% band),Definition,Section 8.1,Pending,Low,Metric definition
+TC-070,8,8.4,Initial condition: θ₁(0) = π + 0.1 rad (near upright, slight perturbation),Empirical,Section 8.1,Pending,Low,Initial condition specification
+TC-071,8,8.5,Simulation time: 0 to 10 seconds,Empirical,Section 8.1,Pending,Low,Simulation duration
+TC-072,8,8.6,Integration method: RK45 with step size dt = 0.001 s,Empirical,Section 8.1,Pending,Low,Numerical method
+TC-073,8,8.7,Random seed: fixed seed = 42 for reproducibility,Empirical,Section 8.1,Pending,Low,Reproducibility specification
+TC-074,8,8.8,Shapiro-Wilk test (α = 0.05) confirms normality of rise time data,Statistical,Appendix B.1,Pending,High,Normality assumption
+TC-075,8,8.9,Levene's test confirms equal variances across classical/STA/adaptive (p > 0.05),Statistical,Appendix B.1,Pending,High,Homogeneity assumption
+TC-076,8,8.10,Welch's t-test used (unequal variances corrected),Statistical,Section 8.2,Pending,Medium,Appropriate test choice
+TC-077,8,8.11,Bonferroni correction: α_adjusted = 0.05/15 = 0.0033 for 15 tests,Statistical,Section 8.3,Pending,High,Multiple comparison control
+TC-078,8,8.12,Sample size per group: n = 30 trials,Empirical,Section 8.1,Pending,High,Statistical power adequacy
+TC-079,8,8.13,Cohen's d effect sizes reported for all pairwise comparisons,Statistical,Table 8.6,Pending,Medium,Effect size reporting
+TC-080,8,8.14,95% confidence intervals computed for all means,Statistical,Figure 8.5,Pending,Medium,Uncertainty quantification
+TC-081,8,8.15,Classical SMC mean rise time: 2.1 ± 0.3 s,Empirical,Table 8.2,Pending,Low,Specific result
+TC-082,8,8.16,STA mean rise time: 1.8 ± 0.2 s (improvement 14%),Empirical,Table 8.2,Pending,Low,Comparative result
+TC-083,8,8.17,Adaptive SMC mean rise time: 1.9 ± 0.25 s,Empirical,Table 8.2,Pending,Low,Specific result
+TC-084,8,8.18,Hybrid approach mean rise time: 1.6 ± 0.2 s (best performance),Empirical,Table 8.2,Pending,Low,Best result claim
+TC-085,8,8.19,Chattering amplitude (classical SMC): 0.15-0.25 V peak-to-peak,Empirical,Figure 8.11,Pending,Low,Quantified chattering
+TC-086,8,8.20,Chattering amplitude (STA): 0.02-0.05 V peak-to-peak (82% reduction),Empirical,Figure 8.11,Pending,Low,Comparative improvement
+TC-087,8,8.21,Robustness test: ±10% inertia variation - all controllers stable,Empirical,Section 8.7,Pending,Low,Robustness threshold
+TC-088,8,8.22,Robustness test: ±20% friction variation - all controllers stable,Empirical,Section 8.7,Pending,Low,Robustness threshold
+TC-089,8,8.23,Robustness test: ±30% length variation - hybrid approach only controller stable,Empirical,Section 8.7,Pending,Medium,Robustness ranking
+TC-090,9,9.1,HIL plant model: Simulink real-time implementation,Implementation,Section 9.2,Pending,Low,Implementation technology
+TC-091,9,9.2,Communication: UDP at 1 kHz sampling rate,Implementation,Section 9.2,Pending,Low,Real-time communication
+TC-092,9,9.3,Controller latency: ≤ 10 ms (< 1/100 of control period),Implementation,Section 9.3,Pending,Medium,Real-time feasibility
+TC-093,10,10.1,Control energy integral: ∫₀ᵀ u²(t) dt over simulation period,Definition,Section 10.1,Pending,Low,Metric definition
+TC-094,10,10.2,Energy efficiency ranking: STA < Adaptive < Classical < Hybrid,Empirical,Table 10.1,Pending,Low,Comparative ranking
+TC-095,10,10.3,Power consumption estimate: 50 mW (classical) to 35 mW (hybrid),Empirical,Section 10.2,Pending,Low,Practical consideration
+TC-096,11,11.1,Five major contributions identified and novel vs. prior art,Literature,Section 11.1,Pending,Medium,Novelty summary
+TC-097,12,12.1,Research question RQ1 answered: Classical SMC is effective for DIP,Logical,Section 12.1,Pending,Medium,RQ resolution
+TC-098,12,12.2,Research question RQ2 answered: STA improves over classical SMC,Logical,Section 12.2,Pending,Medium,RQ resolution
+TC-099,12,12.3,Research question RQ3 answered: Adaptation provides robustness benefits,Logical,Section 12.3,Pending,Medium,RQ resolution
+TC-100,12,12.4,Research question RQ4 answered: PSO optimization improves performance,Logical,Section 12.4,Pending,Medium,RQ resolution
+TC-101,12,12.5,Research question RQ5 answered: Hybrid approach combines advantages,Logical,Section 12.5,Pending,Medium,RQ resolution
+TC-102,3,3.6,Equation of motion: M(q)q̈ + C(q,q̇)q̇ + G(q) = τ is correct form,Mathematical,Eq. 3.15,Pending,High,Standard form validation
+TC-103,4,4.7,Matched uncertainty assumption (control input appears in uncertainty),Control_Theory,Section 4.7,Pending,Medium,Robustness model
+TC-104,5,5.3,Barbalat's lemma applied correctly for adaptive SMC asymptotic stability,Proof,Appendix A.3,Pending,High,Proof technique validation
+TC-105,6,6.5,PSO swarm convergence proven for unimodal cost functions,Mathematical,Section 6.5,Pending,Medium,Optimization theory
+TC-106,7,7.3,Gain tuning procedure repeatable with same random seed,Empirical,Section 7.2,Pending,Low,Reproducibility validation
+TC-107,8,8.24,Disturbance signal: sinusoidal 0.5 rad/s applied to θ₁,Empirical,Section 8.1,Pending,Low,Disturbance specification
+TC-108,8,8.25,Measurement noise: Gaussian white noise σ = 0.01 rad added to θ₁,Empirical,Section 8.1,Pending,Low,Noise specification
+TC-109,8,8.26,Uncertainty: ±15% parameter variation (mass, length, friction),Empirical,Section 8.7,Pending,Low,Uncertainty specification
+TC-110,8,8.27,All statistical tests use significance level α = 0.05 (or adjusted),Statistical,Section 8.2,Pending,Low,Significance level specification
+TC-111,4,4.8,Feedback gain C ensures eigenvalues of (A - BC) in left half-plane,Control_Theory,Section 4.1,Pending,Medium,Stability condition
+TC-112,5,5.6,Zeno behavior (infinite switches in finite time) prevented by dwell time τ > δ,Control_Theory,Appendix A.4,Pending,High,Hybrid system property
+TC-113,6,6.6,PSO parameter bounds correspond to physically realizable actuator limits,Design,Section 6.1,Pending,Medium,Physical realizability
+TC-114,7,7.4,Tuned gains validated on 5 different initial conditions,Empirical,Section 7.2,Pending,Low,Validation protocol
+TC-115,8,8.28,Post-hoc Tukey HSD test used for pairwise comparisons (if ANOVA significant),Statistical,Section 8.2,Pending,Medium,Multiple comparison procedure
+TC-116,8,8.29,Effect size interpretation: Cohen's d < 0.2 = small, 0.2-0.8 = medium, > 0.8 = large,Statistical,Appendix B,Pending,Low,Effect size convention
+TC-117,9,9.4,Simulation-to-HIL discrepancy attributed to model mismatch and latency,Empirical,Section 9.4,Pending,Low,Error analysis
+TC-118,10,10.4,Chattering frequency spectrum (FFT) shows dominant frequency at 50 Hz,Empirical,Figure 10.4,Pending,Low,Spectral analysis
+TC-119,11,11.3,Hybrid adaptive STA-SMC implements 4 control modes with smooth transitions,Design,Section 11.2,Pending,Low,Control structure
+TC-120,12,12.6,Future work: real hardware implementation of controllers,Future_Work,Section 12.3,Pending,Low,Research direction
+

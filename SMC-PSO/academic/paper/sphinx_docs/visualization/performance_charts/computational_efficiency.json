@@ -1,0 +1,59 @@
+{
+  "type": "bar",
+  "data": {
+    "labels": [
+      "Classical Smc",
+      "Sta Smc",
+      "Adaptive Smc",
+      "Hybrid Adaptive Sta Smc"
+    ],
+    "datasets": [
+      {
+        "label": "Instantiation Time (ms)",
+        "data": [
+          0.07501999905798584,
+          0.04878399980952963,
+          0.07953599997563288,
+          0.18796800024574623
+        ],
+        "backgroundColor": "rgba(54, 162, 235, 0.6)",
+        "borderColor": "rgb(54, 162, 235)",
+        "borderWidth": 2
+      },
+      {
+        "label": "Control Computation Time (ms)",
+        "data": [
+          0.02245800191303715,
+          0.06466400081990287,
+          0.0339279996114783,
+          0.0981859999592416
+        ],
+        "backgroundColor": "rgba(255, 99, 132, 0.6)",
+        "borderColor": "rgb(255, 99, 132)",
+        "borderWidth": 2
+      }
+    ]
+  },
+  "options": {
+    "responsive": true,
+    "plugins": {
+      "title": {
+        "display": true,
+        "text": "Computational Efficiency: Instantiation vs Control Computation"
+      },
+      "legend": {
+        "display": true,
+        "position": "top"
+      }
+    },
+    "scales": {
+      "y": {
+        "beginAtZero": true,
+        "title": {
+          "display": true,
+          "text": "Time (milliseconds)"
+        }
+      }
+    }
+  }
+}

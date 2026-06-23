@@ -1,0 +1,213 @@
+% ============================================================================
+% PART III: ADVANCED TOPICS - SPEAKER SCRIPTS
+% ============================================================================
+% Specialized technical domains
+% Sections: 6 (HIL, Monitoring, Dev Infrastructure, Architecture, Attribution, Memory)
+% Slides: ~100 | Speaking Time: ~120-150 minutes
+% ============================================================================
+
+\speakerpart{Part III: Advanced Topics}
+
+% ============================================================================
+% SECTION 12: HIL SYSTEM
+% ============================================================================
+
+\speakersection{12}{Hardware-in-the-Loop System}
+
+\slideref{12.1}{HIL Architecture Overview}
+\speakertime{9-11}
+
+\context{%
+This slide marks the transition to advanced technical topics. HIL (Hardware-in-the-Loop) bridges simulation and reality, allowing validation of controllers on physical systems. This is critical for demonstrating that our algorithms work beyond idealized simulations.
+}
+
+\maincontent{%
+``Now we enter Part III: Advanced Topics. Let's begin with our Hardware-in-the-Loop system.
+
+The fundamental challenge in control engineering is the \term{simulation-to-reality gap}. Simulations make assumptions: perfect sensors, no friction, instantaneous actuation, no communication delays. Real hardware has all of these issues. HIL lets us test controllers under realistic conditions without building a complete physical system initially.
+
+Our HIL architecture has two main components:
+
+First, the \term{Plant Server}. This can run in two modes: \textit{simulation mode} where it uses our nonlinear dynamics models (same as batch simulation), or \textit{hardware mode} where it interfaces with actual pendulum hardware via USB/serial connection. The plant server handles physics -- it knows the current state and computes the next state given a control input.
+
+Second, the \term{Controller Client}. This runs the SMC algorithm. It receives state measurements from the plant server, computes the control force using the controller's \code{compute\_control()} method, and sends the force back to the plant. The controller doesn't know whether it's talking to a simulation or real hardware -- the interface is identical.
+
+They communicate over TCP sockets with a strict real-time protocol. The cycle works like this:
+
+\begin{enumerate}
+    \item Plant server sends state (cart position, angles, velocities) at exactly 100 Hz (every 10ms)
+    \item Controller client receives state, computes control force, sends it back -- all within 5ms
+    \item Plant server applies the force for one timestep (10ms), integrates dynamics, repeats
+\end{enumerate}
+
+Why is timing critical? If the controller takes longer than one timestep to respond, the plant has to guess what control to apply (usually holds the last value). This introduces latency, which can destabilize the system. We enforce \term{weakly-hard constraints}: occasional deadline misses are tolerated (1 in 100), but consecutive misses (3 in a row) trigger a safety shutdown.
+
+The HIL system includes extensive monitoring: latency tracking for every cycle, deadline miss detection, control saturation tracking, and emergency stop mechanisms if the pendulum angles exceed safety limits.''
+}
+
+\insights{%
+\begin{itemize}
+    \item The client-server architecture creates a clean separation between \textit{what is being controlled} (plant server) and \textit{how it's being controlled} (controller client). This means you can test the same controller against different plants or test different controllers against the same plant without changing both sides.
+
+    \item The 100 Hz update rate (10ms timesteps) is typical for mechanical systems. Faster rates (1kHz) are used for motor control in robotics. Slower rates (10 Hz) work for large-scale systems like HVAC. Our choice balances computational cost and control bandwidth.
+
+    \item Real-time constraints are non-negotiable. A controller that works perfectly at 50 Hz but misses deadlines at 100 Hz is useless for high-bandwidth applications. Our weakly-hard formulation (1 miss in 100 okay, 3 consecutive fatal) reflects real-world tolerance for occasional glitches.
+
+    \item The dual-mode plant server (simulation vs. hardware) is powerful for development. You debug controllers in simulation mode (fast, safe, repeatable), then switch to hardware mode for final validation without changing controller code.
+\end{itemize}
+}
+
+\connections{%
+This slide connects to:
+\begin{itemize}
+    \item \textbf{Section 2} -- controllers designed in simulation are tested via HIL
+    \item \textbf{Section 5} -- same simulation engine used in both batch mode and HIL plant server
+    \item \textbf{Section 13} -- monitoring infrastructure tracks HIL latency and deadlines
+    \item \textbf{Section 17} -- memory management ensures controller clients don't leak during long runs
+    \item \textbf{Section 21} -- future work includes distributed HIL with multiple pendulums
+\end{itemize}
+}
+
+\anticipatedqa{%
+\textbf{Q: What happens if the network connection drops during an HIL experiment?}
+
+A: ``Both sides detect the connection loss within 100ms (10 missed cycles). The plant server immediately stops applying control forces and brings the pendulum to a safe state (if in hardware mode, it applies maximum braking force to the cart). The controller client logs the disconnection event and waits for reconnection. We've tested this with simulated network failures -- recovery is automatic when the connection resumes.''
+
+\textbf{Q: Can you run multiple controllers against the same plant simultaneously?}
+
+A: ``Not simultaneously controlling, but we support \textit{switching}. The plant server can accept connections from multiple controller clients. Only one is active at a time (``primary''), but others can be ``observers'' receiving state updates without sending controls. This is useful for comparison: run Controller A for 10 seconds, switch to Controller B for the next 10 seconds, compare performance on the same conditions.''
+
+\textbf{Q: What physical hardware are you using?}
+
+A: ``Currently, we interface with Quanser's Inverted Pendulum system, which is an educational lab setup common in control courses. The interface is designed to be hardware-agnostic -- we use a generic serial protocol. In principle, any pendulum with position encoders and motor drivers could be integrated by writing a 100-line hardware adapter.''
+}
+
+\transition{%
+``The HIL system allows real-time control. But how do we ensure real-time constraints are met? That's what our monitoring infrastructure handles, which we'll discuss next.''
+}
+
+% ============================================================================
+% SECTION 13: MONITORING INFRASTRUCTURE
+% ============================================================================
+
+\speakersection{13}{Monitoring \& Performance Tracking}
+
+\slideref{13.1}{Latency Monitoring System}
+\speakertime{7-9}
+
+\context{%
+Real-time control requires monitoring to verify timing constraints. This slide introduces our latency tracking system, which measures and analyzes control loop timing. This is essential for HIL validation and production deployment.
+}
+
+\maincontent{%
+``Real-time control lives or dies by timing. Let's discuss how we monitor it.
+
+The \code{LatencyMonitor} class tracks timing for every control loop iteration. It works like this:
+
+\begin{enumerate}
+    \item At the start of a control cycle, call \code{monitor.start()}. This returns a timestamp.
+    \item Compute the control force (the expensive operation).
+    \item At the end, call \code{monitor.end(timestamp)}. This returns whether a deadline was missed.
+\end{enumerate}
+
+The monitor maintains a rolling history of the last 1000 cycle times. From this, it computes:
+
+\begin{itemize}
+    \item \textbf{Mean latency}: average time per cycle
+    \item \textbf{Max latency}: worst-case time (99th percentile, to avoid outliers)
+    \item \textbf{Jitter}: standard deviation of latency (consistency measure)
+    \item \textbf{Deadline miss rate}: percentage of cycles exceeding the deadline
+    \item \textbf{Consecutive misses}: longest streak of consecutive deadline violations
+\end{itemize}
+
+For our 100 Hz control (10ms deadline), typical results are:
+\begin{itemize}
+    \item Mean latency: 2.3ms (23\% of budget used)
+    \item Max latency: 4.8ms (48\% of budget)
+    \item Jitter: 0.5ms (low, meaning consistent timing)
+    \item Deadline miss rate: 0.1\% (1 in 1000 cycles)
+    \item Max consecutive misses: 1 (no streaks)
+\end{itemize}
+
+These metrics tell us the controller is comfortably real-time. If mean latency approached 8-9ms, we'd worry about deadline misses becoming common. If jitter was high (2-3ms), we'd investigate what causes timing variability (garbage collection? OS scheduling?).
+
+The monitor also logs timestamps to a file for post-experiment analysis. We can plot latency over time, identify when deadline misses cluster, and correlate them with events (e.g., misses happen during PSO optimizer iterations when the system is under load).
+
+For production deployment, the monitor can trigger alerts: if consecutive misses exceed 3, an alert is raised and the system can automatically degrade gracefully (e.g., reduce control frequency from 100 Hz to 50 Hz to give more time per cycle).''
+}
+
+\insights{%
+\begin{itemize}
+    \item The 1000-sample rolling window balances memory usage and statistical validity. Storing every timestamp for a 1-hour experiment (360,000 cycles at 100 Hz) would consume megabytes. 1000 samples is enough to compute stable statistics.
+
+    \item The 99th percentile for max latency is more robust than the absolute maximum, which is often an outlier (e.g., a one-time garbage collection pause). We care about ``typical worst case,'' not once-in-a-lifetime worst case.
+
+    \item Jitter is often overlooked but critically important. Consistent timing (low jitter) allows better control tuning. High jitter means you must tune conservatively (assume worst-case latency always), which reduces performance.
+
+    \item Logging timestamps enables post-hoc analysis. You can correlate deadline misses with other events: CPU temperature, network activity, controller switching. This is invaluable for debugging intermittent timing issues.
+\end{itemize}
+}
+
+\connections{%
+This slide connects to:
+\begin{itemize}
+    \item \textbf{Section 12} -- HIL system uses latency monitoring to enforce real-time constraints
+    \item \textbf{Section 5} -- simulation runner can also use monitoring to track performance
+    \item \textbf{Section 17} -- performance optimization aims to reduce mean latency and jitter
+    \item \textbf{Section 22} -- project statistics include latency benchmarks for all controllers
+\end{itemize}
+}
+
+\anticipatedqa{%
+\textbf{Q: What causes deadline misses in practice?}
+
+A: ``Several factors: (1) Garbage collection pauses in Python (mitigated by using Numba-compiled hot paths that don't allocate). (2) OS scheduling -- if the control process doesn't have real-time priority, it might be preempted. (3) CPU frequency scaling -- if the laptop goes into power-saving mode, performance drops. (4) Thermal throttling -- sustained load heats the CPU, which then reduces frequency. We handle these by: using real-time OS if available, pinning process to dedicated CPU cores, disabling power management during experiments.''
+
+\textbf{Q: Can you guarantee zero deadline misses?}
+
+A: ``Not in general-purpose operating systems like Windows or Linux (non-real-time variants). Even with high priority, the OS can preempt us for kernel operations. For true hard real-time (zero misses guaranteed), you need a real-time OS (RTOS) like VxWorks or FreeRTOS. Our approach is \textit{soft real-time}: we tolerate occasional misses (weakly-hard constraints) and design controllers to be robust to them. For the DIP, 1 miss in 100 cycles has negligible effect on stability.''
+}
+
+\transition{%
+``Monitoring tells us what's happening. Now let's discuss the development infrastructure that makes iterative development efficient despite this complexity.''
+}
+
+% ============================================================================
+% SECTION 14: DEVELOPMENT INFRASTRUCTURE
+% ============================================================================
+
+\speakersection{14}{Development Infrastructure \& Session Continuity}
+
+\slideref{14.1}{Session Continuity System}
+\speakertime{8-10}
+
+\context{%
+This slide introduces our development workflow tools. Large research projects span months, involving multiple sessions, tool crashes, and context loss. Our session continuity system enables 30-second recovery from interruptions, which is critical for productivity.
+}
+
+\maincontent{%
+``Research doesn't happen in one sitting. Projects stretch over months with interruptions: token limits, power outages, switching to other work. How do you resume without losing context?
+
+Our \term{Session Continuity System} solves this. It provides 30-second recovery from:
+
+\begin{itemize}
+    \item Token limit exhaustion (AI assistant context overflow)
+    \item Multi-month gaps between work sessions
+    \item System crashes or power failures
+    \item Switching between multiple accounts/machines
+\end{itemize}
+
+The system has four components:
+
+\textbf{1. Project State Manager} (\filepath{.ai\_workspace/tools/recovery/project\_state\_manager.py})
+
+This tracks:
+\begin{itemize}
+    \item Current project phase (Phase 1: Core, Phase 2: Advanced, Phase 3: UI, Phase 4: Production, Phase 5: Research)
+    \item Active roadmap (72-hour research roadmap for Phase 5)
+    \item Completed tasks (11/11 research tasks done)
+    \item Last session summary (what was accomplished, what's next)
+\end{itemize}
+
+The state is stored in JSON files that survive crashes.
+% END

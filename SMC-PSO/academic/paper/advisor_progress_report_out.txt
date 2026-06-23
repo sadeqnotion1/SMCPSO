@@ -1,0 +1,616 @@
+February 2026                                            DIP-SMC-PSO: Technical Progress Memo
+
+
+
+         DIP-SMC-PSO: Technical Progress Memo
+                Model choices, algorithm design, and experimental results
+  February 2026    —   Repository: github.com/theSadeQ/dip-smc-pso        —    Status: Research
+                                      complete, thesis 90%
+
+
+
+
+Contents
+
+
+1 System Model: Equations and Parameter Choices                                                   2
+  1.1 State Vector and Coordinate Definition . . . . . . . . . . . . . . . . . . . . . .          2
+  1.2 Equations of Motion . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .       2
+  1.3 Physical Parameters . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .       3
+  1.4 Model Selection: Simplified vs. Full Nonlinear . . . . . . . . . . . . . . . . . . .        3
+
+2 Sliding Mode Control: Surface Design and Control Laws                                           3
+  2.1 Sliding Surface . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .     3
+  2.2 Controller Variants: Control Laws . . . . . . . . . . . . . . . . . . . . . . . . .         4
+       2.2.1 Classical SMC . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .        4
+       2.2.2 Super-Twisting Algorithm (STA-SMC) . . . . . . . . . . . . . . . . . . .             4
+       2.2.3 Adaptive SMC . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .         4
+       2.2.4 Hybrid Adaptive STA-SMC . . . . . . . . . . . . . . . . . . . . . . . . .            4
+
+3 PSO Algorithm: Configuration and Methodology                                                     5
+  3.1 Algorithm Parameters . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .         5
+  3.2 Fitness Function . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .       5
+  3.3 Search Bounds per Controller . . . . . . . . . . . . . . . . . . . . . . . . . . . .         5
+  3.4 Robust PSO: Scenario-Based Optimization . . . . . . . . . . . . . . . . . . . .              5
+  3.5 PSO-Optimized Gains (MT-8 Robust Tuning) . . . . . . . . . . . . . . . . . . .               6
+
+4 Lyapunov Stability: Proofs and Validation                                                       6
+  4.1 Classical SMC . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .       6
+  4.2 Super-Twisting (STA-SMC) . . . . . . . . . . . . . . . . . . . . . . . . . . . . .          6
+  4.3 Adaptive SMC . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .        6
+  4.4 Hybrid Adaptive STA-SMC . . . . . . . . . . . . . . . . . . . . . . . . . . . . .           7
+  4.5 Swing-Up SMC . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .        7
+  4.6 MPC . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .     7
+  4.7 Summary Table . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .       7
+
+5 Monte Carlo Benchmark Results                                                                    8
+  5.1 Experimental Setup . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .         8
+  5.2 Primary Performance Metrics . . . . . . . . . . . . . . . . . . . . . . . . . . . .          8
+  5.3 Chattering Analysis (FFT) . . . . . . . . . . . . . . . . . . . . . . . . . . . . .          8
+  5.4 Statistical Significance (Welch’s t-test) . . . . . . . . . . . . . . . . . . . . . . .      9
+  5.5 Energy Trade-off Analysis . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .        9
+
+6 Boundary Layer Study: MT-6 Honest Result                                                        9
+
+7 Robustness Analysis                                                                             10
+  7.1 Model Uncertainty (LT-6) . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .        10
+
+
+                                                1
+February 2026                                            DIP-SMC-PSO: Technical Progress Memo
+
+
+   7.2   Disturbance Rejection (MT-8) . . . . . . . . . . . . . . . . . . . . . . . . . . . .   10
+
+8 Thesis and Paper Status                                                                       10
+  8.1 Research Paper (LT-7): Submission-Ready . . . . . . . . . . . . . . . . . . . . .         10
+  8.2 Thesis: 90/100 (Near Submission-Ready) . . . . . . . . . . . . . . . . . . . . .          11
+
+A Controller Gains Reference (PSO-Tuned, Operational)                                           11
+
+B Key Citations                                                                                 11
+
+
+
+
+                                                2
+February 2026                                                 DIP-SMC-PSO: Technical Progress Memo
+
+
+1     System Model: Equations and Parameter Choices
+
+
+1.1    State Vector and Coordinate Definition
+The DIP state is a 6-vector:
+                                                               ⊤
+                                 x = x, θ1 , θ2 , ẋ, θ̇1 , θ̇2 ∈ R6
+                                    
+                                                                                                    (1)
+
+where x is cart position, θ1 and θ2 are pendulum link angles (from vertical), and dots denote
+time derivatives.
+
+1.2    Equations of Motion
+The full Lagrangian model is:
+
+                            M(q) q̈ + C(q, q̇) q̇ + G(q) + Ffric = B u                              (2)
+
+where q = [x, θ1 , θ2 ]⊤ , u ∈ [−150, 150] N is the cart force, and B = [1, 0, 0]⊤ selects the actuated
+direction.
+
+Inertia matrix M(q) (3×3, symmetric): The matrix is configuration-dependent and
+varies 40–60% across the workspace. Its 3 unique entries (out of 6 due to symmetry) involve all
+cross-coupling terms between cart, link 1, and link 2:
+
+                                    M11 = M + m1 + m2
+                                    M12 = (m1 lc1 + m2 l1 ) cos θ1
+                                    M13 = m2 lc2 cos θ2
+                                              2
+                                    M22 = m1 lc1 + m2 l12 + I1
+                                    M23 = m2 l1 lc2 cos(θ1 − θ2 )
+                                              2
+                                    M33 = m2 lc2 + I2
+
+
+Coriolis/centrifugal C(q, q̇): Includes centrifugal terms (θ̇i2 ) and Coriolis cross-terms (θ̇i θ̇j ).
+Also includes gyroscopic effects (enabled in config).
+
+Gravity vector G(q):
+
+                     G2 = −(m1 lc1 + m2 l1 )g sin θ1 ,       G3 = −m2 lc2 g sin θ2                  (3)
+
+Friction model: Asymmetric viscous + Coulomb friction for all joints:
+
+                                     Ffric = bc ẋ + b1 θ̇1 + b2 θ̇2                                (4)
+
+with 10% variation in friction coefficients used in Monte Carlo studies (Section 5).
+
+
+
+
+                                                   3
+February 2026                                                DIP-SMC-PSO: Technical Progress Memo
+
+
+1.3    Physical Parameters
+
+                      Parameter                  Symbol       Value
+                      Cart mass                  M            1.5 kg
+                      Link 1 mass                m1           0.2 kg
+                      Link 2 mass                m2           0.15 kg
+                      Link 1 length              l1           0.4 m
+                      Link 2 length              l2           0.3 m
+                      Link 1 COM distance        lc1          0.2 m
+                      Link 2 COM distance        lc2          0.15 m
+                      Link 1 inertia             I1           0.0081 kg·m2
+                      Link 2 inertia             I2           0.0034 kg·m2
+                      Gravity                    g            9.81 m/s2
+                      Cart friction              bc           0.2 N·s/m
+                      Joint 1 friction           b1           0.005 N·m·s/rad
+                      Joint 2 friction           b2           0.004 N·m·s/rad
+                      Max control force          umax         150 N
+                      Control period             ∆t           0.01 s (100 Hz)
+
+1.4    Model Selection: Simplified vs. Full Nonlinear
+
+        Model                    Use in this project            Rationale
+        Simplified (linearized                     10–50× faster per simulation
+                                 PSO optimization (all
+        around upright)          controllers)      step. PSO requires thou-
+                                                   sands of evaluations; full
+                                                   model would be prohibitive.
+        Full nonlinear (2) All published benchmark Complete Lagrangian, all
+                           results                 coupling terms, Coriolis, cen-
+                                                   trifugal, gyroscopic, full fric-
+                                                   tion. Used for MT-5, MT-7,
+                                                   MT-8, LT-6.
+        Low-rank (SVD ap- HIL mode (hardware-in- Reduced          singular-value
+        proximation)       the-loop)               truncation preserves stability
+                                                   with lower real-time compute
+                                                   load.
+
+Decision rationale: Controller gain tuning (PSO) uses the simplified model because PSO
+with 40 particles × 200 iterations × 10 s simulation on the full nonlinear model would require
+>8 hours per controller. With the simplified model, PSO completes in minutes. All final
+validation and reported results use the full nonlinear model.
+
+2     Sliding Mode Control: Surface Design and Control Laws
+
+
+2.1    Sliding Surface
+The multi-variable sliding surface for the DIP is:
+                                  σ = λ1 θ1 + λ2 θ2 + k1 θ̇1 + k2 θ̇2                         (5)
+Equivalently, in error coordinates ei = θi − θi∗ (where θ∗ = 0 at upright equilibrium):
+                                  σ = λ1 e1 + λ2 e2 + k1 ė1 + k2 ė2                         (6)
+
+                                                  4
+February 2026                                                          DIP-SMC-PSO: Technical Progress Memo
+
+
+The surface (5) is a hyperplane in R4 (angle + rate space). On this surface, the reduced
+dynamics are first-order linear and stable by design (eigenvalues at −λi /ki ).
+
+2.2     Controller Variants: Control Laws
+2.2.1      Classical SMC
+                                                                 σ 
+                                     u=      ueq         + K sat      + −kd σ̇                          (7)
+                                             |{z}                 ε}    | {z }
+                                                                       derivative
+                                          equiv. control
+                                                           |  {z
+                                                           switching
+
+       ueq = −(LM−1 B)−1 LM−1 F (model-based feedforward)
+       K: switching gain; ε = 0.3: boundary layer width
+       sat(·): replaces sign(·) to reduce chattering
+       6 gains tuned by PSO: [k1 , k2 , λ1 , λ2 , K, kd ]
+
+2.2.2      Super-Twisting Algorithm (STA-SMC)
+The STA operates on the surface derivative, not the surface itself:
+                                     u = u1 + u2                                                        (8)
+                                                    α
+                                    u1 = −K1 |σ| sign(σ)        (continuous)
+                                              Z t
+                                    u2 = −K2      sign(σ(τ )) dτ     (integral)
+                                                0
+with K1 > K2 > 0 and standard exponent α = 0.5.
+Key property: u1 is continuous (chattering reduction), while u2 handles steady-state errors
+via integration. Near σ = 0, regularization replaces |σ|α with δ α (where δ = 10−10 ) to avoid
+numerical singularity.
+6 gains: [c1 , λ1 , c2 , λ2 , K1 , K2 ]; constraint K1 > K2 enforced during PSO.
+
+2.2.3      Adaptive SMC
+The switching gain adapts online:
+                                                                 σ 
+                                               u = −K(t) sat                                            (9)
+                                                                   ε
+                           K̇(t) = γ|σ| − δleak K(t)          with dead zone |σ| < dz                  (10)
+where γ is the adaptation rate, δleak = 0.01 prevents gain windup, and dz = 0.05 suppresses
+noise-driven adaptation. K(t) is clamped to [Kmin , Kmax ] = [0.1, 100].
+5 gains: [k1 , k2 , λ1 , λ2 , γ].
+
+2.2.4      Hybrid Adaptive STA-SMC
+Combines adaptive gain scheduling with the super-twisting structure:
+                                                          Z
+                       u = −k1 (t) |σ|0.5 sign(σ) − k2 (t) sign(σ) dt                                  (11)
+
+Adaptation laws for both gains k1 (t), k2 (t) use rates γ1 = 0.1, γ2 = 0.05 with a rate limiter of
+5.0/s.
+Known instability (documented): Under large disturbances and adaptive gain scheduling,
+this controller produces 666.9◦ overshoot (176% chattering increase). Root cause: feedback
+loop between k1 (t) adaptation and the |σ|0.5 term amplifies errors when |σ| ≫ 1. This is an
+open research item.
+
+                                                          5
+February 2026                                                   DIP-SMC-PSO: Technical Progress Memo
+
+
+3     PSO Algorithm: Configuration and Methodology
+
+
+3.1     Algorithm Parameters
+
+
+Parameter                   Symbol       Value     Rationale
+Number of particles         Np           40        Increased from 30 for 6D space
+Iterations                  T            200       Convergence verified experimentally
+Inertia weight              w            0.7       Range [0.4, 0.9]; balances exploration/exploitation
+Cognitive acceleration      c1           2.0       Standard PSO literature value
+Social acceleration         c2           2.0       Standard PSO literature value
+Random seed                 –            42        Reproducibility
+                  t+1      t + c r (p      t                    t
+Velocity update: vi,d = w vi,d  1 1 i,d − xi,d ) + c2 r2 (gd − xi,d ), where r1 , r2 ∼ U (0, 1).
+
+
+3.2     Fitness Function
+                                      J(θ) = w1 J¯mc + w2 max Jk                                       (12)
+                                                                k
+
+where w1 = 0.7, w2 = 0.3 (mean vs. worst-case balance), and:
+                                                          Z
+           Jk = werr ISE(x) + wu IAE(u) + wr IAE(u̇) + ws σ 2 dt + P · ⊮unstable                       (13)
+                 |    {z    } | {z } | {z }                        |    {z     }
+                   tracking      effort     slew rate   | {z }        penalty
+                                                                      sliding
+
+with weights [werr , wu , wr , ws ] = [1.0, 0.1, 0.01, 0.1], normalization thresholds [10.0, 100.0, 1000.0, 1.0],
+and instability penalty P = 106 .
+
+3.3     Search Bounds per Controller
+
+              Controller                  Surface gains         Switch gain         Other
+                                          min            max    min        max     min    max
+              Classical SMC (6D)           2.0           30.0   2.0         50.0   0.05   3.0
+              STA-SMC (6D)                 2.0           30.0   2.0         30.0   0.05   3.0
+              Adaptive SMC (5D)            2.0           30.0   2.0         10.0   0.05   3.0
+              Hybrid Adaptive (4D)         2.0           30.0   2.0         10.0      –     –
+
+Note: STA-SMC enforces K1 > K2 as a hard constraint during PSO evaluation (particles
+violating it are given the instability penalty).
+
+3.4     Robust PSO: Scenario-Based Optimization
+Standard PSO (nominal initial condition) produces gains that fail catastrophically on varied
+initial conditions:
+
+Nominal chattering:      2.14±0.13         −→        Realistic scenarios:       107.61±5.48     (×50.4 degradation)
+                                                                                                       (14)
+Robust PSO solution: Evaluate each particle on Ns = 15 scenarios:
+       3 nominal: θ0 ∈ [−0.05, +0.05] rad
+       4 moderate: θ0 ∈ [−0.15, +0.15] rad
+       8 large: θ0 ∈ [−0.30, +0.30] rad
+
+                                                     6
+February 2026                                                 DIP-SMC-PSO: Technical Progress Memo
+
+
+Fitness: Jrobust = 0.7 J¯ + 0.3 max Jk (weighted average + worst-case, same formula as (12)).
+Result: Chattering degradation reduced from 50.4× to 7.5× (144.59× → 19.28× in absolute
+terms).
+
+3.5     PSO-Optimized Gains (MT-8 Robust Tuning)
+
+      Controller            k1        k2          λ1            λ2       Gain 5     Gain 6      Cost
+    Classical    SMC        5.0      5.0          5.0           0.5          0.5        0.5   baseline
+    (nom.)
+    Classical SMC (ro-    23.07    12.85         5.51          3.49        2.23        0.15    −2.2%
+    bust)
+    STA-SMC (nominal)      12.0      6.0         4.85          3.43    K1 =8.0      K2 =4.0   baseline
+    STA-SMC (robust)       5.62     3.75         4.36          2.05   K1 =2.02     K2 =6.67          –
+      Adaptive SMC         10.0      8.0          5.0           4.0       γ=1.0          –    baseline
+      Adaptive SMC (ro-    2.14     3.36         7.20          0.34      γ=0.29          –           –
+      bust)
+      Hybrid (robust)         –        –    c1 =10.15     λ1 =12.84   c2 =6.82     λ2 =2.75   −21.4%
+
+
+4     Lyapunov Stability: Proofs and Validation
+
+
+Proofs are documented in docs/theory/lyapunov stability proofs.md (v2.0, 1427 lines, 9
+theorems + 5 lemmas, 15 BibTeX references).
+
+4.1     Classical SMC
+                                              V = 21 σ 2                                             (15)
+                                  V̇ = σ σ̇ ≤ −βη|σ| − βkd σ 2 < 0                                   (16)
+for all |σ| > ε (outside boundary layer). Stability type: exponential asymptotic (when
+kd > 0).
+Numerical validation: 96.2% of simulation samples satisfy V̇ < 0 outside the boundary
+layer.
+
+4.2     Super-Twisting (STA-SMC)
+Uses the generalized gradient Lyapunov function (Moreno & Osorio 2008):
+                                                  1 2
+                                  VSTA = |σ| +       z ,        z = u2                               (17)
+                                                 2K2
+
+                                     V̇STA ≤ −c1 ∥ξ∥3/2 + c2 L                                       (18)
+where ξ = [|σ|1/2 sign(σ), z]⊤ , L is the Lipschitz constant of the perturbation, and c1 , c2 > 0
+depend on K1 , K2 .
+Stability type: finite-time convergence.
+Numerical validation: Convergence in 1.82 s (16% faster than Classical SMC at 2.15 s).
+
+4.3     Adaptive SMC
+Composite Lyapunov (state + parameter estimation error):
+                                             1 2
+                           Vad = 21 σ 2 +      K̃ ,        K̃ = K(t) − K ∗                           (19)
+                                            2γ
+
+                                                      7
+February 2026                                               DIP-SMC-PSO: Technical Progress Memo
+
+
+                        V̇ad ≤ −η|σ|        ⇒   σ(t) → 0,     K(t) bounded                   (20)
+Stability type: asymptotic with bounded adaptive gain.
+Numerical validation: 100% of simulation samples within K(t) ∈ [Kmin , Kmax ] = [0.1, 100].
+
+4.4   Hybrid Adaptive STA-SMC
+Extended composite Lyapunov:
+
+                                                  k̃12   k̃ 2
+                                Vhyb = 21 σ 2 +        + 2 + 21 u2int                        (21)
+                                                  2γ1 2γ2
+
+                                     V̇hyb ≤ −α1 Vhyb + α2 ∥w∥                               (22)
+Stability type: Input-to-State Stable (ISS).
+Numerical validation: All signals bounded, 0 emergency resets during nominal conditions.
+
+4.5   Swing-Up SMC
+Switched Lyapunov approach for the two-phase control:
+                            (
+                              Etotal − Eupright (swing-up phase)
+                   Vsw (t) = 1 2                                                             (23)
+                              2σ                (stabilization phase)
+
+Global stability proven; hysteresis in switching prevents Zeno behavior (finite switching guar-
+anteed).
+
+4.6   MPC
+Lyapunov function is the optimal cost-to-go Vk = Jk∗ :
+
+                                Vk+1 − Vk ≤ −λmin (Q)∥xk ∥2 < 0                              (24)
+
+Stability type: asymptotic (requires recursive feasibility).
+
+4.7   Summary Table
+
+
+Controller             Lyapunov V               Stability                             Settling (s)
+                        1 2
+Classical SMC           2σ                      Asymptotic                                     2.15
+                                                (exp.)
+STA-SMC                |σ| + z 2 /2K2           Finite-time                                    1.82
+Adaptive SMC           σ 2 + K̃ 2 /γ            Asymptotic                                     2.35
+                                                (bnd.)
+Hybrid   Adaptive      σ 2 + k̃ 2 + u2int       ISS                                            1.95
+STA
+Swing-Up               Energy-based             Global                                              –
+                       (switched)
+MPC                    Optimal cost J ∗         Asymptotic                                          –
+ Convergence ordering (fastest to slowest):                        STA ¿ Hyb ¿ Classical ¿ Adaptive
+
+
+
+
+                                                   8
+February 2026                                               DIP-SMC-PSO: Technical Progress Memo
+
+
+5     Monte Carlo Benchmark Results
+
+
+5.1     Experimental Setup
+       Method: 100 Monte Carlo runs per controller (MT-5 study)
+       Model: Full nonlinear dynamics (2)
+       Initial conditions: Randomized within physical bounds
+       Simulation duration: 10 s at ∆t = 0.01 s (1000 steps)
+       Total simulations: 400 (4 controllers × 100 runs)
+       Statistics: Bootstrap 95% CI (10,000 resamples); Welch’s t-test at α = 0.05
+
+5.2     Primary Performance Metrics
+
+ Controller               Settling (s)    Overshoot (%)            Energy (N2 s)     Chattering
+ Classical SMC              2.15 ± 0.18               5.8 ± 0.8      9,843 ± 7,518   0.647 ± 0.347
+ STA-SMC                    1.82 ± 0.15               2.3 ± 0.4   202,907 ± 15,749   3.088 ± 0.141
+ Adaptive SMC               2.35 ± 0.21               8.2 ± 1.1    214,255 ± 6,254   3.098 ± 0.030
+ Hybrid Adap.                         –                       –             Failed          Failed
+    Values: mean ± SD; 95% CI in Table below.
+
+Controller               Settling 95% CI        Overshoot 95% CI           Compute (µs)       Score
+Classical SMC                  [1.97, 2.33] s                [5.0, 6.6]%        18.5 ± 2.1    85.1%
+STA-SMC                        [1.67, 1.97] s                [1.9, 2.7]%        24.2 ± 3.5    92.5%
+Adaptive SMC                   [2.14, 2.56] s                [7.1, 9.3]%        31.6 ± 4.2    78.4%
+Hybrid Adap.                   [1.79, 2.11] s                [3.0, 4.0]%        26.8 ± 3.1    88.3%
+
+All controllers meet the 100 µs real-time deadline (68–81% headroom).
+
+5.3     Chattering Analysis (FFT)
+
+
+Controller               Peak freq. (Hz)        Chattering index        Energy in chatt. band         vs. Classical
+Classical SMC                          ≈35                        8.2                        12.3%         baseline
+STA-SMC                                 ≈8                        2.1                         2.1%           −74%
+Hybrid Adap.                           ≈28                        5.4                         8.5%           −34%
+Adaptive SMC                           ≈42                        9.7                        15.1%           +18%
+
+STA chattering mechanism: Moving the switching action to the integral u2 (inside the
+control loop) vs. directly to u in classical SMC reduces the high-frequency switching amplitude
+from 35 Hz to 8 Hz in the output.
+
+
+
+
+                                                  9
+February 2026                                                  DIP-SMC-PSO: Technical Progress Memo
+
+
+5.4    Statistical Significance (Welch’s t-test)
+
+      Comparison             t-stat   p-value    Cohen’s d             Result
+       Settling time:
+      STA vs. Classical        2.14      0.038                2.14     Significant (−16%, −330 ms)
+      STA vs. Adaptive         3.67      0.002                   –     Highly significant (−29%)
+      STA vs. Hybrid           1.03      0.312                   –     Not significant (practical tie)
+      Hybrid vs. Adaptive      2.31      0.031                   –     Significant (−17%)
+       Overshoot:
+      STA vs. Classical        4.89    <0.001                   –      Highly significant (−60%)
+      STA vs. Adaptive         6.42    <0.001                   –      Highly significant (−72%)
+      STA vs. Hybrid           2.34     0.030                   –      Significant (−34%)
+
+Cohen’s d = 2.14 for STA vs. Classical (settling time) indicates a large practical effect size, not
+just statistical significance.
+
+5.5    Energy Trade-off Analysis
+
+                   Energy phase (Classi- Energy                Share
+                   cal SMC)
+                   Reaching phase (0–0.5 s)           6.2 J          50%
+                   Sliding phase (0.5–2.1 s)          5.8 J          47%
+                   Steady state (> 2.1 s)             0.4 J           3%
+                   Classical total               12.4 J                –
+                   STA total                      11.8 J               –   4.8% less
+                   Adaptive total                 13.6 J               –   9.7% more
+
+Note on MT-5 energy values: The MT-5 study reports energy in N2 ·s (integral of u2 ,
+control effort metric). The QW-2 single-run study reports in Joules (physical energy). Both are
+valid metrics; the MT-5 N2 ·s values show a 20× difference between Classical and STA because
+the MT-5 initial conditions span a wider range (higher control effort required).
+
+6     Boundary Layer Study: MT-6 Honest Result
+
+
+The boundary layer width ε in (7) controls the chattering/accuracy tradeoff.
+
+ε       Chattering (∆ from baseline)           Overshoot             Settling   Notes
+0.01                       baseline (high)        nominal         nominal       Too narrow, noisy
+0.02                      −3.7% (optimal)         nominal         nominal       Near-optimal
+0.05                                −10%           +7.5%         degraded       Too wide, accuracy loss
+
+Important correction: An initial analysis reported 66.5% chattering reduction from adaptive
+boundary layer ε(t) = εmin + κ|σ|. A frequency-domain re-analysis showed this was a transient
+metric artifact (the initial transient dominated the RMS computation). The unbiased frequency-
+domain metric gives only 3.7%.
+Conclusion: Fixed ε = 0.02 is near-optimal for the DIP. Adaptive boundary layers are not
+justified by this result.
+
+
+
+
+                                                 10
+February 2026                                         DIP-SMC-PSO: Technical Progress Memo
+
+
+7     Robustness Analysis
+
+
+7.1    Model Uncertainty (LT-6)
+All controllers tested under parametric uncertainty: ±10% and ±20% on all physical parameters
+(cart mass, link masses, lengths, inertias). Friction coefficients varied by ±10%.
+
+    Controller              ±10% mismatch     ±20% mismatch
+    Classical SMC                    Stable               Stable   12% mismatch tolerance
+    STA-SMC                          Stable               Stable   8% mismatch tolerance
+    Adaptive SMC                     Stable               Stable   15% mismatch tolerance
+    Hybrid     Adaptive              Stable               Stable   16% (best)
+    STA
+
+The Adaptive and Hybrid controllers tolerate larger uncertainty because the adaptive gain
+K(t) compensates for the unknown bounds automatically (consistent with the ISS Lyapunov
+proof in Section 4.4).
+
+7.2    Disturbance Rejection (MT-8)
+External step disturbances applied to cart; attenuation measured as 1 − ∥xdist ∥/∥xnom ∥:
+
+                   Controller              Disturbance attenuation
+                   STA-SMC                                 91% (best)
+                   Hybrid     Adaptive                           89%
+                   STA
+                   Classical SMC                                   87%
+                   Adaptive SMC                                    78%
+
+STA-SMC’s continuous u1 component (8) provides better disturbance rejection than the
+discontinuous sign function in Classical SMC.
+
+8     Thesis and Paper Status
+
+
+8.1    Research Paper (LT-7): Submission-Ready
+
+       Item                      Value
+       Status                    [DONE] SUBMISSION-READY (v2.1, Dec 25 2025)
+       Pages                     71 pages
+       Figures                   14 (all 300 DPI, auto-generated from raw data)
+       Simulation total          1,300+ runs (400 MC + 15-scenario robust PSO +
+                                 QW-2 + LT-6 uncertainty)
+       Target journal (1)        IEEE Trans. Control Systems Technology
+       Target journal (2)        IFAC World Congress / IEEE CDC
+
+
+
+
+                                              11
+February 2026                                                        DIP-SMC-PSO: Technical Progress Memo
+
+
+8.2     Thesis: 90/100 (Near Submission-Ready)
+
+ Phase                         Target score               Status              Target date
+ Phases 1–2 (figures, ta-      +20 pts                    [DONE] Done         Dec 29 2025
+ bles)
+ Phase 3 (bibliography         +2 pts                                         Jan 10 2026
+ +15 refs)
+ Phase 4 (proofreading)        +3 pts                                         Jan 13 2026
+ Phase 5 (final QA)            +3 pts                                         Jan 14 2026
+ Phase 6 (advisor review)      +2 pts                                         Jan 24 2026
+ Current: 90/100               Target: 100/100 by Jan 24, 2026 (17 hours remaining)
+
+Completed figures: system architecture (54 KB), control loop schematic (84 KB), Lyapunov
+phase portrait (68 KB), PSO convergence 3D surface (182 KB). All meet 300 DPI and ¡500 KB
+requirements.
+
+A      Controller Gains Reference (PSO-Tuned, Operational)
+
+
+
+Controller               Gain                              Nominal                     Robust (MT-8)
+Classical SMC            [k1 , k2 , λ1 , λ2 , K, kd ]      [5, 5, 5, 0.5, 0.5, 0.5]    [23.07, 12.85, 5.51, 3.49, 2.23, 0.15]
+STA-SMC                  [c1 , λ1 , c2 , λ2 , K1 , K2 ]    [12, 6, 4.85, 3.43, 8, 4]   [5.62, 3.75, 4.36, 2.05, 2.02, 6.67]
+Adaptive SMC             [k1 , k2 , λ1 , λ2 , γ]           [10, 8, 5, 4, 1]            [2.14, 3.36, 7.20, 0.34, 0.29]
+Hybrid     Adaptive      [c1 , λ1 , c2 , λ2 ]              [5, 5, 5, 0.5]              [10.15, 12.84, 6.82, 2.75]
+STA
+
+
+B      Key Citations
+
+
+       Utkin, V. I. (1992). Sliding Modes in Control and Optimization.
+       Slotine, J.-J. E. & Li, W. (1991). Applied Nonlinear Control.
+       Levant, A. (2003). Higher-order sliding modes. IEEE TAC, 48(6).
+       Moreno, J. A. & Osorio, M. (2008). A Lyapunov approach to second-order sliding modes.
+        IFAC Proceedings.
+       Kennedy, J. & Eberhart, R. C. (1995). Particle swarm optimization. Proc. IEEE ICNN.
+       Khalil, H. K. (2002). Nonlinear Systems (3rd ed.).
+
+
+
+
+                                                          12
+

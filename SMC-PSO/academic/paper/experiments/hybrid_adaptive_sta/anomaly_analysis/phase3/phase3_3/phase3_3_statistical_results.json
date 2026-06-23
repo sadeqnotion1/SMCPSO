@@ -1,0 +1,41 @@
+{
+  "phase2_1": {
+    "baseline_mean": 2522.2917846227197,
+    "baseline_std": 4433.170142583779,
+    "scheduled_mean": 5678.427037108186,
+    "scheduled_std": 9689.647984313657,
+    "t_statistic": -2.961943767233274,
+    "p_value": 0.003597873011021263,
+    "cohen_d": 0.41888210466077547,
+    "percent_change": 125.12966468538673,
+    "n_trials": 100,
+    "significant": true
+  },
+  "phase2_3": {
+    "baseline_mean": 1649.0267107567854,
+    "baseline_std": 772.8974552635241,
+    "scheduled_mean": 4553.182092314051,
+    "scheduled_std": 2686.582396967151,
+    "t_statistic": -7.271947677282895,
+    "p_value": 1.1147894198661712e-09,
+    "cohen_d": 1.4691552900115707,
+    "percent_change": 176.11330141671667,
+    "n_trials": 100
+  },
+  "phase3_1": {
+    "baseline_mean": 1037009.1072567764,
+    "c1_only_mean": 1037009.1072567764,
+    "c2_only_mean": 1037009.1072567764,
+    "full_mean": 3197516.022561354,
+    "full_vs_baseline_percent": 208.3402064828356,
+    "n_trials": 2
+  },
+  "phase3_2": {
+    "baseline_mean": 1037009.1072567764,
+    "lambda1_only_mean": 1037009.1072567764,
+    "lambda2_only_mean": 1037009.1072567764,
+    "full_mean": 3197516.022561354,
+    "full_vs_baseline_percent": 208.3402064828356,
+    "n_trials": 2
+  }
+}

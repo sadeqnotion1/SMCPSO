@@ -1,0 +1,134 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% MASTER THESIS TEMPLATE
+% Sliding Mode Control of Double-Inverted Pendulum with PSO Optimization
+%
+% Author: [Your Name]
+% University: [Your University]
+% Date: December 2025
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% DOCUMENT CLASS %%%
+\documentclass[12pt, a4paper, oneside]{report}
+
+%%% LOAD PREAMBLE (packages, custom commands) %%%
+\input{preamble}
+
+%%% METADATA (title, author, etc.) %%%
+\input{metadata}
+
+%%% BEGIN DOCUMENT %%%
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% FRONT MATTER
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frontmatter  % Roman numerals (i, ii, iii...)
+
+%%% TITLE PAGE %%%
+\input{front/title_page}
+\clearpage
+
+%%% ABSTRACT %%%
+\input{front/abstract}
+\clearpage
+
+%%% ACKNOWLEDGMENTS %%%
+\input{front/acknowledgments}
+\clearpage
+
+%%% TABLE OF CONTENTS %%%
+\tableofcontents
+\clearpage
+
+%%% LIST OF FIGURES %%%
+\listoffigures
+\clearpage
+
+%%% LIST OF TABLES %%%
+\listoftables
+\clearpage
+
+%%% NOMENCLATURE %%%
+\input{front/nomenclature}
+\clearpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% MAIN CONTENT
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\mainmatter  % Arabic numerals (1, 2, 3...)
+
+%%% CHAPTER 1: INTRODUCTION %%%
+\include{chapters/chapter01_placeholder}
+
+%%% CHAPTER 2: LITERATURE REVIEW %%%
+\include{chapters/chapter02_placeholder}
+
+%%% CHAPTER 3: PROBLEM FORMULATION %%%
+\include{chapters/chapter03_placeholder}
+
+%%% CHAPTER 4: MATHEMATICAL MODELING %%%
+\include{chapters/chapter04_placeholder}
+
+%%% CHAPTER 5: SLIDING MODE CONTROL THEORY %%%
+\include{chapters/chapter05_placeholder}
+
+%%% CHAPTER 6: CHATTERING MITIGATION %%%
+\include{chapters/chapter06_placeholder}
+
+%%% CHAPTER 7: PSO OPTIMIZATION %%%
+\include{chapters/chapter07_placeholder}
+
+%%% CHAPTER 8: SYSTEM IMPLEMENTATION %%%
+\include{chapters/chapter08_placeholder}
+
+%%% CHAPTER 9: EXPERIMENTAL SETUP %%%
+\include{chapters/chapter09_placeholder}
+
+%%% CHAPTER 10: CONTROLLER COMPARISON %%%
+\include{chapters/chapter10_placeholder}
+
+%%% CHAPTER 11: ROBUSTNESS ANALYSIS %%%
+\include{chapters/chapter11_placeholder}
+
+%%% CHAPTER 12: PSO TUNING RESULTS %%%
+\include{chapters/chapter12_placeholder}
+
+%%% CHAPTER 13: LYAPUNOV STABILITY ANALYSIS %%%
+\include{chapters/chapter13_placeholder}
+
+%%% CHAPTER 14: DISCUSSION %%%
+\include{chapters/chapter14_placeholder}
+
+%%% CHAPTER 15: CONCLUSION %%%
+\include{chapters/chapter15_placeholder}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% BIBLIOGRAPHY
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% BibTeX style (IEEE for engineering)
+\bibliographystyle{IEEEtran}
+
+% Bibliography file
+\bibliography{bibliography/main}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% APPENDICES
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\appendix
+
+%%% APPENDIX A: LYAPUNOV PROOFS %%%
+\include{appendices/appendix_a_proofs}
+
+%%% APPENDIX B: CODE LISTINGS %%%
+\include{appendices/appendix_b_code}
+
+%%% APPENDIX C: BENCHMARK DATA %%%
+\include{appendices/appendix_c_data}
+
+%%% APPENDIX D: CONFIGURATION FILES %%%
+\include{appendices/appendix_d_config}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

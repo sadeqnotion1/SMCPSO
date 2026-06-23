@@ -1,0 +1,182 @@
+% ============================================================================
+% SECTION 12: HARDWARE-IN-THE-LOOP (HIL) SYSTEM
+% ============================================================================
+\section{Hardware-in-the-Loop (HIL) System}
+
+\begin{frame}{HIL Architecture Overview}
+    \textbf{Network-Based Plant-Controller Separation:}
+
+    \vspace{0.3cm}
+
+    \begin{tikzpicture}[
+        node distance=2cm,
+        every node/.style={font=\small},
+        box/.style={rectangle, draw, thick, minimum width=3cm, minimum height=1.2cm}
+    ]
+        \node[box, fill=dipblue!20] (plant) {Plant Server};
+        \node[box, fill=dipgreen!20, right=4cm of plant] (controller) {Controller Client};
+
+        \draw[->, ultra thick, dipred] (controller.south) -- node[below, midway] {Control $u$} (plant.south);
+        \draw[->, ultra thick, dipblue] (plant.north) -- node[above, midway] {State $\mathbf{x}$} (controller.north);
+
+        \node[below=0.3cm of plant, align=center] {
+            \texttt{tcp://0.0.0.0:5555} \\
+            Simulates dynamics \\
+            Safety monitoring
+        };
+
+        \node[below=0.3cm of controller, align=center] {
+            \texttt{tcp://localhost:5555} \\
+            Computes control law \\
+            Latency monitoring
+        };
+    \end{tikzpicture}
+
+    \vspace{0.3cm}
+
+    \textbf{Key Benefits:}
+    \begin{itemize}
+        \item \textbf{Hardware testing:} Replace plant server with real robot interface
+        \item \textbf{Network simulation:} Test latency, packet loss effects
+        \item \textbf{Safety validation:} Emergency stop mechanisms
+        \item \textbf{Controller portability:} Same controller code for sim/hardware
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{HIL Communication Protocol}
+    \textbf{ZeroMQ-Based Request-Reply Pattern:}
+
+    \vspace{0.3cm}
+
+    \textbf{Plant Server (Pseudocode):}
+    \begin{lstlisting}
+import zmq
+
+socket = zmq.Context().socket(zmq.REP)
+socket.bind("tcp://*:5555")
+
+while True:
+    # Receive control input
+    u = socket.recv_json()['control']
+
+    # Simulate dynamics (one time step)
+    state = integrate_dynamics(current_state, u, dt=0.01)
+
+    # Check safety limits
+    if abs(state['cart_position']) > 2.0:
+        emergency_stop()
+
+    # Send state back
+    socket.send_json({'state': state, 'timestamp': time.time()})
+    \end{lstlisting}
+
+    \vspace{0.3cm}
+
+    \textbf{Message Format:} JSON with timestamps for latency measurement
+\end{frame}
+
+\begin{frame}{HIL Safety Mechanisms}
+    \textbf{Multi-Layer Safety Architecture:}
+
+    \vspace{0.3cm}
+
+    \begin{enumerate}
+        \item \textbf{Physical Limit Checks}
+        \begin{itemize}
+            \item Cart position: $|x| < 2.0$ m
+            \item Pole angles: $|\theta_1|, |\theta_2| < \pi/2$ rad
+            \item Control force: $|u| < 100$ N
+        \end{itemize}
+
+        \item \textbf{Timeout Detection}
+        \begin{itemize}
+            \item Maximum control latency: 100 ms
+            \item Heartbeat monitoring (1 Hz)
+            \item Automatic emergency stop on timeout
+        \end{itemize}
+
+        \item \textbf{Watchdog Timers}
+        \begin{itemize}
+            \item Control loop must respond within deadline
+            \item Watchdog reset every successful cycle
+            \item Trigger emergency stop after 3 missed deadlines
+        \end{itemize}
+
+        \item \textbf{Manual Override}
+        \begin{itemize}
+            \item Emergency stop button (keyboard interrupt)
+            \item Graceful shutdown sequence
+            \item State logging before termination
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{HIL Latency Monitoring}
+    \textbf{Real-Time Performance Tracking:}
+
+    \vspace{0.3cm}
+
+    \textbf{Monitored Metrics:}
+    \begin{itemize}
+        \item \textbf{Round-trip time (RTT):} Total communication delay
+        \item \textbf{Controller computation time:} Time to compute control law
+        \item \textbf{Network jitter:} Variance in communication delay
+        \item \textbf{Deadline misses:} Cycles exceeding 100 ms deadline
+    \end{itemize}
+
+    \vspace{0.3cm}
+
+    \textbf{Typical Performance (Local Network):}
+    \begin{tabular}{ll}
+        \toprule
+        \textbf{Metric} & \textbf{Value} \\
+        \midrule
+        Mean RTT & 2-5 ms \\
+        Max RTT & 8-12 ms \\
+        Controller compute time & 0.5-1 ms \\
+        Deadline miss rate & <0.1\% \\
+        \bottomrule
+    \end{tabular}
+
+    \vspace{0.3cm}
+
+    \begin{exampleblock}{Weakly-Hard Real-Time Constraints}
+        Allows occasional deadline misses (≤1\%) while maintaining stability
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}{HIL Validation Results}
+    \textbf{Test Scenarios:}
+
+    \vspace{0.3cm}
+
+    \begin{enumerate}
+        \item \textbf{Local Simulation (Baseline)}
+        \begin{itemize}
+            \item Both plant and controller on same machine
+            \item RTT: 1-3 ms, zero packet loss
+            \item Result: Identical performance to non-HIL mode
+        \end{itemize}
+
+        \item \textbf{Network Latency Injection}
+        \begin{itemize}
+            \item Added 10 ms, 50 ms, 100 ms delays
+            \item Controller adapts to latency (predictive compensation)
+            \item Result: Stable up to 100 ms, degraded performance beyond
+        \end{itemize}
+
+        \item \textbf{Packet Loss Simulation}
+        \begin{itemize}
+            \item 1\%, 5\%, 10\% packet loss rates
+            \item Timeout recovery and state estimation
+            \item Result: Stable up to 5\% loss, unstable at 10\%
+        \end{itemize}
+
+        \item \textbf{Safety Limit Triggering}
+        \begin{itemize}
+            \item Deliberately exceeded position/angle limits
+            \item Emergency stop activated within 1 time step
+            \item Result: No damage, graceful shutdown logged
+        \end{itemize}
+    \end{enumerate}
+\end{frame}

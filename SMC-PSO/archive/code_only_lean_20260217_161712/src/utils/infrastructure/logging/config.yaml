@@ -1,0 +1,98 @@
+# Logging Configuration for DIP-SMC-PSO
+# Version: 1.0
+# Last Updated: 2025-11-11
+
+# Global log level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+default_level: INFO
+
+# Per-component log levels (override default)
+component_levels:
+  Controller.*: DEBUG
+  Controller.ClassicalSMC: INFO
+  Controller.AdaptiveSMC: DEBUG
+  Controller.STASMC: INFO
+  Controller.HybridAdaptiveSTA: INFO
+  Controller.SwingUpSMC: INFO
+  Controller.MPC: INFO
+  Optimizer.PSO: INFO
+  Simulation.Runner: INFO
+  Simulation.Runner.step: WARNING  # Only log warnings/errors for steps
+  Plant.*: WARNING
+  HIL.*: INFO
+
+# Output handlers
+handlers:
+  # Console handler (real-time output)
+  console:
+    enabled: true
+    level: INFO
+    format: human_readable  # or 'json'
+    colorize: true
+
+  # File handler (rotating log files)
+  file:
+    enabled: true
+    level: DEBUG
+    format: json
+    directory: logs
+    filename_pattern: "{component}_{date}.log"  # e.g., controller_2025-11-11.log
+    rotation:
+      strategy: daily_and_size
+      max_bytes: 104857600  # 100MB
+      backup_count: 5
+      retention_days: 30
+      compress: true
+
+  # Async handler (non-blocking wrapper)
+  async:
+    enabled: true
+    queue_size: 10000
+    flush_interval_ms: 100
+    flush_on_levels: [ERROR, CRITICAL]
+
+# Log formatting
+formatters:
+  json:
+    timestamp_format: iso8601  # ISO 8601 with microseconds
+    include_hostname: true
+    include_pid: true
+    include_thread_id: true
+    pretty_print: false  # Set to true for debugging
+
+  human_readable:
+    timestamp_format: "%Y-%m-%d %H:%M:%S.%f"
+    format: "[{timestamp}] [{level}] [{component}] {event}: {data_summary} ({duration_ms}ms)"
+    max_data_length: 100  # Truncate long data fields
+
+# Performance settings
+performance:
+  lazy_formatting: true  # Only format if log level is enabled
+  sampling:
+    enabled: false  # Set to true to sample high-frequency logs
+    rate: 100  # Log every Nth event
+  batch_mode:
+    enabled: false  # Set to true for batch logging
+    batch_size: 100
+
+# Validation
+validation:
+  validate_schema: true  # Validate against schema.json
+  strict_mode: false  # Fail on validation errors (vs. warn)
+
+# Monitoring
+monitoring:
+  self_monitoring: true  # Log logging system performance
+  monitoring_interval_seconds: 60
+  metrics:
+    - logs_written_count
+    - avg_latency_ms
+    - max_latency_ms
+    - queue_depth
+    - flush_count
+    - error_count
+
+# Environment variable overrides
+# LOG_LEVEL - Override default_level
+# LOG_DIR - Override file.directory
+# LOG_ASYNC_ENABLED - Override async.enabled (true/false)
+# LOG_CONSOLE_ENABLED - Override console.enabled (true/false)

@@ -1,0 +1,163 @@
+name: 🔵 PSO Optimization - Convergence Issue
+description: Report PSO convergence problems (CRITICAL)
+title: "[PSO-CONVERGENCE] "
+labels: ["bug", "optimization", "pso", "critical", "convergence"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 🔵 Critical PSO Convergence Issue
+        Use this template for PSO convergence failures, premature convergence, or stagnation.
+        **Response Time**: < 4 hours
+
+  - type: dropdown
+    id: convergence_type
+    attributes:
+      label: Convergence Issue Type
+      description: Select the type of convergence problem
+      options:
+        - Premature Convergence
+        - Non-Convergence/Stagnation
+        - Convergence to Infeasible Solutions
+        - Oscillating Fitness
+        - Loss of Swarm Diversity
+        - Local Optima Trap
+      default: 0
+    validations:
+      required: true
+
+  - type: dropdown
+    id: optimization_target
+    attributes:
+      label: Optimization Target
+      description: What parameters are being optimized?
+      options:
+        - Classical SMC Gains
+        - Super-Twisting SMC Parameters
+        - Adaptive SMC Parameters
+        - Hybrid STA-SMC Parameters
+        - Sliding Surface Coefficients
+        - Multi-Objective Optimization
+        - Other
+      default: 0
+    validations:
+      required: true
+
+  - type: textarea
+    id: pso_parameters
+    attributes:
+      label: PSO Algorithm Parameters
+      description: Provide PSO configuration details
+      placeholder: |
+        - Population size: 30
+        - Max iterations: 100
+        - Inertia weight (w): 0.9
+        - Cognitive coefficient (c1): 2.0
+        - Social coefficient (c2): 2.0
+        - Velocity clamping: [-1.0, 1.0]
+        - Topology: Global best
+    validations:
+      required: true
+
+  - type: textarea
+    id: parameter_bounds
+    attributes:
+      label: Parameter Bounds
+      description: Provide the parameter search space bounds
+      placeholder: |
+        Control Gains (K):
+        - K1: [0.1, 50.0]
+        - K2: [0.1, 30.0]
+        - K3: [0.1, 40.0]
+        - K4: [0.1, 20.0]
+        - K5: [0.1, 60.0]
+        - K6: [0.1, 25.0]
+
+        Sliding Surface (c):
+        - c1: [0.1, 10.0]
+        - c2: [0.1, 10.0]
+        - c3: [0.1, 10.0]
+        - c4: [0.1, 10.0]
+    validations:
+      required: true
+
+  - type: textarea
+    id: fitness_function
+    attributes:
+      label: Fitness Function
+      description: Describe the objective function being optimized
+      placeholder: |
+        Objective: Minimize weighted combination of:
+        - Settling time: w1 * settling_time
+        - Overshoot: w2 * overshoot
+        - Steady-state error: w3 * ss_error
+        - Control effort: w4 * control_effort
+
+        Weights: w1=1.0, w2=2.0, w3=1.5, w4=0.5
+        Constraints: Stability requirement, gain bounds
+    validations:
+      required: true
+
+  - type: textarea
+    id: convergence_data
+    attributes:
+      label: Convergence Analysis Data
+      description: Provide convergence metrics and observations
+      placeholder: |
+        - Best fitness achieved: X
+        - Generation of stagnation: Y
+        - Diversity at stagnation: Z
+        - Boundary hits: N particles
+        - Constraint violations: M evaluations
+        - Final swarm spread: σ
+        - Convergence plot: [attach or describe]
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction_command
+    attributes:
+      label: Reproduction Command
+      description: Command to reproduce the convergence issue
+      placeholder: |
+        python simulate.py --ctrl classical_smc --run-pso --seed 42 --save debug_gains.json
+
+        Or provide specific PSO configuration:
+        python simulate.py --ctrl adaptive_smc --run-pso --pso-params "{'population':50, 'iterations':200}" --seed 123
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: convergence_symptoms
+    attributes:
+      label: Observed Symptoms
+      description: Check all that apply
+      options:
+        - label: Fitness stagnation for >20 iterations
+        - label: Swarm diversity below threshold
+        - label: All particles cluster at boundaries
+        - label: Oscillating best fitness
+        - label: Constraint violations in final solution
+        - label: Performance worse than baseline
+        - label: Infeasible parameter combinations
+
+  - type: textarea
+    id: baseline_comparison
+    attributes:
+      label: Baseline Comparison
+      description: Compare with known good results or manual tuning
+      placeholder: |
+        - Manual tuning result: Fitness = X
+        - Previous PSO run: Fitness = Y
+        - Literature benchmark: Fitness = Z
+        - Expected performance: ...
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: Additional Context
+      description: Any additional information, plots, logs, or context
+      placeholder: Add any other context about the convergence issue here...

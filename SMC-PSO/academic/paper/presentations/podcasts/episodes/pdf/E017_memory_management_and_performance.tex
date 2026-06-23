@@ -1,0 +1,142 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{E017}
+\lhead{DIP-SMC-PSO Learning Episode}
+\rfoot{\thepage}
+
+\title{\Large\textbf{E017: Memory Management and Performance}}
+\author{DIP-SMC-PSO Educational Series}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section*{Overview}
+
+This episode covers memory management and performance from the DIP-SMC-PSO project.
+
+\textbf{Part:} Part3 Advanced
+
+\textbf{Duration:} 15-20 minutes
+
+\textbf{Source:} Comprehensive Presentation Materials
+
+\newpage
+
+\section{HIL Architecture Overview}
+
+**Network-Based Plant-Controller Separation:**
+
+    [Visual diagram - see PDF]
+
+    **Key Benefits:**
+    
+        - **Hardware testing:** Replace plant server with real robot interface
+        - **Network simulation:** Test latency, packet loss effects
+        - **Safety validation:** Emergency stop mechanisms
+        - **Controller portability:** Same controller code for sim/hardware
+
+\section{HIL Safety Mechanisms}
+
+**Multi-Layer Safety Architecture:**
+
+        - **Physical Limit Checks**
+        
+            - Cart position: $|x| < 2.0$ m
+            - Pole angles: $|\theta_1|, |\theta_2| < \pi/2$ rad
+            - Control force: $|u| < 100$ N
+
+        - **Timeout Detection**
+        
+            - Maximum control latency: 100 ms
+            - Heartbeat monitoring (1 Hz)
+            - Automatic emergency stop on timeout
+
+        - **Watchdog Timers**
+        
+            - Control loop must respond within deadline
+            - Watchdog reset every successful cycle
+            - Trigger emergency stop after 3 missed deadlines
+
+        - **Manual Override**
+        
+            - Emergency stop button (keyboard interrupt)
+            - Graceful shutdown sequence
+            - State logging before termination
+
+\section{HIL Latency Monitoring}
+
+**Real-Time Performance Tracking:**
+
+    **Monitored Metrics:**
+    
+        - **Round-trip time (RTT):** Total communication delay
+        - **Controller computation time:** Time to compute control law
+        - **Network jitter:** Variance in communication delay
+        - **Deadline misses:** Cycles exceeding 100 ms deadline
+
+    **Typical Performance (Local Network):**
+    \begin{tabular}{ll}
+        \toprule
+        **Metric** & **Value** \\
+        \midrule
+        Mean RTT & 2-5 ms \\
+        Max RTT & 8-12 ms \\
+        Controller compute time & 0.5-1 ms \\
+        Deadline miss rate & <0.1\
+        \bottomrule
+    \end{tabular}
+
+        Allows occasional deadline misses (≤1\
+
+\section{HIL Validation Results}
+
+**Test Scenarios:**
+
+        - **Local Simulation (Baseline)**
+        
+            - Both plant and controller on same machine
+            - RTT: 1-3 ms, zero packet loss
+            - Result: Identical performance to non-HIL mode
+
+        - **Network Latency Injection**
+        
+            - Added 10 ms, 50 ms, 100 ms delays
+            - Controller adapts to latency (predictive compensation)
+            - Result: Stable up to 100 ms, degraded performance beyond
+
+        - **Packet Loss Simulation**
+        
+            - 1\
+            - Timeout recovery and state estimation
+            - Result: Stable up to 5\
+
+        - **Safety Limit Triggering**
+        
+            - Deliberately exceeded position/angle limits
+            - Emergency stop activated within 1 time step
+            - Result: No damage, graceful shutdown logged
+
+\newpage
+
+\section*{{Resources}}
+
+\begin{itemize}
+    \item \textbf{Repository:} \url{https://github.com/theSadeQ/dip-smc-pso.git}
+    \item \textbf{Documentation:} See \texttt{docs/} directory
+    \item \textbf{Getting Started:} \texttt{docs/guides/getting-started.md}
+\end{itemize}
+
+\vfill
+
+\noindent\textit{Educational podcast episode generated from comprehensive presentation materials}
+
+\end{document}

@@ -1,0 +1,1004 @@
+{
+  "textbook_structure": {
+    "title": "Sliding Mode Control for Underactuated Systems: Theory, Implementation, and Optimization",
+    "subtitle": "A Comprehensive Guide Using the Double-Inverted Pendulum Benchmark",
+    "target_audience": "Graduate students, researchers, and control engineers with undergraduate-level knowledge of linear control (state space, Lyapunov stability) and programming (Python)",
+    "prerequisites": "Linear algebra, differential equations, classical control theory (LQR, pole placement), basic Python programming",
+    "page_estimate": "400-500 pages",
+    "pedagogical_approach": "Theory-first with immediate practical implementation; each theoretical concept followed by algorithm pseudocode, Python implementation, and numerical examples",
+
+    "chapters": [
+      {
+        "number": 1,
+        "title": "Introduction to Underactuated Systems and Sliding Mode Control",
+        "page_estimate": "30-35 pages",
+        "sections": [
+          "1.1 The Challenge of Underactuated Control",
+          "1.2 Double-Inverted Pendulum as a Benchmark System",
+          "1.3 Sliding Mode Control: Historical Development (1950s-2025)",
+          "1.4 The Chattering Problem and Modern Solutions",
+          "1.5 Overview of Controllers Covered in This Book",
+          "1.6 Software Framework and Computational Tools"
+        ],
+        "algorithms": [],
+        "figures": [
+          "academic/paper/thesis/figures/architecture/system_overview.png",
+          "academic/paper/thesis/figures/schematics/control_loop.png"
+        ],
+        "code_listings": [
+          "src/plant/models/simplified_dynamics.py (excerpt: state vector definition)",
+          "config.yaml (excerpt: system parameters)"
+        ],
+        "exercises": {
+          "count": 8,
+          "difficulty": "Introductory",
+          "types": ["Conceptual understanding", "Literature review", "System identification"]
+        }
+      },
+
+      {
+        "number": 2,
+        "title": "Mathematical Foundations: Dynamics and Stability Theory",
+        "page_estimate": "45-50 pages",
+        "sections": [
+          "2.1 Euler-Lagrange Mechanics for Multi-Body Systems",
+          "2.2 Double-Inverted Pendulum Dynamics Derivation",
+          "2.3 State-Space Representation and Linearization",
+          "2.4 Lyapunov Stability Theory: Asymptotic vs Finite-Time Convergence",
+          "2.5 Controllability and Observability Analysis",
+          "2.6 Matched vs Unmatched Disturbances",
+          "2.7 Numerical Integration Methods (RK4, RK45, Symplectic Integrators)"
+        ],
+        "algorithms": [
+          "Algorithm 2.1: Recursive Newton-Euler Dynamics Computation",
+          "Algorithm 2.2: Linearization via Finite Differences",
+          "Algorithm 2.3: Controllability Matrix Rank Test"
+        ],
+        "figures": [
+          "academic/paper/thesis/figures/lyapunov/stability_regions.png",
+          "NEW: Free-body diagram of DIP system",
+          "NEW: Energy landscape visualization"
+        ],
+        "code_listings": [
+          "src/plant/models/full_dynamics.py (complete)",
+          "src/core/simulation/simulation_context.py (excerpt: RK4 integration)",
+          "src/utils/validation/stability.py (excerpt: Lyapunov validation)"
+        ],
+        "exercises": {
+          "count": 12,
+          "difficulty": "Intermediate",
+          "types": ["Derivation", "Linearization", "Stability proofs", "Numerical simulation"]
+        }
+      },
+
+      {
+        "number": 3,
+        "title": "Classical Sliding Mode Control: Theory and Implementation",
+        "page_estimate": "55-60 pages",
+        "sections": [
+          "3.1 Sliding Surface Design: Hurwitz Polynomial Requirements",
+          "3.2 Equivalent Control and the Filippov Solution",
+          "3.3 Switching Control and the Reachability Condition",
+          "3.4 Lyapunov Proof of Exponential Convergence",
+          "3.5 Boundary Layer Theory: Saturation vs Hyperbolic Tangent",
+          "3.6 Gain Positivity Constraints and Physical Interpretation",
+          "3.7 Controllability Threshold: Decoupling from Boundary Layer",
+          "3.8 Implementation: The ClassicalSMC Class",
+          "3.9 Experimental Results and Performance Analysis"
+        ],
+        "algorithms": [
+          "Algorithm 3.1: Classical SMC Control Law (full pseudocode)",
+          "Algorithm 3.2: Equivalent Control Computation with Regularization",
+          "Algorithm 3.3: Boundary Layer Saturation Function",
+          "Algorithm 3.4: Gain Validation and Positivity Check"
+        ],
+        "figures": [
+          "academic/paper/experiments/figures/LT7_section_7_2_transient_response.png (classical SMC portion)",
+          "academic/paper/experiments/figures/LT7_section_7_3_chattering.png (classical SMC chattering)",
+          "NEW: Phase portrait showing sliding surface and trajectories",
+          "NEW: Boundary layer effect comparison (epsilon = 0.01, 0.05, 0.1)"
+        ],
+        "code_listings": [
+          "src/controllers/smc/classic_smc.py (complete with detailed annotations)",
+          "src/utils/control/primitives.py (saturate function)",
+          "tests/test_controllers/test_classical_smc.py (excerpt: gain validation tests)"
+        ],
+        "exercises": {
+          "count": 15,
+          "difficulty": "Intermediate to Advanced",
+          "types": ["Lyapunov stability proofs", "Pole placement design", "Boundary layer tuning", "Python implementation", "Simulation experiments"]
+        }
+      },
+
+      {
+        "number": 4,
+        "title": "Super-Twisting Algorithm: Second-Order Sliding Mode Control",
+        "page_estimate": "50-55 pages",
+        "sections": [
+          "4.1 Limitations of First-Order SMC: Chattering Analysis",
+          "4.2 Second-Order Sliding Modes: Concept and Advantages",
+          "4.3 Super-Twisting Algorithm Derivation (Levant 2003)",
+          "4.4 Finite-Time Convergence Proof (Moreno-Osorio Lyapunov Function)",
+          "4.5 Gain Selection Guidelines: Sufficient Conditions",
+          "4.6 Boundary Layer Adaptation for Practical Implementation",
+          "4.7 Anti-Windup Mechanisms for Integrator State",
+          "4.8 Numba Optimization: JIT Compilation for Real-Time Control",
+          "4.9 Implementation: The SuperTwistingSMC Class",
+          "4.10 Comparative Study: Classical vs STA Performance"
+        ],
+        "algorithms": [
+          "Algorithm 4.1: Super-Twisting Control Law (continuous + integral terms)",
+          "Algorithm 4.2: Integrator Update with Anti-Windup Back-Calculation",
+          "Algorithm 4.3: Numba-Accelerated Core (_sta_smc_core)",
+          "Algorithm 4.4: STA Gain Tuning via Sufficient Conditions"
+        ],
+        "figures": [
+          "academic/paper/experiments/figures/LT7_section_7_3_chattering.png (STA vs Classical)",
+          "academic/paper/experiments/sta_smc/optimization/active/sta_smc_convergence.png",
+          "academic/paper/experiments/figures/MT6_performance_comparison.png",
+          "NEW: Finite-time convergence trajectory (sigma and sigma_dot)",
+          "NEW: Control signal comparison (Classical discontinuous vs STA continuous)"
+        ],
+        "code_listings": [
+          "src/controllers/smc/sta_smc.py (complete with Numba annotations)",
+          "src/controllers/smc/sta_smc.py (_sta_smc_core function - detailed walkthrough)",
+          "benchmarks/scripts/compare_classical_sta.py (excerpt: performance comparison)"
+        ],
+        "exercises": {
+          "count": 14,
+          "difficulty": "Advanced",
+          "types": ["Finite-time convergence proofs", "Gain tuning experiments", "Numba optimization", "Chattering metric computation", "Comparative analysis"]
+        }
+      },
+
+      {
+        "number": 5,
+        "title": "Adaptive Sliding Mode Control: Online Parameter Tuning",
+        "page_estimate": "45-50 pages",
+        "sections": [
+          "5.1 The Unknown Disturbance Problem",
+          "5.2 Adaptation Laws: Gradient-Based vs Switching",
+          "5.3 Dead Zone Design: Noise Rejection and Steady-State Error",
+          "5.4 Leak Rate Selection: Preventing Unbounded Growth",
+          "5.5 Extended Lyapunov Stability Proof with Adaptive Gains",
+          "5.6 Rate Limiting and Bounded Adaptation",
+          "5.7 Implementation: The AdaptiveSMC Class",
+          "5.8 Case Study: Time-Varying Disturbance Rejection",
+          "5.9 Comparison with Fixed-Gain Classical SMC"
+        ],
+        "algorithms": [
+          "Algorithm 5.1: Piecewise Adaptive Law with Dead Zone",
+          "Algorithm 5.2: Bounded Gradient Adaptation",
+          "Algorithm 5.3: Rate-Limited Gain Update",
+          "Algorithm 5.4: Adaptive SMC Full Control Loop"
+        ],
+        "figures": [
+          "academic/paper/experiments/adaptive_smc/optimization/active/adaptive_smc_convergence.png",
+          "academic/paper/experiments/figures/LT7_section_8_2_disturbance_rejection.png (adaptive portion)",
+          "NEW: Gain evolution trajectory (K vs time)",
+          "NEW: Dead zone effect on adaptation (with/without)",
+          "NEW: Leak rate comparison (alpha = 0, 0.001, 0.01)"
+        ],
+        "code_listings": [
+          "src/controllers/smc/adaptive_smc.py (complete)",
+          "src/controllers/adaptive_gain_scheduler.py (adaptation logic)",
+          "tests/test_integration/test_adaptive_disturbance.py (disturbance rejection test)"
+        ],
+        "exercises": {
+          "count": 12,
+          "difficulty": "Advanced",
+          "types": ["Lyapunov stability with adaptation", "Dead zone tuning", "Disturbance scenario design", "Comparative experiments"]
+        }
+      },
+
+      {
+        "number": 6,
+        "title": "Hybrid Adaptive Super-Twisting Control: Unified Framework",
+        "page_estimate": "55-60 pages",
+        "sections": [
+          "6.1 Motivation: Combining Finite-Time Convergence with Online Adaptation",
+          "6.2 Unified Sliding Surface with Cart Recentering",
+          "6.3 Relative vs Absolute Surface Formulation",
+          "6.4 Adaptive Super-Twisting Algorithm Derivation",
+          "6.5 Dual-Gain Adaptation Strategy",
+          "6.6 Scheduler-Based Gain Modulation (Lambda Scheduling)",
+          "6.7 Lyapunov Stability Analysis for Hybrid System",
+          "6.8 Implementation: The HybridAdaptiveSTASMC Class",
+          "6.9 Anomaly Analysis: Zero-Variance Edge Cases",
+          "6.10 Performance Evaluation: Best-of-Both-Worlds?"
+        ],
+        "algorithms": [
+          "Algorithm 6.1: Hybrid Adaptive STA Control Law",
+          "Algorithm 6.2: Dual-Gain Adaptation with Lambda Scheduling",
+          "Algorithm 6.3: Relative Sliding Surface Computation",
+          "Algorithm 6.4: Mode Confusion Detection and Recovery"
+        ],
+        "figures": [
+          "academic/paper/experiments/hybrid_adaptive_sta/optimization/active/hybrid_adaptive_sta_smc_convergence.png",
+          "academic/paper/experiments/figures/LT7_section_7_4_energy.png (hybrid performance)",
+          "academic/paper/experiments/hybrid_adaptive_sta/anomaly_analysis/phase3/phase3_3/phase3_3_phase_comparison.png",
+          "NEW: Lambda scheduler effect on adaptation",
+          "NEW: Comparative robustness under model uncertainty"
+        ],
+        "code_listings": [
+          "src/controllers/smc/hybrid_adaptive_sta_smc.py (complete with scheduler)",
+          "src/controllers/sliding_surface_scheduler.py (lambda scheduling logic)",
+          "academic/paper/experiments/hybrid_adaptive_sta/anomaly_analysis/analysis_scripts/phase3_3_comparative_analysis.py (excerpt)"
+        ],
+        "exercises": {
+          "count": 16,
+          "difficulty": "Expert",
+          "types": ["Hybrid Lyapunov proofs", "Scheduler design", "Edge case analysis", "Multi-objective optimization"]
+        }
+      },
+
+      {
+        "number": 7,
+        "title": "Swing-Up Control: Energy-Based Nonlinear Techniques",
+        "page_estimate": "35-40 pages",
+        "sections": [
+          "7.1 The Stabilization vs Swing-Up Problem",
+          "7.2 Energy-Based Control Design",
+          "7.3 Switching Logic: Energy Threshold and Hysteresis",
+          "7.4 Combined Swing-Up and SMC Stabilization",
+          "7.5 Implementation: The SwingUpSMC Class",
+          "7.6 Experimental Results: Large-Angle Initial Conditions"
+        ],
+        "algorithms": [
+          "Algorithm 7.1: Energy-Based Swing-Up Control",
+          "Algorithm 7.2: Switching Logic with Hysteresis",
+          "Algorithm 7.3: Combined Swing-Up + SMC Controller"
+        ],
+        "figures": [
+          "academic/paper/experiments/figures/LT7_section_7_2_transient_response.png (swing-up trajectory)",
+          "NEW: Energy evolution during swing-up",
+          "NEW: Phase portrait with large initial angles"
+        ],
+        "code_listings": [
+          "src/controllers/specialized/swing_up_smc.py (complete)",
+          "tests/test_integration/test_swing_up.py (large-angle tests)"
+        ],
+        "exercises": {
+          "count": 10,
+          "difficulty": "Intermediate",
+          "types": ["Energy function design", "Switching threshold tuning", "Simulation experiments"]
+        }
+      },
+
+      {
+        "number": 8,
+        "title": "Particle Swarm Optimization for Controller Tuning",
+        "page_estimate": "60-65 pages",
+        "sections": [
+          "8.1 The Gain Tuning Problem: High-Dimensional Search Space",
+          "8.2 Particle Swarm Optimization Algorithm",
+          "8.3 Multi-Objective Cost Function Design",
+          "8.4 PSO Hyperparameters: Inertia, Cognitive, and Social Weights",
+          "8.5 Convergence Criteria and Stagnation Detection",
+          "8.6 Penalty Functions for Constraint Handling",
+          "8.7 Implementation: The PSOTuner Class",
+          "8.8 Optimization Results for 7 Controllers",
+          "8.9 Generalization Analysis: Train vs Test Conditions",
+          "8.10 Computational Efficiency: Vectorized Batch Simulation"
+        ],
+        "algorithms": [
+          "Algorithm 8.1: Particle Swarm Optimization (PSO) Main Loop",
+          "Algorithm 8.2: Multi-Objective Cost Function with Penalties",
+          "Algorithm 8.3: Velocity Update with Clamping",
+          "Algorithm 8.4: Batch Simulation for Parallel Fitness Evaluation"
+        ],
+        "figures": [
+          "academic/paper/experiments/figures/LT7_section_5_1_pso_convergence.png",
+          "academic/paper/experiments/figures/MT6_pso_convergence.png",
+          "academic/paper/experiments/figures/LT7_section_8_3_pso_generalization.png",
+          "academic/paper/thesis/figures/convergence/pso_3d_surface.png",
+          "academic/paper/experiments/comparative/chattering_pso/chattering_pso_comparison.png",
+          "academic/paper/experiments/comparative/energy_pso/energy_pso_comparison.png"
+        ],
+        "code_listings": [
+          "src/optimizer/pso_optimizer.py (complete PSOTuner class)",
+          "src/core/simulation/vector_sim.py (batch simulation)",
+          "scripts/optimization/run_pso_benchmark.py (optimization workflow)"
+        ],
+        "exercises": {
+          "count": 14,
+          "difficulty": "Advanced",
+          "types": ["Cost function design", "PSO parameter tuning", "Multi-objective optimization", "Computational efficiency analysis"]
+        }
+      },
+
+      {
+        "number": 9,
+        "title": "Robustness Analysis: Model Uncertainty and Disturbances",
+        "page_estimate": "50-55 pages",
+        "sections": [
+          "9.1 Sources of Model Uncertainty in Physical Systems",
+          "9.2 Parametric Uncertainty: Mass, Length, Damping Variations",
+          "9.3 External Disturbances: Impulse, Step, and Sinusoidal",
+          "9.4 Monte Carlo Simulation for Statistical Robustness",
+          "9.5 Worst-Case Analysis and Success Rate Metrics",
+          "9.6 Robustness Comparison Across Controllers",
+          "9.7 Theoretical Bounds on Disturbance Rejection",
+          "9.8 Practical Guidelines for Safety Margins"
+        ],
+        "algorithms": [
+          "Algorithm 9.1: Monte Carlo Robustness Simulation",
+          "Algorithm 9.2: Worst-Case Disturbance Search",
+          "Algorithm 9.3: Bootstrap Confidence Interval Estimation"
+        ],
+        "figures": [
+          "academic/paper/experiments/figures/LT7_section_8_1_model_uncertainty.png",
+          "academic/paper/experiments/figures/LT7_section_8_2_disturbance_rejection.png",
+          "academic/paper/experiments/figures/MT7_robustness_success_rate.png",
+          "academic/paper/experiments/figures/MT7_robustness_worst_case.png",
+          "academic/paper/experiments/figures/MT7_robustness_chattering_distribution.png",
+          "academic/paper/experiments/figures/MT7_robustness_per_seed_variance.png"
+        ],
+        "code_listings": [
+          "src/benchmarks/robustness_benchmarks.py (Monte Carlo framework)",
+          "src/analysis/validation/statistical_tests.py (Welch's t-test, bootstrap)",
+          "scripts/research/LT6_model_uncertainty_analysis.py (complete workflow)"
+        ],
+        "exercises": {
+          "count": 12,
+          "difficulty": "Advanced",
+          "types": ["Monte Carlo experiments", "Statistical hypothesis testing", "Worst-case scenario design", "Safety margin calculation"]
+        }
+      },
+
+      {
+        "number": 10,
+        "title": "Performance Metrics and Benchmarking",
+        "page_estimate": "45-50 pages",
+        "sections": [
+          "10.1 Transient Response Metrics: Settling Time, Overshoot, Rise Time",
+          "10.2 Chattering Quantification: Control Variation and Frequency Analysis",
+          "10.3 Energy Efficiency: Control Effort and Integrated Absolute Error",
+          "10.4 Computational Performance: Execution Time and Real-Time Capability",
+          "10.5 Comprehensive Benchmarking Framework",
+          "10.6 Statistical Analysis: Confidence Intervals and Effect Sizes",
+          "10.7 Performance Ranking and Trade-Off Analysis",
+          "10.8 Reproducibility: Random Seeds and Environment Control"
+        ],
+        "algorithms": [
+          "Algorithm 10.1: Settling Time Detection with Tolerance Bands",
+          "Algorithm 10.2: Chattering Index Computation (Fourier Transform)",
+          "Algorithm 10.3: Statistical Benchmarking with Bootstrap",
+          "Algorithm 10.4: Comprehensive Performance Evaluation Pipeline"
+        ],
+        "figures": [
+          "academic/paper/experiments/figures/LT7_section_7_1_compute_time.png",
+          "academic/paper/experiments/figures/MT6_performance_comparison.png",
+          "NEW: Pareto frontier (energy vs chattering trade-off)",
+          "NEW: Radar chart of normalized performance metrics"
+        ],
+        "code_listings": [
+          "src/benchmarks/metrics/transient_metrics.py (settling time, overshoot)",
+          "src/benchmarks/metrics/chattering_metrics.py (control variation)",
+          "src/benchmarks/metrics/energy_metrics.py (control effort)",
+          "src/benchmarks/statistical_benchmarks_v2.py (complete framework)"
+        ],
+        "exercises": {
+          "count": 10,
+          "difficulty": "Intermediate to Advanced",
+          "types": ["Metric design", "Statistical analysis", "Benchmark reproduction", "Trade-off visualization"]
+        }
+      },
+
+      {
+        "number": 11,
+        "title": "Software Architecture and Implementation Best Practices",
+        "page_estimate": "40-45 pages",
+        "sections": [
+          "11.1 Modular Controller Design: Factory Pattern",
+          "11.2 Configuration Management: YAML and Pydantic Validation",
+          "11.3 Memory Management: Weakref and Circular Reference Prevention",
+          "11.4 Testing Strategies: Unit, Integration, and Property-Based Tests",
+          "11.5 Benchmarking with pytest-benchmark",
+          "11.6 Documentation: Docstrings, Type Hints, and Sphinx",
+          "11.7 Version Control and Reproducibility",
+          "11.8 Continuous Integration for Research Code"
+        ],
+        "algorithms": [
+          "Algorithm 11.1: Controller Factory with Dynamic Registration",
+          "Algorithm 11.2: Pydantic Configuration Validation",
+          "Algorithm 11.3: Hypothesis Property-Based Test Generation"
+        ],
+        "figures": [
+          "academic/paper/thesis/figures/architecture/system_overview.png",
+          "NEW: UML class diagram of controller hierarchy",
+          "NEW: Testing pyramid for control systems"
+        ],
+        "code_listings": [
+          "src/controllers/factory/core.py (factory implementation)",
+          "config.yaml (complete configuration file)",
+          "tests/test_controllers/test_classical_smc.py (complete test suite)",
+          "tests/test_benchmarks/test_performance_benchmarks.py (benchmark tests)"
+        ],
+        "exercises": {
+          "count": 8,
+          "difficulty": "Intermediate",
+          "types": ["Factory pattern implementation", "Test-driven development", "Configuration validation", "Documentation generation"]
+        }
+      },
+
+      {
+        "number": 12,
+        "title": "Advanced Topics and Future Directions",
+        "page_estimate": "35-40 pages",
+        "sections": [
+          "12.1 Model Predictive Control (MPC) for Underactuated Systems",
+          "12.2 Higher-Order Sliding Modes (HOSM) Beyond Super-Twisting",
+          "12.3 Terminal Sliding Mode Control for Finite-Time Stabilization",
+          "12.4 Fractional-Order Sliding Mode Control",
+          "12.5 Machine Learning for Adaptive Control",
+          "12.6 Hardware-in-the-Loop Testing",
+          "12.7 Experimental Validation on Physical Platforms",
+          "12.8 Open Problems and Research Opportunities"
+        ],
+        "algorithms": [
+          "Algorithm 12.1: MPC with Nonlinear Dynamics (CasADi Implementation)",
+          "Algorithm 12.2: Third-Order Sliding Mode (Quasi-Continuous HOSM)"
+        ],
+        "figures": [
+          "NEW: MPC prediction horizon visualization",
+          "NEW: HOSM vs STA comparison"
+        ],
+        "code_listings": [
+          "src/controllers/experimental/mpc_controller.py (sketch)",
+          "src/interfaces/hil/plant_server.py (HIL framework)"
+        ],
+        "exercises": {
+          "count": 10,
+          "difficulty": "Expert",
+          "types": ["Literature review", "MPC implementation", "HIL setup", "Research proposal design"]
+        }
+      }
+    ],
+
+    "appendices": [
+      {
+        "letter": "A",
+        "title": "Mathematical Prerequisites Review",
+        "page_estimate": "20 pages",
+        "content": "Linear algebra review, vector calculus, ordinary differential equations, Lyapunov stability theory"
+      },
+      {
+        "letter": "B",
+        "title": "Python Programming for Control Systems",
+        "page_estimate": "15 pages",
+        "content": "NumPy arrays, SciPy integration, Matplotlib visualization, Numba JIT compilation"
+      },
+      {
+        "letter": "C",
+        "title": "Complete Controller Implementation Reference",
+        "page_estimate": "30 pages",
+        "content": "Full annotated source code for all 7 controllers with line-by-line explanations"
+      },
+      {
+        "letter": "D",
+        "title": "Benchmark Data Tables",
+        "page_estimate": "15 pages",
+        "content": "Comprehensive numerical results for all experiments in Chapters 8-10"
+      },
+      {
+        "letter": "E",
+        "title": "Exercise Solutions",
+        "page_estimate": "40 pages",
+        "content": "Detailed solutions for all exercises (total ~120 exercises across 12 chapters)"
+      }
+    ]
+  },
+
+  "latex_requirements": {
+    "document_class": "book (two-sided, 11pt)",
+    "additional_packages": [
+      "tcolorbox (for colored algorithm boxes and code listings)",
+      "minted (alternative to listings for better Python syntax highlighting)",
+      "cleveref (intelligent cross-referencing)",
+      "index (subject index generation)",
+      "todonotes (for editorial comments during drafting)",
+      "rotating (for landscape tables and figures)",
+      "pdfpages (for including external PDFs if needed)",
+      "glossaries (for terminology definitions)",
+      "biblatex (modern alternative to natbib, better author-year support)"
+    ],
+    "custom_commands": [
+      "\\newcommand{\\pyinline}[1]{\\texttt{#1}} % Inline Python code",
+      "\\newcommand{\\controller}[1]{\\textsc{#1}} % Controller names (e.g., ClassicalSMC)",
+      "\\newenvironment{algorithm_box}{\\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,title=Algorithm]}{\\end{tcolorbox}}",
+      "\\newcommand{\\matlab}[1]{\\texttt{#1}} % MATLAB code (if comparing)",
+      "\\newcommand{\\config}[1]{\\texttt{#1}} % Configuration parameters",
+      "\\newcommand{\\metric}[1]{\\textit{#1}} % Performance metric names",
+      "\\DeclareMathOperator{\\PSO}{PSO} % PSO operator",
+      "\\newcommand{\\code}[1]{\\texttt{\\small #1}} % Inline code snippets"
+    ],
+    "algorithm_style": "algorithm2e with ruled style, vlined option, custom tcolorbox wrapping for visual consistency",
+    "code_listing_style": "Use minted package with Python3 lexer, frame=lines, linenos, bgcolor=lightgray!10, fontsize=\\small, breaklines=true",
+    "citation_style": "numeric (IEEE-style) with biblatex backend for modern bibliography management",
+    "theorem_environments": "Already defined in preamble.tex: theorem, lemma, proposition, corollary, definition, example",
+    "figure_placement": "Use [htbp] by default, [H] for critical algorithm flow diagrams that must appear in-place",
+    "table_style": "booktabs for professional horizontal rules, avoid vertical lines, use \\toprule, \\midrule, \\bottomrule"
+  },
+
+  "content_extraction_plan": {
+    "theory_sources": [
+      {
+        "file": "academic/paper/sphinx_docs/mathematical_foundations/smc_complete_theory.md",
+        "chapters": [3, 4, 5, 6],
+        "extraction": "Lyapunov proofs, convergence analysis, gain selection theory - convert markdown math to LaTeX with proper theorem environments"
+      },
+      {
+        "file": "academic/paper/sphinx_docs/mathematical_foundations/dynamics_derivations.md",
+        "chapters": [2],
+        "extraction": "Euler-Lagrange derivation, inertia matrix computation - verify all equations and add missing intermediate steps"
+      },
+      {
+        "file": "academic/paper/sphinx_docs/mathematical_foundations/pso_algorithm_theory.md",
+        "chapters": [8],
+        "extraction": "PSO algorithm derivation, convergence properties - supplement with implementation details"
+      },
+      {
+        "file": "academic/paper/sphinx_docs/mathematical_foundations/boundary_layer_derivations.md",
+        "chapters": [3, 4],
+        "extraction": "Boundary layer theory, saturation function analysis"
+      },
+      {
+        "file": "academic/paper/sphinx_docs/mathematical_foundations/sliding_surface_analysis.md",
+        "chapters": [3, 6],
+        "extraction": "Sliding surface design, relative vs absolute formulation"
+      },
+      {
+        "file": "academic/paper/sphinx_docs/mathematical_foundations/controller_comparison_theory.md",
+        "chapters": [9, 10],
+        "extraction": "Theoretical robustness bounds, performance trade-offs"
+      },
+      {
+        "file": "academic/paper/sphinx_docs/mathematical_foundations/numerical_integration_theory.md",
+        "chapters": [2, 11],
+        "extraction": "RK4/RK45 derivation, numerical stability"
+      }
+    ],
+
+    "code_sources": [
+      {
+        "file": "src/controllers/smc/classic_smc.py",
+        "chapters": [3],
+        "extraction": "Complete controller class with detailed line-by-line annotations; convert to Algorithm 3.1 pseudocode; create listings for key methods (__init__, compute_control, validate_gains)"
+      },
+      {
+        "file": "src/controllers/smc/sta_smc.py",
+        "chapters": [4],
+        "extraction": "SuperTwistingSMC class and Numba-accelerated core; Algorithm 4.1-4.3 from _sta_smc_control_numba and _sta_smc_core; explain JIT compilation benefits"
+      },
+      {
+        "file": "src/controllers/smc/adaptive_smc.py",
+        "chapters": [5],
+        "extraction": "AdaptiveSMC class with adaptation law implementation; Algorithm 5.1-5.4 from gain update logic; dead zone and leak rate code"
+      },
+      {
+        "file": "src/controllers/smc/hybrid_adaptive_sta_smc.py",
+        "chapters": [6],
+        "extraction": "HybridAdaptiveSTASMC class; dual-gain adaptation; lambda scheduling from sliding_surface_scheduler.py"
+      },
+      {
+        "file": "src/controllers/specialized/swing_up_smc.py",
+        "chapters": [7],
+        "extraction": "SwingUpSMC class; energy computation and switching logic"
+      },
+      {
+        "file": "src/optimizer/pso_optimizer.py",
+        "chapters": [8],
+        "extraction": "PSOTuner class; main optimization loop; cost function design; particle update equations"
+      },
+      {
+        "file": "src/plant/models/full_dynamics.py",
+        "chapters": [2],
+        "extraction": "Complete dynamics computation; inertia matrix, Coriolis, gravity terms"
+      },
+      {
+        "file": "src/core/simulation/vector_sim.py",
+        "chapters": [8, 11],
+        "extraction": "Batch simulation for PSO; vectorized operations; Numba acceleration"
+      },
+      {
+        "file": "src/benchmarks/statistical_benchmarks_v2.py",
+        "chapters": [10],
+        "extraction": "Comprehensive benchmarking pipeline; metric computation; statistical analysis"
+      },
+      {
+        "file": "tests/test_controllers/test_classical_smc.py",
+        "chapters": [11],
+        "extraction": "Unit test examples; property-based testing; gain validation tests"
+      }
+    ],
+
+    "figure_sources": [
+      {
+        "directory": "academic/paper/experiments/figures/",
+        "figures": [
+          "LT7_section_5_1_pso_convergence.png",
+          "LT7_section_7_1_compute_time.png",
+          "LT7_section_7_2_transient_response.png",
+          "LT7_section_7_3_chattering.png",
+          "LT7_section_7_4_energy.png",
+          "LT7_section_8_1_model_uncertainty.png",
+          "LT7_section_8_2_disturbance_rejection.png",
+          "LT7_section_8_3_pso_generalization.png",
+          "MT6_performance_comparison.png",
+          "MT6_pso_convergence.png",
+          "MT7_robustness_success_rate.png",
+          "MT7_robustness_worst_case.png",
+          "MT7_robustness_chattering_distribution.png",
+          "MT7_robustness_per_seed_variance.png"
+        ],
+        "chapters": [8, 9, 10],
+        "caption_template": "Extracted from research paper (LT7/MT6/MT7 tasks); add detailed captions explaining setup, conditions, and key observations"
+      },
+      {
+        "directory": "academic/paper/thesis/figures/",
+        "figures": [
+          "architecture/system_overview.png",
+          "convergence/pso_3d_surface.png",
+          "lyapunov/stability_regions.png",
+          "schematics/control_loop.png"
+        ],
+        "chapters": [1, 2, 8, 11],
+        "caption_template": "Architectural and schematic diagrams; use early in chapters for visual orientation"
+      },
+      {
+        "directory": "academic/paper/experiments/comparative/",
+        "figures": [
+          "chattering_pso/chattering_pso_comparison.png",
+          "energy_pso/energy_pso_comparison.png"
+        ],
+        "chapters": [8, 10],
+        "caption_template": "Cross-controller comparative studies; highlight trade-offs"
+      },
+      {
+        "directory": "academic/paper/experiments/[controller]/optimization/active/",
+        "figures": [
+          "sta_smc_convergence.png",
+          "adaptive_smc_convergence.png",
+          "hybrid_adaptive_sta_smc_convergence.png"
+        ],
+        "chapters": [4, 5, 6, 8],
+        "caption_template": "PSO optimization convergence for each controller; discuss final gains and cost function values"
+      },
+      {
+        "directory": "NEW FIGURES TO CREATE",
+        "figures": [
+          "Phase portraits with sliding surfaces (Chapter 3)",
+          "Boundary layer effect comparison (Chapter 3)",
+          "Finite-time convergence trajectory (Chapter 4)",
+          "Control signal comparison (Chapter 4)",
+          "Gain evolution during adaptation (Chapter 5)",
+          "Dead zone effect visualization (Chapter 5)",
+          "Lambda scheduler effect (Chapter 6)",
+          "Energy evolution during swing-up (Chapter 7)",
+          "Pareto frontier energy-chattering (Chapter 10)",
+          "Radar chart normalized metrics (Chapter 10)",
+          "UML class diagram (Chapter 11)",
+          "Testing pyramid (Chapter 11)",
+          "MPC prediction horizon (Chapter 12)"
+        ],
+        "generation_method": "Python matplotlib scripts using existing simulation data; create scripts/textbook/generate_figures.py with dedicated functions for each figure type"
+      }
+    ],
+
+    "bibliography_extraction": {
+      "source": "academic/paper/thesis/bibliography/references.bib",
+      "key_papers": [
+        "Levant 2003 (Higher-order sliding modes)",
+        "Moreno-Osorio 2008 (STA Lyapunov proof)",
+        "Utkin 1977 (SMC foundations)",
+        "Edwards-Spurgeon 1998 (SMC textbook)",
+        "Kennedy-Eberhart 1995 (PSO introduction)",
+        "Slotine-Li 1991 (Applied nonlinear control)",
+        "Khalil 2002 (Nonlinear systems)",
+        "Fantoni-Lozano 2002 (Underactuated systems)"
+      ],
+      "citation_strategy": "Cite foundational papers in theory sections, recent papers (2010+) for advanced techniques, cross-reference with implementation for reproducibility"
+    }
+  },
+
+  "subagent_delegation": {
+    "agent_1": {
+      "role": "Theory Extraction and LaTeX Conversion Agent",
+      "responsibilities": [
+        "Extract theory from .md files in mathematical_foundations/",
+        "Convert markdown math to LaTeX with proper theorem environments",
+        "Add missing derivation steps for pedagogical clarity",
+        "Create theorem/lemma/proposition environments with proofs",
+        "Ensure consistency of notation across chapters",
+        "Cross-reference equations and theorems using \\cref{}"
+      ],
+      "deliverables": [
+        "Chapter 2 LaTeX source (dynamics derivation)",
+        "Chapter 3 LaTeX source (classical SMC theory)",
+        "Chapter 4 LaTeX source (STA theory)",
+        "Chapter 5 LaTeX source (adaptive SMC theory)",
+        "Chapter 6 LaTeX source (hybrid theory)",
+        "Appendix A (mathematical prerequisites)"
+      ],
+      "estimated_hours": 30
+    },
+
+    "agent_2": {
+      "role": "Algorithm Extraction and Pseudocode Generation Agent",
+      "responsibilities": [
+        "Extract Python implementations from src/controllers/",
+        "Convert to algorithm2e pseudocode with clear structure",
+        "Create line-by-line annotations for code listings",
+        "Ensure algorithm-code correspondence (same logic flow)",
+        "Add complexity analysis (time/space) for each algorithm",
+        "Create tcolorbox-wrapped algorithm environments"
+      ],
+      "deliverables": [
+        "Algorithm blocks for Chapters 3-8 (30+ algorithms total)",
+        "Annotated code listings for Chapters 3-8, 11",
+        "Appendix C (complete implementation reference)",
+        "Complexity analysis tables"
+      ],
+      "estimated_hours": 35
+    },
+
+    "agent_3": {
+      "role": "Figure Integration and Caption Writing Agent",
+      "responsibilities": [
+        "Copy all relevant PNG/PDF figures from academic/paper/ to textbook/figures/",
+        "Create new figures using matplotlib (13 figures listed in NEW FIGURES)",
+        "Write detailed captions (3-5 sentences each) explaining setup and observations",
+        "Ensure consistent figure style (fonts, colors, sizing)",
+        "Create figure placement commands with proper [htbp] or [H]",
+        "Generate figure cross-reference labels (\\label{fig:...})"
+      ],
+      "deliverables": [
+        "textbook/figures/ directory with 50+ organized figures",
+        "scripts/textbook/generate_figures.py (13 new figure scripts)",
+        "figure_captions.tex (all captions with labels)",
+        "Figure style guide document"
+      ],
+      "estimated_hours": 25
+    },
+
+    "agent_4": {
+      "role": "Exercise Design and Solution Writing Agent",
+      "responsibilities": [
+        "Design 120+ exercises across 12 chapters (10-16 per chapter)",
+        "Create mix of conceptual, derivation, implementation, and experimental exercises",
+        "Write detailed solutions with step-by-step explanations",
+        "Include MATLAB/Python code for computational exercises",
+        "Create difficulty progression (easy -> medium -> hard within each chapter)",
+        "Add hints for challenging exercises"
+      ],
+      "deliverables": [
+        "Exercise sections for Chapters 1-12 (at end of each chapter)",
+        "Appendix E (complete solutions manual)",
+        "Exercise difficulty tags and learning objectives"
+      ],
+      "estimated_hours": 40
+    },
+
+    "agent_5": {
+      "role": "Benchmarking and Experimental Results Agent",
+      "responsibilities": [
+        "Extract numerical results from academic/paper/experiments/",
+        "Create data tables for Chapters 8-10",
+        "Write experimental setup descriptions",
+        "Perform statistical analysis (if not already done)",
+        "Create comparative tables across controllers",
+        "Write result interpretation and discussion sections"
+      ],
+      "deliverables": [
+        "Chapter 8 experimental results section (PSO optimization)",
+        "Chapter 9 robustness analysis results",
+        "Chapter 10 benchmarking results",
+        "Appendix D (benchmark data tables)",
+        "Statistical analysis summaries"
+      ],
+      "estimated_hours": 20
+    },
+
+    "agent_6": {
+      "role": "Software Engineering and Best Practices Agent",
+      "responsibilities": [
+        "Write Chapter 11 (software architecture)",
+        "Explain factory pattern, config management, testing strategies",
+        "Create UML diagrams (class hierarchy, sequence diagrams)",
+        "Extract testing examples from tests/",
+        "Write documentation best practices section",
+        "Create code organization guide"
+      ],
+      "deliverables": [
+        "Chapter 11 complete LaTeX source",
+        "UML diagrams (PlantUML or TikZ)",
+        "Testing examples and strategies",
+        "Appendix B (Python programming guide)"
+      ],
+      "estimated_hours": 20
+    },
+
+    "agent_7": {
+      "role": "Integration, Consistency, and Final Assembly Agent",
+      "responsibilities": [
+        "Integrate all agent outputs into main.tex",
+        "Ensure consistent notation, terminology, and cross-references",
+        "Create table of contents, list of figures, list of tables",
+        "Generate nomenclature and subject index",
+        "Compile full LaTeX document and fix errors",
+        "Create preface, acknowledgments, and bibliography",
+        "Final proofreading and formatting"
+      ],
+      "deliverables": [
+        "main.tex (master document with \\include{} for all chapters)",
+        "Compiled textbook PDF (450+ pages)",
+        "Nomenclature and index",
+        "Front matter (preface, acknowledgments, dedication)",
+        "README for textbook repository"
+      ],
+      "estimated_hours": 30
+    }
+  },
+
+  "build_workflow": {
+    "step_1_setup": {
+      "action": "Create textbook directory structure",
+      "commands": [
+        "mkdir academic/paper/textbook/",
+        "mkdir academic/paper/textbook/chapters/",
+        "mkdir academic/paper/textbook/figures/",
+        "mkdir academic/paper/textbook/algorithms/",
+        "mkdir academic/paper/textbook/exercises/",
+        "mkdir academic/paper/textbook/appendices/",
+        "cp academic/paper/thesis/preamble.tex academic/paper/textbook/preamble.tex"
+      ],
+      "description": "Set up directory structure and copy existing preamble as base"
+    },
+
+    "step_2_preamble": {
+      "action": "Extend preamble.tex with textbook-specific packages",
+      "additions": [
+        "\\usepackage{tcolorbox}",
+        "\\usepackage{minted}",
+        "\\usepackage{cleveref}",
+        "\\usepackage{makeidx} \\makeindex",
+        "\\usepackage[toc]{glossaries} \\makeglossaries",
+        "All custom commands from latex_requirements.custom_commands"
+      ],
+      "description": "Add textbook-specific packages and custom commands to preamble"
+    },
+
+    "step_3_parallel_agent_work": {
+      "action": "Launch 7 sub-agents in parallel using agent orchestration system",
+      "coordination": "Use checkpoint system (.ai_workspace/tools/checkpoints/) to track agent progress",
+      "communication": "Shared nomenclature.tex and notation_guide.md for consistency",
+      "duration": "40 hours (max agent time), parallelized to ~5 days with checkpointing"
+    },
+
+    "step_4_integration": {
+      "action": "Agent 7 integrates all outputs",
+      "main_tex_structure": [
+        "\\documentclass[11pt,twoside]{book}",
+        "\\input{preamble}",
+        "\\begin{document}",
+        "\\frontmatter (title, preface, TOC, nomenclature)",
+        "\\mainmatter",
+        "\\include{chapters/chapter01}",
+        "...",
+        "\\include{chapters/chapter12}",
+        "\\appendix",
+        "\\include{appendices/appendixA}",
+        "...",
+        "\\include{appendices/appendixE}",
+        "\\backmatter (bibliography, index)",
+        "\\end{document}"
+      ],
+      "description": "Create master document with all includes and front/back matter"
+    },
+
+    "step_5_compilation": {
+      "action": "Compile LaTeX document with proper build sequence",
+      "commands": [
+        "pdflatex -shell-escape main.tex (first pass, shell-escape for minted)",
+        "biber main (process bibliography)",
+        "makeindex main.idx (generate index)",
+        "makeglossaries main (generate nomenclature)",
+        "pdflatex -shell-escape main.tex (second pass)",
+        "pdflatex -shell-escape main.tex (third pass for cross-refs)"
+      ],
+      "expected_output": "main.pdf (~450-500 pages)",
+      "description": "Full LaTeX build sequence with bibliography, index, and glossaries"
+    },
+
+    "step_6_verification": {
+      "action": "Quality assurance checks",
+      "checks": [
+        "All cross-references resolved (no ?? in PDF)",
+        "All figures appear correctly (check for missing images)",
+        "Equation numbering consistent (no gaps or duplicates)",
+        "Bibliography complete (all citations resolved)",
+        "Index has entries (check index.pdf or end of main.pdf)",
+        "TOC accurate (page numbers match)",
+        "Code listings compile without errors",
+        "No overfull hboxes (LaTeX warnings < 50)"
+      ],
+      "description": "Comprehensive quality checks before finalization"
+    },
+
+    "step_7_finalization": {
+      "action": "Prepare final deliverables",
+      "deliverables": [
+        "main.pdf (textbook PDF)",
+        "README.md (build instructions, prerequisites, usage)",
+        "LICENSE (CC BY-NC-SA 4.0 or similar for educational materials)",
+        "errata.md (placeholder for future corrections)",
+        "Source code archive (all .tex files for reproducibility)"
+      ],
+      "description": "Package textbook with documentation and license"
+    },
+
+    "step_8_git_commit": {
+      "action": "Commit to repository",
+      "message": "feat(textbook): Add comprehensive SMC textbook (450 pages)\n\n- 12 chapters covering classical, STA, adaptive, hybrid SMC\n- 7 appendices including solutions manual\n- 50+ figures with detailed captions\n- 30+ algorithms with LaTeX pseudocode and Python implementations\n- 120+ exercises with complete solutions\n- Comprehensive bibliography (100+ references)\n\nGenerated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>",
+      "description": "Commit textbook source and PDF to repository"
+    }
+  },
+
+  "timeline_estimate": {
+    "setup_and_planning": "2 hours (directory setup, preamble extension, agent task delegation)",
+    "parallel_agent_work": "40 hours (max single agent) = ~5 days with 7 agents parallelized",
+    "integration_and_compilation": "8 hours (agent 7 integration, LaTeX debugging)",
+    "verification_and_revision": "10 hours (QA checks, fix missing cross-refs, adjust figures)",
+    "finalization": "2 hours (README, license, packaging)",
+    "total_wall_clock_time": "~7-8 days with full agent orchestration",
+    "total_human_review_time": "~10 hours (user reviews plan, interim outputs, final PDF)"
+  },
+
+  "risk_mitigation": {
+    "latex_compilation_errors": {
+      "risk": "Complex LaTeX documents may have compilation errors (missing packages, syntax errors, overfull boxes)",
+      "mitigation": "Compile each chapter individually first; use latexmk for automatic recompilation; maintain error log and fix incrementally"
+    },
+    "figure_missing_or_misplaced": {
+      "risk": "Figures may not appear or may be in wrong location",
+      "mitigation": "Use \\graphicspath{{figures/}} for centralized figure directory; verify all \\includegraphics paths; use [H] for critical in-place figures"
+    },
+    "notation_inconsistency": {
+      "risk": "Different agents may use different notation for same concepts",
+      "mitigation": "Create shared notation_guide.md before agent work; Agent 7 performs consistency pass; use LaTeX macros for repeated symbols"
+    },
+    "algorithm_code_mismatch": {
+      "risk": "Pseudocode and Python code may diverge in logic",
+      "mitigation": "Agent 2 cross-checks algorithm pseudocode against actual Python implementation; include code comments referencing algorithm line numbers"
+    },
+    "exercise_difficulty_imbalance": {
+      "risk": "Exercises may be too easy or too hard for target audience",
+      "mitigation": "Agent 4 creates difficulty progression; user reviews sample exercises from each chapter; include hints for advanced exercises"
+    },
+    "page_count_overrun": {
+      "risk": "Textbook may exceed 500 pages, becoming unwieldy",
+      "mitigation": "Monitor page count during integration; prioritize essential content; move lengthy derivations to appendices; use smaller font for code listings if needed"
+    }
+  },
+
+  "success_criteria": {
+    "completeness": "All 12 chapters + 5 appendices present with planned content",
+    "compilation": "LaTeX compiles without errors, <50 warnings",
+    "figures": "All 50+ figures appear correctly with detailed captions",
+    "algorithms": "30+ algorithms in consistent pseudocode format with corresponding code listings",
+    "exercises": "120+ exercises with complete solutions in Appendix E",
+    "cross_references": "All \\cref{}, \\ref{}, \\cite{} resolve correctly (no ?? in PDF)",
+    "page_count": "400-550 pages (within 10% of 450-500 target)",
+    "readability": "Clear pedagogical flow from fundamentals to advanced topics",
+    "reproducibility": "All experiments and figures reproducible from provided code"
+  },
+
+  "post_publication_maintenance": {
+    "errata_tracking": "Maintain errata.md for corrections discovered after publication",
+    "version_control": "Tag releases (v1.0, v1.1) with semantic versioning",
+    "community_feedback": "Accept GitHub issues/PRs for typos, clarifications, additional exercises",
+    "updates_for_new_research": "Plan biannual updates to incorporate new SMC techniques and references",
+    "companion_website": "Host on GitHub Pages with download links, supplementary materials, video tutorials"
+  }
+}

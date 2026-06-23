@@ -1,0 +1,4 @@
+Controller,Energy Before,Energy After,Energy Reduction (%),RMSE Before,RMSE After,RMSE Change (%),Fitness Before,Fitness After,Fitness Improvement (%),Optimization Time (s)
+Classical Smc,4.3679,2.0589,52.8627,9.3647,4.5359,-51.5643,5.8670,2.8020,52.2409,1111.9071
+Adaptive Smc,0.0000,0.0000,0.0000,8.5138,8.5138,0.0000,2.5541,2.5541,0.0000,1796.8180
+Hybrid Adaptive Sta Smc,0.0000,0.0000,0.0000,8.5138,8.5138,0.0000,2.5541,2.5541,0.0000,2116.6159

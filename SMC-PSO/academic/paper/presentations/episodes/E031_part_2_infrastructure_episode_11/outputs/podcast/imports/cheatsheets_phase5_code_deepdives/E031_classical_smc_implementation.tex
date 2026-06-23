@@ -1,0 +1,230 @@
+% ==============================================================================
+% EPISODE 031: CLASSICAL SMC IMPLEMENTATION
+% ==============================================================================
+\input{../templates/master_template.tex}
+\input{../templates/tikz_components.tex}
+\input{episode_macros.tex}
+
+% Episode-specific title
+\renewcommand{\episodetitle}{E031: Classical SMC}
+
+\begin{document}
+
+% ==============================================================================
+% TITLE PAGE
+% ==============================================================================
+\makeepisodetitle{E031: Classical SMC Implementation}{Sliding Surface, Equivalent Control, and Robust Switching}{5A}{25-30 minutes}
+
+% ==============================================================================
+% PAGE 1: WHY CLASSICAL SMC EXISTS
+% ==============================================================================
+\learningobjective{Understand how ClassicalSMC computes sliding surface $\sigma$, model-based equivalent control $u_{eq}$, and robust switching control with chattering mitigation}
+
+\section*{What Classical SMC Solves}
+
+\begin{keypoint}
+\textbf{Goal:} Stabilize the double-inverted pendulum by driving the sliding surface $\sigma$ to zero.
+
+The controller combines:
+\textbf{(1) Equivalent control} from physics matrices + \textbf{(2) Robust switching control} to handle uncertainties.
+\end{keypoint}
+
+\subsection*{Classical SMC Control Law}
+
+\eqbox{
+u = u_{eq} - K \, \text{sat}\left(\frac{\sigma}{\epsilon}\right) - k_d \, \sigma
+}
+
+\begin{multicols}{2}
+
+\textbf{Where:}
+\begin{itemize}
+    \item $\sigma$ = sliding surface (state error)
+    \item $u_{eq}$ = model-based feedforward term
+    \item $K$ = switching gain
+    \item $\epsilon$ = boundary layer thickness
+    \item $k_d$ = damping term
+\end{itemize}
+
+\columnbreak
+
+\begin{tip}
+\textbf{Why Two Terms?}
+\begin{itemize}
+    \item $u_{eq}$ cancels nominal dynamics
+    \item Switching term handles uncertainty + disturbances
+    \item Boundary layer smooths chattering
+\end{itemize}
+\end{tip}
+
+\end{multicols}
+
+\subsection*{State Ordering (Critical)}
+
+\begin{warning}
+\textbf{ClassicalSMC expects state ordering:}
+\[
+[x, \theta_1, \theta_2, \dot{x}, \dot{\theta}_1, \dot{\theta}_2]
+\]
+
+This order is used directly in \texttt{\_compute\_sliding\_surface()}.
+\end{warning}
+
+\begin{example}
+\textbf{Source:} \texttt{src/controllers/smc/classic\_smc.py}
+\begin{lstlisting}[style=python, numbers=none, basicstyle=\ttfamily\scriptsize]
+_, theta1, theta2, _, dtheta1, dtheta2 = state
+sigma = lam1*theta1 + lam2*theta2 + k1*dtheta1 + k2*dtheta2
+\end{lstlisting}
+\end{example}
+
+% ==============================================================================
+% PAGE 2: SLIDING SURFACE + SWITCHING LOGIC
+% ==============================================================================
+\newpage
+
+\section*{Sliding Surface and Switching}
+
+\subsection*{Sliding Surface Computation}
+
+\begin{keypoint}
+\textbf{Sliding Surface:} A weighted combination of joint angles and joint rates.
+It encodes the desired dynamics and convergence behavior.
+\end{keypoint}
+
+\begin{lstlisting}[style=python, basicstyle=\ttfamily\tiny]
+def _compute_sliding_surface(self, state: np.ndarray) -> float:
+    _, theta1, theta2, _, dtheta1, dtheta2 = state
+    return (self.lam1 * theta1 + self.lam2 * theta2
+            + self.k1 * dtheta1 + self.k2 * dtheta2)
+\end{lstlisting}
+
+\subsection*{Switching Function: tanh vs linear}
+
+\sidebysidecomparison
+{tanh (Recommended)}
+{
+\begin{itemize}
+    \item Smooth near $\sigma=0$
+    \item Retains nonzero slope at origin
+    \item Better steady-state behavior
+\end{itemize}
+}
+{linear (Use with care)}
+{
+\begin{itemize}
+    \item Harder clipping near origin
+    \item Control authority drops for small errors
+    \item Can increase steady-state error
+\end{itemize}
+}
+
+\subsection*{Boundary Layer + Hysteresis}
+
+\begin{lstlisting}[style=python, basicstyle=\ttfamily\tiny]
+eps_dyn = self.epsilon0 + self.epsilon1 * float(np.linalg.norm(sigma))
+if abs(float(sigma)) < self.hysteresis_ratio * self.epsilon0:
+    sat_sigma = 0.0
+else:
+    sat_sigma = saturate(sigma, eps_dyn, method=self.switch_method)
+\end{lstlisting}
+
+\begin{tip}
+\textbf{Adaptive Boundary Layer:} $\epsilon$ increases with $|\sigma|$ for large errors,
+then shrinks near the sliding surface to reduce chattering.
+\end{tip}
+
+% ==============================================================================
+% PAGE 3: EQUIVALENT CONTROL (MODEL-BASED TERM)
+% ==============================================================================
+\newpage
+
+\section*{Equivalent Control: Physics-Based Feedforward}
+
+\begin{keypoint}
+\textbf{Purpose:} Use the dynamics model to compute a control term that cancels
+nominal system dynamics.
+\end{keypoint}
+
+\subsection*{Physics Matrices and Regularization}
+
+\begin{lstlisting}[style=python, basicstyle=\ttfamily\tiny]
+M, C, G = self.dyn._compute_physics_matrices(state)
+M_reg = M + np.eye(3) * max(self.regularization, 0.0)
+Minv_B = np.linalg.solve(M_reg, self.B)
+L_Minv_B = float(self.L @ Minv_B)
+\end{lstlisting}
+
+\subsection*{Controllability Check}
+
+\begin{warning}
+If $|L M^{-1} B|$ is too small, equivalent control becomes ill-defined.
+The controller returns 0.0 for $u_{eq}$ to stay safe.
+\end{warning}
+
+\begin{lstlisting}[style=python, basicstyle=\ttfamily\tiny]
+if abs(L_Minv_B) < self.eq_threshold:
+    return 0.0
+\end{lstlisting}
+
+\subsection*{Equivalent Control Formula}
+
+\begin{lstlisting}[style=python, basicstyle=\ttfamily\tiny]
+if getattr(C, "ndim", 1) == 2:
+    rhs = C @ q_dot + G
+else:
+    rhs = C + G
+Minv_rhs = np.linalg.solve(M_reg, rhs)
+term1 = float(self.L @ Minv_rhs)
+term2 = self.k1 * self.lam1 * q_dot[1] + self.k2 * self.lam2 * q_dot[2]
+u_eq = (term1 - term2) / L_Minv_B
+\end{lstlisting}
+
+\begin{example}
+\textbf{Robustness Note:} If physics matrices fail or are ill-conditioned,
+the controller falls back to purely switching control.
+\end{example}
+
+% ==============================================================================
+% PAGE 4: FULL CONTROL PIPELINE + DESIGN SUMMARY
+% ==============================================================================
+\newpage
+
+\section*{Full Control Pipeline}
+
+\begin{center}
+\begin{tikzpicture}[node distance=1.4cm, scale=0.9, every node/.style={scale=0.9}]
+    \node[block, fill=primary!30] (state) {\textbf{State}\\$[x,\theta_1,\theta_2,\dot{x},\dot{\theta}_1,\dot{\theta}_2]$};
+    \node[process, below=of state] (sigma) {\textbf{Sliding Surface}\\$\sigma$};
+    \node[process, below=of sigma] (eq) {\textbf{Equivalent Control}\\$u_{eq}$};
+    \node[process, below=of eq] (robust) {\textbf{Robust Term}\\$-K \, sat(\sigma/\epsilon) - k_d \sigma$};
+    \node[block, fill=secondary!30, below=of robust] (sum) {\textbf{Sum + Saturate}\\$u = u_{eq} + u_{robust}$};
+
+    \draw[arrow] (state) -- (sigma);
+    \draw[arrow] (sigma) -- (eq);
+    \draw[arrow] (eq) -- (robust);
+    \draw[arrow] (robust) -- (sum);
+\end{tikzpicture}
+\end{center}
+
+\subsection*{Compute Control Core}
+
+\begin{lstlisting}[style=python, basicstyle=\ttfamily\tiny]
+sigma = self._compute_sliding_surface(state)
+u_eq = self._compute_equivalent_control(state)
+u_robust = -self.K * sat_sigma - self.kd * sigma
+u = u_eq + u_robust
+u_saturated = float(np.clip(u, -self.max_force, self.max_force))
+return ClassicalSMCOutput(u_saturated, (), history)
+\end{lstlisting}
+
+\fourkeypatterns
+{\textbf{Sliding Surface Design}: $\sigma$ encodes desired convergence behavior}
+{\textbf{Model-Based Feedforward}: $u_{eq}$ cancels nominal dynamics}
+{\textbf{Robust Switching}: Boundary layer + hysteresis reduce chattering}
+{\textbf{Safety + Telemetry}: Saturation + history logging for analysis}
+
+\episodexref{E030}{Controller Base \& Factory}{See how ClassicalSMC is created via the controller registry.}
+
+\end{document}
+

@@ -1,0 +1,60 @@
+% Sliding Surface Geometry in 3D State Space
+% TikZ diagram for Chapter 3 - Classical SMC
+
+\begin{tikzpicture}[scale=1.0,
+    every node/.style={font=\small},
+    axis/.style={->, thick},
+    trajectory/.style={thick, ->, decoration={markings, mark=at position 0.7 with {\arrow{>}}}, postaction={decorate}}]
+
+    % 3D coordinate system
+    \coordinate (O) at (0,0);
+    \coordinate (X) at (5,0);
+    \coordinate (Y) at (-1.5,-1.5);
+    \coordinate (Z) at (0,4);
+
+    % Draw axes
+    \draw[axis] (O) -- (X) node[right] {$x_1$};
+    \draw[axis] (O) -- (Y) node[below left] {$x_2$};
+    \draw[axis] (O) -- (Z) node[above] {$x_3$};
+
+    % Sliding surface (plane in 3D)
+    \fill[blue!20, opacity=0.6]
+        (0.5, 2.5) -- (4.5, 2.5) -- (4.5, -1) -- (0.5, -0.5) -- cycle;
+    \draw[blue!70, very thick]
+        (0.5, 2.5) -- (4.5, 2.5) -- (4.5, -1) -- (0.5, -0.5) -- cycle;
+
+    % Surface equation label
+    \node[blue!70!black, align=center] at (2.5, 3) {
+        \textbf{Sliding Surface}\\$s(\vect{x}, t) = 0$
+    };
+
+    % State trajectory reaching the surface (Phase 1: Reaching)
+    \draw[red, trajectory, very thick, samples=50, smooth, domain=0:1]
+        plot ({0.5 + 2*\x}, {-1.5 + 3.5*\x});
+    \node[red, align=center] at (0.5, -1.8) {\textbf{Phase 1:}\\Reaching};
+
+    % State trajectory on the surface (Phase 2: Sliding)
+    \draw[green!70!black, trajectory, very thick]
+        (2.5, 2) -- (3.8, 1.5);
+    \node[green!70!black, align=center] at (3.5, 2.5) {\textbf{Phase 2:}\\Sliding};
+
+    % Equilibrium point on surface
+    \fill[black] (4, 1.2) circle (0.1) node[right] {$\vect{x}^* = \vect{0}$};
+
+    % Normal vector to surface
+    \draw[->, very thick, purple] (2.5, 1.5) -- (2.2, 2.5)
+        node[left] {$\nabla s(\vect{x})$};
+
+    % Control force vectors
+    \draw[->, thick, orange] (1.5, 0.8) -- (1.8, 1.3) node[above right] {$\vect{u}$};
+    \draw[->, thick, orange] (3, 1.8) -- (3.2, 2.3);
+
+    % Distance from surface annotation
+    \draw[<->, dashed, gray, thick] (1.8, 0.5) -- (2.2, 1.2);
+    \node[gray] at (1.5, 1.0) {$|s|$};
+
+    % Region labels
+    \node[red!70, align=center] at (1, -0.5) {$s(\vect{x}) < 0$};
+    \node[red!70, align=center] at (3.5, 3.5) {$s(\vect{x}) > 0$};
+
+\end{tikzpicture}

@@ -1,0 +1,211 @@
+E002: Control Theory Fundamentals
+Speaker Scripts - All 12 Slides
+TTS-Ready Format (no markdown)
+
+
+SLIDE 1 - Introduction: From Broomsticks to Mathematics
+Duration: 2-3 minutes
+
+Welcome back to our podcast series on the double-inverted pendulum project. In Episode E001, we talked about balancing that double broomstick blindfolded while standing on a moving platform - that SpaceX rocket problem. We covered the architecture, the workflow, and the real-world applications. Now we're going to unpack the mathematics that makes it actually work.
+
+This episode dives into the control theory fundamentals - the mathematical framework behind everything. We'll build from basic concepts like state-space representation all the way to advanced sliding mode control techniques. And here's my promise to you: we're going to build intuition first, equations second. If the math sounds scary at any point, I'll give you a physical analogy that makes it click. We'll tie everything back to that rocket landing we keep talking about.
+
+Control theory is the mathematical framework for making systems behave the way we want them to. Whether it's a rocket maintaining vertical position during landing, a humanoid robot keeping its balance, or our double inverted pendulum staying upright, the same mathematical principles apply.
+
+Today we'll cover five main topics. First, state-space representation - how we describe the system mathematically with six numbers. Second, Lyapunov stability theory - the marble-in-a-bowl intuition for proving convergence. Third, sliding mode control fundamentals - the guardrail path down the mountain that naturally rejects disturbances. Fourth, chattering and how to eliminate it using boundary layers and super-twisting algorithms. And fifth, adaptive control - controllers that learn and adjust their own gains in real-time.
+
+By the end of this episode, you'll understand not just what these controllers do, but why the mathematics works and how it connects to physical reality. Let's dive into the theory!
+
+
+SLIDE 2 - State-Space Representation: Six Numbers Tell Everything
+Duration: 3 minutes
+
+Let's start with the foundation: state-space representation. This is how modern control theory describes systems mathematically, and it's elegantly simple once you understand what's happening.
+
+For the double inverted pendulum, our state vector is just a list of six numbers that completely describe the system at any moment. Think of these as the dashboard readout for your rocket - the essential measurements you need to know what's happening right now.
+
+The first two numbers describe the cart: position - how far left or right is the cart in meters - and velocity - how fast is it moving. The next two describe the bottom pendulum: angle theta-one, measured in radians from vertical, and angular velocity - how fast that pendulum is rotating. The last two describe the top pendulum: angle theta-two and its angular velocity.
+
+If you know these six numbers at any instant, you know everything about the system's current state. That's why it's called the state vector - it captures the complete state. You could pause time, look at these six values, and predict exactly how the system will evolve forward based on the physics and whatever control input you apply.
+
+Now here's the underactuated challenge we mentioned in episode one: we only have one control input - the horizontal force applied to the cart, measured in Newtons. That single force has to manage all six state variables. It's like trying to steer a car with only the gas pedal - you have fewer control inputs than things you're trying to control.
+
+The general state-space form is beautifully simple: x-dot equals f of x, u, t. That's just saying the rate of change of state depends on the current state, the control input, and time. For our pendulum, that function f encapsulates all the physics - Newton's laws, gravity, inertia, everything. The code just implements this equation using the actual dynamics we'll see in episode three.
+
+State-space representation has huge advantages over classical transfer functions. It handles multi-input, multi-output systems naturally. It works for nonlinear systems like ours. It enables optimal control design. And critically, it has direct physical interpretation - every state variable corresponds to something you can actually measure or estimate. This is the framework that lets us design advanced controllers like sliding mode control.
+
+
+SLIDE 3 - Lyapunov Stability: The Marble in a Bowl
+Duration: 3-4 minutes
+
+Now let's talk about stability theory, and I'm going to give you an intuition that makes this completely clear: the marble in a bowl.
+
+Imagine you have a marble sitting at the bottom of a smooth bowl - like a cereal bowl on your kitchen table. Now nudge the marble slightly to the side. What happens? First, gravity pulls it down toward the bottom because that's the lowest point. But it has momentum, so it overshoots and rolls up the other side. Then gravity pulls it back down again. Each time it oscillates, friction removes a bit of energy. Eventually, the marble must stop at the bottom - there's nowhere else for it to go.
+
+That's stability in a nutshell. The bowl shape provides what we call a restoring force - gravity always pulls toward the bottom. And friction provides damping - energy dissipation. Together, they guarantee the marble ends up at equilibrium.
+
+Now here's the brilliant insight that Aleksandr Lyapunov had over a century ago: What if we could prove our control system has the same property - a bowl-like shape and friction-like damping - without actually solving the differential equations? That would be incredibly powerful, because solving nonlinear differential equations is often impossible analytically.
+
+The trick is to find an energy-like function for your system, which we call the Lyapunov function V. Think of it as measuring how far from perfect you are. For our marble, when it's at the bottom - equilibrium - the energy is zero. You're perfect. When it's away from the bottom, the energy is positive, and the higher up the bowl you are, the more energy you have. And as time passes, energy always decreases thanks to friction.
+
+If you can prove these three properties for your control system, you've mathematically proven stability without solving any equations. You've just shown my system has a bowl shape with friction - which means it must settle to equilibrium.
+
+Why does this matter for the rocket? That SpaceX rocket we keep mentioning - its control system is designed with a Lyapunov function in mind. The control engineers construct a mathematical bowl where the vertical upright position is at the bottom, and the control law acts as friction that dissipates energy. As long as they can prove the bowl exists and the friction works, they know the rocket will stabilize even with wind gusts, thrust variations, and all the messy real-world disturbances.
+
+This is the mathematical foundation that gives us confidence in our controllers. We're not just hoping they work - we have mathematical proofs that they must work, based on this elegant bowl-and-friction intuition.
+
+
+SLIDE 4 - Sliding Mode Control: The Guardrail Down the Mountain
+Duration: 4 minutes
+
+Now we get to the heart of this project: Sliding Mode Control. This is the control strategy that makes everything work, and I'm going to explain it with an analogy that makes the abstract mathematics concrete: hiking down a mountain with a guardrail.
+
+Imagine you're hiking down a foggy mountain trying to reach a cabin at the bottom. You can't see very far ahead, and there are gusts of wind trying to push you off course. But someone has built a guardrail path down the mountain. Here's your strategy, and it has two distinct phases.
+
+Phase one is the reaching phase. You might start anywhere on the mountainside - could be far to the left, far to the right, high up, wherever. Your first goal is simple: get to the guardrail path as quickly as possible. You don't care about the most efficient route or conserving energy. You just want to reach that designated path, period.
+
+Phase two is the sliding mode phase. Once you're on the path, the geometry of the guardrail itself guides you safely to the bottom. This is the brilliant part: the guardrail is designed so that if you stay on it, you'll definitely reach the cabin. Even when wind gusts hit you - those are disturbances - the guardrail keeps you on track. You just press against it and keep walking. The path geometry naturally rejects those disturbances.
+
+That's Sliding Mode Control in a nutshell. The sliding surface is that guardrail path, mathematically designed so that staying on it guarantees you reach equilibrium - the upright position for our pendulum, the cabin at the bottom of the mountain.
+
+Here's the key magic property that makes SMC so powerful: once you're on the sliding surface, the system becomes insensitive to what we call matched uncertainties. These are disturbances that enter through the control channel - like wind pushing you, which you can counteract by pushing harder against the guardrail. The sliding surface geometry naturally rejects these disturbances without you needing to know their exact magnitude. You just maintain contact with the guardrail, and it works.
+
+For the double inverted pendulum, we design our sliding surface to combine the pendulum angles and their rates of change in a specific way. When the sliding surface equals zero, it means the system is on that mathematical path that guarantees convergence to upright. Our control law has two jobs: drive the system to that surface in finite time - the reaching phase - then keep it there - the sliding phase. Once we're on the surface, the pendulum angles decay exponentially to zero - that's the path leading to the cabin at the bottom.
+
+This two-phase approach is what makes SMC robust to model uncertainties and disturbances. We don't need a perfect model. We don't need to know the exact disturbances. We just need to reach the sliding surface and stay there, and the mathematics guarantees stability.
+
+
+SLIDE 5 - Two-Phase SMC Design: Building the Guardrail
+Duration: 2.5 minutes
+
+Let's break down how we actually design a sliding mode controller. There are two phases to the design process, just like there are two phases during operation.
+
+Phase one is designing the sliding surface - the path itself. For the double inverted pendulum, we want both pendulum angles to go to zero, so our sliding surface combines the angles and their angular rates in a specific weighted sum. This equation might look intimidating, but it's just saying: mix together the two angles, their two rotation rates, and scale them by these gain parameters called lambdas.
+
+When this sliding surface equals zero, the system is on the desired trajectory. And here's the clever part: when s equals zero, you've defined a first-order differential equation that has a simple, exponential solution. The pendulum angles decay exponentially to zero with a time constant determined by those lambda gains. Bigger gains mean faster convergence, smaller gains mean gentler, slower convergence. That's your tuning knob.
+
+Phase two is designing the reaching law - the push that drives you to the path. This has two components. The reaching term uses the sign function to provide a strong push toward the surface - push left if you're to the right of the path, push right if you're to the left. It's directionally correct no matter where you start. The damping term prevents overshoot - it slows you down as you approach the surface so you don't smash into it and bounce off. Together, these guarantee you reach the sliding surface in finite time.
+
+The total control law combines two components. First is the equivalent control, which is model-based feedforward. It answers the question: what force would keep me perfectly on the surface if I were already there and my model was perfect? This is the smooth, calculated component. Second is the switching control, which is robust feedback. It compensates for model errors and disturbances - the unpredictable stuff. Together, these guarantee you reach the sliding surface and stay there.
+
+The Python implementation follows this design step-by-step. Compute the sliding surface value - how far are we from the path? Compute the equivalent control from the model. Compute the switching control based on the sign of s. Sum everything up. And critically, saturate the output at the end because real actuators have limits. The code is modular - each component has its own function - making it easy to test and modify.
+
+
+SLIDE 6 - The Chattering Problem and Boundary Layer Solution
+Duration: 3 minutes
+
+Now let's address the biggest practical limitation of classical sliding mode control: chattering. This is the harsh reality when theory meets messy real-world implementation.
+
+Imagine you're trying to balance on a tightrope. In theory, you should make instant corrections - lean left, lean right, left, right - infinitely fast switching to maintain perfect balance. But in practice, your muscles have response time. Your measurements have noise. Your nervous system samples your position at finite intervals, not continuously. The result? You end up oscillating rapidly left-right-left-right in a jerky, high-frequency motion.
+
+That's chattering. In classical SMC, the control law says: when the sliding surface is positive, apply plus-U. When it's negative, apply minus-U. Instant switching. But in practice, you're near the surface most of the time, so you're switching rapidly between plus and minus at 100 hertz or faster. If you hooked up a speaker to the control signal, you'd hear a harsh buzzing or grinding noise, like an old dot-matrix printer or a cicada.
+
+Why is this bad? Three main reasons. First, actuator wear. If you're constantly flipping a motor or valve on and off hundreds of times per second, it wears out quickly. Second, energy waste. All that switching consumes power. Third, it excites unmodeled dynamics - vibrations and resonances that your model doesn't account for - which can actually destabilize the system.
+
+The solution is called the boundary layer method. Instead of hard switching with the sign function - which is discontinuous - we use a smooth approximation near the sliding surface. We define a thin region around the sliding surface, called the boundary layer with thickness Phi. Far from the surface, we still use strong switching control to drive toward it quickly. But once we're close - inside the boundary layer - we smoothly interpolate the control. It's like gradually applying the brakes instead of slamming them on-and-off repeatedly.
+
+Now there's a trade-off here. A wider boundary layer gives you smoother control, less chattering, quieter operation - but slightly less accurate tracking and weaker robustness to disturbances. A narrower boundary layer gives you more aggressive control, better tracking, stronger robustness - but more chattering. For the double inverted pendulum, we typically use a boundary layer of 0.3 to 0.5 - thick enough to eliminate most chattering, thin enough to maintain good performance. The exact value is part of what PSO optimization tunes for us automatically.
+
+This boundary layer approach is one way to handle chattering. In the next slide, we'll see an even better solution: the Super-Twisting Algorithm, which achieves smooth control without sacrificing robustness.
+
+
+SLIDE 7 - Super-Twisting Algorithm: The Smooth Operator
+Duration: 3 minutes
+
+Now let's talk about the Super-Twisting Algorithm, which earned the nickname smooth operator in episode one. This is an elegant solution to the chattering problem that doesn't require compromise.
+
+Remember from the last slide that classical SMC gets you to the sliding surface in finite time - the sliding surface value s reaches zero. That's great. But there's still a problem: even though s reaches zero, its derivative - s-dot - doesn't. There's still a discontinuity, a sharp switch happening continuously. That discontinuity is what causes the chattering we discussed. Even with a boundary layer, you're still fundamentally switching back and forth. It's like tapping the brakes repeatedly instead of slamming them - better than hard switching, but still not ideal.
+
+What if we could make both the sliding surface and its derivative go to zero simultaneously? That would eliminate the switching entirely, giving us truly continuous, smooth control. That's exactly what Super-Twisting does. It's called a second-order sliding mode because we're controlling both the function s and its first derivative s-dot.
+
+Back to our tightrope analogy: instead of oscillating left-right-left-right trying to stay balanced, you smoothly glide to the center and stop. No oscillation, no jerking, just smooth convergence.
+
+The control law has two components working together. First is an integral term that gradually builds up force based on accumulated error - like slowly ramping up pressure. Second is a proportional term with fractional power - and here's the clever part - it uses the square root of the sliding surface error.
+
+Why square root? This is brilliant. Because it provides exactly the right balance. When you're far from the surface with large error, the square root is still significant, so you get strong control to drive you toward the surface quickly. But when you're close to the surface with small error, the square root makes that error even smaller, so you get gentle control that doesn't overshoot. It's like having automatic gain scheduling built right into the control law. The closer you get to the target, the gentler the corrections become, naturally preventing oscillations.
+
+This gives you three big advantages. First, dramatically reduced chattering. The control signal is continuous - no more buzzing cicada sound. Second, you still get finite-time convergence, just like classical SMC. For our double inverted pendulum, convergence times are typically 0.1 to 1 second. And third, robustness to smooth, bounded disturbances - the kind that don't jump instantaneously - which covers most real-world scenarios.
+
+The Python implementation is surprisingly simple - just a few lines of code. Compute the proportional term using the square root. Update the integral term by accumulating signed error over time. Sum them together. That's it. The fractional power and the integral accumulation do all the heavy lifting. There are no if-statements, no hard switches, just smooth mathematical functions. That's why the control output is smooth and chattering-free.
+
+This is the ABS brakes we mentioned in episode one - smooth, continuous corrections that achieve the same stabilization as classical SMC but without the harsh on-off behavior.
+
+
+SLIDE 8 - Adaptive SMC: The Smart Learner
+Duration: 2.5 minutes
+
+Now let's talk about Adaptive Sliding Mode Control - the smart learner that adjusts its own gains in real-time. This addresses a fundamental limitation of fixed-gain controllers.
+
+Imagine you're designing a suspension system for a delivery truck. Sometimes the truck is empty - light load. Sometimes it's fully loaded - heavy load. If you tune the suspension for the heavy case, it'll be too stiff when empty - harsh ride, poor handling. If you tune for the empty case, it'll be too soft when loaded - wallowing, unstable.
+
+The same problem exists with controller gains. We have to pick gains that work for the worst-case scenario - maximum disturbances, heaviest load, strongest uncertainties. But most of the time, we're operating in nominal conditions where those aggressive gains are overkill. The result? We're wasting control effort and energy during normal operation.
+
+What if the controller could adjust its own gains in real-time based on how hard it's working? That's exactly what Adaptive SMC does. The simple rule is: when the sliding surface error is large, meaning I'm working hard and still not converging fast enough, increase the gains - I need more muscle. When the sliding surface error is small, meaning I'm close to the target, ease off the gains - I don't need aggressive control.
+
+The implementation has three smart features. First, a dead zone. If the error is tiny - within a threshold - don't adapt. You're already close enough, and you don't want to react to measurement noise. Second, gain leak. When you're in the dead zone, slowly decrease gains. This prevents ratcheting where gains only ever increase and never decrease. Third, bounded adaptation. Enforce minimum and maximum gain limits. We don't want gains going to zero, which would be unstable, or to infinity, which is unrealistic.
+
+The theoretical justification uses Lyapunov theory, just like our marble-in-a-bowl analogy. We construct a Lyapunov function that includes both the sliding surface error and the gain error - the difference between current gains and ideal gains. The adaptation law is designed so that this combined energy always decreases, which mathematically proves the whole system remains stable while adapting. The beautiful part: even though we don't know what the ideal gain is - that's the whole problem - the math still works out. The adaptation naturally drives the gains toward whatever value makes the system stable.
+
+Here are real results from our mass uncertainty benchmark. We simulated a 20 percent increase in cart mass to see how controllers handle parameter variations. Classical SMC showed 1.6 degrees more overshoot with the heavier mass. Super-Twisting showed 1.2 degrees more overshoot. But Adaptive SMC? Only 0.3 degrees degradation. It automatically adjusted its gains to compensate for the heavier mass, maintaining nearly identical performance. That's the power of adaptation - robustness to real-world parameter variations without manual retuning.
+
+
+SLIDE 9 - Robustness Properties: Matched vs. Unmatched Uncertainties
+Duration: 3 minutes
+
+We've now covered three types of sliding mode controllers. But here's a critical question: when real-world disturbances and model errors hit the system, what can SMC actually guarantee? This is where robustness theory comes in.
+
+There are two fundamentally different types of uncertainties, and SMC treats them very differently.
+
+Matched uncertainties enter through the same channel as the control input. Mathematically, the disturbance appears in the equation alongside the control term. The remarkable property of SMC is that once you're on the sliding surface - once s equals zero - these disturbances cancel out completely from the sliding dynamics. The proof is elegant: you set s-dot to zero to maintain the surface, solve for the equivalent control, and the disturbance term simply disappears from the equation. This is why SMC is so appealing for real hardware - actuator model errors, input-channel disturbances, anything that enters through the control path gets completely rejected.
+
+Unmatched uncertainties are a different story. These disturbances enter through channels that the control input cannot directly reach. Sensor noise, parameter variations in the plant dynamics - these cannot be perfectly cancelled. SMC can attenuate them, keeping their effect bounded, but not eliminate them entirely. This is a fundamental limitation that every control engineer needs to understand.
+
+Now here's how the theory plays out in practice. Looking at our benchmark results, we tested all three controllers against a 20 percent cart mass uncertainty - a realistic scenario representing model error or payload variation. Classical SMC shows 1.6 degrees more overshoot with the heavier mass. Super-Twisting is somewhat better at 1.2 degrees degradation. But Adaptive SMC? Only 0.3 degrees - it automatically adjusts its gains to compensate for the parameter change.
+
+The lesson: SMC's robustness to matched uncertainties is a theoretical guarantee. Robustness to unmatched uncertainties depends on the specific controller variant and gains. When in doubt, Adaptive SMC is your most robust option.
+
+
+SLIDE 10 - Convergence Time Analysis: Guaranteed Finite-Time
+Duration: 2.5 minutes
+
+Now let's talk about something that separates SMC from most other control algorithms: finite-time convergence. This is a mathematical guarantee that makes SMC particularly valuable for real hardware applications.
+
+Most classical control algorithms achieve what's called exponential convergence. The error decays exponentially: it gets halved every fixed time interval, but it never actually reaches zero. Mathematically, you only get within epsilon of zero as time approaches infinity. For many applications that's fine - you're just trying to get close enough. But in safety-critical systems, close enough by infinity isn't an acceptable specification.
+
+Sliding mode control achieves finite-time convergence: the system reaches exactly zero at a predictable, computable time T-f. Not close to zero. Not within epsilon. Zero. And you can calculate that time before you even run the system.
+
+For Classical SMC with the reaching law we've discussed, the formula is elegant: the time to reach the sliding surface equals the initial distance from the surface divided by your reaching speed eta. So if your sliding surface error starts at 0.5 and your reaching gain is 2.0, you're guaranteed to hit the surface in exactly 0.25 seconds. That's a hard real-time deadline.
+
+For Super-Twisting, the bound is slightly more complex but still computable. In practice, STA converges faster than Classical SMC for the same gain magnitudes - the super-twisting dynamics actively push the system toward the surface more aggressively.
+
+Why does this matter? Think about SpaceX landing. The control system must return the rocket to vertical before touchdown - a hard time constraint. Exponential convergence gives you we'll be very close by some unspecified future time. Finite-time convergence gives you we will be at vertical in T-f seconds, guaranteed. That kind of hard real-time guarantee is what separates certified aerospace control from academic demonstrations.
+
+
+SLIDE 11 - Practical Pitfalls and Implementation Tips
+Duration: 3 minutes
+
+Let's close the theory section with something practically invaluable: the pitfalls I've seen derail SMC implementations, and the tips that make debugging faster. Think of this as the learn from others' mistakes slide.
+
+Pitfall one: derivative explosion. When you compute the time derivative of the sliding surface numerically - taking the difference of consecutive s values divided by dt - you're amplifying noise by a factor of 1 over dt. At 0.01 second timesteps, that's 100x amplification. The result? Your control signal looks like white noise riding on top of a useful signal. The fix is to compute s-dot analytically using the model - you know the dynamics, so compute the derivative from first principles rather than numerical differencing. If you must use numerical differentiation, always run it through a low-pass filter first.
+
+Pitfall two: gain over-tuning. More aggressive gains are not always better. Large gains push the system toward the sliding surface faster, but they also amplify chattering and waste control energy. The right approach is to start conservative - gains of 1 to 5 - and increase gradually until performance is acceptable. Then use PSO for the final optimization step. This is important: in our benchmark study, PSO found gains with cost scores far lower than manual starting values - sometimes 360 percent better. Those gains weren't obvious from manual intuition. PSO found them through systematic search. Don't confuse large gains are needed with I should manually crank gains up.
+
+Pitfall three: ignoring actuator saturation. Every real actuator has a maximum force or torque. When your controller demands more than that limit, the actuator saturates - it outputs maximum force regardless of what you asked for. If your gains are so aggressive that you're saturating more than 20 percent of the time, the sliding surface may become unreachable. Always saturate control in code, and always run the diagnostic check.
+
+Two tips. First, always start PSO optimization on the simplified linear model - it runs in minutes rather than hours. Then validate those gains on the full nonlinear model. This two-step workflow saves enormous time. Second, make visualizing the sliding surface s of t a standard practice. If s converges to zero and stays within the boundary layer, your controller is working. If s oscillates or diverges, that tells you exactly where to look for problems.
+
+
+SLIDE 12 - Key Takeaways and Next Steps
+Duration: 2-3 minutes
+
+Let's bring this full circle back to that SpaceX rocket we keep mentioning. Now you understand what's actually happening during those dramatic landings.
+
+First, state estimation. The rocket's control computer is capturing six numbers - position, velocity, angles, angular rates - thousands of times per second. That's the state vector we discussed. Second, Lyapunov stability. The control law is proven stable using energy functions - the marble-in-a-bowl guarantee that it will settle upright. Third, sliding mode control. There's a mathematically designed path, a sliding surface, that naturally rejects disturbances like wind gusts and thrust variations. Fourth, finite-time convergence. The rocket doesn't asymptotically approach vertical over infinite time - it reaches vertical in finite, predictable time, which is critical when you're seconds from touchdown. And fifth, chattering reduction. Boundary layers and super-twisting algorithms prevent rapid oscillations that would damage the gimbaled engines.
+
+Every single concept we covered - state-space models, Lyapunov functions, sliding surfaces, boundary layers - is actively working in that rocket's control computer. The math isn't abstract theory. It's the difference between a successful landing and an explosion.
+
+Let me summarize what you've learned today. State-space representation: six numbers completely describe the double inverted pendulum at any instant, and the general form x-dot equals f of x and u captures all the dynamics. Lyapunov stability: the marble-in-a-bowl intuition for proving convergence without solving differential equations. Sliding mode control: the guardrail path down the mountain where you design the path to guarantee stability, then push the system toward it. Chattering: the harsh buzzing sound of rapid switching, and how to eliminate it using boundary layers or super-twisting algorithms. And three controller types: Classical as the foundation, Super-Twisting as the smooth operator, and Adaptive as the smart learner.
+
+What's next? Episode E003 dives into the physics - the actual equations of motion for the double inverted pendulum. We'll unpack Lagrangian mechanics, explain where that mass matrix comes from, and show you the difference between simplified and full nonlinear models. We're moving from control algorithms to understanding the plant being controlled - the physics itself.
+
+Final thought: The math we covered today has been refined over decades by brilliant control theorists. But at its heart, it's all about simple, physical intuitions. Marbles rolling in bowls. Guardrails guiding you down mountains. Smooth versus jerky corrections. Keep those intuitions in mind, and the equations become tools, not obstacles. See you in episode three!

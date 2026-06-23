@@ -1,0 +1,440 @@
+% ==============================================================================
+% EPISODE 011: CONFIGURATION AND DEPLOYMENT
+% ==============================================================================
+\input{../templates/master_template.tex}
+\input{../templates/tikz_components.tex}
+
+% Episode-specific title
+\renewcommand{\episodetitle}{E011: Configuration \& Deployment}
+
+\begin{document}
+
+% ==============================================================================
+% TITLE PAGE
+% ==============================================================================
+\makeepisodetitle{E011: Configuration \& Deployment}{config.yaml as Cockpit Control Panel, Pydantic Validation, 3 Deployment Scenarios}{2}{15-20 minutes}
+
+% ==============================================================================
+% PAGE 1: CONFIG PROBLEM & STRUCTURE
+% ==============================================================================
+\learningobjective{Understand config.yaml structure (6 sections, 400 lines), Pydantic validation, physics constraints, controller parameters, and 3 deployment environments}
+
+\section*{The Configuration Problem}
+
+\begin{keypoint}
+\textbf{Question:} How do you prevent users from setting cart mass to -5 kg?
+
+\textbf{Answer:} Validate configuration BEFORE simulation runs (not during, not after)
+
+\textbf{Principle:} Invalid config → Program refuses to start (no silent failures!)
+\end{keypoint}
+
+\subsection*{Why Not Hardcode Parameters?}
+
+\begin{tcolorbox}[colback=warning!10, colframe=warning, title=\faExclamationTriangle\ Three Problems with Hardcoding]
+\textbf{Problem 1: Reproducibility}
+
+Controller gains scattered across 10 Python files → How to reproduce experiment?
+
+\textbf{Solution:} Single config file versioned in Git → Entire simulation reproducible
+
+\textbf{Problem 2: Validation}
+
+Hardcoded values can't be validated before runtime
+
+\textbf{Solution:} Config file parsed, validated, rejected if invalid
+
+\textbf{Problem 3: Parameter Sweeps}
+
+Want to test 100 gain combinations → Must edit code 100 times
+
+\textbf{Solution:} Generate 100 config files, no code changes
+\end{tcolorbox}
+
+\section*{config.yaml: The Cockpit Control Panel}
+
+\begin{keypoint}
+\textbf{Analogy:} Like pilot's cockpit with labeled switches for engines, flaps, landing gear
+
+\textbf{Our Config:} 6 main sections (panels) controlling different systems
+
+\textbf{Size:} ~400 lines with extensive inline comments
+\end{keypoint}
+
+\subsection*{Six Main Sections}
+
+\begin{multicols}{2}
+
+\textbf{1. Physics Panel}
+\begin{itemize}
+    \item Masses (cart, pendulum 1, pendulum 2)
+    \item Lengths (L1, L2)
+    \item Friction coefficients
+    \item Gravity
+    \item Moments of inertia
+\end{itemize}
+
+\textbf{2. Controllers Panel}
+\begin{itemize}
+    \item Gains for each of 7 controllers
+    \item Boundary layers
+    \item Adaptation rates
+    \item Max force limits
+\end{itemize}
+
+\textbf{3. PSO Optimization Panel}
+\begin{itemize}
+    \item Particle count (50)
+    \item Iterations (100)
+    \item Inertia weight (0.7)
+    \item Cost function weights
+\end{itemize}
+
+\columnbreak
+
+\textbf{4. Simulation Panel}
+\begin{itemize}
+    \item Duration (10 seconds)
+    \item Timestep (0.01 s = 100 Hz)
+    \item Initial conditions
+    \item Dynamics model (simplified/full)
+\end{itemize}
+
+\textbf{5. Hardware-in-the-Loop Panel}
+\begin{itemize}
+    \item Network settings
+    \item IP addresses
+    \item Timeouts
+\end{itemize}
+
+\textbf{6. Monitoring Panel}
+\begin{itemize}
+    \item Latency thresholds
+    \item Deadline detection
+    \item Logging verbosity
+\end{itemize}
+
+\end{multicols}
+
+% ==============================================================================
+% PAGE 2: PHYSICS & CONTROLLER CONFIG
+% ==============================================================================
+\newpage
+
+\section*{Physics Parameters: Defining the System}
+
+\begin{tcolorbox}[colback=primary!5, colframe=primary, title=\faFlask\ 12 Physical Parameters]
+\textbf{Masses:} Cart, pendulum 1, pendulum 2
+
+\textbf{Lengths:} L1, L2 (pendulum link lengths)
+
+\textbf{Centers of Mass:} Distance from pivot to center
+
+\textbf{Moments of Inertia:} Rotational resistance
+
+\textbf{Environment:} Gravity (9.81 m/s²), friction coefficients
+
+\textbf{Defines:} Whether simulating lightweight lab prototype or heavy industrial system
+\end{tcolorbox}
+
+\subsection*{Physics Validation: Preventing Impossible Configurations}
+
+\begin{warning}
+\textbf{Example 1: Negative Mass}
+
+\textbf{Config:} \texttt{cart\_mass: -5.0}
+
+\textbf{Problem:} Newton's F=ma with negative mass → Accelerates TOWARD you when pushed away (universe doesn't work this way!)
+
+\textbf{Pydantic Error:} "Field 'cart\_mass' expected positive value, received -5.0. Physical masses cannot be negative."
+
+\textbf{Result:} Simulation refuses to start, user fixes config
+\end{warning}
+
+\begin{warning}
+\textbf{Example 2: Impossible Inertia}
+
+\textbf{Physics Constraint:} Inertia $\geq$ mass × length²
+
+\textbf{Config:} pendulum1\_inertia: 0.0001 (but mass=0.2 kg, length=0.4 m → min inertia=0.008)
+
+\textbf{Validation Error:} "pendulum1\_inertia violates physics constraints. You configured 0.0001, but minimum for 0.2 kg at 0.4 m is 0.008."
+
+\textbf{Prevents:} Hours wasted running simulation with meaningless results
+\end{warning}
+
+\section*{Controller Configuration: Seven Variants}
+
+\begin{example}
+\textbf{Example: Classical SMC Config}
+\begin{lstlisting}[style=yaml]
+controllers:
+  classical_smc:
+    gains: [23.07, 12.85, 5.51, 3.49, 2.23, 0.15]
+    max_force: 150.0
+    dt: 0.001
+    boundary_layer: 0.3
+\end{lstlisting}
+
+\textbf{Gains Array:} 6 values (sliding surface coefficients + switching gains)
+
+\textbf{Boundary Layer:} 0 = perfect but chattering, 0.3 = smooth in 0.3-rad band
+\end{example}
+
+\subsection*{Controller-Specific Gain Validation}
+
+\begin{tcolorbox}[colback=secondary!10, colframe=secondary, title=\faCheckCircle\ Schema Enforcement]
+\textbf{Pydantic Schema Per Controller:}
+\begin{itemize}
+    \item ClassicalSMCConfig expects EXACTLY 6 gains
+    \item STASMCConfig expects EXACTLY 6 gains (different interpretation)
+    \item AdaptiveSMCConfig expects EXACTLY 5 gains
+\end{itemize}
+
+\textbf{Wrong Number?} "classical\_smc.gains expected 6 elements, received 5"
+
+\textbf{Prevents:} Mismatched gain arrays causing runtime crashes
+\end{tcolorbox}
+
+% ==============================================================================
+% PAGE 3: PSO, SIMULATION, PYDANTIC
+% ==============================================================================
+\newpage
+
+\section*{PSO Configuration: Optimization Parameters}
+
+\begin{tcolorbox}[colback=accent!10, colframe=accent, title=\faCogs\ PSO Algorithm Parameters]
+\textbf{n\_particles: 50} - How many candidate solutions search simultaneously
+
+\textbf{n\_iterations: 100} - How many generations swarm evolves
+
+\textbf{inertia\_weight: 0.7} - Exploration vs exploitation tradeoff
+
+\textbf{cognitive\_coeff: 2.0} - Trust own best position
+
+\textbf{social\_coeff: 2.0} - Trust swarm's best position
+
+\textbf{cost\_weights:} Relative importance in cost function
+\begin{itemize}
+    \item state\_error: 1.0 (minimize tracking error most)
+    \item control\_effort: 0.1 (care less about actuator wear)
+    \item settling\_time: 0.5 (penalize slow settling moderately)
+    \item overshoot: 0.3 (penalize overshoot somewhat)
+\end{itemize}
+\end{tcolorbox}
+
+\begin{tip}
+\textbf{Tuning Cost Weights:}
+
+\textbf{Industrial Robot:} control\_effort: 0.5 (actuators expensive, wear out)
+
+\textbf{Academic Benchmark:} state\_error: 2.0 (maximize tracking accuracy)
+
+\textbf{No Universal Right Answer} - depends on application priorities
+\end{tip}
+
+\section*{Simulation Settings}
+
+\begin{multicols}{2}
+
+\textbf{duration: 10.0 seconds}
+
+How long to simulate
+
+\textbf{dt: 0.01 seconds (100 Hz)}
+
+Timestep for numerical integration
+
+\textbf{initial\_state:}
+
+\texttt{[0.0, 0.05, -0.03, 0.0, 0.0, 0.0]}
+
+Cart at origin, small angle perturbation
+
+\columnbreak
+
+\textbf{use\_full\_dynamics: false}
+
+Simplified (5 µs) vs Full nonlinear (50 µs)
+
+\textbf{Tradeoff:}
+\begin{itemize}
+    \item Simplified: PSO in 3 minutes
+    \item Full: PSO in 30 minutes
+    \item Strategy: Develop with simplified, validate with full
+\end{itemize}
+
+\end{multicols}
+
+\subsection*{Timestep Constraints: Nyquist Stability}
+
+\begin{warning}
+\textbf{Physics Limit:} Fastest dynamics ~5 rad/s (pendulum natural frequency)
+
+\textbf{Nyquist:} Need ≥10 samples per oscillation → dt ≤ 0.1 seconds
+
+\textbf{Practice:} dt=0.01 for 100 Hz (10× safety margin)
+
+\textbf{Validation:} If dt=0.5 → Warning: "Timestep 0.5s exceeds Nyquist limit for system dynamics. Maximum safe: 0.1s"
+\end{warning}
+
+\section*{Pydantic Validation: The Bouncer}
+
+\begin{keypoint}
+\textbf{Analogy:} Pydantic is a nightclub bouncer checking IDs at the door
+
+\textbf{Checks:}
+\begin{itemize}
+    \item \textbf{1.} Data types correct? (Is cart\_mass a number or "heavy"?)
+    \item \textbf{2.} Values in acceptable ranges? (Mass positive? Length < 5 m?)
+\end{itemize}
+
+\textbf{Pass:} Simulation starts
+
+\textbf{Fail:} Rejected with specific reason (before wasting time!)
+\end{keypoint}
+
+\subsection*{Fail Fast, Fail Clearly}
+
+\begin{example}
+\textbf{Without Bouncer:}
+\begin{itemize}
+    \item Start simulation
+    \item Run for 3 minutes
+    \item Crash deep in physics engine: "cannot multiply string by float"
+    \item Debug backwards: what config value was wrong?
+\end{itemize}
+
+\textbf{With Pydantic Bouncer:}
+\begin{itemize}
+    \item Try to load config
+    \item Rejected at door immediately: "cart\_mass must be float, you provided string"
+    \item Fix config, retry - no time wasted!
+\end{itemize}
+\end{example}
+
+% ==============================================================================
+% PAGE 4: DEPLOYMENT & KEY TAKEAWAYS
+% ==============================================================================
+\newpage
+
+\section*{Configuration Loading Process}
+
+\begin{center}
+\begin{tikzpicture}[node distance=1.8cm, auto]
+    \node[block, fill=primary!30] (load) {\textbf{Load}\\config.yaml};
+    \node[process, below=of load] (pydantic) {\textbf{Pydantic}\\Validate types};
+    \node[process, below=of pydantic] (physics) {\textbf{Physics}\\Check bounds};
+    \node[decision, below=of physics] (valid) {\textbf{Valid?}\\All pass};
+    \node[block, fill=secondary!30, below=of valid] (pass) {\textbf{Success}\\Immutable config};
+    \node[block, fill=warning!30, right=2.5cm of valid] (fail) {\textbf{Error}\\Report all issues};
+
+    \draw[arrow] (load) -- (pydantic);
+    \draw[arrow] (pydantic) -- (physics);
+    \draw[arrow] (physics) -- (valid);
+    \draw[arrow] (valid) -- node[right] {Yes} (pass);
+    \draw[arrow] (valid) -- node[above] {No} (fail);
+\end{tikzpicture}
+\end{center}
+
+\begin{tcolorbox}[colback=primary!5, colframe=primary, title=\faDownload\ Five-Step Process]
+\textbf{Step 1:} Read \texttt{config.yaml} from disk (PyYAML → nested dictionary)
+
+\textbf{Step 2:} Pass to Pydantic \texttt{Config} model (recursively validate all sections)
+
+\textbf{Step 3:} Additional physics validation (inertia bounds, Nyquist criterion)
+
+\textbf{Step 4:} Cross-section validation (if use\_full\_dynamics=true, check consistency)
+
+\textbf{Step 5:} If all pass → Return immutable config object. If any fail → Collect ALL errors, report together
+\end{tcolorbox}
+
+\begin{tip}
+\textbf{Why Collect All Errors?}
+
+\textbf{Bad UX:} Fix one error → Re-run → Hit next error → Fix → Hit third error (frustrating!)
+
+\textbf{Good UX:} See all errors at once → "cart\_mass negative, pendulum1\_inertia violates physics, classical\_smc.gains wrong length (5 expected 6)" → Fix all in batch
+\end{tip}
+
+\section*{Deployment: Three Environments}
+
+\begin{tcolorbox}[colback=secondary!10, colframe=secondary, title=\faRocket\ Deployment Scenarios]
+\textbf{Environment 1: Local Development}
+\begin{itemize}
+    \item Clone repo, create venv, \texttt{pip install -r requirements.txt}
+    \item Run \texttt{python simulate.py}
+    \item Everything on one machine, default config, immediate feedback
+\end{itemize}
+
+\textbf{Environment 2: Batch Computation}
+\begin{itemize}
+    \item Research cluster or cloud instance
+    \item Parameter sweeps, Monte Carlo simulations, PSO optimization
+    \item Headless execution (no GUI), results saved to files
+\end{itemize}
+
+\textbf{Environment 3: Hardware-in-the-Loop (HIL)}
+\begin{itemize}
+    \item Plant server on one machine (PLC or industrial PC with real hardware)
+    \item Controller client on another machine
+    \item Communicate over network using ZeroMQ
+\end{itemize}
+\end{tcolorbox}
+
+\section*{Key Takeaways}
+
+\begin{summary}
+\textbf{config.yaml:} 400 lines, 6 sections (physics, controllers, PSO, simulation, HIL, monitoring)
+
+\textbf{Cockpit Control Panel:} Every parameter has inline comment explaining purpose, units, citations
+
+\textbf{Physics Validation:} Prevents negative mass, impossible inertia, violates Nyquist limits
+
+\textbf{Controller Gains:} Schema per controller (Classical=6, STA=6, Adaptive=5 gains)
+
+\textbf{Boundary Layer:} 0 = perfect/chattering, 0.3 = smooth (chattering mitigation)
+
+\textbf{PSO Parameters:} 50 particles, 100 iterations, cost weights tunable per application
+
+\textbf{Simulation:} dt=0.01 (100 Hz), duration=10s, simplified vs full dynamics tradeoff
+
+\textbf{Pydantic Bouncer:} Validates types + ranges BEFORE simulation (fail fast, fail clearly)
+
+\textbf{Loading Process:} Read YAML → Pydantic validate → Physics check → Cross-section → Immutable config or detailed errors
+
+\textbf{Three Environments:} Local dev (one machine), Batch compute (headless), HIL (networked plant + controller)
+
+\textbf{Configuration as Code:} Version in Git for reproducibility, generate variants for parameter sweeps
+\end{summary}
+
+\subsection*{Quick Reference: Config Usage}
+
+\quickref{Load and Validate Config}{
+\begin{lstlisting}[style=python, numbers=none]
+from src.config import load_config
+
+# Load with validation
+config = load_config("config.yaml")
+
+# Strict mode (fail on unknown keys)
+config = load_config("config.yaml",
+                     allow_unknown=False)
+
+# Access nested values
+cart_mass = config.physics.cart_mass
+gains = config.controllers.classical_smc.gains
+\end{lstlisting}
+}
+
+\subsection*{What's Next?}
+
+\begin{keypoint}
+\textbf{E012: Hardware-in-the-Loop System}
+
+Plant server, controller client, network communication, real-time constraints, latency measurement
+
+\textbf{Remember:} Configuration is a first-class artifact, not an afterthought!
+\end{keypoint}
+
+\end{document}

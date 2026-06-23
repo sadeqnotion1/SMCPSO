@@ -1,0 +1,781 @@
+/* =============================================================================
+   DIP-SMC-PSO Documentation - Custom Styles
+   ============================================================================= */
+
+/* Back to Top Button - Improves navigation for long documentation pages */
+.back-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 1000;
+    display: none;
+    background-color: var(--color-brand-primary, #2962ff);
+    color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 50px;
+    font-size: 24px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.back-to-top:hover {
+    background-color: var(--color-brand-content, #1976d2);
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+.back-to-top.show {
+    display: block;
+    animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Sticky Table of Contents for Long Pages */
+.toc-scroll {
+    position: sticky;
+    top: 20px;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+}
+
+/* Improved scroll behavior for TOC */
+.toc-scroll::-webkit-scrollbar {
+    width: 6px;
+}
+
+.toc-scroll::-webkit-scrollbar-track {
+    background: var(--color-background-secondary, #f5f5f5);
+    border-radius: 3px;
+}
+
+.toc-scroll::-webkit-scrollbar-thumb {
+    background: var(--color-brand-primary, #2962ff);
+    border-radius: 3px;
+}
+
+.toc-scroll::-webkit-scrollbar-thumb:hover {
+    background: var(--color-brand-content, #1976d2);
+}
+
+/* Presentation Slide Layout - Better visual separation */
+.presentation-slide {
+    border: 1px solid var(--color-background-border, #e0e0e0);
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px 0;
+    background-color: var(--color-background-secondary, #fafafa);
+}
+
+.presentation-slide h3 {
+    border-bottom: 2px solid var(--color-brand-primary, #2962ff);
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+/* Download Links - Prominent styling */
+.download-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background-color: var(--color-brand-primary, #2962ff);
+    color: white !important;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.download-link:hover {
+    background-color: var(--color-brand-content, #1976d2);
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.download-link::before {
+    content: "⬇";
+    font-size: 16px;
+}
+
+/* Note/Admonition Styling for Download Prompts */
+.admonition.note.download-prompt {
+    border-left: 4px solid var(--color-brand-primary, #2962ff);
+    background-color: var(--color-background-secondary, #f0f7ff);
+}
+
+/* Improved Code Block Styling */
+div[class*="highlight"] {
+    border-radius: 6px;
+    margin: 1em 0;
+}
+
+/* Better table styling for long tables */
+table.docutils {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1em 0;
+}
+
+table.docutils th {
+    background-color: var(--color-background-secondary, #f5f5f5);
+    padding: 12px;
+    text-align: left;
+    border-bottom: 2px solid var(--color-brand-primary, #2962ff);
+}
+
+table.docutils td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--color-background-border, #e0e0e0);
+}
+
+/* Responsive adjustments for mobile */
+@media (max-width: 768px) {
+    .back-to-top {
+        bottom: 20px;
+        right: 20px;
+        width: 45px;
+        height: 45px;
+        line-height: 45px;
+        font-size: 20px;
+    }
+
+    .presentation-slide {
+        padding: 15px;
+        margin: 15px 0;
+    }
+}
+
+/* Print styles - hide interactive elements */
+@media print {
+    .back-to-top {
+        display: none !important;
+    }
+}
+
+/* ============================================================================
+   Lazy Loading Image States
+   ============================================================================ */
+
+/* Images awaiting lazy load - skeleton loading animation */
+img[data-src] {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+    min-height: 100px;  /* Prevent layout shift */
+}
+
+/* Image currently loading */
+img.lazy-loading {
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+}
+
+/* Image successfully loaded */
+img.lazy-loaded {
+    opacity: 1;
+    animation: fadeIn 0.5s ease;
+}
+
+/* Image failed to load */
+img.lazy-error {
+    opacity: 0.3;
+    border: 2px dashed #e0e0e0;
+    background: #f5f5f5;
+}
+
+/* Skeleton loading animation */
+@keyframes loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* Dark mode support for lazy loading */
+[data-theme="dark"] img[data-src] {
+    background: linear-gradient(90deg, #2d2d2d 25%, #404040 50%, #2d2d2d 75%);
+    background-size: 200% 100%;
+}
+
+[data-theme="dark"] img.lazy-error {
+    background: #1a1a1a;
+    border-color: #404040;
+}
+
+/* ============================================================================
+   Dark Mode Theme Styles
+   ============================================================================ */
+
+/* Theme toggle button */
+.theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 100px;
+    z-index: 1001;
+    background-color: var(--color-background-secondary, #f5f5f5);
+    border: 1px solid var(--color-background-border, #e0e0e0);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.theme-toggle:hover {
+    transform: scale(1.1) rotate(15deg);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.theme-toggle:focus {
+    outline: 2px solid var(--color-brand-primary, #2962ff);
+    outline-offset: 2px;
+}
+
+.theme-icon {
+    font-size: 20px;
+    display: none;
+}
+
+.theme-toggle[data-theme="light"] .theme-icon.light {
+    display: block;
+}
+
+.theme-toggle[data-theme="dark"] .theme-icon.dark {
+    display: block;
+}
+
+/* Screen reader only class for announcements */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* Dark mode color scheme - comprehensive */
+[data-theme="dark"] {
+    /* Background colors */
+    --color-background-primary: #1a1a1a;
+    --color-background-secondary: #2d2d2d;
+    --color-background-border: #404040;
+
+    /* Text colors */
+    --color-text-primary: #e0e0e0;
+    --color-text-secondary: #b0b0b0;
+    --color-text-muted: #808080;
+
+    /* Brand colors */
+    --color-brand-primary: #4a9eff;
+    --color-brand-content: #6bb0ff;
+
+    /* Semantic colors */
+    --color-success: #4caf50;
+    --color-warning: #ff9800;
+    --color-error: #f44336;
+    --color-info: #2196f3;
+}
+
+/* Apply dark mode to body and main elements */
+[data-theme="dark"] {
+    background-color: var(--color-background-primary);
+    color: var(--color-text-primary);
+}
+
+/* Links */
+[data-theme="dark"] a {
+    color: var(--color-brand-primary);
+}
+
+[data-theme="dark"] a:hover {
+    color: var(--color-brand-content);
+}
+
+[data-theme="dark"] a:visited {
+    color: #9575cd;
+}
+
+/* Code blocks */
+[data-theme="dark"] code {
+    background-color: var(--color-background-secondary);
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-background-border);
+}
+
+[data-theme="dark"] pre {
+    background-color: #1e1e1e;
+    border: 1px solid var(--color-background-border);
+}
+
+[data-theme="dark"] div[class*="highlight"] {
+    background-color: #1e1e1e;
+    border: 1px solid var(--color-background-border);
+}
+
+/* Inline code */
+[data-theme="dark"] :not(pre) > code {
+    background-color: var(--color-background-secondary);
+    color: #f8f8f2;
+}
+
+/* Tables */
+[data-theme="dark"] table.docutils {
+    border-color: var(--color-background-border);
+}
+
+[data-theme="dark"] table.docutils th {
+    background-color: var(--color-background-secondary);
+    border-bottom-color: var(--color-brand-primary);
+    color: var(--color-text-primary);
+}
+
+[data-theme="dark"] table.docutils td {
+    border-bottom-color: var(--color-background-border);
+    color: var(--color-text-primary);
+}
+
+/* Admonitions */
+[data-theme="dark"] .admonition {
+    background-color: var(--color-background-secondary);
+    border-color: var(--color-background-border);
+}
+
+[data-theme="dark"] .admonition.note {
+    border-left-color: var(--color-info);
+}
+
+[data-theme="dark"] .admonition.warning {
+    border-left-color: var(--color-warning);
+}
+
+[data-theme="dark"] .admonition.error {
+    border-left-color: var(--color-error);
+}
+
+/* Blockquotes */
+[data-theme="dark"] blockquote {
+    background-color: var(--color-background-secondary);
+    border-left-color: var(--color-brand-primary);
+    color: var(--color-text-secondary);
+}
+
+/* Headers */
+[data-theme="dark"] h1,
+[data-theme="dark"] h2,
+[data-theme="dark"] h3,
+[data-theme="dark"] h4,
+[data-theme="dark"] h5,
+[data-theme="dark"] h6 {
+    color: var(--color-text-primary);
+}
+
+/* Horizontal rules */
+[data-theme="dark"] hr {
+    border-color: var(--color-background-border);
+}
+
+/* Lists */
+[data-theme="dark"] ul,
+[data-theme="dark"] ol {
+    color: var(--color-text-primary);
+}
+
+/* Definition lists */
+[data-theme="dark"] dt {
+    color: var(--color-text-primary);
+    font-weight: bold;
+}
+
+[data-theme="dark"] dd {
+    color: var(--color-text-secondary);
+}
+
+/* Forms and inputs (if any) */
+[data-theme="dark"] input,
+[data-theme="dark"] textarea,
+[data-theme="dark"] select {
+    background-color: var(--color-background-secondary);
+    color: var(--color-text-primary);
+    border-color: var(--color-background-border);
+}
+
+/* Buttons */
+[data-theme="dark"] button {
+    background-color: var(--color-background-secondary);
+    color: var(--color-text-primary);
+    border-color: var(--color-background-border);
+}
+
+[data-theme="dark"] button:hover {
+    background-color: var(--color-background-border);
+}
+
+/* Search box (if present) */
+[data-theme="dark"] .search-input {
+    background-color: var(--color-background-secondary);
+    color: var(--color-text-primary);
+    border-color: var(--color-background-border);
+}
+
+/* Sidebar */
+[data-theme="dark"] .sidebar {
+    background-color: var(--color-background-secondary);
+    border-color: var(--color-background-border);
+}
+
+/* Footer */
+[data-theme="dark"] footer {
+    background-color: var(--color-background-secondary);
+    border-top-color: var(--color-background-border);
+    color: var(--color-text-secondary);
+}
+
+/* Back to top button in dark mode */
+[data-theme="dark"] .back-to-top {
+    background-color: var(--color-brand-primary);
+    color: white;
+}
+
+[data-theme="dark"] .back-to-top:hover {
+    background-color: var(--color-brand-content);
+}
+
+/* Download links in dark mode */
+[data-theme="dark"] .download-link {
+    background-color: var(--color-brand-primary);
+    color: white;
+}
+
+[data-theme="dark"] .download-link:hover {
+    background-color: var(--color-brand-content);
+}
+
+/* Presentation slides in dark mode */
+[data-theme="dark"] .presentation-slide {
+    background-color: var(--color-background-secondary);
+    border-color: var(--color-background-border);
+}
+
+/* Smooth transitions between themes */
+html, body, div, span, p, a, h1, h2, h3, h4, h5, h6,
+table, tr, td, th, pre, code, blockquote {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Mobile adjustments for theme toggle */
+@media (max-width: 768px) {
+    .theme-toggle {
+        top: 15px;
+        right: 70px;
+        width: 36px;
+        height: 36px;
+    }
+
+    .theme-icon {
+        font-size: 18px;
+    }
+}
+
+/* ============================================================================
+   Reading Progress Bar
+   ============================================================================ */
+
+.reading-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 3px;
+    background: linear-gradient(90deg, var(--color-brand-primary, #2962ff), var(--color-brand-content, #1976d2));
+    z-index: 1002;
+    transition: width 0.1s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* Pulse animation when reaching milestones */
+@keyframes progressPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+.reading-progress[aria-valuenow="25"],
+.reading-progress[aria-valuenow="50"],
+.reading-progress[aria-valuenow="75"],
+.reading-progress[aria-valuenow="100"] {
+    animation: progressPulse 0.5s ease;
+}
+
+/* ============================================================================
+   Enhanced TOC Active Section Highlighting
+   ============================================================================ */
+
+.toc-scroll a.active,
+.contents.local a.active {
+    font-weight: 600;
+    color: var(--color-brand-primary, #2962ff);
+    border-left: 3px solid var(--color-brand-primary, #2962ff);
+    padding-left: 12px;
+    background-color: var(--color-background-secondary, #f5f5f5);
+    margin-left: -15px;
+    transition: all 0.2s ease;
+}
+
+[data-theme="dark"] .toc-scroll a.active,
+[data-theme="dark"] .contents.local a.active {
+    background-color: var(--color-background-secondary, #2d2d2d);
+}
+
+/* Smooth scroll in TOC container */
+.toc-scroll,
+.contents.local {
+    scroll-behavior: smooth;
+}
+
+/* ============================================================================
+   Breadcrumb Sticky Enhancement
+   ============================================================================ */
+
+.breadcrumb {
+    position: sticky;
+    top: 3px; /* Below progress bar */
+    background-color: var(--color-background-primary, #ffffff);
+    z-index: 100;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--color-background-border, #e0e0e0);
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="dark"] .breadcrumb {
+    background-color: var(--color-background-primary, #1a1a1a);
+    border-bottom-color: var(--color-background-border, #404040);
+}
+
+/* ============================================================================
+   Print and PDF Export Styles
+   ============================================================================ */
+
+@media print {
+    /* Hide interactive UI elements */
+    .back-to-top,
+    .theme-toggle,
+    .reading-progress,
+    nav,
+    .sidebar,
+    .toc-drawer,
+    .breadcrumb,
+    header.mobile-header,
+    footer.mobile-footer,
+    button,
+    .search-button {
+        display: none !important;
+    }
+
+    /* Optimize page breaks */
+    h1, h2, h3, h4, h5, h6 {
+        page-break-after: avoid;
+        page-break-inside: avoid;
+    }
+
+    pre, blockquote, table, figure, img {
+        page-break-inside: avoid;
+    }
+
+    /* Avoid breaking list items */
+    li {
+        page-break-inside: avoid;
+    }
+
+    /* Ensure code blocks are readable in print */
+    pre, code {
+        border: 1px solid #ccc;
+        background-color: #f5f5f5 !important;
+        color: #000 !important;
+        padding: 8px;
+        font-size: 10pt;
+        line-height: 1.4;
+    }
+
+    /* Inline code */
+    :not(pre) > code {
+        background-color: #f0f0f0 !important;
+        color: #000 !important;
+        border: 1px solid #ddd;
+        padding: 2px 4px;
+    }
+
+    /* Show URLs for external links */
+    a[href^="http"]:after {
+        content: " (" attr(href) ")";
+        font-size: 0.8em;
+        color: #666;
+        word-break: break-all;
+    }
+
+    /* Don't show URLs for internal links */
+    a[href^="#"]:after,
+    a[href^="/"]:after {
+        content: "";
+    }
+
+    /* Preserve images with max width */
+    img {
+        max-width: 100% !important;
+        height: auto !important;
+        page-break-inside: avoid;
+    }
+
+    /* Table formatting for print */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 9pt;
+    }
+
+    table th {
+        background-color: #f0f0f0 !important;
+        color: #000 !important;
+        border: 1px solid #ccc;
+        padding: 6px;
+        font-weight: bold;
+    }
+
+    table td {
+        border: 1px solid #ccc;
+        padding: 6px;
+    }
+
+    /* Admonitions (note, warning, etc.) */
+    .admonition {
+        border: 1px solid #ccc;
+        border-left: 4px solid #666;
+        padding: 10px;
+        margin: 10px 0;
+        background-color: #f9f9f9 !important;
+        page-break-inside: avoid;
+    }
+
+    .admonition.note {
+        border-left-color: #2196f3;
+    }
+
+    .admonition.warning {
+        border-left-color: #ff9800;
+    }
+
+    .admonition.error {
+        border-left-color: #f44336;
+    }
+
+    /* Headers and footers */
+    @page {
+        margin: 2cm;
+        size: A4 portrait;
+
+        @bottom-right {
+            content: "Page " counter(page);
+            font-size: 9pt;
+            color: #666;
+        }
+
+        @bottom-left {
+            content: "DIP-SMC-PSO Documentation";
+            font-size: 9pt;
+            color: #666;
+        }
+    }
+
+    /* First page specific styling */
+    @page :first {
+        @bottom-left {
+            content: "";
+        }
+        @bottom-right {
+            content: "";
+        }
+    }
+
+    /* Main content styling */
+    body {
+        background: white !important;
+        color: black !important;
+        font-size: 11pt;
+        line-height: 1.6;
+    }
+
+    main, article {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Heading sizes for print */
+    h1 { font-size: 24pt; margin-top: 0; }
+    h2 { font-size: 18pt; margin-top: 14pt; }
+    h3 { font-size: 14pt; margin-top: 12pt; }
+    h4 { font-size: 12pt; margin-top: 10pt; }
+    h5, h6 { font-size: 11pt; margin-top: 8pt; }
+
+    /* Paragraph spacing */
+    p {
+        margin: 8pt 0;
+        orphans: 3;
+        widows: 3;
+    }
+
+    /* Lists */
+    ul, ol {
+        margin: 8pt 0;
+        padding-left: 20pt;
+    }
+
+    li {
+        margin: 4pt 0;
+    }
+
+    /* Blockquotes */
+    blockquote {
+        border-left: 4px solid #ccc;
+        padding-left: 12pt;
+        margin: 12pt 0;
+        font-style: italic;
+        color: #333 !important;
+    }
+
+    /* Math equations (preserve) */
+    .math, .MathJax {
+        font-size: 11pt !important;
+    }
+
+    /* Remove box shadows and fancy effects */
+    * {
+        box-shadow: none !important;
+        text-shadow: none !important;
+    }
+}

@@ -1,0 +1,43 @@
+Locked Files - Manual Cleanup Required
+=========================================
+
+Date: December 17, 2025 13:47
+
+LOCKED FILES DETECTED
+----------------------
+1. logs/pso_results.db (0 bytes)
+   - Locked by: SQLite database process
+   - Action: Remove directory after processes stop
+   - Command: rm -rf logs/
+
+2. monitoring_data/logs/data_manager_20251216.log (56MB)
+   - Locked by: Monitoring system or stale file handle
+   - Action: This is a DUPLICATE of .logs/logs/monitoring/logs/data_manager_20251216.log
+   - MD5: 61eaa93e46cf715541899702782b13ee (verified duplicate)
+   - Command after unlock: rm -rf monitoring_data/
+
+3. report.log (583 bytes)
+   - Locked by: Unknown process
+   - Action: Move to .logs/ after unlock
+   - Command: mv report.log .logs/report_20251217.log
+
+STATUS
+------
+[OK] .logs/monitoring_data_merged/ removed (56MB freed)
+[OK] 3 unlocked files removed from logs/ (combined.log, error.log, interactions.log)
+[PENDING] logs/pso_results.db - awaiting process release
+[PENDING] monitoring_data/ - awaiting process release
+
+MANUAL CLEANUP COMMANDS (run when locks release)
+-------------------------------------------------
+rm -rf logs/
+rm -rf monitoring_data/
+mv report.log .logs/report_20251217.log
+
+This will reduce visible root items from 20 → 17 (under target of ≤19)
+
+CURRENT PROGRESS
+----------------
+.logs/: 113MB → 57MB (50% reduction achieved!)
+Visible items: 20 (will be 17 after manual cleanup)
+Removed: nul (0 bytes), .logs/monitoring_data_merged/ (56MB), 3 unlocked logs

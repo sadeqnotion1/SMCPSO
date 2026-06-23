@@ -1,0 +1,50 @@
+{
+  "configuration": {
+    "n_runs": 100,
+    "n_success": 100,
+    "success_rate": 100.0,
+    "seed": 42,
+    "sim_time": 10.0,
+    "dt": 0.01,
+    "boundary_layer_base": 0.00250336,
+    "boundary_layer_slope": 1.21441504
+  },
+  "statistics": {
+    "chattering_index": {
+      "mean": 2.1354,
+      "std": 0.1346,
+      "ci_lower": 2.1087,
+      "ci_upper": 2.1621
+    },
+    "settling_time": {
+      "mean": 10.0,
+      "std": 0.0,
+      "ci_lower": null,
+      "ci_upper": null
+    },
+    "overshoot_theta1": {
+      "mean": 4.613,
+      "std": 0.457,
+      "ci_lower": 4.523,
+      "ci_upper": 4.704
+    },
+    "overshoot_theta2": {
+      "mean": 4.613,
+      "std": 0.457,
+      "ci_lower": 4.523,
+      "ci_upper": 4.704
+    },
+    "control_energy": {
+      "mean": 5231.71,
+      "std": 2887.95,
+      "ci_lower": 4658.68,
+      "ci_upper": 5804.76
+    },
+    "rms_control": {
+      "mean": 21.50,
+      "std": 7.85,
+      "ci_lower": 19.94,
+      "ci_upper": 23.06
+    }
+  }
+}

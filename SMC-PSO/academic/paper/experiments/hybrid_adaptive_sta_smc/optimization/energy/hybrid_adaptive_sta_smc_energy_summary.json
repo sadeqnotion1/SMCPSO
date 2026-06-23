@@ -1,0 +1,26 @@
+{
+  "controller_name": "hybrid_adaptive_sta_smc",
+  "original_gains": [
+    10.148979254143576,
+    12.839386550675101,
+    6.815065802267164,
+    2.7500136927843215
+  ],
+  "optimized_gains": [
+    14.619184289050752,
+    18.667551017209206,
+    9.642393920636964,
+    2.39294834059788
+  ],
+  "energy_before": 0.0,
+  "energy_after": 0.0,
+  "rmse_before": 8.513831406947817,
+  "rmse_after": 8.513831406947817,
+  "fitness_before": 2.554149422084345,
+  "fitness_after": 2.554149422084345,
+  "improvement_pct": 0.0,
+  "n_iterations": 50,
+  "n_particles": 30,
+  "converged": true,
+  "optimization_time_sec": 2116.615924
+}

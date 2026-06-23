@@ -1,0 +1,165 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% PREAMBLE: Packages, Formatting, Custom Commands
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% PAGE LAYOUT %%%
+\usepackage[
+    a4paper,
+    left=3.5cm,      % Wider left margin for binding
+    right=2.5cm,
+    top=2.5cm,
+    bottom=2.5cm,
+    headheight=15pt
+]{geometry}
+
+%%% ENCODING & FONTS %%%
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}          % Latin Modern fonts (better than default)
+
+%%% MATH PACKAGES %%%
+\usepackage{amsmath}          % Core math environments
+\usepackage{amsfonts}         % Math fonts (\mathbb{R})
+\usepackage{amssymb}          % Extra symbols (\therefore, \because)
+\usepackage{mathtools}        % Extensions to amsmath
+
+%%% GRAPHICS & FIGURES %%%
+\usepackage{graphicx}         % \includegraphics
+\usepackage{float}            % [H] placement specifier
+\usepackage{caption}          % Caption customization
+\usepackage{subcaption}       % Subfigures (a), (b), (c)
+
+% Fix figure/table numbering - ensure sequential numbering (Figure 1, 2, 3...)
+\renewcommand{\thefigure}{\arabic{figure}}
+\renewcommand{\thetable}{\arabic{table}}
+\renewcommand{\theequation}{\arabic{equation}}
+
+%%% TABLES %%%
+\usepackage{booktabs}         % Professional tables (\toprule, \midrule)
+\usepackage{multirow}         % Multi-row cells
+\usepackage{array}            % Enhanced column formatting
+\usepackage{pdflscape}        % Landscape pages for wide tables
+\usepackage{afterpage}        % Allow landscape tables after current page
+
+%%% ALGORITHMS & CODE %%%
+\usepackage[ruled,vlined]{algorithm2e}  % Algorithm pseudocode
+\usepackage{listings}         % Code listings
+\usepackage{xcolor}           % Colors for code syntax highlighting
+
+% Code listing style
+\lstset{
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue},
+    commentstyle=\color{gray},
+    stringstyle=\color{red},
+    showstringspaces=false,
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    frame=single,
+    breaklines=true
+}
+
+%%% BIBLIOGRAPHY %%%
+\usepackage[numbers,sort&compress]{natbib}  % Numeric citations [1,2,3]
+
+%%% HEADERS & FOOTERS %%%
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}  % Clear defaults
+\fancyhead[R]{\nouppercase{\leftmark}}  % Chapter name on right
+\fancyfoot[C]{\thepage}                 % Page number centered
+
+% Chapter pages (no header)
+\fancypagestyle{plain}{
+    \fancyhf{}
+    \fancyfoot[C]{\thepage}
+    \renewcommand{\headrulewidth}{0pt}
+}
+
+%%% SI UNITS %%%
+\usepackage{siunitx}          % \SI{10}{\meter\per\second}
+
+%%% NOMENCLATURE %%%
+\usepackage{nomencl}
+\makenomenclature
+
+%%% THEOREM ENVIRONMENTS %%%
+\usepackage{amsthm}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{example}{Example}[section]
+
+%%% TIKZ (for diagrams) %%%
+\usepackage{tikz}
+\usetikzlibrary{arrows,shapes,positioning,calc}
+
+%%% HYPERLINKS & CROSS-REFERENCES %%%
+% IMPORTANT: hyperref must be loaded LAST (after all other packages)
+\usepackage[
+    colorlinks=true,
+    linkcolor=blue,       % Internal links (sections, figures, tables)
+    citecolor=red,        % Citation links
+    urlcolor=cyan,        % External URLs
+    bookmarks=true
+]{hyperref}
+
+% CRITICAL FIX: Hyperref 7.01o (July 2025) has a bug preventing counter increments
+% Root cause: hyperref's \H@refstepcounter is not properly incrementing counters
+% Workaround: manually restore proper counter stepping behavior for all counter types
+\makeatletter
+
+% Fix 1: Standard \refstepcounter (for sections, equations, etc.)
+\let\@@latex@refstepcounter\refstepcounter
+\def\refstepcounter#1{%
+  \stepcounter{#1}%  % Manually increment the counter FIRST
+  \protected@edef\@currentlabel{\csname p@#1\endcsname\csname the#1\endcsname}%
+  \@ifundefined{@hyper@refstepcounter}{}{%
+    \@hyper@refstepcounter{#1}%  % Create hyperlink anchor if hyperref loaded
+  }%
+}
+
+% Fix 2: Caption package's refstepcounter wrapper (for tables/figures)
+\@ifpackageloaded{caption}{%
+  % Patch caption package to use fixed \refstepcounter
+  \let\caption@refstepcounter\refstepcounter
+}{}
+
+\makeatother
+
+% Ensure proper section numbering (article class should do this by default)
+\setcounter{secnumdepth}{3}  % Number down to subsubsection
+\setcounter{tocdepth}{3}      % TOC depth to subsubsection
+
+%%% CUSTOM COMMANDS %%%
+
+% Vectors (bold)
+\newcommand{\vect}[1]{\mathbf{#1}}
+
+% Matrices (bold uppercase)
+\newcommand{\mat}[1]{\mathbf{#1}}
+
+% Real numbers
+\newcommand{\Real}{\mathbb{R}}
+
+% Derivative shortcuts
+\newcommand{\diff}[2]{\frac{d #1}{d #2}}
+\newcommand{\pdiff}[2]{\frac{\partial #1}{\partial #2}}
+
+% Common symbols
+\newcommand{\thetaone}{\theta_1}
+\newcommand{\thetatwo}{\theta_2}
+
+% Norm
+\newcommand{\norm}[1]{\left\| #1 \right\|}
+
+% Sign function
+\DeclareMathOperator{\sign}{sign}
+
+% Saturation function
+\DeclareMathOperator{\sat}{sat}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

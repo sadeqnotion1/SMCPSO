@@ -1,0 +1,193 @@
+name: Documentation Build
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/**'
+      - 'src/**/*.py'
+      - '.github/workflows/docs-build.yml'
+      - 'docs/conf.py'
+      - 'docs/requirements.txt'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'docs/**'
+      - 'src/**/*.py'
+      - '.github/workflows/docs-build.yml'
+      - 'docs/conf.py'
+      - 'docs/requirements.txt'
+  workflow_dispatch:
+
+jobs:
+  build-docs:
+    name: Build Sphinx Documentation
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for git-based features
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r docs/requirements.txt
+          pip install -e .  # Install project for autodoc
+
+      - name: Build HTML documentation
+        run: |
+          cd docs
+          sphinx-build -b html -W --keep-going . _build/html
+        env:
+          SPHINXOPTS: "-v"
+
+      - name: Check for broken links
+        run: |
+          cd docs
+          sphinx-build -b linkcheck . _build/linkcheck
+        continue-on-error: true  # Don't fail build on broken external links
+
+      - name: Upload documentation artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: documentation-html
+          path: docs/_build/html/
+          retention-days: 30
+
+      - name: Generate build summary
+        if: always()
+        run: |
+          echo "## Documentation Build Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Build Status:** ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Python Version:** 3.12" >> $GITHUB_STEP_SUMMARY
+          echo "**Sphinx Version:** $(sphinx-build --version)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ -f docs/_build/html/index.html ]; then
+            echo "✅ HTML documentation built successfully" >> $GITHUB_STEP_SUMMARY
+
+            # Count pages
+            PAGE_COUNT=$(find docs/_build/html -name "*.html" | wc -l)
+            echo "📄 Pages generated: $PAGE_COUNT" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ HTML documentation build failed" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          # Link check results
+          if [ -f docs/_build/linkcheck/output.txt ]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### Link Check Results" >> $GITHUB_STEP_SUMMARY
+
+            BROKEN_COUNT=$(grep -c "broken" docs/_build/linkcheck/output.txt || echo "0")
+            echo "Broken links: $BROKEN_COUNT" >> $GITHUB_STEP_SUMMARY
+          fi
+
+  validate-code-examples:
+    name: Validate Documentation Code Examples
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest
+
+      - name: Extract code examples
+        run: |
+          python scripts/documentation/extract_doc_examples.py
+
+      - name: Run syntax validation tests
+        run: |
+          pytest tests/test_documentation/test_code_examples.py::test_example_syntax_valid -v --tb=short --maxfail=10
+
+      - name: Run coverage tests
+        run: |
+          pytest tests/test_documentation/test_code_examples.py -k "coverage or distributed" -v
+
+      - name: Generate validation summary
+        if: always()
+        run: |
+          echo "## Code Example Validation" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ -f .test_artifacts/doc_examples/extracted_examples.json ]; then
+            TOTAL=$(python -c "import json; print(len(json.load(open('.test_artifacts/doc_examples/extracted_examples.json'))))")
+            echo "Total examples: $TOTAL" >> $GITHUB_STEP_SUMMARY
+          fi
+
+  validate-cross-references:
+    name: Validate Documentation Cross-References
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest
+
+      - name: Analyze cross-references
+        run: |
+          python scripts/documentation/analyze_cross_references.py
+        continue-on-error: true  # Don't fail on broken links
+
+      - name: Run link validation tests
+        run: |
+          pytest tests/test_documentation/test_cross_references.py -v --tb=short
+        continue-on-error: true  # Warning only
+
+      - name: Generate cross-reference summary
+        if: always()
+        run: |
+          echo "## Cross-Reference Validation" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ -f .test_artifacts/cross_references/statistics.json ]; then
+            python -c "
+import json
+with open('.test_artifacts/cross_references/statistics.json') as f:
+    stats = json.load(f)
+print(f'Total internal links: {stats[\"total_internal_links\"]}')
+print(f'Broken links: {stats[\"broken_links\"]} ({stats[\"broken_link_rate\"]*100:.1f}%)')
+print(f'Link density: {stats[\"link_density"]:.2f} links/doc')
+" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Upload cross-reference report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cross-reference-report
+          path: .test_artifacts/cross_references/
+          retention-days: 30

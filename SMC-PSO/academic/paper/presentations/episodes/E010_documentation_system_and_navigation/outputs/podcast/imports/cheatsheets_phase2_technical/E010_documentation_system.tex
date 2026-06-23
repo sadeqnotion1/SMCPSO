@@ -1,0 +1,639 @@
+% ==============================================================================
+% EPISODE 010: DOCUMENTATION SYSTEM AND NAVIGATION
+% ==============================================================================
+\input{../templates/master_template.tex}
+\input{../templates/tikz_components.tex}
+
+% Episode-specific title
+\renewcommand{\episodetitle}{E010: Documentation System}
+
+\begin{document}
+
+% ==============================================================================
+% TITLE PAGE
+% ==============================================================================
+\makeepisodetitle{E010: Documentation System \& Navigation}{706 Files, 5 Learning Paths, Automated API Reference}{2}{15-20 minutes}
+
+% ==============================================================================
+% PAGE 1: THE DOCUMENTATION PROBLEM
+% ==============================================================================
+\learningobjective{Understand the Sphinx documentation system (706 files), automated API reference generation, 5 learning paths, cross-reference validation, and freshness mechanisms}
+
+\section*{The Documentation Challenge}
+
+\begin{keypoint}
+\textbf{Question:} How do you document 105,000 lines of code across 358 files?
+
+\textbf{Answer:} 706 documentation files in Sphinx + automated API generation + 5 learning paths
+
+\textbf{Key Insight:} Assume future you will forget everything current you knows!
+\end{keypoint}
+
+\subsection*{Three Core Principles}
+
+\begin{tcolorbox}[colback=primary!5, colframe=primary, title=\faBook\ Documentation Philosophy]
+\textbf{Principle 1: Colocate Documentation with Code}
+
+Every controller in \texttt{src/controllers/} has corresponding page in \texttt{sphinx\_docs/controllers/}
+
+\textbf{Principle 2: Automate What You Can}
+
+API reference generated from docstrings - NEVER write manually
+
+Code changes → Docs update automatically (no synchronization problems!)
+
+\textbf{Principle 3: Multiple Navigation Strategies}
+
+5 learning paths for 5 audience types with different mental models
+\end{tcolorbox}
+
+\section*{Sphinx: The Librarian for Scattered Notes}
+
+\begin{keypoint}
+\textbf{What is Sphinx?}
+
+Gathers code comments, theory explanations, tutorial examples → Organizes into chapters → Creates TOC → Builds index → Adds cross-references → Outputs searchable website
+
+\textbf{Why Sphinx?} Standard in Python ecosystem (NumPy, SciPy, Django, Flask all use it)
+
+\textbf{Alternative:} Chaos - dozens of disconnected markdown files nobody can navigate
+\end{keypoint}
+
+\begin{multicols}{2}
+
+\textbf{Location:}
+\begin{itemize}
+    \item \texttt{academic/paper/sphinx\_docs/}
+    \item \texttt{conf.py} - 19 KB of configuration
+\end{itemize}
+
+\textbf{Source Subdirectories:}
+\begin{itemize}
+    \item \texttt{api/} - Auto-generated reference
+    \item \texttt{controllers/} - Theory \& implementation
+    \item \texttt{benchmarks/} - Performance results
+    \item \texttt{architecture/} - Design decisions
+    \item \texttt{development/} - Contributor guides
+    \item \texttt{deployment/} - Installation \& production
+    \item \texttt{examples/} - Runnable tutorials
+    \item \texttt{for\_reviewers/} - Academic paper materials
+\end{itemize}
+
+\columnbreak
+
+\textbf{Build Process:}
+\begin{lstlisting}[style=yaml, numbers=none]
+sphinx-build -M html docs docs/_build
+\end{lstlisting}
+
+\textbf{What It Does:}
+\begin{itemize}
+    \item \textbf{1.} Reads \texttt{conf.py}
+    \item \textbf{2.} Parses markdown \& reST files
+    \item \textbf{3.} Generates API from docstrings (autodoc)
+    \item \textbf{4.} Builds cross-reference links
+    \item \textbf{5.} Outputs searchable HTML
+\end{itemize}
+
+\textbf{Strict Mode:}
+
+\texttt{-W} flag: Warnings become errors
+
+Catches broken links, missing docstrings, invalid markup EARLY
+
+\end{multicols}
+
+% ==============================================================================
+% PAGE 2: DIRECTORY STRUCTURE & API REFERENCE
+% ==============================================================================
+\newpage
+
+\section*{Directory Structure: 706 Files Organized}
+
+\begin{tcolorbox}[colback=secondary!10, colframe=secondary, title=\faFolderOpen\ Eight Main Categories]
+\textbf{1. api/} - Auto-generated API reference for 358 source files
+
+Every public class, function, module documented from docstrings
+
+\textbf{2. controllers/} - Theory \& implementation (7 subdirectories, one per controller)
+
+Classical SMC, STA, Adaptive, Hybrid Adaptive STA, Swing-up, Terminal, Integral
+
+\textbf{3. benchmarks/} - Performance results from 11 research tasks (MT-5, MT-6, MT-7, MT-8, LT-4, LT-6, LT-7, etc.)
+
+\textbf{4. architecture/} - Design decisions and patterns
+
+Module design, controller factory, simulation engine, testing strategy
+
+\textbf{5. development/} - Contributor guides and coding standards
+
+\textbf{6. deployment/} - Installation, production setup, HIL integration
+
+\textbf{7. examples/} - Runnable tutorials (5 numbered scripts + markdown explanations)
+
+\textbf{8. for\_reviewers/} - Materials for academic paper reviewers
+\end{tcolorbox}
+
+\section*{API Reference: Automated Documentation}
+
+\begin{keypoint}
+\textbf{Key Insight:} Documentation should live NEXT TO the code it documents!
+
+Write docstring inside Python function → Sphinx auto-generates formatted reference pages
+
+Change function signature → Docs update automatically → NO manual copy-pasting!
+\end{keypoint}
+
+\subsection*{Why Docstrings Prevent Staleness}
+
+\begin{warning}
+\textbf{Separate Files Problem:}
+
+Change code → Forget to update docs → Docs lie → Confusion 6 months later
+
+\textbf{Docstring Solution:}
+
+Documentation IS the code → Sphinx just formats it nicely
+\end{warning}
+
+\subsection*{NumPy Style Docstrings}
+
+\begin{example}
+\textbf{Standard Format Forces You to Answer 4 Questions:}
+\begin{itemize}
+    \item \textbf{1.} What does this function do?
+    \item \textbf{2.} What inputs does it need? (Parameters section)
+    \item \textbf{3.} What does it return? (Returns section)
+    \item \textbf{4.} What errors can it raise? (Raises section)
+\end{itemize}
+
+\textbf{Magic:} Write documentation ONCE in code → Appears in 3 places:
+\begin{itemize}
+    \item IDE autocomplete
+    \item Python \texttt{help(function)} output
+    \item Published HTML docs
+\end{itemize}
+
+\textbf{Zero duplication!}
+\end{example}
+
+\subsection*{Enforcement: Missing Docstrings Fail Build}
+
+\begin{tcolorbox}[colback=warning!10, colframe=warning, title=\faExclamationTriangle\ Strict Checking]
+\textbf{What Triggers Warnings/Errors:}
+\begin{itemize}
+    \item Missing docstring for public function
+    \item Missing parameter descriptions
+    \item Return type not documented
+    \item Example code doesn't run
+\end{itemize}
+
+\textbf{Policy:} Function without proper docstring CANNOT be merged
+
+\textbf{Why?} Prevents 6 months of confusion when someone asks "What is this parameter?" and original author is gone
+\end{tcolorbox}
+
+% ==============================================================================
+% PAGE 3: LEARNING PATHS & CROSS-REFERENCES
+% ==============================================================================
+\newpage
+
+\section*{Learning Paths: Five Audience Types}
+
+\begin{tcolorbox}[colback=accent!10, colframe=accent, title=\faRoad\ Five Paths for Five Audiences]
+\textbf{Path 0: Complete Beginners}
+\begin{itemize}
+    \item \textbf{Background:} Zero programming/control theory
+    \item \textbf{Duration:} ~125 hours over 4-6 months (about a semester)
+    \item \textbf{Content:} Python, physics, calculus, linear algebra, control theory, SMC fundamentals
+    \item \textbf{Location:} \texttt{.ai\_workspace/edu/beginner-roadmap.md}
+    \item \textbf{Phases:} 5 phases (Computing basics → Math foundations → Physics → Control theory → SMC)
+\end{itemize}
+
+\textbf{Path 1: Quick Start}
+\begin{itemize}
+    \item \textbf{Background:} Knows Python, wants immediate results
+    \item \textbf{Duration:} 1-2 hours
+    \item \textbf{Content:} Install → Run \texttt{python simulate.py} → See pendulum stabilize
+    \item \textbf{Location:} \texttt{docs/guides/getting-started.md} + Tutorial 01
+\end{itemize}
+
+\textbf{Path 2: Advanced Usage}
+\begin{itemize}
+    \item \textbf{Content:} Custom controllers, PSO tuning, batch simulations
+\end{itemize}
+
+\textbf{Path 3: Research Workflows}
+\begin{itemize}
+    \item \textbf{Content:} Running benchmarks, analyzing results, writing papers
+\end{itemize}
+
+\textbf{Path 4: Production Deployment}
+\begin{itemize}
+    \item \textbf{Content:} Thread safety, memory management, HIL integration
+\end{itemize}
+\end{tcolorbox}
+
+\subsection*{Decision Tree in README.md}
+
+\begin{example}
+\textbf{User Self-Navigation:}
+\begin{itemize}
+    \item "Have you programmed in Python before?" No → Path 0
+    \item Yes → "Do you know control theory?" No → Path 0 theory section
+    \item Yes → "Do you want to run a quick demo?" Yes → Path 1
+    \item "Do you want to write custom controllers?" Yes → Path 2
+\end{itemize}
+
+\textbf{Each user finds their appropriate entry point}
+\end{example}
+
+\section*{Cross-References and Linkage}
+
+\begin{keypoint}
+\textbf{Challenge:} With 706 files, how do you prevent broken links?
+
+\textbf{Solution:} Sphinx cross-reference syntax + automated validation
+\end{keypoint}
+
+\subsection*{Sphinx Reference Syntax}
+
+\begin{multicols}{2}
+
+\textbf{Internal Links:}
+\begin{lstlisting}[style=yaml, numbers=none]
+:ref:`section-label`
+:doc:`path/to/file`
+:class:`ClassName`
+:func:`function_name`
+\end{lstlisting}
+
+Sphinx validates ALL references during build
+
+Emits warnings for broken links
+
+\columnbreak
+
+\textbf{External Links:}
+\begin{lstlisting}[style=yaml, numbers=none]
+[NumPy Docs](https://numpy.org/doc/)
+\end{lstlisting}
+
+Plain markdown syntax
+
+Weekly link checker script validates external URLs
+
+Files issue if dead links found
+
+\end{multicols}
+
+\begin{tip}
+\textbf{Reorganize Docs?} Update references → Sphinx catches broken links → Fix → Rebuild passes
+
+Cannot manually verify 706 files - automated validation is CRITICAL!
+\end{tip}
+
+% ==============================================================================
+% PAGE 4: RUNNABLE TUTORIALS & SEARCH
+% ==============================================================================
+\newpage
+
+\section*{Code Examples: Runnable Tutorials}
+
+\begin{tcolorbox}[colback=primary!5, colframe=primary, title=\faCode\ Five Numbered Tutorials]
+\textbf{Location:} \texttt{examples/} subdirectory
+
+\textbf{Format:} Runnable Python scripts with extensive comments
+
+\begin{tabular}{ll}
+\toprule
+\textbf{Tutorial} & \textbf{What It Teaches} \\
+\midrule
+01: \texttt{tutorial\_01\_quick\_start.py} & Run simulation with default settings \\
+02: \texttt{tutorial\_02\_custom\_gains.py} & Modify controller gains and compare \\
+03: \texttt{tutorial\_03\_pso\_tuning.py} & Optimize gains with PSO \\
+04: \texttt{tutorial\_04\_batch\_simulation.py} & Run Monte Carlo validation \\
+05: \texttt{tutorial\_05\_hil\_setup.py} & Configure hardware-in-the-loop \\
+\bottomrule
+\end{tabular}
+
+\textbf{Each Tutorial Has:}
+\begin{itemize}
+    \item Runnable Python script (copy-paste and run)
+    \item Corresponding markdown in \texttt{sphinx\_docs/examples/} (concepts + expected output)
+\end{itemize}
+\end{tcolorbox}
+
+\subsection*{Keeping Examples Up-to-Date}
+
+\begin{keypoint}
+\textbf{Problem:} Code changes → Examples break → Users confused
+
+\textbf{Solution:} CI runs all tutorial scripts as integration tests
+
+If tutorial fails → Build fails → Prevents merging broken examples
+\end{keypoint}
+
+\begin{example}
+\textbf{Additional Validation:}
+
+Script checks if code blocks in markdown MATCH actual tutorial script files
+
+Prevents copy-paste errors and drift between docs and code
+\end{example}
+
+\section*{Search and Indexing}
+
+\begin{keypoint}
+\textbf{Challenge:} 706 files - how do users find what they need?
+
+\textbf{Solution:} Sphinx JavaScript search index
+\end{keypoint}
+
+\subsection*{Search Granularity: Section-Level}
+
+\begin{multicols}{2}
+
+\textbf{What Gets Indexed:}
+\begin{itemize}
+    \item Every heading
+    \item Every function name
+    \item Every class name
+    \item Significant terms
+\end{itemize}
+
+\textbf{Example Search:} "sliding surface"
+
+\textbf{Results:}
+\begin{itemize}
+    \item Theory pages
+    \item API reference for sliding surface module
+    \item Tutorial examples
+\end{itemize}
+
+\columnbreak
+
+\textbf{What Does NOT Get Indexed:}
+\begin{itemize}
+    \item Code snippets (unless manually marked)
+\end{itemize}
+
+\textbf{Manual Index Entry:}
+\begin{lstlisting}[style=yaml, numbers=none]
+.. index:: PSO; cost function
+\end{lstlisting}
+
+Makes "PSO cost function" appear in search
+
+\end{multicols}
+
+\begin{example}
+\textbf{Search: "boundary layer chattering"}
+
+\textbf{Direct Links To:}
+\begin{itemize}
+    \item Section in Classical SMC theory page (boundary layer explanation)
+    \item API reference for boundary layer parameter
+    \item Benchmark results showing chattering reduction (MT-6)
+\end{itemize}
+\end{example}
+
+% ==============================================================================
+% PAGE 5: MAINTENANCE & FRESHNESS
+% ==============================================================================
+\newpage
+
+\section*{Maintenance: Keeping 706 Files Fresh}
+
+\begin{keypoint}
+\textbf{Challenge:} How do you prevent 706 files from going stale?
+
+\textbf{Answer:} Three freshness mechanisms
+\end{keypoint}
+
+\begin{tcolorbox}[colback=secondary!10, colframe=secondary, title=\faSyncAlt\ Three Freshness Mechanisms]
+\textbf{Mechanism 1: Automated API Reference}
+
+NEVER goes stale - generated from code
+
+Change function signature → Docs update automatically on next build
+
+Zero manual work, zero synchronization problems
+
+\textbf{Mechanism 2: Link Validation}
+
+Weekly cron job checks all internal and external links
+
+Files GitHub issue if broken links found
+
+\textbf{Mechanism 3: Deprecation Warnings}
+
+Mark function as deprecated in docstring:
+\begin{lstlisting}[style=python, numbers=none]
+"""
+.. deprecated:: 0.8.0
+   Use :func:`new_function` instead.
+   Removed in version 1.0.
+"""
+\end{lstlisting}
+
+Sphinx generates prominent warning box in HTML
+\end{tcolorbox}
+
+\subsection*{Architecture Docs: Manual Review Required}
+
+\begin{warning}
+\textbf{Policy:} Any PR that changes architecture MUST update corresponding \texttt{architecture/} docs
+
+\textbf{PR Template Checklist:} "Updated architecture docs? Yes/No"
+
+Reviewer verifies before approving
+
+\textbf{Why?} Conceptual docs explaining design decisions require human review (can't be automated)
+\end{warning}
+
+\subsection*{Documentation Debt: Quarterly Audits}
+
+\begin{example}
+\textbf{Audit Process:}
+\begin{itemize}
+    \item \textbf{1.} Script lists files in \texttt{src/} without corresponding docs in \texttt{sphinx\_docs/}
+    \item \textbf{2.} List goes on backlog
+    \item \textbf{3.} Prioritize based on usage:
+    \begin{itemize}
+        \item Undocumented + Unused → Document or deprecate
+        \item Undocumented + Used → HIGH PRIORITY, document immediately
+    \end{itemize}
+\end{itemize}
+
+\textbf{Prevents slow decay into undocumented codebase}
+\end{example}
+
+\section*{Documentation Build Workflow}
+
+\begin{center}
+\begin{tikzpicture}[node distance=2.5cm]
+    \node[cloud] (source) {.md/.rst\\Source\\706 files};
+    \node[block, fill=primary!30, right=of source] (sphinx) {\textbf{Sphinx}\\Builder\\30s};
+    \node[process, above right=1cm and 1.5cm of sphinx] (html) {\textbf{HTML}\\Docs\\GitHub Pages};
+    \node[process, below right=1cm and 1.5cm of sphinx] (pdf) {\textbf{PDF}\\Manual\\LaTeX};
+
+    \draw[arrow] (source) -- (sphinx);
+    \draw[arrow] (sphinx) -- (html);
+    \draw[arrow] (sphinx) -- (pdf);
+\end{tikzpicture}
+\end{center}
+
+\begin{tcolorbox}[colback=accent!10, colframe=accent, title=\faCogs\ Three Build Scenarios]
+\textbf{Scenario 1: During Development}
+
+Write code → Write docstring → Run \texttt{sphinx-build} → Verify API reference looks correct
+
+\textbf{Scenario 2: Before Committing}
+
+Pre-commit hook runs \texttt{sphinx-build -W}
+
+Fails commit if documentation errors
+
+\textbf{Scenario 3: In CI/CD}
+
+GitHub Actions builds docs on every merge to main
+
+Deploys to GitHub Pages: \texttt{https://thesadeq.github.io/dip-smc-pso/}
+
+Users always see latest docs matching main branch
+\end{tcolorbox}
+
+\subsection*{Incremental Builds: Speed Optimization}
+
+\begin{multicols}{2}
+
+\textbf{First Build:}
+\begin{itemize}
+    \item All 706 files parsed
+    \item Time: ~30 seconds
+\end{itemize}
+
+\columnbreak
+
+\textbf{Subsequent Builds:}
+\begin{itemize}
+    \item Sphinx caches parsed content
+    \item Only rebuilds changed files
+    \item Time: 2-3 seconds (1 file changed)
+\end{itemize}
+
+\end{multicols}
+
+% ==============================================================================
+% PAGE 6: KEY TAKEAWAYS & QUICK REFERENCE
+% ==============================================================================
+\newpage
+
+\section*{Key Takeaways}
+
+\begin{summary}
+\textbf{706 Files Organized:} 8 categories (API, controllers, benchmarks, architecture, development, deployment, examples, reviewers)
+
+\textbf{Sphinx System:} Gathers scattered docs → Organizes → Creates TOC → Builds index → Cross-references → Searchable HTML
+
+\textbf{API Reference:} Auto-generated from NumPy-style docstrings (change code → docs update automatically)
+
+\textbf{5 Learning Paths:} Path 0 (beginners, ~125 hrs), Path 1 (quick start, 1-2 hrs), Paths 2-4 (advanced, research, production)
+
+\textbf{Cross-References:} Sphinx validates ALL internal links during build (broken links → warnings → build fails)
+
+\textbf{Runnable Tutorials:} 5 numbered Python scripts in \texttt{examples/}, CI runs as integration tests
+
+\textbf{Freshness:} (1) Automated API, (2) Weekly link validation, (3) Deprecation warnings
+
+\textbf{Path 0 Beginner Roadmap:} 5 phases over 4-6 months (Computing → Math → Physics → Control theory → SMC)
+
+\textbf{Quarterly Audits:} List undocumented modules → Prioritize by usage → Document or deprecate
+
+\textbf{Build Workflow:} Development (verify) → Pre-commit (enforce) → CI/CD (deploy to GitHub Pages)
+
+\textbf{Search:} Section-level indexing (headings, function names, class names, manual index entries)
+
+\textbf{Documentation as Design Tool:} Write docstring → Often realize function too complex → Simplifies design
+\end{summary}
+
+\subsection*{Quick Reference: Documentation Commands}
+
+\quickref{Build Sphinx Documentation}{
+\begin{lstlisting}[style=yaml, numbers=none]
+# Standard build
+sphinx-build -M html docs docs/_build
+
+# Strict mode (warnings are errors)
+sphinx-build -W docs docs/_build
+
+# Incremental build (only changed files)
+sphinx-build -M html docs docs/_build
+# (automatic caching)
+
+# Serve locally
+python -m http.server 9000 \
+  --directory docs/_build/html
+# Navigate to http://localhost:9000
+\end{lstlisting}
+}
+
+\quickref{Docstring Template (NumPy Style)}{
+\begin{lstlisting}[style=python, numbers=none]
+def function_name(param1, param2):
+    """Brief one-line summary.
+
+    Extended description explaining what
+    the function does and why.
+
+    Parameters
+    ----------
+    param1 : type
+        Description of param1
+    param2 : type
+        Description of param2
+
+    Returns
+    -------
+    return_type
+        Description of return value
+
+    Raises
+    ------
+    ErrorType
+        When this error occurs
+    """
+    # Implementation
+\end{lstlisting}
+}
+
+\quickref{Cross-Reference Syntax}{
+\begin{lstlisting}[style=yaml, numbers=none]
+# Link to section
+:ref:`section-label`
+
+# Link to document
+:doc:`path/to/file`
+
+# Link to API
+:class:`ClassName`
+:func:`module.function_name`
+:meth:`ClassName.method_name`
+
+# External link (markdown)
+[NumPy Documentation](https://numpy.org/doc/)
+\end{lstlisting}
+}
+
+\subsection*{What's Next?}
+
+\begin{keypoint}
+\textbf{E011: Configuration \& Deployment}
+
+How \texttt{config.yaml} validates parameters, Pydantic ensures type safety, deploying in different environments
+
+\textbf{Remember:} Documentation is not a chore - it's a design tool! If you can't explain it clearly, you shouldn't build it.
+\end{keypoint}
+
+\end{document}

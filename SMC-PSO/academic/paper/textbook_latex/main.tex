@@ -1,0 +1,162 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SLIDING MODE CONTROL OF UNDERACTUATED SYSTEMS
+% A Comprehensive Textbook with Python Implementation
+%
+% Author: [Author Name]
+% Date: January 2026
+% Version: 1.0
+%
+% Build Instructions:
+%   pdflatex main.tex
+%   bibtex main
+%   pdflatex main.tex
+%   pdflatex main.tex
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% DOCUMENT CLASS %%%
+\documentclass[12pt, a4paper, twoside, openright]{book}
+
+%%% LOAD PREAMBLE (packages, custom commands) %%%
+\input{preamble}
+
+%%% METADATA (title, author, date) %%%
+\input{metadata}
+
+%%% BEGIN DOCUMENT %%%
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% FRONT MATTER
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\frontmatter  % Roman page numbering (i, ii, iii, ...)
+
+%%% TITLE PAGE %%%
+\maketitle
+\thispagestyle{empty}
+\clearpage
+
+%%% COPYRIGHT PAGE (optional) %%%
+\thispagestyle{empty}
+\vspace*{\fill}
+\begin{center}
+\copyright\ 2026 [Author Name]\\[0.5cm]
+All rights reserved.\\[1cm]
+
+\textbf{License Information}\\
+[License details - e.g., CC BY-NC-SA 4.0]\\[1cm]
+
+\textbf{Source Code Repository}\\
+\url{https://github.com/theSadeQ/dip-smc-pso}\\[1cm]
+
+\textbf{Suggested Citation}\\
+[Author Name] (2026). \textit{Sliding Mode Control of Underactuated Systems:
+Theory, Implementation, and Optimization}. [Publisher/University].
+\end{center}
+\vspace*{\fill}
+\clearpage
+
+%%% DEDICATION (optional) %%%
+\input{source/front/dedication}
+
+%%% PREFACE %%%
+\input{source/front/preface}
+\clearpage
+
+%%% ACKNOWLEDGMENTS %%%
+\input{source/front/acknowledgments}
+\clearpage
+
+%%% ABSTRACT %%%
+\input{source/front/abstract}
+\clearpage
+
+%%% TABLE OF CONTENTS %%%
+\tableofcontents
+\clearpage
+
+%%% LIST OF FIGURES %%%
+\listoffigures
+\clearpage
+
+%%% LIST OF TABLES %%%
+\listoftables
+\clearpage
+
+%%% LIST OF ALGORITHMS (optional) %%%
+\listofalgorithms
+\clearpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% MAIN MATTER (Chapters)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\mainmatter  % Arabic page numbering (1, 2, 3, ...)
+
+%%% CHAPTER 1: INTRODUCTION %%%
+\input{source/chapters/ch01_introduction}
+
+%%% CHAPTER 2: MATHEMATICAL FOUNDATIONS %%%
+\input{source/chapters/ch02_mathematical_foundations}
+
+%%% CHAPTER 3: CLASSICAL SLIDING MODE CONTROL %%%
+\input{source/chapters/ch03_classical_smc}
+
+%%% CHAPTER 4: SUPER-TWISTING ALGORITHM %%%
+\input{source/chapters/ch04_super_twisting}
+
+%%% CHAPTER 5: ADAPTIVE SMC %%%
+\input{source/chapters/ch05_adaptive_smc}
+
+%%% CHAPTER 6: HYBRID ADAPTIVE-STA SMC %%%
+\input{source/chapters/ch06_hybrid_smc}
+
+%%% CHAPTER 7: PSO THEORY %%%
+\input{source/chapters/ch07_pso_theory}
+
+%%% CHAPTER 8: PERFORMANCE BENCHMARKING %%%
+\input{source/chapters/ch08_benchmarking}
+
+%%% CHAPTER 9: PSO RESULTS %%%
+\input{source/chapters/ch09_pso_results}
+
+%%% CHAPTER 10: ADVANCED TOPICS %%%
+\input{source/chapters/ch10_advanced_topics}
+
+%%% CHAPTER 11: SOFTWARE IMPLEMENTATION %%%
+\input{source/chapters/ch11_software}
+
+%%% CHAPTER 12: CASE STUDIES %%%
+\input{source/chapters/ch12_case_studies}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% BACK MATTER (Appendices, Bibliography, Index)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\backmatter
+
+%%% APPENDICES %%%
+\appendix
+
+\input{source/appendices/appendix_a_math}
+\input{source/appendices/appendix_b_lyapunov_proofs}
+\input{source/appendices/appendix_c_api}
+\input{source/appendices/appendix_d_solutions}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% BIBLIOGRAPHY
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\bibliographystyle{IEEEtran}
+\bibliography{bibliography/main}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% INDEX
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\printindex
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

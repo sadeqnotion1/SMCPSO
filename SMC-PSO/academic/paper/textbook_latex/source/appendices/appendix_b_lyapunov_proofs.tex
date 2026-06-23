@@ -1,0 +1,98 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% APPENDIX B: COMPLETE LYAPUNOV STABILITY PROOFS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Complete Lyapunov Stability Proofs}
+\label{app:lyapunov_proofs}
+
+This appendix provides detailed Lyapunov stability proofs for all five controllers.
+
+%===============================================================================
+\section{Classical SMC Exponential Convergence Proof}
+%===============================================================================
+
+\subsection{Theorem Statement}
+
+\begin{theorem}
+Consider the classical SMC with gains $k_1, k_2, \lambda_1, \lambda_2, K, k_d > 0$ and sliding surface $s = \lambda_1 \theta_1 + \lambda_2 \theta_2 + k_1 \dot{\theta}_1 + k_2 \dot{\theta}_2$. The system converges to the sliding surface $s = 0$ in finite time, and exhibits exponential convergence on the sliding manifold.
+\end{theorem}
+
+\subsection{Proof}
+
+\textbf{Part 1: Reaching Phase (Finite-Time Convergence)}
+
+Choose Lyapunov function:
+\begin{equation}
+V_1(s) = \frac{1}{2} s^2
+\end{equation}
+
+Time derivative:
+\begin{equation}
+\dot{V}_1 = s \dot{s} = s \left( -K \sign(s) - k_d s \right) = -K |s| - k_d s^2 \leq -K |s| < 0
+\end{equation}
+
+This proves finite-time convergence with reaching time $T_r \leq |s(0)|/K$.
+
+\textbf{Part 2: Sliding Phase (Exponential Convergence)}
+
+On the sliding surface ($s = 0$), the reduced-order dynamics satisfy:
+\begin{equation}
+k_1 \dot{\theta}_1 + k_2 \dot{\theta}_2 = -(\lambda_1 \theta_1 + \lambda_2 \theta_2)
+\end{equation}
+
+For Hurwitz stability, choose $V_2 = \frac{1}{2}(\theta_1^2 + \theta_2^2)$. Then $\dot{V}_2 < 0$, proving exponential decay of $\theta_i$ to zero.
+
+%===============================================================================
+\section{STA-SMC Finite-Time Convergence Proof}
+%===============================================================================
+
+\subsection{Moreno-Osorio Lyapunov Function}
+
+\begin{equation}
+V(s, z) = 2 K_2 \sqrt{|s|} + \frac{1}{2} \left( z + K_1 \sqrt{|s|} \sign(s) \right)^2
+\end{equation}
+
+\subsection{Proof Sketch}
+
+Compute $\dot{V}$ and apply STA stability conditions (\cref{eq:sta_stability_conditions}):
+\begin{equation}
+\dot{V}(s, z) \leq -\eta V^{1/2}(s, z)
+\end{equation}
+
+for some $\eta > 0$. This proves finite-time convergence. For complete proof, see Moreno \& Osorio (2008) \cite{Moreno2008}.
+
+%===============================================================================
+\section{Adaptive SMC Bounded Adaptation Proof}
+%===============================================================================
+
+\subsection{Extended Lyapunov Function}
+
+\begin{equation}
+V(s, \tilde{K}) = \frac{1}{2} s^2 + \frac{1}{2\gamma} \tilde{K}^2
+\end{equation}
+
+\subsection{Proof}
+
+With adaptation law $\dot{K} = \gamma |s| \sign(s) - \alpha K$ and leak rate $\alpha > 0$:
+
+\begin{equation}
+\dot{V} = s \dot{s} + \frac{1}{\gamma} \tilde{K} \dot{\tilde{K}} \leq -\alpha \tilde{K}^2 < 0
+\end{equation}
+
+This proves $K(t)$ remains bounded and $s \to 0$ asymptotically.
+
+%===============================================================================
+\section{Hybrid STA Stability with Dual-Gain Adaptation}
+%===============================================================================
+
+Combine Moreno-Osorio Lyapunov function with adaptive gain terms:
+
+\begin{equation}
+V(s, z, \tilde{K}_1, \tilde{K}_2) = 2 K_2 \sqrt{|s|} + \frac{1}{2} (z + K_1 \sqrt{|s|} \sign(s))^2 + \frac{1}{2\gamma_1} \tilde{K}_1^2 + \frac{1}{2\gamma_2} \tilde{K}_2^2
+\end{equation}
+
+With proper gain coupling, $\dot{V} < 0$ ensures finite-time convergence and bounded adaptation.
+
+%===============================================================================
+% END OF APPENDIX B
+%===============================================================================

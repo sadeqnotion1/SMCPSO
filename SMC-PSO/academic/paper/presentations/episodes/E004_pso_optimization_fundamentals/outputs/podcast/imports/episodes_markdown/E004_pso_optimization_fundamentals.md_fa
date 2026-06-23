@@ -1,0 +1,269 @@
+# E004: بهینه‌سازی PSO برای تنظیم بهره‌های کنترل‌گر
+
+**مجریان**: دکتر سارا چن (کنترل) و الکس ریورا (نرم‌افزار)
+
+**[یادداشت صوتی: ریاضی به‌صورت روایی و شهودی توضیح داده می‌شود. فرمول‌ها با تشبیه «کارنامه وزنی» و «نبرد نیروها» بیان می‌شوند.]**
+
+---
+
+## شروع
+
+**سارا**: در E003 بهره‌های کنترل‌گر را داریم، اما این اعداد را چطور انتخاب کنیم؟
+
+**الکس**: با 6 تا 12 پارامتر، فضای جست‌وجو نجومی است. اینجا PSO وارد می‌شود.
+
+**سارا**: امروز:
+- سازوکار PSO
+- طراحی تابع هزینه چندهدفه
+- نتایج واقعی MT-8
+- بهینه‌سازی مقاوم
+
+---
+
+## معرفی PSO
+
+PSO (1995) با الهام از رفتار دسته‌جمعی پرندگان ایجاد شد. هر ذره:
+1. بهترین کشف شخصی خود را به خاطر می‌سپارد
+2. بهترین کشف جمعی را می‌بیند
+3. جهت حرکت فعلی را حفظ می‌کند
+
+**چرا مناسب کنترل؟**
+- بدون گرادیان (تابع هزینه نامُنعّم)
+- جست‌وجوی سراسری
+- قابل موازی‌سازی
+- مقاوم در حضور نویز
+
+---
+
+## مبانی الگوریتم
+
+### تشبیه زیستی
+
+| پرندگان | PSO |
+|---|---|
+| پرنده | ذره |
+| موقعیت | بردار بهره‌ها |
+| کیفیت غذا | تابع هزینه |
+| جهت پرواز | سرعت |
+| بهترین شخصی | personal best |
+| بهترین جمعی | global best |
+
+### دو معادله اصلی
+
+**به‌روزرسانی موقعیت**:
+```
+x_i(t+1) = x_i(t) + v_i(t+1)
+```
+
+**به‌روزرسانی سرعت**:
+```
+v_i(t+1) = w·v_i(t) + c1·r1·(p_i - x_i(t)) + c2·r2·(g - x_i(t))
+```
+
+**معنا**:
+- اینرسی: ادامه مسیر فعلی
+- شناختی: بازگشت به بهترین شخصی
+- اجتماعی: حرکت به بهترین جمعی
+
+---
+
+## پیاده‌سازی کد (نمونه)
+
+```python
+class PSOTuner:
+    def __init__(self, bounds, n_particles=30, iters=50, w=0.7, c1=2.0, c2=2.0):
+        self.bounds = bounds
+        self.n_particles = n_particles
+        self.iters = iters
+        self.w = w
+        self.c1 = c1
+        self.c2 = c2
+
+    def optimize(self, objective_function):
+        positions = self._initialize_particles()
+        velocities = np.zeros_like(positions)
+
+        personal_best_positions = positions.copy()
+        personal_best_costs = np.array([objective_function(p) for p in positions])
+        global_best_idx = np.argmin(personal_best_costs)
+        global_best_position = personal_best_positions[global_best_idx]
+        global_best_cost = personal_best_costs[global_best_idx]
+
+        for iter in range(self.iters):
+            for i in range(self.n_particles):
+                r1 = np.random.random(len(positions[i]))
+                r2 = np.random.random(len(positions[i]))
+                velocities[i] = (
+                    self.w * velocities[i] +
+                    self.c1 * r1 * (personal_best_positions[i] - positions[i]) +
+                    self.c2 * r2 * (global_best_position - positions[i])
+                )
+                positions[i] = positions[i] + velocities[i]
+                positions[i] = np.clip(positions[i], self.bounds['min'],
+                                      self.bounds['max'])
+
+                cost = objective_function(positions[i])
+                if cost < personal_best_costs[i]:
+                    personal_best_costs[i] = cost
+                    personal_best_positions[i] = positions[i].copy()
+                    if cost < global_best_cost:
+                        global_best_cost = cost
+                        global_best_position = positions[i].copy()
+            print(f"Iteration {iter+1}/{self.iters}: Best cost = {global_best_cost:.4f}")
+
+        return global_best_position, global_best_cost
+```
+
+### تنظیم پارامترها
+
+- **w**: بزرگ‌تر → کاوش بیشتر، کوچک‌تر → بهره‌برداری
+- **c1, c2**: معمولاً حدود 2.0
+- **n_particles**: 20 تا 50
+- **iters**: 50 تا 200
+
+از `config.yaml`:
+```yaml
+pso:
+  n_particles: 40
+  iters: 50
+  w: 0.7
+  c1: 2.0
+  c2: 2.0
+```
+
+---
+
+## طراحی تابع هزینه: کارنامه وزنی
+
+ما چهار مؤلفه داریم:
+1. **خطای حالت** (Tracking)
+2. **تلاش کنترلی** (Effort)
+3. **چترینگ** (Smoothness)
+4. **پایداری** (Penalty)
+
+**نمونه وزن‌دهی**:
+```
+J_total = 0.6 * J_state + 0.3 * J_control + 0.1 * J_rate + J_stability
+```
+
+### J_state (خطای حالت)
+```
+J_state = ∑ (θ1[i]^2 + θ2[i]^2 + x[i]^2) * dt
+```
+
+### J_control (تلاش کنترلی)
+```
+J_control = ∑ u[i]^2 * dt
+```
+
+### J_rate (چترینگ)
+```
+J_rate = ∑ ((u[i] - u[i-1]) / dt)^2 * dt
+```
+
+### J_stability (جریمه پایداری)
+```
+J_stability = 0 اگر |θ1| و |θ2| < 45°
+           = 1000 در غیر این صورت
+```
+
+---
+
+## رفتار همگرایی
+
+PSO معمولاً سه فاز دارد:
+1. **کاوش**: کاهش سریع هزینه
+2. **بهره‌برداری**: بهبود آهسته
+3. **ریزتنظیم**: رسیدن به کف و توقف
+
+---
+
+## مقایسه با تنظیم دستی
+
+**نتیجه تجربی**: PSO در 5 دقیقه بهتر از سه مهندس (با 30 دقیقه وقت) عمل کرد.  
+بهترین رویکرد: **شهود انسانی + PSO** برای ریزتنظیم.
+
+---
+
+## روند عملی: از خط فرمان تا کنترل‌گر بهینه
+
+### 1) پیکربندی
+```yaml
+pso:
+  n_particles: 30
+  max_iter: 50
+  w: 0.7
+  c1: 2.0
+  c2: 2.0
+  bounds:
+    lambda: [1.0, 50.0]
+    k: [0.1, 100.0]
+  convergence:
+    tolerance: 1e-6
+    patience: 10
+```
+
+### 2) اجرا
+```bash
+python simulate.py --ctrl classical_smc --run-pso --save gains_classical.json
+```
+
+### 3) اعتبارسنجی
+```bash
+python simulate.py --load gains_classical.json --plot
+```
+
+### بهینه‌سازی چندسناریویی
+```bash
+python simulate.py --ctrl classical_smc --run-pso \
+  --scenarios nominal,high_mass,high_friction,disturbance \
+  --save gains_robust.json
+```
+
+---
+
+## عیب‌یابی رایج
+
+**PSO پیشرفتی ندارد** → bounds را بازتر کنید، w را بالاتر ببرید، ذرات را بیشتر کنید.  
+**تعداد زیادی ذره ناپایدار** → bounds را محدودتر کنید.  
+**همگرایی زودهنگام** → patience را افزایش دهید یا c2 را کاهش دهید.
+
+---
+
+## جمع‌بندی
+
+**مزایای PSO**
+- بدون گرادیان
+- جست‌وجوی سراسری
+- چندهدفه
+- مقاوم
+- سریع و قابل تکرار
+
+**نکات کلیدی**
+- کیفیت تابع هزینه از تنظیمات PSO مهم‌تر است
+- bounds درست = 80% موفقیت
+- نتایج را در سناریوهای دیده‌نشده تست کنید
+
+---
+
+## ارتباط با SpaceX
+
+همان‌طور که فرود یک Falcon 9 نیازمند تعادل بین دقت، مصرف سوخت، نرمی و پایداری است، PSO هم همین مصالحه‌ها را در تابع هزینه کد می‌کند. اصول یکی است: دینامیک + قانون کنترل + بهینه‌سازی بهره‌ها.
+
+---
+
+## قسمت بعدی
+
+**E005: معماری موتور شبیه‌سازی**
+- حلقه شبیه‌سازی
+- شبیه‌سازی برداری برای PSO
+- Numba JIT برای سرعت
+- معماری HIL
+
+---
+
+**طول قسمت**: ~1120 خط (نسخه صوتی)  
+**زمان مطالعه**: 50-55 دقیقه  
+**عمق فنی**: متوسط-بالا  
+**پیش‌نیازها**: E001-E003  
+**بعدی**: E005

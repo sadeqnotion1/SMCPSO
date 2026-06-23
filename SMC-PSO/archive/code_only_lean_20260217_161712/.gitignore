@@ -1,0 +1,145 @@
+# Byte-compiled / optimized / DLL files
+**/__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+*.pyo
+
+# Cache directories (consolidated in .cache/)
+.cache/
+.benchmarks/
+.numba_cache/
+.pytest_cache/
+.ruff_cache/
+.hypothesis/
+.mypy_cache/
+.tox/
+*.cover
+*.coverage
+.htmlcov/
+
+# Build and distribution
+build/
+dist/
+*.egg-info/
+
+# Environment and configs
+.env
+.venv
+venv/
+ENV/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS specific
+.DS_Store
+Thumbs.db
+desktop.ini
+*.lnk
+
+# Backup files
+*.bak
+*.backup
+
+# Temporary files
+*.tmp
+*.temp
+tmp/
+*.log.1
+*.log.2
+*.log.*
+report.log
+report.log.*
+nul
+.benchmark_results.json
+coverage.json
+
+# Test artifacts
+.test_artifacts/doc_screenshots/
+.test_artifacts/doc_examples/
+.regression_baselines.json
+coverage_report.txt
+coverage_report.html
+
+# Large project directories (for clean GitHub setup)
+SubAgent/
+envs/
+DIP_SMC_PSO/
+.validation_reports/
+problem-tracking/
+prompt/
+.artifacts/
+
+# Keep only essentials for GitHub issues setup
+!.github/
+!CLAUDE.md
+!README.md
+
+# Allow ultrathink prompts and documentation (strategic project documentation)
+!prompt/README.md
+!prompt/issue_*_subagent_planning_prompt.md.codex/phase3/validation/sphinx/before_after/before/*.png
+
+# Runtime directories (hidden from git)
+node_modules/
+data/
+logs/
+.logs/
+optimization_results/
+docs/_build/
+
+# Claude Code specific (DO NOT COMMIT)
+.project/ai/archive/
+.project/archive/
+.mcp.json
+.clinerules
+settings.local.json
+.ai/
+.claude/
+
+# Backward compatibility directory (canonical version in .project/dev_tools/)
+.dev_tools/
+
+# Test artifacts (relocated to .cache/)
+tests/logs/
+tests/browser_automation/artifacts/
+tests/browser_automation/tests/
+
+# Large binary files excluded
+/__pycache__/
+
+# Hidden logs directory (workspace cleanup Dec 17, 2025)
+.logs/
+*.log
+
+# Academic artifacts (reorganization Dec 29, 2025)
+academic/logs/*.log
+academic/caches/*
+academic/quality/coverage/htmlcov/
+
+# Old patterns (kept for backward compatibility during migration)
+# .cache/
+# .benchmarks/
+# .pytest_cache/
+# .hypothesis/
+# .htmlcov/
+
+# LaTeX Build Artifacts (thesis/ directory - Dec 29, 2025)
+academic/paper/thesis/*.aux
+academic/paper/thesis/*.bbl
+academic/paper/thesis/*.blg
+academic/paper/thesis/*.lof
+academic/paper/thesis/*.lot
+academic/paper/thesis/*.nlo
+academic/paper/thesis/*.out
+academic/paper/thesis/*.toc
+academic/paper/thesis/*.fdb_latexmk
+academic/paper/thesis/*.fls
+academic/paper/thesis/*.synctex.gz
+academic/paper/thesis/**/*.aux
+academic/paper/thesis/pdflatex_output.txt
+*.tar.gz

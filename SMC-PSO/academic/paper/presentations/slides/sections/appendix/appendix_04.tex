@@ -1,0 +1,143 @@
+% ============================================================================
+% SECTION 23: VISUAL DIAGRAMS
+% ============================================================================
+\section{Visual Diagrams}
+
+\begin{frame}{System Architecture Diagram}
+    \textbf{High-Level Component Interaction:}
+
+    \vspace{0.3cm}
+
+    \begin{tikzpicture}[
+        node distance=1.5cm,
+        every node/.style={font=\tiny},
+        box/.style={rectangle, draw, thick, minimum width=2cm, minimum height=0.8cm}
+    ]
+        % Top layer: UI
+        \node[box, fill=dipblue!20] (ui) {Web UI (Streamlit)};
+
+        % Middle layer: Controllers
+        \node[box, fill=dipgreen!20, below left=of ui] (ctrl) {Controllers (7)};
+        \node[box, fill=dipgreen!20, below right=of ui] (pso) {PSO Optimizer};
+
+        % Bottom layer: Core
+        \node[box, fill=diporange!20, below=of ctrl] (dynamics) {Dynamics Models};
+        \node[box, fill=diporange!20, below=of pso] (sim) {Simulation Engine};
+
+        % Data layer
+        \node[box, fill=dipgray!20, below=2cm of dynamics] (data) {Data Storage};
+
+        % Arrows
+        \draw[->, thick] (ui) -- (ctrl);
+        \draw[->, thick] (ui) -- (pso);
+        \draw[->, thick] (ctrl) -- (dynamics);
+        \draw[->, thick] (ctrl) -- (sim);
+        \draw[->, thick] (pso) -- (sim);
+        \draw[->, thick] (dynamics) -- (sim);
+        \draw[->, thick] (sim) -- (data);
+        \draw[->, thick, dashed] (data) -- (ui);
+    \end{tikzpicture}
+\end{frame}
+
+\begin{frame}{Control Loop Flow Diagram}
+    \textbf{Real-Time Control Cycle:}
+
+    \vspace{0.3cm}
+
+    \begin{tikzpicture}[
+        node distance=2cm,
+        every node/.style={font=\small},
+        box/.style={rectangle, draw, thick, minimum width=2.5cm, minimum height=1cm},
+        arrow/.style={->, ultra thick, dipblue}
+    ]
+        \node[box, fill=dipgreen!20] (controller) {Controller};
+        \node[box, fill=diporange!20, right=of controller] (plant) {Plant (DIP)};
+        \node[box, fill=dipgray!20, below=of plant] (sensor) {Sensor (State)};
+
+        \draw[arrow] (controller) -- node[above] {$u$ (force)} (plant);
+        \draw[arrow] (plant) -- node[right] {Motion} (sensor);
+        \draw[arrow] (sensor) -- node[below] {$\mathbf{x}$ (state)} (controller);
+
+        % Time annotations
+        \node[above=0.2cm of controller] {\texttt{t=k}};
+        \node[above=0.2cm of plant] {\texttt{t=k+dt}};
+    \end{tikzpicture}
+
+    \vspace{0.5cm}
+
+    \textbf{Cycle Timing:}
+    \begin{itemize}
+        \item \textbf{Time step (dt):} 0.01 s (100 Hz)
+        \item \textbf{Controller compute:} 0.5-1 ms
+        \item \textbf{Plant update:} 9-9.5 ms (RK45 integration)
+        \item \textbf{Total cycle:} ~10 ms
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Research Paper Figure: Controller Comparison}
+    \textbf{Example: MT-5 Comprehensive Benchmark Results}
+
+    \vspace{0.3cm}
+
+    \begin{tikzpicture}
+        \begin{axis}[
+            width=0.9\textwidth,
+            height=0.5\textheight,
+            ybar,
+            ylabel={Settling Time (s)},
+            symbolic x coords={Classical, STA, Adaptive, Hybrid, Swing-Up, MPC},
+            xtick=data,
+            x tick label style={rotate=45, anchor=east},
+            ymin=0,
+            ymax=4,
+            legend pos=north west,
+            bar width=0.6cm
+        ]
+            \addplot[fill=dipblue] coordinates {
+                (Classical, 2.5) (STA, 2.1) (Adaptive, 2.3) (Hybrid, 1.8) (Swing-Up, 3.2) (MPC, 2.8)
+            };
+
+            \addplot[fill=dipgreen, error bars/.cd, y dir=both, y explicit] coordinates {
+                (Classical, 2.5) +- (0, 0.15)
+                (STA, 2.1) +- (0, 0.12)
+                (Adaptive, 2.3) +- (0, 0.18)
+                (Hybrid, 1.8) +- (0, 0.10)
+                (Swing-Up, 3.2) +- (0, 0.25)
+                (MPC, 2.8) +- (0, 0.20)
+            };
+
+            \legend{Mean, 95\% CI}
+        \end{axis}
+    \end{tikzpicture}
+\end{frame}
+
+\begin{frame}{TikZ Diagram: Sliding Surface Dynamics}
+    \textbf{Phase Portrait: State Trajectory to Sliding Surface}
+
+    \vspace{0.3cm}
+
+    \begin{tikzpicture}[scale=1.2]
+        % Axes
+        \draw[->, thick] (-3,0) -- (3,0) node[right] {$\theta$ (angle)};
+        \draw[->, thick] (0,-2) -- (0,2) node[above] {$\dot{\theta}$ (velocity)};
+
+        % Sliding surface
+        \draw[dipblue, ultra thick] (-3,-1.5) -- (3,1.5) node[right] {$s = 0$};
+
+        % State trajectory
+        \draw[dipred, thick, ->] (-2.5, 1.5) to[out=-30, in=120] (-1, 0.5);
+        \draw[dipred, thick, ->] (-1, 0.5) to[out=-60, in=150] (0.5, -0.2);
+        \draw[dipred, thick, ->] (0.5, -0.2) to[out=-30, in=180] (2, 0) node[right] {$x(t)$};
+
+        % Regions
+        \node at (-1.5, 1) {$s > 0$};
+        \node at (1.5, -1) {$s < 0$};
+
+        % Origin
+        \fill (0,0) circle (0.08) node[below right] {Origin};
+    \end{tikzpicture}
+
+    \vspace{0.3cm}
+
+    \textbf{Key Insight:} Trajectory converges to sliding surface, then slides to origin
+\end{frame}

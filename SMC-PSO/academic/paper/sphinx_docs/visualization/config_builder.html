@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive YAML Config Builder - DIP SMC PSO</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .config-panel, .preview-panel {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .preview-panel {
+            position: sticky;
+            top: 20px;
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
+        }
+
+        h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .form-section h3 {
+            color: #764ba2;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .label-help {
+            font-weight: normal;
+            font-size: 0.9em;
+            color: #888;
+            margin-left: 5px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .gains-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+        }
+
+        .gains-grid input {
+            text-align: center;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        button {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .button-group button {
+            flex: 1;
+        }
+
+        .preview-code {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            white-space: pre-wrap;
+            overflow-x: auto;
+            max-height: 600px;
+            border: 2px solid #ddd;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .alert-info {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            color: #1565c0;
+        }
+
+        .alert-success {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            color: #2e7d32;
+        }
+
+        @media (max-width: 1024px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .preview-panel {
+                position: static;
+                max-height: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔧 Interactive YAML Config Builder</h1>
+            <p class="subtitle">Generate valid configuration files for DIP-SMC-PSO framework with guided form inputs</p>
+        </header>
+
+        <div class="content-grid">
+            <div class="config-panel">
+                <h2>Configuration Form</h2>
+
+                <div class="alert alert-info">
+                    <strong>ℹ️ Instructions:</strong> Fill in the form below to generate a valid config.yaml file.
+                    Default values are provided based on tested configurations.
+                </div>
+
+                <form id="configForm">
+                    <!-- Global Settings -->
+                    <div class="form-section">
+                        <h3>🌐 Global Settings</h3>
+                        <div class="form-group">
+                            <label>Random Seed <span class="label-help">(for reproducibility)</span></label>
+                            <input type="number" id="global_seed" value="42" min="0">
+                        </div>
+                    </div>
+
+                    <!-- Controller Selection -->
+                    <div class="form-section">
+                        <h3>🎮 Controller Configuration</h3>
+                        <div class="form-group">
+                            <label>Controller Type</label>
+                            <select id="controller_type" onchange="updateControllerForm()">
+                                <option value="classical_smc">Classical SMC</option>
+                                <option value="sta_smc">Super-Twisting STA-SMC</option>
+                                <option value="adaptive_smc">Adaptive SMC</option>
+                                <option value="hybrid_adaptive_sta_smc">Hybrid Adaptive-STA SMC</option>
+                            </select>
+                        </div>
+
+                        <div id="controller_params">
+                            <!-- Dynamic content based on controller type -->
+                        </div>
+                    </div>
+
+                    <!-- PSO Settings -->
+                    <div class="form-section">
+                        <h3>🔍 PSO Optimization Settings</h3>
+                        <div class="form-group">
+                            <label>Number of Particles <span class="label-help">(swarm size)</span></label>
+                            <input type="number" id="pso_particles" value="40" min="10" max="100">
+                        </div>
+                        <div class="form-group">
+                            <label>Iterations <span class="label-help">(optimization budget)</span></label>
+                            <input type="number" id="pso_iters" value="200" min="50" max="500">
+                        </div>
+                        <div class="form-group">
+                            <label>Inertia Weight (w) <span class="label-help">(momentum)</span></label>
+                            <input type="number" id="pso_w" value="0.7" min="0.4" max="0.9" step="0.1">
+                        </div>
+                        <div class="form-group">
+                            <label>Cognitive Coefficient (c1)</label>
+                            <input type="number" id="pso_c1" value="2.0" min="0.0" max="4.0" step="0.1">
+                        </div>
+                        <div class="form-group">
+                            <label>Social Coefficient (c2)</label>
+                            <input type="number" id="pso_c2" value="2.0" min="0.0" max="4.0" step="0.1">
+                        </div>
+                    </div>
+
+                    <!-- Simulation Settings -->
+                    <div class="form-section">
+                        <h3>⚙️ Simulation Settings</h3>
+                        <div class="form-group">
+                            <label>Duration (seconds)</label>
+                            <input type="number" id="sim_duration" value="5.0" min="1.0" max="20.0" step="0.5">
+                        </div>
+                        <div class="form-group">
+                            <label>Time Step (dt)</label>
+                            <input type="number" id="sim_dt" value="0.001" min="0.0001" max="0.01" step="0.0001">
+                        </div>
+                        <div class="form-group checkbox-group">
+                            <input type="checkbox" id="use_full_dynamics" checked>
+                            <label for="use_full_dynamics">Use Full Nonlinear Dynamics</label>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="button-group">
+                    <button onclick="generateConfig()">🔄 Update Preview</button>
+                    <button onclick="downloadConfig()">⬇️ Download config.yaml</button>
+                    <button onclick="copyToClipboard()">📋 Copy to Clipboard</button>
+                </div>
+            </div>
+
+            <div class="preview-panel">
+                <h2>📄 Configuration Preview</h2>
+                <div class="alert alert-success" id="successAlert" style="display: none;">
+                    <strong>✓ Success:</strong> Configuration generated successfully!
+                </div>
+                <pre class="preview-code" id="yamlPreview"># Click "Update Preview" to generate configuration</pre>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Controller parameter templates
+        const controllerTemplates = {
+            classical_smc: {
+                gains: [5.0, 5.0, 5.0, 0.5, 0.5, 0.5],
+                gainLabels: ['k1', 'k2', 'k3', 'λ1', 'λ2', 'λ3'],
+                params: {
+                    max_force: 150.0,
+                    boundary_layer: 0.3,
+                    dt: 0.001
+                }
+            },
+            sta_smc: {
+                gains: [8.0, 4.0, 12.0, 6.0, 4.85, 3.43],
+                gainLabels: ['K1', 'K2', 'k1', 'k2', 'λ1', 'λ2'],
+                params: {
+                    max_force: 150.0,
+                    boundary_layer: 0.3,
+                    damping_gain: 0.0,
+                    dt: 0.001
+                }
+            },
+            adaptive_smc: {
+                gains: [10.0, 8.0, 5.0, 4.0, 1.0],
+                gainLabels: ['k1', 'k2', 'k3', 'k4', 'k5'],
+                params: {
+                    max_force: 150.0,
+                    leak_rate: 0.01,
+                    dead_zone: 0.05,
+                    adapt_rate_limit: 10.0,
+                    K_min: 0.1,
+                    K_max: 100.0,
+                    dt: 0.001,
+                    smooth_switch: true,
+                    boundary_layer: 0.4
+                }
+            },
+            hybrid_adaptive_sta_smc: {
+                gains: [5.0, 5.0, 5.0, 0.5],
+                gainLabels: ['c1', 'λ1', 'c2', 'λ2'],
+                params: {
+                    max_force: 150.0,
+                    dt: 0.001,
+                    k1_init: 4.0,
+                    k2_init: 0.4,
+                    gamma1: 2.0,
+                    gamma2: 0.5,
+                    dead_zone: 0.05,
+                    enable_equivalent: false,
+                    damping_gain: 3.0,
+                    adapt_rate_limit: 5.0,
+                    sat_soft_width: 0.35,
+                    cart_gain: 0.5,
+                    cart_lambda: 1.0,
+                    cart_p_gain: 80.0,
+                    cart_p_lambda: 2.0
+                }
+            }
+        };
+
+        // Initialize form
+        document.addEventListener('DOMContentLoaded', function() {
+            updateControllerForm();
+            generateConfig();
+        });
+
+        function updateControllerForm() {
+            const controllerType = document.getElementById('controller_type').value;
+            const template = controllerTemplates[controllerType];
+            const paramsDiv = document.getElementById('controller_params');
+
+            let html = '<div class="form-group"><label>Controller Gains</label><div class="gains-grid">';
+            template.gains.forEach((gain, i) => {
+                html += `<div>
+                    <label style="font-size: 0.8em; margin-bottom: 3px;">${template.gainLabels[i]}</label>
+                    <input type="number" id="gain_${i}" value="${gain}" step="0.1">
+                </div>`;
+            });
+            html += '</div></div>';
+
+            // Add common parameters
+            html += `<div class="form-group">
+                <label>Max Force (N)</label>
+                <input type="number" id="max_force" value="${template.params.max_force}" step="10">
+            </div>`;
+
+            if (template.params.boundary_layer !== undefined) {
+                html += `<div class="form-group">
+                    <label>Boundary Layer</label>
+                    <input type="number" id="boundary_layer" value="${template.params.boundary_layer}" step="0.01">
+                </div>`;
+            }
+
+            paramsDiv.innerHTML = html;
+        }
+
+        function generateConfig() {
+            const controllerType = document.getElementById('controller_type').value;
+            const template = controllerTemplates[controllerType];
+
+            // Collect gains
+            const gains = [];
+            for (let i = 0; i < template.gains.length; i++) {
+                const input = document.getElementById(`gain_${i}`);
+                gains.push(parseFloat(input?.value || template.gains[i]));
+            }
+
+            // Build YAML configuration
+            const yaml = `# DIP-SMC-PSO Configuration
+# Generated by Interactive Config Builder
+
+global_seed: ${document.getElementById('global_seed').value}
+
+controllers:
+  ${controllerType}:
+    gains: [${gains.join(', ')}]
+    max_force: ${document.getElementById('max_force')?.value || template.params.max_force}
+${template.params.boundary_layer !== undefined ? `    boundary_layer: ${document.getElementById('boundary_layer')?.value || template.params.boundary_layer}` : ''}
+    dt: ${template.params.dt}
+${controllerType === 'adaptive_smc' ? `    leak_rate: ${template.params.leak_rate}
+    dead_zone: ${template.params.dead_zone}
+    adapt_rate_limit: ${template.params.adapt_rate_limit}
+    K_min: ${template.params.K_min}
+    K_max: ${template.params.K_max}
+    smooth_switch: ${template.params.smooth_switch}` : ''}
+
+pso:
+  n_particles: ${document.getElementById('pso_particles').value}
+  iters: ${document.getElementById('pso_iters').value}
+  w: ${document.getElementById('pso_w').value}
+  c1: ${document.getElementById('pso_c1').value}
+  c2: ${document.getElementById('pso_c2').value}
+  seed: ${document.getElementById('global_seed').value}
+
+simulation:
+  duration: ${document.getElementById('sim_duration').value}
+  dt: ${document.getElementById('sim_dt').value}
+  use_full_dynamics: ${document.getElementById('use_full_dynamics').checked}
+`;
+
+            document.getElementById('yamlPreview').textContent = yaml;
+            document.getElementById('successAlert').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('successAlert').style.display = 'none';
+            }, 3000);
+        }
+
+        function downloadConfig() {
+            const yaml = document.getElementById('yamlPreview').textContent;
+            const blob = new Blob([yaml], { type: 'text/yaml' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'config.yaml';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function copyToClipboard() {
+            const yaml = document.getElementById('yamlPreview').textContent;
+            navigator.clipboard.writeText(yaml).then(() => {
+                const alert = document.getElementById('successAlert');
+                alert.innerHTML = '<strong>✓ Success:</strong> Configuration copied to clipboard!';
+                alert.style.display = 'block';
+                setTimeout(() => {
+                    alert.style.display = 'none';
+                }, 3000);
+            });
+        }
+
+        // Auto-update preview on input change
+        document.addEventListener('input', function(e) {
+            if (e.target.matches('input, select')) {
+                generateConfig();
+            }
+        });
+    </script>
+</body>
+</html>

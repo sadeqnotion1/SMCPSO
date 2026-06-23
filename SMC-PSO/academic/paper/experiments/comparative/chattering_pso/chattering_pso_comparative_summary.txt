@@ -1,0 +1,24 @@
+====================================================================================================
+Phase 2: Chattering PSO Comparative Analysis
+====================================================================================================
+
+             Controller  Chattering Before  Chattering After  Chattering Reduction (%)  RMSE Before  RMSE After  RMSE Change (%)  Fitness Before  Fitness After  Fitness Improvement (%)  Optimization Time (s)
+          Classical Smc          49.368305           12.5047                 74.670591     9.364697   10.798901        15.315009       37.367222      11.992960                67.905134             782.434948
+           Adaptive Smc           0.000000            0.0000                  0.000000     8.513831    8.513831         0.000000        2.554149       2.554149                 0.000000            1665.847080
+Hybrid Adaptive Sta Smc           0.000000            0.0000                  0.000000     8.513831    8.513831         0.000000        2.554149       2.554149                 0.000000            1848.448785
+
+====================================================================================================
+KEY FINDINGS
+====================================================================================================
+
+1. Best Chattering Reduction: Classical Smc
+   - Reduction: 74.67%
+   - From: 49.3683 -> 12.5047
+
+2. Best Overall Fitness Improvement: Classical Smc
+   - Improvement: 67.91%
+
+3. Baseline Chattering Performance:
+   - Classical Smc: 49.3683
+   - Adaptive Smc: 0.0000
+   - Hybrid Adaptive Sta Smc: 0.0000

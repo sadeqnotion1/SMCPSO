@@ -1,0 +1,153 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CHAPTER 1 SOLUTIONS: Introduction
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section*{Solutions to Chapter 1 Exercises}
+
+\begin{solution}[Exercise \ref{ex:ch1_underactuation_degree}]
+\textbf{Problem:} Robotic arm with $n$ revolute joints, each with one actuator.
+
+\textbf{Solution:}
+\begin{enumerate}[label=(\alph*)]
+    \item A robotic arm with $n$ revolute joints has $n$ degrees of freedom. If each joint has one independent actuator, there are $n$ control inputs. Since $m = n$, the system is \textbf{fully actuated}.
+
+    \item If two joints share a single actuator via a differential mechanism, the number of independent control inputs is $m = n - 1$ (the two coupled joints act as a single control input). Since $m < n$, the system becomes \textbf{underactuated with degree 1}.
+
+    \textbf{Example:} A 3-joint arm with joints 2 and 3 coupled has $n = 3$ DOF but only $m = 2$ independent actuators, making it underactuated.
+\end{enumerate}
+\end{solution}
+
+\begin{solution}[Exercise \ref{ex:ch1_dip_controllability}]
+\textbf{Problem:} DIP controllability classification.
+
+\textbf{Solution:}
+\begin{enumerate}[label=(\alph*)]
+    \item Degree of underactuation = $n - m = 3 - 1 = 2$. The DIP has 2 unactuated degrees of freedom ($\theta_1, \theta_2$) relative to the actuated cart position.
+
+    \item If we add a second actuator directly controlling $\theta_1$, we have $m = 2$ (cart force + $\theta_1$ torque) and $n = 3$, so the system remains \textbf{underactuated with degree 1}. Only $\theta_2$ would be unactuated. Full actuation requires $m = n = 3$.
+
+    \item \textbf{Implications:}
+    \begin{itemize}
+        \item With $m = 1$: Highly underactuated, requires nonlinear control, coupling exploitation, no direct control of pendulum angles.
+        \item With $m = 2$: Less underactuated, $\theta_1$ can be directly stabilized, $\theta_2$ still requires indirect control.
+        \item With $m = 3$: Fully actuated, linear control (LQR, PID) would suffice, no SMC needed.
+    \end{itemize}
+\end{enumerate}
+\end{solution}
+
+\begin{solution}[Exercise \ref{ex:ch1_history}]
+\textbf{Problem:} Summarize Utkin's 1977 contributions.
+
+\textbf{Solution:}
+The three main contributions from Utkin's seminal 1977 paper are:
+
+\begin{enumerate}
+    \item \textbf{Reaching Condition ($\sigma \dot{\sigma} < 0$):} Formalized the condition ensuring finite-time convergence to the sliding surface. This provides a constructive design criterion for switching control laws.
+
+    \item \textbf{Equivalent Control Method:} Introduced the concept of $u_{eq}$ obtained by setting $\dot{\sigma} = 0$ and solving for $u$. This separates the control law into model-based (equivalent control) and robust switching (discontinuous) components.
+
+    \item \textbf{Matched Disturbance Rejection:} Proved that classical SMC can completely reject disturbances entering through the control channel (matched disturbances) if the switching gain exceeds the disturbance bound: $K > d_{\max}$.
+\end{enumerate}
+
+\textbf{Difference from prior work (1950s-1960s):}
+\begin{itemize}
+    \item 1950s VSS research (Emelyanov et al.) focused on switching between control structures but lacked rigorous stability proofs.
+    \item Utkin's 1977 work provided \textit{Lyapunov-based proofs} of stability and convergence, making SMC a mathematically rigorous control methodology.
+\end{itemize}
+\end{solution}
+
+\begin{solution}[Exercise \ref{ex:ch1_chattering_causes}]
+\textbf{Problem:} Rank chattering sources by severity.
+
+\textbf{Solution:}
+Ranking (1 = most severe, 4 = least severe):
+
+\begin{enumerate}
+    \item \textbf{Discrete-time sampling (Severity: 1):} In digital control, finite sampling frequency ($f_s$) is the \textit{primary} cause of chattering. The controller cannot switch infinitely fast, creating a quasi-sliding mode with zigzag motion around the surface. Chattering frequency $\approx f_s / 2$.
+
+    \item \textbf{Actuator switching delays (Severity: 2):} Physical actuators (motors, valves) have nonzero response time ($\tau_{\text{actuator}}$). This prevents instantaneous switching and exacerbates chattering. For fast systems (DIP: $\tau_{\text{dynamics}} \sim 0.1$ s), even small delays ($\tau_{\text{actuator}} = 0.01$ s) are significant.
+
+    \item \textbf{Unmodeled high-frequency dynamics (Severity: 3):} Flexible modes, sensor dynamics, and other unmodeled phenomena interact with discontinuous control to create limit cycles. This is system-dependent and more severe in mechanical systems with structural flexibility.
+
+    \item \textbf{Measurement noise (Severity: 4):} Sensor noise causes spurious sliding surface crossings, triggering unnecessary switching. However, this is the \textit{least} severe in well-designed systems with appropriate filtering and dead zones.
+\end{enumerate}
+
+\textbf{Justification:} Discrete-time sampling is unavoidable in digital controllers and directly limits the theoretical infinite switching frequency of SMC. Actuator delays are physical constraints. Unmodeled dynamics are often negligible for rigid-body systems. Noise can be filtered.
+\end{solution}
+
+\begin{solution}[Exercise \ref{ex:ch1_energy_analysis}]
+\textbf{Problem:} Energy analysis at upright equilibrium.
+
+\textbf{Solution:}
+Using parameters: $M = 1.0$ kg, $m_1 = m_2 = 0.1$ kg, $L_1 = L_2 = 0.5$ m, $g = 9.81$ m/s$^2$.
+
+\begin{enumerate}[label=(\alph*)]
+    \item \textbf{Total energy at equilibrium:}
+    \begin{align*}
+    T_0 &= 0 \quad (\text{all velocities zero}) \\
+    V_0 &= g\left[\left(\frac{m_1}{2} + m_2\right)L_1 + \frac{m_2 L_2}{2}\right] \\
+    &= 9.81 \left[ (0.05 + 0.1) \cdot 0.5 + 0.05 \cdot 0.5 \right] \\
+    &= 9.81 \cdot 0.1 = 0.981 \text{ J} \\
+    E_0 &= T_0 + V_0 = 0.981 \text{ J}
+    \end{align*}
+
+    \item \textbf{Local maximum:} The upright equilibrium is a \textit{local maximum} of potential energy. Any small deviation in $\theta_1$ or $\theta_2$ reduces $V$ (since $\cos\theta < 1$ for $\theta \neq 0$), confirming instability.
+
+    \item \textbf{Hessian matrix:} Linearizing $V(\theta_1, \theta_2)$ around $(0, 0)$:
+    \begin{equation*}
+    \nabla^2 V = \begin{bmatrix}
+    \pdiff{^2 V}{\theta_1^2} & \pdiff{^2 V}{\theta_1 \partial \theta_2} \\
+    \pdiff{^2 V}{\theta_1 \partial \theta_2} & \pdiff{^2 V}{\theta_2^2}
+    \end{bmatrix} =
+    \begin{bmatrix}
+    -g(m_1 L_1/2 + m_2 L_1) & 0 \\
+    0 & -g m_2 L_2/2
+    \end{bmatrix}
+    \end{equation*}
+    Eigenvalues:
+    \begin{align*}
+    \lambda_1 &= -g(m_1 L_1/2 + m_2 L_1) = -9.81 \cdot 0.075 = -0.736 \\
+    \lambda_2 &= -g m_2 L_2/2 = -9.81 \cdot 0.025 = -0.245
+    \end{align*}
+    Both eigenvalues are \textbf{negative}, confirming the Hessian is negative definite $\implies$ local maximum of $V$ $\implies$ unstable equilibrium.
+\end{enumerate}
+\end{solution}
+
+\begin{solution}[Exercise \ref{ex:ch1_sliding_surface}]
+\textbf{Problem:} Sliding surface design for simple inverted pendulum.
+
+\textbf{Solution:}
+For a simple pendulum with state $[\theta, \dot{\theta}]^T$, the sliding surface is:
+\begin{equation*}
+\sigma(\theta, \dot{\theta}) = k_1 \theta + k_2 \dot{\theta}
+\end{equation*}
+
+\begin{enumerate}[label=(\alph*)]
+    \item \textbf{Constraints on $k_1, k_2$:}
+    On the sliding surface $\sigma = 0$, we have:
+    \begin{equation*}
+    k_2 \dot{\theta} = -k_1 \theta \implies \dot{\theta} = -\frac{k_1}{k_2} \theta
+    \end{equation*}
+    This is a first-order ODE with solution $\theta(t) = \theta(0) e^{-k_1 t / k_2}$. For exponential convergence ($\theta \to 0$), we require:
+    \begin{equation*}
+    \frac{k_1}{k_2} > 0 \implies k_1, k_2 > 0
+    \end{equation*}
+
+    \item \textbf{Convergence rate $\lambda = 5$ rad/s:}
+    We want $\theta(t) = \theta(0) e^{-\lambda t}$ with $\lambda = 5$ rad/s. Comparing to the sliding mode dynamics:
+    \begin{equation*}
+    \lambda = \frac{k_1}{k_2} = 5 \implies k_1 = 5 k_2
+    \end{equation*}
+    Choosing $k_2 = 1$, we get $k_1 = 5$. Thus: $\sigma = 5\theta + \dot{\theta}$.
+
+    \item \textbf{Phase portrait:}
+    The sliding line is $\dot{\theta} = -5\theta$. Trajectories approach this line and then slide toward the origin along it with exponential convergence rate $\lambda = 5$ rad/s.
+\end{enumerate}
+\end{solution}
+
+% Additional solutions for remaining exercises would follow...
+% (Full solution manual would be ~40 pages for all 120+ exercises)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% End of Chapter 1 Solutions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

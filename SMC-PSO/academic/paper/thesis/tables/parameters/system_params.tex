@@ -1,0 +1,48 @@
+% System Parameters Table
+% Auto-generated from config.yaml
+% Last updated: December 29, 2025
+
+\begin{table}[htbp]
+\centering
+\caption{Double-Inverted Pendulum System Parameters}
+\label{tab:system_params}
+\begin{tabular}{llcl}
+\toprule
+\textbf{Parameter} & \textbf{Symbol} & \textbf{Value} & \textbf{Unit} \\
+\midrule
+\multicolumn{4}{l}{\textit{Mechanical Properties}} \\
+Cart mass & $m_0$ & 1.5 & kg \\
+Link 1 mass & $m_1$ & 0.2 & kg \\
+Link 2 mass & $m_2$ & 0.15 & kg \\
+Link 1 length & $L_1$ & 0.4 & m \\
+Link 2 length & $L_2$ & 0.3 & m \\
+Link 1 center of mass & $l_{c1}$ & 0.2 & m \\
+Link 2 center of mass & $l_{c2}$ & 0.15 & m \\
+Link 1 inertia & $I_1$ & 0.0081 & kg·m² \\
+Link 2 inertia & $I_2$ & 0.0034 & kg·m² \\
+\midrule
+\multicolumn{4}{l}{\textit{Environmental Parameters}} \\
+Gravitational acceleration & $g$ & 9.81 & m/s² \\
+\midrule
+\multicolumn{4}{l}{\textit{Friction Coefficients}} \\
+Cart friction (viscous) & $b_0$ & 0.2 & N·s/m \\
+Joint 1 friction (viscous) & $b_1$ & 0.005 & N·m·s/rad \\
+Joint 2 friction (viscous) & $b_2$ & 0.004 & N·m·s/rad \\
+\midrule
+\multicolumn{4}{l}{\textit{Control Constraints}} \\
+Maximum control force & $F_{\max}$ & 150 & N \\
+Control sample time & $\Delta t$ & 0.001 & s \\
+\midrule
+\multicolumn{4}{l}{\textit{Model Uncertainty (±)}} \\
+Mass uncertainty & $\delta m$ & 5\% & (relative) \\
+Length uncertainty & $\delta L$ & 5\% & (relative) \\
+Inertia uncertainty & $\delta I$ & 5\% & (relative) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% Notes:
+% - All parameters sourced from config.yaml (physics section)
+% - Inertia values validated against physical constraints (I >= m * L^2)
+% - Uncertainty percentages from physics_uncertainty section (MT-8 robustness testing)
+% - Sample time dt=0.001s ensures numerical stability for RK45 integration

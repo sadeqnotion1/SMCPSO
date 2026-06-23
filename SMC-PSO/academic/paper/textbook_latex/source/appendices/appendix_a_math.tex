@@ -1,0 +1,96 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% APPENDIX A: MATHEMATICAL PREREQUISITES
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Mathematical Prerequisites}
+\label{app:math}
+\label{app:math_prereq}
+
+This appendix reviews essential mathematical concepts used throughout the textbook.
+
+%===============================================================================
+\section{Linear Algebra}
+%===============================================================================
+
+\subsection{Matrices and Vectors}
+
+\textbf{Matrix-Vector Product}:
+\begin{equation}
+\vect{y} = \mat{A} \vect{x}, \quad y_i = \sum_{j=1}^{n} A_{ij} x_j
+\end{equation}
+
+\textbf{Matrix Inversion}: For invertible $\mat{A} \in \mathbb{R}^{n \times n}$, $\mat{A}^{-1}$ satisfies $\mat{A} \mat{A}^{-1} = \mat{I}$.
+
+\subsection{Eigenvalues and Eigenvectors}
+
+For $\mat{A} \vect{v} = \lambda \vect{v}$, $\lambda$ is an eigenvalue and $\vect{v}$ is the corresponding eigenvector.
+
+\textbf{Hurwitz Stability}: A matrix is Hurwitz stable if all eigenvalues have negative real parts: $\text{Re}(\lambda_i) < 0$ for all $i$.
+
+%===============================================================================
+\section{Differential Equations}
+%===============================================================================
+
+\subsection{Ordinary Differential Equations (ODEs)}
+
+General form:
+\begin{equation}
+\dot{\vect{x}} = \vect{f}(\vect{x}, t)
+\end{equation}
+
+\textbf{Linearization}: Near equilibrium $\vect{x}_e$:
+\begin{equation}
+\dot{\vect{x}} \approx \mat{A} (\vect{x} - \vect{x}_e), \quad \mat{A} = \left. \frac{\partial \vect{f}}{\partial \vect{x}} \right|_{\vect{x} = \vect{x}_e}
+\end{equation}
+
+%===============================================================================
+\section{Lyapunov Stability Theory}
+%===============================================================================
+
+\subsection{Definitions}
+
+\begin{definition}[Lyapunov Function]
+A function $V: \mathbb{R}^n \to \mathbb{R}$ is a Lyapunov function candidate if:
+\begin{enumerate}
+    \item $V(\vect{0}) = 0$
+    \item $V(\vect{x}) > 0$ for all $\vect{x} \neq \vect{0}$ (positive definite)
+    \item $\dot{V}(\vect{x}) \leq 0$ along system trajectories (non-increasing)
+\end{enumerate}
+\end{definition}
+
+\begin{theorem}[Lyapunov's Direct Method]
+If there exists a Lyapunov function $V$ such that $\dot{V}(\vect{x}) < 0$ for all $\vect{x} \neq \vect{0}$, then the origin is asymptotically stable.
+\end{theorem}
+
+\subsection{Finite-Time Convergence}
+
+If $\dot{V}(\vect{x}) \leq -\alpha V^{\beta}(\vect{x})$ for $\alpha > 0$ and $0 < \beta < 1$, then convergence to the origin occurs in finite time:
+\begin{equation}
+T \leq \frac{V^{1-\beta}(0)}{\alpha (1-\beta)}
+\end{equation}
+
+%===============================================================================
+\section{Vector Calculus}
+%===============================================================================
+
+\subsection{Gradient}
+
+For scalar function $f: \mathbb{R}^n \to \mathbb{R}$:
+\begin{equation}
+\nabla f = \begin{bmatrix} \frac{\partial f}{\partial x_1} \\ \vdots \\ \frac{\partial f}{\partial x_n} \end{bmatrix}
+\end{equation}
+
+\subsection{Jacobian Matrix}
+
+For vector function $\vect{f}: \mathbb{R}^n \to \mathbb{R}^m$:
+\begin{equation}
+\mat{J} = \begin{bmatrix}
+\frac{\partial f_1}{\partial x_1} & \cdots & \frac{\partial f_1}{\partial x_n} \\
+\vdots & \ddots & \vdots \\
+\frac{\partial f_m}{\partial x_1} & \cdots & \frac{\partial f_m}{\partial x_n}
+\end{bmatrix}
+\end{equation}
+
+%===============================================================================
+% END OF APPENDIX A
+%===============================================================================

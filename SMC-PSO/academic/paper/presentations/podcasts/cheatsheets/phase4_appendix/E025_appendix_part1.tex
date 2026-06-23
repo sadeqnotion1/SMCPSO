@@ -1,0 +1,39 @@
+% Episode 025: Appendix Reference Part 1
+\input{../templates/master_template.tex}
+\title{\textbf{E025: Appendix Part 1}}
+\def\episodenumber{025}
+\def\episodetitle{Appendix Reference - Configuration \& Setup}
+\def\episodecategory{Appendix \& Reference}
+\def\difficulty{Reference}
+\begin{document}
+\makeepisodetitle
+\section{Configuration System}
+\textbf{Central File}: \texttt{config.yaml} (Pydantic-validated)
+\subsection{Key Sections}
+\begin{itemize}
+\item \textbf{physics}: Mass, length, damping, gravity
+\item \textbf{controller\_settings}: Gains for 7 SMC variants
+\item \textbf{pso\_parameters}: Swarm size (50), iterations (100)
+\item \textbf{simulation\_settings}: Time step (0.01s), duration (10s)
+\end{itemize}
+\section{Installation}
+\begin{lstlisting}[style=bashstyle]
+git clone https://github.com/theSadeQ/dip-smc-pso
+cd dip-smc-pso
+python -m venv .venv
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+\end{lstlisting}
+\section{Quick Start}
+\begin{lstlisting}[style=bashstyle]
+# Run simulation
+python simulate.py --ctrl classical_smc --plot
+
+# Run PSO optimization
+python simulate.py --ctrl classical_smc --run-pso --save gains.json
+
+# Launch web UI
+streamlit run streamlit_app.py
+\end{lstlisting}
+\section*{Next: E026 Controllers Reference}
+\end{document}

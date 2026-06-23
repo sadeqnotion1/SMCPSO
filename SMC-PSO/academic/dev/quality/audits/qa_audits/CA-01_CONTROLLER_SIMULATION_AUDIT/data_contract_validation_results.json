@@ -1,0 +1,153 @@
+{
+  "data_contract": {
+    "classical_smc": {
+      "status": "PASS",
+      "protocol_compliance": {
+        "compute_control": true,
+        "initialize_state": true,
+        "initialize_history": true,
+        "gains": true,
+        "max_force": true
+      },
+      "state_vars_type": "tuple",
+      "state_vars_value": "()",
+      "history_type": "dict",
+      "history_keys": [
+        "sigma",
+        "epsilon_eff",
+        "u_eq",
+        "u_robust",
+        "u_total",
+        "u"
+      ],
+      "control_output_type": "ClassicalSMCOutput",
+      "control_value": -17.2,
+      "control_dtype": "float",
+      "is_scalar": true,
+      "is_finite": true,
+      "max_force": 100.0,
+      "validation": {
+        "state_vars_valid": true,
+        "history_valid": true,
+        "control_valid": true
+      }
+    },
+    "adaptive_smc": {
+      "status": "PASS",
+      "protocol_compliance": {
+        "compute_control": true,
+        "initialize_state": true,
+        "initialize_history": true,
+        "gains": true,
+        "max_force": true
+      },
+      "state_vars_type": "tuple",
+      "state_vars_value": "(10.0, 0.0, 0.0)",
+      "history_type": "dict",
+      "history_keys": [
+        "K",
+        "sigma",
+        "u_sw",
+        "dK",
+        "time_in_sliding"
+      ],
+      "control_output_type": "AdaptiveSMCOutput",
+      "control_value": -14.75,
+      "control_dtype": "float64",
+      "is_scalar": true,
+      "is_finite": true,
+      "max_force": 100.0,
+      "validation": {
+        "state_vars_valid": true,
+        "history_valid": true,
+        "control_valid": true
+      }
+    },
+    "sta_smc": {
+      "status": "PASS",
+      "protocol_compliance": {
+        "compute_control": true,
+        "initialize_state": true,
+        "initialize_history": true,
+        "gains": true,
+        "max_force": true
+      },
+      "state_vars_type": "tuple",
+      "state_vars_value": "(0.0, 0.0)",
+      "history_type": "dict",
+      "history_keys": [
+        "sigma",
+        "z",
+        "u",
+        "u_eq"
+      ],
+      "control_output_type": "STAOutput",
+      "control_value": -35.4964786985977,
+      "control_dtype": "float",
+      "is_scalar": true,
+      "is_finite": true,
+      "max_force": 100.0,
+      "validation": {
+        "state_vars_valid": true,
+        "history_valid": true,
+        "control_valid": true
+      }
+    },
+    "hybrid_adaptive_sta_smc": {
+      "status": "PASS",
+      "protocol_compliance": {
+        "compute_control": true,
+        "initialize_state": true,
+        "initialize_history": true,
+        "gains": true,
+        "max_force": true
+      },
+      "state_vars_type": "tuple",
+      "state_vars_value": "(5.0, 3.0, 0.0)",
+      "history_type": "dict",
+      "history_keys": [
+        "k1",
+        "k2",
+        "u_int",
+        "s"
+      ],
+      "control_output_type": "HybridSTAOutput",
+      "control_value": 35.9316390883526,
+      "control_dtype": "float",
+      "is_scalar": true,
+      "is_finite": true,
+      "max_force": 100.0,
+      "validation": {
+        "state_vars_valid": true,
+        "history_valid": true,
+        "control_valid": true
+      }
+    }
+  },
+  "simulation_integration": {
+    "classical_smc": {
+      "status": "PASS",
+      "steps": 101,
+      "final_state_norm": 0.14142135623730953,
+      "control_effort": 17.2
+    },
+    "adaptive_smc": {
+      "status": "PASS",
+      "steps": 101,
+      "final_state_norm": 0.14142135623730953,
+      "control_effort": 68.91065773884327
+    },
+    "sta_smc": {
+      "status": "PASS",
+      "steps": 101,
+      "final_state_norm": 0.14142135623730953,
+      "control_effort": 37.99889892560124
+    },
+    "hybrid_adaptive_sta_smc": {
+      "status": "PASS",
+      "steps": 101,
+      "final_state_norm": 0.14142135623730953,
+      "control_effort": 42.93624358535127
+    }
+  }
+}

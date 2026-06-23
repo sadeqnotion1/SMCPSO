@@ -1,0 +1,710 @@
+{
+  "audit_metadata": {
+    "category": "docs/guides/",
+    "audit_date": "2025-11-10T19:08:41.566246",
+    "auditor": "Claude Code MA-01"
+  },
+  "files": [
+    {
+      "path": "guides\\api\\configuration.md",
+      "filename": "configuration.md",
+      "subcategory": "api",
+      "type": "api_reference",
+      "lines": 611,
+      "words": 1821,
+      "size_bytes": 16536,
+      "last_modified": "2025-10-27T13:45:06.794113"
+    },
+    {
+      "path": "guides\\api\\controllers.md",
+      "filename": "controllers.md",
+      "subcategory": "api",
+      "type": "api_reference",
+      "lines": 767,
+      "words": 2324,
+      "size_bytes": 21370,
+      "last_modified": "2025-11-10T12:05:17.867363"
+    },
+    {
+      "path": "guides\\api\\optimization.md",
+      "filename": "optimization.md",
+      "subcategory": "api",
+      "type": "api_reference",
+      "lines": 749,
+      "words": 2100,
+      "size_bytes": 20834,
+      "last_modified": "2025-10-27T13:45:06.796964"
+    },
+    {
+      "path": "guides\\api\\plant-models.md",
+      "filename": "plant-models.md",
+      "subcategory": "api",
+      "type": "api_reference",
+      "lines": 541,
+      "words": 1739,
+      "size_bytes": 15211,
+      "last_modified": "2025-11-10T12:06:12.010046"
+    },
+    {
+      "path": "guides\\api\\README.md",
+      "filename": "README.md",
+      "subcategory": "api",
+      "type": "index",
+      "lines": 172,
+      "words": 953,
+      "size_bytes": 9978,
+      "last_modified": "2025-10-27T13:45:06.794113"
+    },
+    {
+      "path": "guides\\api\\simulation.md",
+      "filename": "simulation.md",
+      "subcategory": "api",
+      "type": "api_reference",
+      "lines": 764,
+      "words": 2050,
+      "size_bytes": 20160,
+      "last_modified": "2025-10-27T13:45:06.798161"
+    },
+    {
+      "path": "guides\\api\\utilities.md",
+      "filename": "utilities.md",
+      "subcategory": "api",
+      "type": "api_reference",
+      "lines": 615,
+      "words": 1435,
+      "size_bytes": 14853,
+      "last_modified": "2025-11-10T12:06:05.594963"
+    },
+    {
+      "path": "guides\\features\\code-collapse\\changelog.md",
+      "filename": "changelog.md",
+      "subcategory": "features",
+      "type": "general",
+      "lines": 211,
+      "words": 957,
+      "size_bytes": 7525,
+      "last_modified": "2025-11-10T12:08:01.360630"
+    },
+    {
+      "path": "guides\\features\\code-collapse\\configuration-reference.md",
+      "filename": "configuration-reference.md",
+      "subcategory": "features",
+      "type": "general",
+      "lines": 486,
+      "words": 1905,
+      "size_bytes": 14838,
+      "last_modified": "2025-11-10T11:16:27.154444"
+    },
+    {
+      "path": "guides\\features\\code-collapse\\integration-guide.md",
+      "filename": "integration-guide.md",
+      "subcategory": "features",
+      "type": "general",
+      "lines": 388,
+      "words": 1042,
+      "size_bytes": 8568,
+      "last_modified": "2025-11-10T14:14:48.752926"
+    },
+    {
+      "path": "guides\\features\\code-collapse\\maintenance-guide.md",
+      "filename": "maintenance-guide.md",
+      "subcategory": "features",
+      "type": "general",
+      "lines": 441,
+      "words": 1371,
+      "size_bytes": 11445,
+      "last_modified": "2025-11-10T17:59:39.194368"
+    },
+    {
+      "path": "guides\\features\\code-collapse\\PHASE6_COMPLETION_SUMMARY.md",
+      "filename": "PHASE6_COMPLETION_SUMMARY.md",
+      "subcategory": "features",
+      "type": "general",
+      "lines": 308,
+      "words": 1069,
+      "size_bytes": 8778,
+      "last_modified": "2025-10-27T13:45:06.801366"
+    },
+    {
+      "path": "guides\\features\\code-collapse\\technical-reference.md",
+      "filename": "technical-reference.md",
+      "subcategory": "features",
+      "type": "general",
+      "lines": 483,
+      "words": 1593,
+      "size_bytes": 13535,
+      "last_modified": "2025-11-10T18:06:23.020281"
+    },
+    {
+      "path": "guides\\features\\code-collapse\\troubleshooting.md",
+      "filename": "troubleshooting.md",
+      "subcategory": "features",
+      "type": "general",
+      "lines": 534,
+      "words": 1691,
+      "size_bytes": 13000,
+      "last_modified": "2025-11-10T18:00:08.667378"
+    },
+    {
+      "path": "guides\\features\\code-collapse\\user-guide.md",
+      "filename": "user-guide.md",
+      "subcategory": "features",
+      "type": "general",
+      "lines": 278,
+      "words": 1255,
+      "size_bytes": 8485,
+      "last_modified": "2025-10-27T13:45:06.806081"
+    },
+    {
+      "path": "guides\\features\\README.md",
+      "filename": "README.md",
+      "subcategory": "features",
+      "type": "index",
+      "lines": 163,
+      "words": 626,
+      "size_bytes": 5852,
+      "last_modified": "2025-11-10T17:57:55.722163"
+    },
+    {
+      "path": "guides\\getting-started-validation-report.md",
+      "filename": "getting-started-validation-report.md",
+      "subcategory": "root",
+      "type": "general",
+      "lines": 279,
+      "words": 2136,
+      "size_bytes": 17164,
+      "last_modified": "2025-10-27T13:45:06.807082"
+    },
+    {
+      "path": "guides\\getting-started.md",
+      "filename": "getting-started.md",
+      "subcategory": "root",
+      "type": "general",
+      "lines": 237,
+      "words": 2279,
+      "size_bytes": 17974,
+      "last_modified": "2025-10-27T13:45:06.807082"
+    },
+    {
+      "path": "guides\\how-to\\optimization-workflows.md",
+      "filename": "optimization-workflows.md",
+      "subcategory": "how-to",
+      "type": "workflow",
+      "lines": 316,
+      "words": 2338,
+      "size_bytes": 19136,
+      "last_modified": "2025-11-10T11:20:15.896697"
+    },
+    {
+      "path": "guides\\how-to\\result-analysis.md",
+      "filename": "result-analysis.md",
+      "subcategory": "how-to",
+      "type": "how_to_guide",
+      "lines": 608,
+      "words": 1609,
+      "size_bytes": 16355,
+      "last_modified": "2025-10-27T13:45:06.809488"
+    },
+    {
+      "path": "guides\\how-to\\robust-pso-optimization.md",
+      "filename": "robust-pso-optimization.md",
+      "subcategory": "how-to",
+      "type": "how_to_guide",
+      "lines": 451,
+      "words": 1562,
+      "size_bytes": 14371,
+      "last_modified": "2025-11-07T11:03:13.945931"
+    },
+    {
+      "path": "guides\\how-to\\running-simulations.md",
+      "filename": "running-simulations.md",
+      "subcategory": "how-to",
+      "type": "how_to_guide",
+      "lines": 291,
+      "words": 1641,
+      "size_bytes": 14265,
+      "last_modified": "2025-10-27T13:45:06.810483"
+    },
+    {
+      "path": "guides\\how-to\\testing-validation.md",
+      "filename": "testing-validation.md",
+      "subcategory": "how-to",
+      "type": "how_to_guide",
+      "lines": 193,
+      "words": 1625,
+      "size_bytes": 14295,
+      "last_modified": "2025-11-10T11:20:35.976778"
+    },
+    {
+      "path": "guides\\icon_usage_guide.md",
+      "filename": "icon_usage_guide.md",
+      "subcategory": "root",
+      "type": "general",
+      "lines": 419,
+      "words": 1288,
+      "size_bytes": 11665,
+      "last_modified": "2025-11-10T11:22:36.583575"
+    },
+    {
+      "path": "guides\\INDEX.md",
+      "filename": "INDEX.md",
+      "subcategory": "root",
+      "type": "index",
+      "lines": 383,
+      "words": 1610,
+      "size_bytes": 14621,
+      "last_modified": "2025-11-09T20:19:48.845792"
+    },
+    {
+      "path": "guides\\interactive\\3d-pendulum-demo.md",
+      "filename": "3d-pendulum-demo.md",
+      "subcategory": "interactive",
+      "type": "interactive_demo",
+      "lines": 282,
+      "words": 1205,
+      "size_bytes": 11885,
+      "last_modified": "2025-11-10T11:19:22.586867"
+    },
+    {
+      "path": "guides\\interactive\\index.md",
+      "filename": "index.md",
+      "subcategory": "interactive",
+      "type": "index",
+      "lines": 231,
+      "words": 768,
+      "size_bytes": 6503,
+      "last_modified": "2025-11-08T11:23:22.026113"
+    },
+    {
+      "path": "guides\\interactive\\jupyter-notebooks-demo.md",
+      "filename": "jupyter-notebooks-demo.md",
+      "subcategory": "interactive",
+      "type": "interactive_demo",
+      "lines": 398,
+      "words": 1100,
+      "size_bytes": 9551,
+      "last_modified": "2025-10-27T13:45:06.814565"
+    },
+    {
+      "path": "guides\\interactive\\live-python-demo.md",
+      "filename": "live-python-demo.md",
+      "subcategory": "interactive",
+      "type": "interactive_demo",
+      "lines": 375,
+      "words": 1211,
+      "size_bytes": 10577,
+      "last_modified": "2025-10-27T13:45:06.815584"
+    },
+    {
+      "path": "guides\\interactive\\mathematical-visualizations-demo.md",
+      "filename": "mathematical-visualizations-demo.md",
+      "subcategory": "interactive",
+      "type": "interactive_demo",
+      "lines": 658,
+      "words": 1997,
+      "size_bytes": 16379,
+      "last_modified": "2025-10-27T13:45:06.815584"
+    },
+    {
+      "path": "guides\\interactive\\plotly-charts-demo.md",
+      "filename": "plotly-charts-demo.md",
+      "subcategory": "interactive",
+      "type": "interactive_demo",
+      "lines": 198,
+      "words": 652,
+      "size_bytes": 5245,
+      "last_modified": "2025-11-10T16:13:37.455863"
+    },
+    {
+      "path": "guides\\interactive_configuration_guide.md",
+      "filename": "interactive_configuration_guide.md",
+      "subcategory": "root",
+      "type": "general",
+      "lines": 517,
+      "words": 1641,
+      "size_bytes": 15815,
+      "last_modified": "2025-11-10T18:06:22.614126"
+    },
+    {
+      "path": "guides\\interactive_visualizations.md",
+      "filename": "interactive_visualizations.md",
+      "subcategory": "root",
+      "type": "general",
+      "lines": 341,
+      "words": 1030,
+      "size_bytes": 9278,
+      "last_modified": "2025-11-10T11:22:36.681787"
+    },
+    {
+      "path": "guides\\QUICK_REFERENCE.md",
+      "filename": "QUICK_REFERENCE.md",
+      "subcategory": "root",
+      "type": "general",
+      "lines": 321,
+      "words": 1324,
+      "size_bytes": 11339,
+      "last_modified": "2025-10-27T13:45:06.792116"
+    },
+    {
+      "path": "guides\\README.md",
+      "filename": "README.md",
+      "subcategory": "root",
+      "type": "index",
+      "lines": 179,
+      "words": 1422,
+      "size_bytes": 12733,
+      "last_modified": "2025-10-27T13:45:06.793116"
+    },
+    {
+      "path": "guides\\sphinx_theme_guide.md",
+      "filename": "sphinx_theme_guide.md",
+      "subcategory": "root",
+      "type": "general",
+      "lines": 823,
+      "words": 2411,
+      "size_bytes": 20093,
+      "last_modified": "2025-10-27T13:45:06.819033"
+    },
+    {
+      "path": "guides\\theory\\dip-dynamics.md",
+      "filename": "dip-dynamics.md",
+      "subcategory": "theory",
+      "type": "theory",
+      "lines": 505,
+      "words": 1726,
+      "size_bytes": 13927,
+      "last_modified": "2025-11-10T11:22:36.777797"
+    },
+    {
+      "path": "guides\\theory\\pso-theory.md",
+      "filename": "pso-theory.md",
+      "subcategory": "theory",
+      "type": "theory",
+      "lines": 460,
+      "words": 1809,
+      "size_bytes": 14548,
+      "last_modified": "2025-11-10T18:06:22.810037"
+    },
+    {
+      "path": "guides\\theory\\README.md",
+      "filename": "README.md",
+      "subcategory": "theory",
+      "type": "index",
+      "lines": 198,
+      "words": 714,
+      "size_bytes": 6592,
+      "last_modified": "2025-11-10T16:13:56.458895"
+    },
+    {
+      "path": "guides\\theory\\smc-theory.md",
+      "filename": "smc-theory.md",
+      "subcategory": "theory",
+      "type": "theory",
+      "lines": 1106,
+      "words": 4770,
+      "size_bytes": 37405,
+      "last_modified": "2025-11-10T18:06:22.834796"
+    },
+    {
+      "path": "guides\\tutorials\\tutorial-01-first-simulation.md",
+      "filename": "tutorial-01-first-simulation.md",
+      "subcategory": "tutorials",
+      "type": "tutorial",
+      "lines": 597,
+      "words": 3902,
+      "size_bytes": 31104,
+      "last_modified": "2025-10-27T13:45:06.824204"
+    },
+    {
+      "path": "guides\\tutorials\\tutorial-01-validation-report.md",
+      "filename": "tutorial-01-validation-report.md",
+      "subcategory": "tutorials",
+      "type": "tutorial",
+      "lines": 299,
+      "words": 2297,
+      "size_bytes": 17989,
+      "last_modified": "2025-10-27T13:45:06.824204"
+    },
+    {
+      "path": "guides\\tutorials\\tutorial-02-controller-comparison.md",
+      "filename": "tutorial-02-controller-comparison.md",
+      "subcategory": "tutorials",
+      "type": "tutorial",
+      "lines": 495,
+      "words": 3771,
+      "size_bytes": 29642,
+      "last_modified": "2025-10-27T13:45:06.827523"
+    },
+    {
+      "path": "guides\\tutorials\\tutorial-03-pso-optimization.md",
+      "filename": "tutorial-03-pso-optimization.md",
+      "subcategory": "tutorials",
+      "type": "tutorial",
+      "lines": 398,
+      "words": 3974,
+      "size_bytes": 31498,
+      "last_modified": "2025-11-07T11:03:13.978962"
+    },
+    {
+      "path": "guides\\tutorials\\tutorial-04-custom-controller.md",
+      "filename": "tutorial-04-custom-controller.md",
+      "subcategory": "tutorials",
+      "type": "tutorial",
+      "lines": 881,
+      "words": 3173,
+      "size_bytes": 28413,
+      "last_modified": "2025-11-10T19:02:09.741291"
+    },
+    {
+      "path": "guides\\tutorials\\tutorial-05-research-workflow.md",
+      "filename": "tutorial-05-research-workflow.md",
+      "subcategory": "tutorials",
+      "type": "tutorial",
+      "lines": 315,
+      "words": 2177,
+      "size_bytes": 20270,
+      "last_modified": "2025-11-10T16:12:57.087950"
+    },
+    {
+      "path": "guides\\user-guide.md",
+      "filename": "user-guide.md",
+      "subcategory": "root",
+      "type": "general",
+      "lines": 854,
+      "words": 2870,
+      "size_bytes": 24961,
+      "last_modified": "2025-10-27T13:45:06.831117"
+    },
+    {
+      "path": "guides\\workflows\\batch-simulation-workflow.md",
+      "filename": "batch-simulation-workflow.md",
+      "subcategory": "workflows",
+      "type": "workflow",
+      "lines": 556,
+      "words": 1921,
+      "size_bytes": 18343,
+      "last_modified": "2025-11-10T16:12:15.838601"
+    },
+    {
+      "path": "guides\\workflows\\custom-cost-functions.md",
+      "filename": "custom-cost-functions.md",
+      "subcategory": "workflows",
+      "type": "general",
+      "lines": 775,
+      "words": 2483,
+      "size_bytes": 21392,
+      "last_modified": "2025-11-10T16:12:37.036654"
+    },
+    {
+      "path": "guides\\workflows\\hil-disaster-recovery.md",
+      "filename": "hil-disaster-recovery.md",
+      "subcategory": "workflows",
+      "type": "general",
+      "lines": 771,
+      "words": 2944,
+      "size_bytes": 24177,
+      "last_modified": "2025-11-10T19:04:27.910724"
+    },
+    {
+      "path": "guides\\workflows\\hil-multi-machine.md",
+      "filename": "hil-multi-machine.md",
+      "subcategory": "workflows",
+      "type": "general",
+      "lines": 712,
+      "words": 2064,
+      "size_bytes": 17230,
+      "last_modified": "2025-11-10T11:22:36.852770"
+    },
+    {
+      "path": "guides\\workflows\\hil-production-checklist.md",
+      "filename": "hil-production-checklist.md",
+      "subcategory": "workflows",
+      "type": "general",
+      "lines": 759,
+      "words": 2722,
+      "size_bytes": 19100,
+      "last_modified": "2025-11-10T08:30:52.465145"
+    },
+    {
+      "path": "guides\\workflows\\hil-safety-validation.md",
+      "filename": "hil-safety-validation.md",
+      "subcategory": "workflows",
+      "type": "general",
+      "lines": 866,
+      "words": 2766,
+      "size_bytes": 23646,
+      "last_modified": "2025-11-10T19:08:13.678736"
+    },
+    {
+      "path": "guides\\workflows\\hil-workflow.md",
+      "filename": "hil-workflow.md",
+      "subcategory": "workflows",
+      "type": "workflow",
+      "lines": 756,
+      "words": 2746,
+      "size_bytes": 22492,
+      "last_modified": "2025-11-10T16:15:00.767120"
+    },
+    {
+      "path": "guides\\workflows\\monte-carlo-validation-quickstart.md",
+      "filename": "monte-carlo-validation-quickstart.md",
+      "subcategory": "workflows",
+      "type": "general",
+      "lines": 231,
+      "words": 1672,
+      "size_bytes": 14116,
+      "last_modified": "2025-10-27T13:45:06.838006"
+    },
+    {
+      "path": "guides\\workflows\\pso-adaptive-smc.md",
+      "filename": "pso-adaptive-smc.md",
+      "subcategory": "workflows",
+      "type": "general",
+      "lines": 669,
+      "words": 2539,
+      "size_bytes": 19659,
+      "last_modified": "2025-11-10T10:33:20.401258"
+    },
+    {
+      "path": "guides\\workflows\\pso-hil-tuning.md",
+      "filename": "pso-hil-tuning.md",
+      "subcategory": "workflows",
+      "type": "general",
+      "lines": 1290,
+      "words": 4381,
+      "size_bytes": 36074,
+      "last_modified": "2025-11-10T10:30:11.533931"
+    },
+    {
+      "path": "guides\\workflows\\pso-hybrid-smc.md",
+      "filename": "pso-hybrid-smc.md",
+      "subcategory": "workflows",
+      "type": "general",
+      "lines": 1074,
+      "words": 4385,
+      "size_bytes": 34547,
+      "last_modified": "2025-11-10T11:22:36.901776"
+    },
+    {
+      "path": "guides\\workflows\\pso-optimization-workflow.md",
+      "filename": "pso-optimization-workflow.md",
+      "subcategory": "workflows",
+      "type": "workflow",
+      "lines": 279,
+      "words": 1806,
+      "size_bytes": 14227,
+      "last_modified": "2025-10-27T13:45:06.840675"
+    },
+    {
+      "path": "guides\\workflows\\pso-sta-smc.md",
+      "filename": "pso-sta-smc.md",
+      "subcategory": "workflows",
+      "type": "general",
+      "lines": 524,
+      "words": 1728,
+      "size_bytes": 13595,
+      "last_modified": "2025-11-10T16:14:38.047091"
+    },
+    {
+      "path": "guides\\workflows\\pso-vs-grid-search.md",
+      "filename": "pso-vs-grid-search.md",
+      "subcategory": "workflows",
+      "type": "general",
+      "lines": 561,
+      "words": 1922,
+      "size_bytes": 14495,
+      "last_modified": "2025-11-10T08:23:33.019508"
+    },
+    {
+      "path": "guides\\workflows\\streamlit-theme-integration.md",
+      "filename": "streamlit-theme-integration.md",
+      "subcategory": "workflows",
+      "type": "general",
+      "lines": 889,
+      "words": 2264,
+      "size_bytes": 20223,
+      "last_modified": "2025-11-10T16:15:26.135196"
+    }
+  ],
+  "summary": {
+    "total_files": 62,
+    "total_lines": 31831,
+    "total_words": 124306,
+    "by_subcategory": {
+      "api": {
+        "files": 7,
+        "lines": 4219,
+        "words": 12422
+      },
+      "features": {
+        "files": 9,
+        "lines": 3292,
+        "words": 11509
+      },
+      "how-to": {
+        "files": 5,
+        "lines": 1859,
+        "words": 8775
+      },
+      "interactive": {
+        "files": 6,
+        "lines": 2142,
+        "words": 6933
+      },
+      "theory": {
+        "files": 4,
+        "lines": 2269,
+        "words": 9019
+      },
+      "tutorials": {
+        "files": 6,
+        "lines": 2985,
+        "words": 19294
+      },
+      "workflows": {
+        "files": 15,
+        "lines": 10712,
+        "words": 38343
+      },
+      "root": {
+        "files": 10,
+        "lines": 4353,
+        "words": 18011
+      }
+    },
+    "by_type": {
+      "api_reference": {
+        "count": 6,
+        "lines": 4047
+      },
+      "index": {
+        "count": 6,
+        "lines": 1326
+      },
+      "general": {
+        "count": 28,
+        "lines": 16041
+      },
+      "workflow": {
+        "count": 4,
+        "lines": 1907
+      },
+      "how_to_guide": {
+        "count": 4,
+        "lines": 1543
+      },
+      "interactive_demo": {
+        "count": 5,
+        "lines": 1911
+      },
+      "theory": {
+        "count": 3,
+        "lines": 2071
+      },
+      "tutorial": {
+        "count": 6,
+        "lines": 2985
+      }
+    }
+  }
+}

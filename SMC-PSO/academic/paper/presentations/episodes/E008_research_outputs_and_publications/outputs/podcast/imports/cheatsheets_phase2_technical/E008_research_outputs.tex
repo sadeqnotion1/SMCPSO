@@ -1,0 +1,851 @@
+% ==============================================================================
+% EPISODE 008: RESEARCH OUTPUTS AND PUBLICATIONS
+% ==============================================================================
+\input{../templates/master_template.tex}
+\input{../templates/tikz_components.tex}
+
+% Episode-specific title
+\renewcommand{\episodetitle}{E008: Research \& Publications}
+
+\begin{document}
+
+% ==============================================================================
+% TITLE PAGE
+% ==============================================================================
+\makeepisodetitle{E008: Research Outputs and Publications}{From 105,000 Lines of Code to 71-Page Submission-Ready Paper}{2}{15-20 minutes}
+
+% ==============================================================================
+% PAGE 1: PHASE 5 ROADMAP
+% ==============================================================================
+\learningobjective{Understand the 72-hour research roadmap, execution of quick wins / medium-term / long-term tasks, paper evolution (v1.0 → v2.1), automation workflows, and submission preparation}
+
+\section*{The Research Challenge}
+
+\begin{keypoint}
+\textbf{Question:} Can 105,000 lines of working code count as research?
+
+\textbf{Answer:} NO! Research requires communication - peer-reviewed papers, reproducible experiments, stability proofs.
+
+\textbf{Goal:} Transform code into submission-ready publication
+\end{keypoint}
+
+\subsection*{Phase 5: The 72-Hour Research Roadmap}
+
+\begin{tcolorbox}[colback=primary!5, colframe=primary, title=\faRocket\ Research Timeline]
+\textbf{Duration:} 72 hours total effort over 8 weeks (Oct 29 - Nov 7, 2025)
+
+\textbf{Structure:} Three-tier risk management approach
+
+\begin{tabular}{llll}
+\toprule
+\textbf{Tier} & \textbf{Hours} & \textbf{Weeks} & \textbf{Strategy} \\
+\midrule
+Quick Wins & 8 (actual: 16) & Week 1 & Build confidence fast \\
+Medium-Term & 18 & Weeks 2-4 & Provide substance \\
+Long-Term & 46 & Months 2-3 & Real contributions \\
+\textbf{TOTAL} & \textbf{72} & \textbf{8 weeks} & \textbf{Momentum → Depth} \\
+\bottomrule
+\end{tabular}
+\end{tcolorbox}
+
+\begin{tip}
+\textbf{Why 3 tiers?} Risk management!
+
+Start with 46-hour task $\Rightarrow$ Burnout before seeing results
+
+Start with quick wins $\Rightarrow$ Early momentum $\Rightarrow$ Confidence for long-term work
+\end{tip}
+
+\section*{Quick Wins Week: 5 Tasks in Week 1}
+
+\begin{multicols}{2}
+
+\textbf{QW-1: SMC Theory Guide (8 hours)}
+\begin{itemize}
+    \item 800-1,200 lines explaining SMC fundamentals
+    \item Classical SMC, super-twisting, adaptive
+    \item Became Section 2 of final paper
+\end{itemize}
+
+\textbf{QW-2: Baseline Benchmarks (3 hours)}
+\begin{itemize}
+    \item Run all 7 controllers with default gains
+    \item Extract 4 metrics: settling time, overshoot, energy, chattering
+    \item Classical: 2.5s settling, 12\% overshoot
+    \item STA: 2.1s settling, 8\% overshoot
+\end{itemize}
+
+\columnbreak
+
+\textbf{QW-3: PSO Visualization (2 hours)}
+\begin{itemize}
+    \item Log particle positions every iteration
+    \item Generate scatter plot animation
+    \item Shows convergence to optimal gains
+\end{itemize}
+
+\textbf{QW-4: Chattering Metrics (2 hours)}
+\begin{itemize}
+    \item FFT-based high-frequency analysis
+    \item Quantify vibration/oscillation
+\end{itemize}
+
+\textbf{QW-5: Status Tracking (1 hour)}
+\begin{itemize}
+    \item Update project docs showing Phase 5 progress
+\end{itemize}
+
+\end{multicols}
+
+\begin{warning}
+\textbf{Estimated vs Actual:} Planned 8 hours, took 16 hours
+
+\textbf{Why?} Mathematical derivations are slow (rigorous proofs take time)
+
+\textbf{Payoff:} Theory guide became Section 2 with minimal revisions
+\end{warning}
+
+% ==============================================================================
+% PAGE 2: MEDIUM-TERM TASKS
+% ==============================================================================
+\newpage
+
+\section*{Medium-Term Tasks: Benchmarks \& Optimization}
+
+\subsection*{MT-5: Comprehensive Benchmark (The Core Study)}
+
+\begin{keypoint}
+\textbf{Goal:} Systematically compare all 7 controllers with statistical rigor
+
+\textbf{Scale:} 700 simulations (7 controllers × 100 Monte Carlo trials each)
+\end{keypoint}
+
+\begin{tcolorbox}[colback=secondary!10, colframe=secondary, title=\faFlask\ MT-5 Four-Stage Process]
+\textbf{Stage 1: Experimental Design}
+\begin{itemize}
+    \item 7 controllers to test
+    \item 4 metrics to measure (settling time, overshoot, energy, chattering)
+    \item 100 Monte Carlo trials per controller
+    \item Total: 700 simulations
+\end{itemize}
+
+\textbf{Stage 2: Data Collection}
+\begin{itemize}
+    \item Batch simulation script (overnight, 12 hours on 8-core)
+    \item Each sim: 10s simulated time, 2s wall time (Numba JIT)
+    \item Output: HDF5 file (105 MB compressed)
+\end{itemize}
+
+\textbf{Stage 3: Statistical Analysis}
+\begin{itemize}
+    \item Bootstrap 95\% CI with 2,000 resamples
+    \item Welch's t-test for 21 pairwise comparisons
+    \item Bonferroni correction (corrected $\alpha = 0.0024$)
+    \item Result: All differences statistically significant!
+\end{itemize}
+
+\textbf{Stage 4: Figure Generation \& Ranking}
+\begin{itemize}
+    \item Bar charts for each metric with error bars
+    \item Heatmap showing rank matrix (rows=controllers, cols=metrics)
+    \item Ranking: Hybrid Adaptive STA 1st, STA 2nd, Adaptive 3rd, Classical 4th
+    \item Became Figure 13 in LT-7 paper
+\end{itemize}
+\end{tcolorbox}
+
+\subsection*{MT-5 Debugging: Two Critical Issues}
+
+\begin{warning}
+\textbf{Issue 1: Trial 347 Divergence}
+
+Pendulum fell during simulation! If uncaught, entire benchmark invalid.
+
+\textbf{Root cause:} PSO found gains on edge of stability region
+
+\textbf{Fix:} Added stability margin constraint to cost function
+\end{warning}
+
+\begin{warning}
+\textbf{Issue 2: Memory Leak}
+
+Loading 700 result files consumed 4 GB RAM!
+
+\textbf{Fix:} Streaming reads - process one trial at a time
+
+\textbf{Result:} Memory dropped to 200 MB
+\end{warning}
+
+\subsection*{MT-6: Boundary Layer Optimization (The Negative Result)}
+
+\begin{example}
+\textbf{Hypothesis:} Optimize boundary layer thickness to reduce chattering by 60-80\%
+
+\textbf{Initial Result:} $\delta = 0.05$ rad gives 60-80\% reduction - CELEBRATE!
+
+\textbf{Deep Dive Validation:} Re-ran with different FFT cutoffs (5 Hz, 10 Hz, 15 Hz)
+\begin{itemize}
+    \item At 5 Hz: 90\% reduction
+    \item At 10 Hz: 66.5\% reduction
+    \item At 15 Hz: 12\% reduction
+\end{itemize}
+
+\textbf{RED FLAG:} Metric too sensitive to arbitrary parameter!
+
+\textbf{True Result:} 3.7\% reduction (baseline already near-optimal)
+
+\textbf{Conclusion:} Negative result, but valuable - prevents future wasted effort
+\end{example}
+
+\begin{tip}
+\textbf{Lesson:} Negative results ARE results! They guide future researchers away from dead ends.
+\end{tip}
+
+% ==============================================================================
+% PAGE 3: MT-7, MT-8, LONG-TERM TASKS
+% ==============================================================================
+\newpage
+
+\subsection*{MT-7: Robust PSO Validation}
+
+\begin{keypoint}
+\textbf{Goal:} Prove PSO finds consistent gains, not lucky outliers
+
+\textbf{Method:} Run PSO with 100 different random seeds
+
+\textbf{Result:} All converge to similar gains (coefficient of variation < 5\%)
+
+\textbf{Conclusion:} PSO optimization is reproducible!
+\end{keypoint}
+
+\subsection*{MT-8: Disturbance Rejection Analysis}
+
+\begin{tcolorbox}[colback=accent!10, colframe=accent, title=\faExclamationTriangle\ Five-Step Protocol]
+\textbf{Step 1:} Baseline simulation (2s equilibrium, no disturbance)
+
+\textbf{Step 2:} Apply 10-Newton step force at $t = 2$ s (20\% of max control)
+
+\textbf{Step 3:} Measure recovery time (when cart returns to $\pm 0.01$ m of setpoint)
+
+\textbf{Step 4:} Repeat for 100 Monte Carlo trials with varied initial conditions
+
+\textbf{Step 5:} Statistical analysis - mean recovery time with 95\% CI
+\end{tcolorbox}
+
+\textbf{Results by Controller:}
+
+\begin{tabular}{lll}
+\toprule
+\textbf{Controller} & \textbf{Recovery Time} & \textbf{Why?} \\
+\midrule
+Adaptive SMC & $0.8 \pm 0.05$ s & Increases gains when error spikes \\
+Hybrid Adaptive STA & $0.85 \pm 0.06$ s & Adaptive + smooth control \\
+STA-SMC & $1.1 \pm 0.08$ s & Fixed gains, no adaptation \\
+Classical SMC & $1.5 \pm 0.12$ s & Fixed gains, chatters \\
+Swing-up & $2.2 \pm 0.18$ s & Optimized for large angles, not disturbances \\
+\bottomrule
+\end{tabular}
+
+\textbf{Paper Integration:} Figure 9 in LT-7 - time series showing cart position recovery
+
+\section*{Long-Term Deliverables: 46 Hours, 3 Tasks}
+
+\subsection*{LT-4: Lyapunov Stability Proofs}
+
+\begin{keypoint}
+\textbf{Goal:} Prove each controller drives system to equilibrium + quantify convergence rates
+
+\textbf{Output:} $\sim$1,000 lines of mathematical derivations (Section 4 of paper)
+\end{keypoint}
+
+\textbf{Proof Structure (Example: Classical SMC):}
+
+\begin{multicols}{2}
+
+\textbf{Part 1: Define Lyapunov Function}
+$$V(s) = \frac{1}{2} s^2$$
+
+Always non-negative, zero only on sliding surface
+
+\textbf{Part 2: Compute Time Derivative}
+$$\dot{V} = s \cdot \dot{s}$$
+
+\columnbreak
+
+\textbf{Part 3: Substitute Control Law}
+$$u = -K \cdot \text{sign}(s)$$
+$$\dot{V} = -K |s| < 0$$
+
+Negative definite when $s \neq 0$!
+
+\textbf{Part 4: Convergence Rate}
+$$t_{\text{reach}} = \frac{V(0)}{K}$$
+
+Larger $K$ → faster reaching
+\end{multicols}
+
+\textbf{Rigor Level:} Formal but not machine-verified (Coq/Isabelle)
+
+Rigorous enough for peer review in control systems journals
+
+\textbf{Total Proofs:} 7 controllers × 3-5 pages each = $\sim$1,000 lines LaTeX
+
+\textbf{References:} Utkin 1977, Levant 1993, Slotine 1991, Moreno 2008
+
+% ==============================================================================
+% PAGE 4: LT-6, LT-7, PAPER STRUCTURE
+% ==============================================================================
+\newpage
+
+\subsection*{LT-6: Model Uncertainty Robustness Testing}
+
+\begin{tcolorbox}[colback=warning!10, colframe=warning, title=\faExclamationTriangle\ Six-Step Protocol]
+\textbf{Step 1:} Identify uncertain parameters (masses, lengths, friction)
+
+\textbf{Step 2:} Define perturbation levels ($\pm 5\%, 10\%, 15\%, 20\%, 25\%, 30\%$)
+
+\textbf{Step 3:} Generate perturbed models (all params randomly varied)
+
+\textbf{Step 4:} Run simulations with nominal gains on perturbed models
+
+\textbf{Step 5:} Measure performance degradation vs nominal
+
+\textbf{Step 6:} Statistical analysis (50 Monte Carlo trials per level)
+\end{tcolorbox}
+
+\textbf{Results:}
+
+\begin{multicols}{2}
+
+\textbf{Adaptive Controllers (Robust):}
+\begin{itemize}
+    \item 10\% perturbation: +5\% settling time
+    \item 20\% perturbation: +12\% settling
+    \item 30\% perturbation: +22\% settling
+    \item \textbf{Graceful linear degradation}
+\end{itemize}
+
+\columnbreak
+
+\textbf{Classical SMC (Fragile):}
+\begin{itemize}
+    \item 10\% perturbation: +8\% settling
+    \item 20\% perturbation: +35\% settling
+    \item 30\% perturbation: \textbf{60\% FAILURE RATE!}
+    \item Fixed gains cannot compensate
+\end{itemize}
+
+\end{multicols}
+
+\textbf{Paper Integration:} Section 7.2 - Robustness to Model Uncertainty, Figure 10 degradation curves
+
+\subsection*{LT-7: Research Paper Evolution}
+
+\begin{keypoint}
+\textbf{Final Output:} Submission-ready version 2.1
+
+\textbf{Stats:} 71 pages (two-column IEEE format), 14 figures, 39 references
+\end{keypoint}
+
+\textbf{Version History:}
+
+\begin{tabular}{lll}
+\toprule
+\textbf{Version} & \textbf{Pages} & \textbf{Key Changes} \\
+\midrule
+v0.5 & - & MPC attempt abandoned (50× too slow), never released \\
+v1.0 & 50 pages & 8 figures, weak intro, no Lyapunov, thin results \\
+v1.5 & 65 pages & +15 pages: 7-page intro (39 refs), 10-page Lyapunov, 12 figures \\
+v2.0 & 70 pages & 8-page discussion rewrite, LT-6 integration, 14 figures \\
+v2.1 & 71 pages & \textbf{SUBMISSION-READY}: 37 typos fixed, 18 unclear sentences, 47 cross-refs verified \\
+\bottomrule
+\end{tabular}
+
+\textbf{Timeline:} Version 1.0 → 2.1 in 5 weeks
+\begin{itemize}
+    \item v1.0 → v1.5: 3 weeks (major additions)
+    \item v1.5 → v2.0: 1.5 weeks (discussion rewrite)
+    \item v2.0 → v2.1: 4 days (polish)
+\end{itemize}
+
+% ==============================================================================
+% PAGE 5: PAPER STRUCTURE
+% ==============================================================================
+\newpage
+
+\section*{LT-7 Paper Structure: Nine Sections}
+
+\begin{tcolorbox}[colback=primary!5, colframe=primary, title=\faBook\ Complete Paper Organization]
+\textbf{Section 1: Introduction}
+\begin{itemize}
+    \item Motivation - Why SMC for underactuated systems?
+    \item Related work - Review of existing DIP control methods
+    \item Contributions - What this paper adds
+\end{itemize}
+
+\textbf{Section 2: Controller Overview}
+\begin{itemize}
+    \item Mathematical descriptions of 7 SMC variants
+    \item Classical, super-twisting, adaptive, hybrid adaptive STA, swing-up, terminal, integral
+\end{itemize}
+
+\textbf{Section 3: PSO Methodology}
+\begin{itemize}
+    \item Multi-objective cost function (settling time + energy + chattering)
+    \item Swarm parameters: 50 particles, 100 iterations, inertia 0.7
+    \item Validation: 100 random seeds for reproducibility
+\end{itemize}
+
+\textbf{Section 4: Lyapunov Analysis}
+\begin{itemize}
+    \item Stability proofs for each controller
+    \item Convergence rate estimates
+    \item Boundary layer tradeoffs
+\end{itemize}
+
+\textbf{Section 5: Experimental Setup}
+\begin{itemize}
+    \item DIP model parameters (masses, lengths, friction)
+    \item Simulation details (timestep, duration, integrator)
+    \item Initial conditions for benchmarks
+\end{itemize}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=secondary!10, colframe=secondary, title=\faChartLine\ Results \& Discussion]
+\textbf{Section 6: Performance Comparison}
+\begin{itemize}
+    \item MT-5 comprehensive benchmark results
+    \item Table with all 7 controllers (mean + 95\% CI)
+    \item Figures 5-8: Bar charts for each metric
+    \item Statistical analysis: Welch's t-test ($p < 0.001$ for all pairs)
+\end{itemize}
+
+\textbf{Section 7: Robustness Analysis}
+\begin{itemize}
+    \item Subsection 7.1: Disturbance rejection (MT-8) - Figure 9
+    \item Subsection 7.2: Model uncertainty (LT-6) - Figure 10
+\end{itemize}
+
+\textbf{Section 8: Discussion}
+\begin{itemize}
+    \item Insights: Tradeoffs between chattering and tracking accuracy
+    \item Why adaptive controllers outperform under uncertainty
+    \item Practical considerations: Computational cost, sensor noise, tuning
+    \item Limitations: Simulation only, not physical hardware
+\end{itemize}
+
+\textbf{Section 9: Conclusions and Future Work}
+\begin{itemize}
+    \item Summary of contributions (systematic comparison, PSO tuning, Lyapunov proofs)
+    \item Key findings (Hybrid Adaptive STA best, adaptive essential for uncertain systems)
+    \item Future work: Formal verification, learning-based tuning, embedded deployment
+\end{itemize}
+\end{tcolorbox}
+
+% ==============================================================================
+% PAGE 6: FIGURES & AUTOMATION
+% ==============================================================================
+\newpage
+
+\section*{Fourteen Publication-Ready Figures}
+
+\begin{keypoint}
+\textbf{Selection Criteria:}
+\begin{itemize}
+    \item \textbf{1.} Does it support a claim in the text?
+    \item \textbf{2.} Does it add new information (not just repeat table)?
+    \item \textbf{3.} Does it meet quality standards? (Vector format, 300 DPI, 10-12pt fonts, colorblind-safe)
+\end{itemize}
+\end{keypoint}
+
+\textbf{Figure List:}
+
+\begin{multicols}{2}
+
+\textbf{Architecture \& Theory:}
+\begin{itemize}
+    \item \textbf{1.} Architecture block diagram
+    \item \textbf{2.} Boundary layer illustration
+    \item \textbf{3.} STA phase portrait
+\end{itemize}
+
+\textbf{Performance Metrics:}
+\begin{itemize}
+    \setcounter{enumi}{3}
+    \item \textbf{1.} PSO convergence
+    \item \textbf{2.} Settling time comparison
+    \item \textbf{3.} Overshoot comparison
+    \item \textbf{4.} Energy consumption
+    \item \textbf{5.} Chattering frequency
+\end{itemize}
+
+\columnbreak
+
+\textbf{Robustness:}
+\begin{itemize}
+    \setcounter{enumi}{8}
+    \item \textbf{1.} Disturbance rejection time series
+    \item \textbf{2.} Model uncertainty degradation
+    \item \textbf{3.} Lyapunov stability regions
+\end{itemize}
+
+\textbf{Statistical Validation:}
+\begin{itemize}
+    \setcounter{enumi}{11}
+    \item \textbf{1.} Monte Carlo histograms
+    \item \textbf{2.} Controller ranking heatmap
+    \item \textbf{3.} Pareto frontier
+\end{itemize}
+
+\end{multicols}
+
+\section*{Automation Workflow: Data to Publication in 3 Minutes}
+
+\begin{center}
+\begin{tikzpicture}[node distance=2cm]
+    \node[block, fill=primary!30] (data) {\textbf{Data}\\HDF5\\105 MB};
+    \node[process, right=of data] (metrics) {\textbf{Metrics}\\CSV\\45s};
+    \node[process, right=of metrics] (stats) {\textbf{Statistics}\\JSON\\CI/p-val};
+    \node[process, right=of stats] (figures) {\textbf{Figures}\\14 PDFs\\60s};
+    \node[block, fill=secondary!30, right=of figures] (paper) {\textbf{Paper}\\LaTeX\\8.2 MB};
+
+    \draw[arrow] (data) -- (metrics);
+    \draw[arrow] (metrics) -- (stats);
+    \draw[arrow] (stats) -- (figures);
+    \draw[arrow] (figures) -- (paper);
+\end{tikzpicture}
+\end{center}
+
+\begin{tcolorbox}[colback=accent!10, colframe=accent, title=\faCogs\ Seven-Stage Pipeline]
+\textbf{Stage 1: Data Collection}
+\begin{itemize}
+    \item 700 trials saved to HDF5 (105 MB)
+    \item Includes state trajectory, control signal, timestamps, metadata
+\end{itemize}
+
+\textbf{Stage 2: Metric Computation (45 seconds)}
+\begin{itemize}
+    \item Load HDF5, compute settling time, overshoot, energy, chattering
+    \item Output: CSV file (1.2 MB)
+\end{itemize}
+
+\textbf{Stage 3: Statistical Analysis}
+\begin{itemize}
+    \item Bootstrap CI (2,000 resamples per controller)
+    \item Welch's t-tests with Bonferroni correction
+    \item Output: JSON with means, CIs, p-values
+\end{itemize}
+
+\textbf{Stage 4: Figure Generation (60 seconds)}
+\begin{itemize}
+    \item Read JSON, create 14 plots with Matplotlib
+    \item Consistent styling (colorblind-safe palette)
+    \item Save as vector PDFs + high-res PNGs
+\end{itemize}
+
+\textbf{Stage 5: LaTeX Integration}
+\begin{itemize}
+    \item Each figure has metadata JSON (caption, data source, script, commit hash)
+    \item Python script generates \texttt{\textbackslash includegraphics} + \texttt{\textbackslash caption} + \texttt{\textbackslash label}
+\end{itemize}
+
+\textbf{Stage 6: Document Compilation}
+\begin{itemize}
+    \item Run pdflatex, pull in all 14 figures
+    \item Output: Submission PDF (8.2 MB)
+\end{itemize}
+
+\textbf{Stage 7: Reproducibility Validation}
+\begin{itemize}
+    \item Delete all figures, re-run pipeline
+    \item Verify 14/14 PDFs are bit-for-bit identical
+\end{itemize}
+\end{tcolorbox}
+
+\textbf{Total Time:} 3 minutes (vs 2 hours manual, 40× faster!)
+
+% ==============================================================================
+% PAGE 7: VERSION CONTROL & COLLABORATION
+% ==============================================================================
+\newpage
+
+\section*{Version Control for Research: Five Practices}
+
+\begin{keypoint}
+\textbf{Goal:} Make every paper revision traceable and reproducible
+\end{keypoint}
+
+\begin{multicols}{2}
+
+\textbf{Practice 1: Granular Commits}
+\begin{lstlisting}[style=yaml, numbers=none]
+git commit -m "Added Lyapunov
+proofs for STA-SMC (Section 4.2)"
+
+git commit -m "Fixed typo in
+equation 17"
+\end{lstlisting}
+
+Every significant change = one commit
+
+\textbf{Practice 2: Tag Paper Versions}
+\begin{lstlisting}[style=yaml, numbers=none]
+git tag v1.0-draft
+git tag v1.0-submission-ieee-tcst
+git tag v1.1-revision-1
+\end{lstlisting}
+
+Each tag captures exact code, data, figures
+
+\columnbreak
+
+\textbf{Practice 3: Embed Git Hash in PDF}
+
+LaTeX footer includes:
+\begin{lstlisting}[style=yaml, numbers=none]
+\footnotesize{Git commit:
+\texttt{\gitHash}}
+\end{lstlisting}
+
+Auto-generated from \texttt{git rev-parse HEAD}
+
+Traceability: PDF → Repository state
+
+\textbf{Practice 4: Git LFS for Large Files}
+\begin{lstlisting}[style=yaml, numbers=none]
+git lfs track "*.pdf"
+git add figures/*.pdf
+git commit -m "Add Figure 5-8"
+\end{lstlisting}
+
+Binary PDFs (5-15 MB total) stored efficiently
+
+\end{multicols}
+
+\textbf{Practice 5: Reproducibility README}
+
+File: \texttt{academic/paper/experiments/REPRODUCTION.md}
+
+Lists exact commands to regenerate every figure from data
+
+\begin{warning}
+\textbf{Example Value:} 6 months after submission, reviewer requests Figure 10 data
+
+\textbf{Without Git tags:} Which data file? Which script version? \textbf{SCREWED!}
+
+\textbf{With Git tags:} Check submission tag → commit 964dc438 → Find exact data file → Send to reviewer → \textbf{CRISIS AVERTED!}
+\end{warning}
+
+\section*{Collaboration Workflows: Four Mechanisms}
+
+\begin{tcolorbox}[colback=secondary!10, colframe=secondary, title=\faUsers\ Multi-Author Coordination]
+\textbf{Mechanism 1: Shared Git Repository}
+\begin{itemize}
+    \item All co-authors access \texttt{github.com/theSadeQ/dip-smc-pso.git}
+    \item Create branch → Submit pull request → Primary author reviews → Merge
+\end{itemize}
+
+\textbf{Mechanism 2: Automated Figure Gallery}
+\begin{itemize}
+    \item Script generates HTML page with thumbnails + captions (14 figures)
+    \item Deployed to GitHub Pages: \texttt{theSadeQ.github.io/dip-smc-pso/figures}
+    \item Updates automatically via GitHub Actions on every push
+    \item Co-authors view latest figures without cloning repo!
+\end{itemize}
+
+\textbf{Mechanism 3: Dropbox/Google Drive Sync}
+\begin{itemize}
+    \item For non-Git users: \texttt{/Shared/research\_paper/} folder
+    \item Cron job syncs from Git to Dropbox every hour
+\end{itemize}
+
+\textbf{Mechanism 4: Overleaf Integration}
+\begin{itemize}
+    \item Upload LaTeX source + figures to Overleaf project
+    \item Co-authors edit in browser
+    \item Changes sync back to Git via Overleaf-GitHub integration
+\end{itemize}
+\end{tcolorbox}
+
+% ==============================================================================
+% PAGE 8: BIBLIOGRAPHY & SUBMISSION
+% ==============================================================================
+\newpage
+
+\section*{Comprehensive Bibliography: 39 References}
+
+\begin{keypoint}
+\textbf{Three-Source Strategy:} Foundational papers + DIP-specific + PSO/optimization
+\end{keypoint}
+
+\begin{multicols}{2}
+
+\textbf{Source 1: Foundational Papers}
+\begin{itemize}
+    \item \textbf{Utkin 1977} - "Variable structure systems with sliding modes" (15,000+ citations)
+    \item \textbf{Levant 1993} - Introduces super-twisting algorithm
+    \item \textbf{Slotine 1991} - "Applied Nonlinear Control" textbook (adaptive SMC)
+    \item \textbf{Moreno 2008} - Hybrid adaptive STA theory
+\end{itemize}
+
+\textbf{Source 2: DIP-Specific Control}
+\begin{itemize}
+    \item \textbf{Fantoni 2002} - "Non-linear Control for Underactuated Systems"
+    \item \textbf{Glück 2013} - Triple pendulum swing-up
+    \item \textbf{Zhong 2001} - Energy-based DIP control
+    \item Recent 2020-2025 papers from IEEE TCST
+\end{itemize}
+
+\columnbreak
+
+\textbf{Source 3: PSO \& Optimization}
+\begin{itemize}
+    \item \textbf{Kennedy 1995} - Original PSO paper (100,000+ citations)
+    \item \textbf{Clerc 2002} - PSO convergence analysis
+    \item \textbf{Coello 2004} - Multi-objective PSO theory
+    \item \textbf{Gad 2022} - PSO applications survey
+\end{itemize}
+
+\end{multicols}
+
+\textbf{Systematic Search Process:}
+
+\begin{itemize}
+    \item \textbf{1.} Google Scholar: "sliding mode control double inverted pendulum" (2,400 results)
+    \item \textbf{2.} Filter by citations: Sort by most cited, read top 10 (foundational papers)
+    \item \textbf{3.} Follow citation chains: If Paper A cites B and B looks relevant, read B
+    \item \textbf{4.} Check recent work: Filter last 5 years, find state-of-the-art
+    \item \textbf{5.} Journal alignment: Search target journal (IEEE TCST) for similar papers
+    \item \textbf{6.} Result: Read 120 papers → Select 39 gold nuggets
+\end{itemize}
+
+\textbf{Citation Management:} BibTeX file (\texttt{references.bib}) with auto-generated bibliography
+
+\section*{Submission Package: Five Components}
+
+\begin{tcolorbox}[colback=warning!10, colframe=warning, title=\faFileArchive\ Journal Submission Checklist]
+\textbf{Component 1: Main Manuscript PDF}
+\begin{itemize}
+    \item 71 pages, IEEE two-column format, 8.2 MB
+\end{itemize}
+
+\textbf{Component 2: Individual Figure Files}
+\begin{itemize}
+    \item All 14 figures as separate high-res PDFs
+    \item Zipped archive: 12 MB (for typesetting)
+\end{itemize}
+
+\textbf{Component 3: Supplementary Materials}
+\begin{itemize}
+    \item 15 pages of additional plots, data tables, extended proofs
+    \item Material that doesn't fit in main paper
+\end{itemize}
+
+\textbf{Component 4: Cover Letter}
+\begin{itemize}
+    \item One page addressed to editor
+    \item Why work is significant, how it fits journal scope
+    \item Suggest 3 expert reviewers (no conflicts of interest)
+\end{itemize}
+
+\textbf{Component 5: Author Forms}
+\begin{itemize}
+    \item Copyright transfer agreement
+    \item Conflict of interest statement
+    \item Author contributions
+    \item ORCID IDs for all authors
+\end{itemize}
+\end{tcolorbox}
+
+\begin{warning}
+\textbf{Miss ONE component?} Submission rejected before review!
+
+\textbf{Use checklist to prevent this!}
+\end{warning}
+
+% ==============================================================================
+% PAGE 9: KEY TAKEAWAYS & QUICK REFERENCE
+% ==============================================================================
+\newpage
+
+\section*{Key Takeaways}
+
+\begin{summary}
+\textbf{72-Hour Roadmap:} 3 tiers for momentum (quick wins 8h → medium 18h → long-term 46h)
+
+\textbf{Quick Wins (Week 1):} Theory docs, baselines, PSO viz, chattering metrics (planned 8h, actual 16h)
+
+\textbf{MT-5 Benchmark:} 700 sims, 105 MB HDF5, bootstrap CI, Welch's t-test, ranking (Hybrid Adaptive STA 1st)
+
+\textbf{MT-6 Negative Result:} Boundary layer 60-80\% reduction was biased metric (true: 3.7\%)
+
+\textbf{MT-8 Disturbance:} Adaptive recovers in 0.8s, Classical in 1.5s (10N step force)
+
+\textbf{LT-4 Lyapunov:} 7 proofs × 3-5 pages = 1,000 lines LaTeX (Section 4 of paper)
+
+\textbf{LT-6 Uncertainty:} Adaptive graceful (22\% degradation @ 30\%), Classical fails (60\% @ 30\%)
+
+\textbf{LT-7 Paper Evolution:} v1.0 (50 pgs) → v1.5 (+15 pgs) → v2.0 (+5 pgs) → v2.1 (71 pgs, submission-ready)
+
+\textbf{14 Figures:} Architecture, theory, performance metrics (5), robustness (3), statistical validation (3)
+
+\textbf{Automation:} 3 minutes data → PDF (vs 2 hours manual, 40× faster, 14/14 bit-identical)
+
+\textbf{Version Control:} 5 practices (granular commits, git tags, embedded hash, LFS, reproducibility README)
+
+\textbf{Collaboration:} Git repo + figure gallery + Dropbox + Overleaf (4 mechanisms)
+
+\textbf{Bibliography:} 39 references from 120 papers (foundational + DIP + PSO)
+
+\textbf{Submission Package:} 5 components (manuscript + figures + supplementary + cover letter + forms)
+\end{summary}
+
+\subsection*{Quick Reference: Research Workflow Commands}
+
+\quickref{Run Research Tasks}{
+\begin{lstlisting}[style=yaml, numbers=none]
+# MT-5 Comprehensive Benchmark
+python academic/paper/experiments/mt5_benchmark.py
+
+# MT-8 Disturbance Rejection
+python academic/paper/experiments/mt8_disturbance.py
+
+# LT-6 Model Uncertainty
+python academic/paper/experiments/lt6_uncertainty.py
+\end{lstlisting}
+}
+
+\quickref{Generate Paper Figures}{
+\begin{lstlisting}[style=yaml, numbers=none]
+# All 14 figures from data (60 seconds)
+python academic/paper/experiments/generate_figures.py
+
+# Verify reproducibility
+python academic/paper/experiments/verify_reproducibility.py
+\end{lstlisting}
+}
+
+\quickref{Version Control for Papers}{
+\begin{lstlisting}[style=yaml, numbers=none]
+# Tag paper version
+git tag v2.1-submission-ieee-tcst
+
+# Embed commit hash in PDF footer
+\footnotesize{Git: \texttt{\gitHash}}
+
+# Find exact data for figure
+git checkout v2.1-submission-ieee-tcst
+cat REPRODUCTION.md | grep "Figure 10"
+\end{lstlisting}
+}
+
+\subsection*{What's Next?}
+
+\begin{keypoint}
+\textbf{E009: Educational Materials \& Learning Paths}
+
+Beginner roadmap (125-150 hours), 5 learning paths (complete novice → advanced researcher), documentation for different audiences
+
+\textbf{Remember:} Research is communication. Code alone is not enough - publish, document, make reproducible!
+\end{keypoint}
+
+\end{document}

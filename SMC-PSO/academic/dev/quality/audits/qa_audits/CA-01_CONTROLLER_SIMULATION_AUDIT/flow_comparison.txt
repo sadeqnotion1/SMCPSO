@@ -1,0 +1,34 @@
+================================================================================
+DATA FLOW COMPARISON: All 4 SMC Controllers
+================================================================================
+
+
+CLASSICAL_SMC
+--------------------------------------------------------------------------------
+  Total events: 23
+  Simulation steps: 11
+  Control effort (RMS): 17.2000 N
+  Final state norm: 0.1414
+
+ADAPTIVE_SMC
+--------------------------------------------------------------------------------
+  Total events: 23
+  Simulation steps: 11
+  Control effort (RMS): 19.4631 N
+  Final state norm: 0.1414
+
+STA_SMC
+--------------------------------------------------------------------------------
+  Total events: 23
+  Simulation steps: 11
+  Control effort (RMS): 35.7218 N
+  Final state norm: 0.1414
+
+HYBRID_ADAPTIVE_STA_SMC
+--------------------------------------------------------------------------------
+  Total events: 23
+  Simulation steps: 11
+  Control effort (RMS): 36.5230 N
+  Final state norm: 0.1414
+
+================================================================================

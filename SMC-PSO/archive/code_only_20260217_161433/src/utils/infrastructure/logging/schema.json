@@ -1,0 +1,182 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/theSadeQ/dip-smc-pso/schemas/log-entry.json",
+  "title": "DIP-SMC-PSO Log Entry",
+  "description": "JSON schema for structured log entries in the DIP-SMC-PSO project",
+  "type": "object",
+  "required": ["timestamp", "level", "component", "event", "metadata"],
+  "properties": {
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp with microsecond precision",
+      "examples": ["2025-11-11T14:23:45.123456Z"]
+    },
+    "level": {
+      "type": "string",
+      "enum": ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
+      "description": "Log level following Python logging convention"
+    },
+    "component": {
+      "type": "string",
+      "pattern": "^[A-Z][a-zA-Z0-9]+(\\.[A-Z][a-zA-Z0-9]+)*$",
+      "description": "Hierarchical component path (dot-separated)",
+      "examples": [
+        "Controller.ClassicalSMC",
+        "Controller.AdaptiveSMC.update_gains",
+        "Optimizer.PSO.evaluate_swarm",
+        "Simulation.Runner.step"
+      ]
+    },
+    "event": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*$",
+      "description": "Event identifier in snake_case",
+      "examples": [
+        "initialized",
+        "control_computed",
+        "pso_optimization_started",
+        "simulation_complete"
+      ]
+    },
+    "data": {
+      "type": "object",
+      "description": "Event-specific structured data",
+      "additionalProperties": true,
+      "examples": [
+        {
+          "state_norm": 0.025,
+          "control_signal": 15.3,
+          "error": [0.01, 0.02, 0.005],
+          "sliding_surface": 0.0023
+        }
+      ]
+    },
+    "duration_ms": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Operation duration in milliseconds",
+      "examples": [1.23, 5123.45]
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Contextual metadata",
+      "required": ["thread_id"],
+      "properties": {
+        "run_id": {
+          "type": "string",
+          "description": "Unique simulation/optimization run identifier",
+          "examples": ["abc123", "pso_run_456"]
+        },
+        "iteration": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Current iteration/step number"
+        },
+        "thread_id": {
+          "type": "string",
+          "description": "Thread identifier",
+          "examples": ["MainThread", "Thread-1"]
+        },
+        "hostname": {
+          "type": "string",
+          "description": "Machine hostname",
+          "examples": ["research-01", "laptop-dev"]
+        },
+        "pid": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Process ID"
+        }
+      },
+      "additionalProperties": true
+    },
+    "error": {
+      "type": "object",
+      "description": "Error information (only present for ERROR/CRITICAL logs)",
+      "properties": {
+        "error_type": {
+          "type": "string",
+          "description": "Exception class name",
+          "examples": ["ValueError", "RuntimeError", "TypeError"]
+        },
+        "error_message": {
+          "type": "string",
+          "description": "Exception message"
+        },
+        "traceback": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Stack trace lines"
+        },
+        "context": {
+          "type": "object",
+          "description": "Additional error context",
+          "additionalProperties": true
+        }
+      }
+    }
+  },
+  "examples": [
+    {
+      "timestamp": "2025-11-11T14:23:45.123456Z",
+      "level": "INFO",
+      "component": "Controller.ClassicalSMC",
+      "event": "control_computed",
+      "data": {
+        "state_norm": 0.025,
+        "control_signal": 15.3,
+        "error": [0.01, 0.02, 0.005, 0.003],
+        "sliding_surface": 0.0023
+      },
+      "duration_ms": 1.23,
+      "metadata": {
+        "run_id": "abc123",
+        "iteration": 100,
+        "thread_id": "MainThread"
+      }
+    },
+    {
+      "timestamp": "2025-11-11T14:30:00.000000Z",
+      "level": "INFO",
+      "component": "Optimizer.PSO",
+      "event": "pso_optimization_started",
+      "data": {
+        "num_particles": 50,
+        "generations": 100,
+        "bounds": [[0, 50], [0, 30], [0, 50], [0, 30], [0, 50], [0, 30]]
+      },
+      "metadata": {
+        "run_id": "pso_run_456",
+        "thread_id": "MainThread"
+      }
+    },
+    {
+      "timestamp": "2025-11-11T14:23:45.345678Z",
+      "level": "ERROR",
+      "component": "Controller.ClassicalSMC.compute_control",
+      "event": "computation_failed",
+      "data": {
+        "state_shape": [4],
+        "expected_shape": [6]
+      },
+      "error": {
+        "error_type": "ValueError",
+        "error_message": "Invalid state vector dimension",
+        "traceback": [
+          "Traceback (most recent call last):",
+          "  File \"src/controllers/smc/classic_smc.py\", line 123, in compute_control",
+          "    self._validate_state(state)",
+          "ValueError: Invalid state vector dimension"
+        ]
+      },
+      "metadata": {
+        "run_id": "abc123",
+        "iteration": 150,
+        "thread_id": "MainThread"
+      }
+    }
+  ]
+}

@@ -1,0 +1,164 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CHAPTER 1 EXERCISES: Introduction to Underactuated Systems and SMC
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section*{Exercises}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Conceptual Questions}
+
+\begin{exercise}[Underactuation Degree]
+\label{ex:ch1_underactuation_degree}
+Consider a robotic arm with $n$ revolute joints, each with one actuator. How many independent control inputs does this system have? Is it underactuated, fully actuated, or overactuated? What if two joints share a single actuator via a differential mechanism?
+\end{exercise}
+
+\begin{exercise}[DIP Controllability Classification]
+\label{ex:ch1_dip_controllability}
+The double-inverted pendulum has 3 degrees of freedom and 1 actuator.
+\begin{enumerate}[label=(\alph*)]
+    \item Calculate the degree of underactuation.
+    \item If we add a second actuator directly controlling $\theta_1$, would the system become fully actuated?
+    \item What are the implications for control design in each case?
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Historical Development]
+\label{ex:ch1_history}
+Research Vadim Utkin's 1977 paper on variable structure systems. Summarize the three main theoretical contributions and explain how they differ from prior variable structure control work of the 1950s-1960s.
+\end{exercise}
+
+\begin{exercise}[Chattering Root Causes]
+\label{ex:ch1_chattering_causes}
+Rank the following sources of chattering by typical severity in digital control implementations (1 = most severe, 4 = least severe), and justify your ranking:
+\begin{itemize}
+    \item Discrete-time sampling at finite frequency
+    \item Actuator switching delays
+    \item Measurement noise
+    \item Unmodeled high-frequency dynamics
+\end{itemize}
+\end{exercise}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Computational Problems}
+
+\begin{exercise}[Energy Analysis]
+\label{ex:ch1_energy_analysis}
+Write the total mechanical energy of the DIP system as $E = T + V$ (kinetic + potential). At the upright equilibrium $(\theta_1 = \theta_2 = 0, \dot{\theta}_1 = \dot{\theta}_2 = 0)$, determine:
+\begin{enumerate}[label=(\alph*)]
+    \item The value of the total energy $E_0$
+    \item Whether this energy is a local minimum, maximum, or saddle point
+    \item The Hessian matrix $\nabla^2 E$ and its eigenvalues
+\end{enumerate}
+\textit{Hint:} Use typical parameters: $M = 1.0$ kg, $m_1 = m_2 = 0.1$ kg, $L_1 = L_2 = 0.5$ m, $g = 9.81$ m/s$^2$.
+\end{exercise}
+
+\begin{exercise}[Sliding Surface Design]
+\label{ex:ch1_sliding_surface}
+For a simple inverted pendulum (1 DOF), propose a sliding surface $\sigma(\theta, \dot{\theta}) = k_1 \theta + k_2 \dot{\theta}$ such that $\sigma = 0$ implies $\theta \to 0$ exponentially.
+\begin{enumerate}[label=(\alph*)]
+    \item What constraints must $k_1, k_2$ satisfy?
+    \item If you want the convergence rate $\lambda = 5$ rad/s, what are appropriate values?
+    \item Sketch the phase portrait showing the sliding line and typical trajectories.
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Boundary Layer Trade-off]
+\label{ex:ch1_boundary_layer}
+If the boundary layer thickness $\epsilon$ is doubled from 0.01 to 0.02 rad:
+\begin{enumerate}[label=(\alph*)]
+    \item How does the steady-state tracking error change? Derive the relationship analytically.
+    \item How does the chattering frequency change qualitatively?
+    \item What is the optimal $\epsilon$ if the acceptable tracking error is $e_{max} = 0.015$ rad?
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Chattering Frequency Estimation]
+\label{ex:ch1_chattering_freq}
+A discrete-time controller samples at 1 kHz. If the sliding surface value oscillates with amplitude $\pm 0.01$ and the system derivative $\dot{\sigma} \approx 10$ s$^{-1}$:
+\begin{enumerate}[label=(\alph*)]
+    \item Estimate the chattering frequency in Hz.
+    \item How does doubling the sampling rate to 2 kHz affect this frequency?
+    \item At what sampling rate would chattering frequency exceed audible range (20 kHz)?
+\end{enumerate}
+\end{exercise}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Python Implementation}
+
+\begin{exercise}[Lyapunov Function Verification]
+\label{ex:ch1_lyapunov_code}
+Implement a Python function to verify Lyapunov stability conditions for the sliding surface $\sigma = k_1 \theta + k_2 \dot{\theta}$.
+
+\begin{lstlisting}[language=Python]
+import numpy as np
+
+def verify_lyapunov_conditions(k1, k2, theta_range, theta_dot_range):
+    """
+    Verify that V = 0.5 * sigma^2 is a valid Lyapunov function.
+
+    Args:
+        k1: Sliding surface coefficient for theta
+        k2: Sliding surface coefficient for theta_dot
+        theta_range: Array of theta values to test (rad)
+        theta_dot_range: Array of theta_dot values to test (rad/s)
+
+    Returns:
+        is_positive_definite: bool (V > 0 for all (theta, theta_dot) != 0)
+        is_radially_unbounded: bool (V -> infinity as norm -> infinity)
+        min_V: Minimum value of V on the grid
+        max_V: Maximum value of V on the boundary
+    """
+    # YOUR CODE HERE
+    pass
+
+# Test with k1 = 5.0, k2 = 1.0
+theta_test = np.linspace(-0.5, 0.5, 100)
+theta_dot_test = np.linspace(-2.0, 2.0, 100)
+results = verify_lyapunov_conditions(5.0, 1.0, theta_test, theta_dot_test)
+print(f"Positive definite: {results[0]}")
+print(f"Radially unbounded: {results[1]}")
+\end{lstlisting}
+\end{exercise}
+
+\begin{exercise}[Controller Selection Tool]
+\label{ex:ch1_controller_selection}
+Create an interactive Python script that recommends a controller based on user requirements:
+
+\begin{lstlisting}[language=Python]
+def recommend_controller(requirements):
+    """
+    Recommend SMC controller variant based on application requirements.
+
+    Args:
+        requirements: dict with keys:
+            - 'chattering_tolerance': float (0-1, 0=intolerant, 1=tolerant)
+            - 'model_accuracy': float (0-1, 0=very uncertain, 1=accurate)
+            - 'computational_budget': str ('low', 'medium', 'high')
+            - 'transient_speed': str ('slow_ok', 'medium', 'fast_required')
+
+    Returns:
+        recommendation: str (controller name)
+        justification: str (why this controller was chosen)
+        alternatives: list of str (other viable options)
+    """
+    # YOUR CODE HERE
+    # Implement decision logic based on Table 1.2 (Controller Selection Guidelines)
+    pass
+
+# Example usage
+req = {
+    'chattering_tolerance': 0.2,  # Low tolerance
+    'model_accuracy': 0.6,        # Medium accuracy
+    'computational_budget': 'high',
+    'transient_speed': 'fast_required'
+}
+controller, reason, alts = recommend_controller(req)
+print(f"Recommended: {controller}")
+print(f"Reason: {reason}")
+print(f"Alternatives: {alts}")
+\end{lstlisting}
+\end{exercise}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% End of Chapter 1 Exercises
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

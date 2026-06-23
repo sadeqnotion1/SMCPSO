@@ -1,0 +1,91 @@
+\section*{Nomenclature}
+\addcontentsline{toc}{section}{Nomenclature}
+
+\subsection*{State Variables}
+\begin{description}
+    \item[$x$] Cart position [m]
+    \item[$\dot{x}$] Cart velocity [m/s]
+    \item[$\theta_1$] First pendulum angle from vertical [rad]
+    \item[$\dot{\theta}_1$] Angular velocity of first pendulum [rad/s]
+    \item[$\theta_2$] Second pendulum angle from vertical [rad]
+    \item[$\dot{\theta}_2$] Angular velocity of second pendulum [rad/s]
+    \item[$\vect{x}$] State vector $= [x, \dot{x}, \theta_1, \dot{\theta}_1, \theta_2, \dot{\theta}_2]^T \in \Real^6$
+\end{description}
+
+\subsection*{Physical Parameters}
+\begin{description}
+    \item[$m_0$] Cart mass = 1.5 kg
+    \item[$m_1$] First pendulum mass = 0.2 kg
+    \item[$m_2$] Second pendulum mass = 0.15 kg
+    \item[$L_1$] Length of first pendulum = 0.4 m
+    \item[$L_2$] Length of second pendulum = 0.3 m
+    \item[$l_1$] Distance to first pendulum center of mass = 0.2 m
+    \item[$l_2$] Distance to second pendulum center of mass = 0.15 m
+    \item[$I_1$] First pendulum moment of inertia = 0.0081 kg$\cdot$m$^2$
+    \item[$I_2$] Second pendulum moment of inertia = 0.0034 kg$\cdot$m$^2$
+    \item[$g$] Gravitational acceleration = 9.81 m/s$^2$
+    \item[$b_0$] Cart friction coefficient = 0.2 N$\cdot$s/m
+    \item[$b_1$] Friction at first joint = 0.005 N$\cdot$m$\cdot$s/rad
+    \item[$b_2$] Friction at second joint = 0.004 N$\cdot$m$\cdot$s/rad
+\end{description}
+
+\subsection*{Control Variables}
+\begin{description}
+    \item[$u(t)$] Control input (force applied to cart) [N]
+    \item[$s(\vect{x})$] Sliding surface function
+    \item[$\lambda$] Sliding surface slope parameter
+    \item[$\phi(\vect{x})$] Boundary layer width parameter
+    \item[$e(t)$] Tracking error vector
+\end{description}
+
+\subsection*{SMC Controller Parameters}
+\begin{description}
+    \item[$K$] Control gain (classical SMC)
+    \item[$\alpha$] Super-twisting algorithm gain
+    \item[$\beta$] Super-twisting algorithm second gain
+    \item[$K_{\text{adapt}}(t)$] Adaptive gain (time-varying)
+    \item[$\gamma$] Adaptation rate
+    \item[$\epsilon$] Boundary layer thickness
+\end{description}
+
+\subsection*{PSO Parameters}
+\begin{description}
+    \item[$w$] Inertia weight
+    \item[$c_1$] Cognitive coefficient
+    \item[$c_2$] Social coefficient
+    \item[$\vect{p}_i$] Personal best position of particle $i$
+    \item[$\vect{g}$] Global best position
+    \item[$N_p$] Number of particles (swarm size)
+    \item[$N_{iter}$] Maximum number of iterations
+    \item[$J(\vect{K})$] Cost function for gain vector $\vect{K}$
+\end{description}
+
+\subsection*{Performance Metrics}
+\begin{description}
+    \item[$t_s$] Settling time [s]
+    \item[$M_p$] Peak overshoot [\%]
+    \item[$e_{ss}$] Steady-state error [rad]
+    \item[$E_{total}$] Total energy consumption [J]
+    \item[$C_{amp}$] Chattering amplitude [N]
+\end{description}
+
+\subsection*{Mathematical Operators}
+\begin{description}
+    \item[$\norm{\cdot}$] Euclidean norm
+    \item[$\sign(\cdot)$] Sign function
+    \item[$\sat(\cdot)$] Saturation function
+    \item[$\Real$] Set of real numbers
+    \item[$\Real^n$] n-dimensional real vector space
+\end{description}
+
+\subsection*{Abbreviations}
+\begin{description}
+    \item[DIP] Double-Inverted Pendulum
+    \item[SMC] Sliding Mode Control
+    \item[STA] Super-Twisting Algorithm
+    \item[PSO] Particle Swarm Optimization
+    \item[DoF] Degrees of Freedom
+    \item[CoM] Center of Mass
+    \item[FFT] Fast Fourier Transform
+    \item[SNR] Signal-to-Noise Ratio
+\end{description}

@@ -1,0 +1,56 @@
+C:\Users\sadeg\AppData\Roaming\Python\Python312\site-packages\pytest_asyncio\plugin.py:252: PytestDeprecationWarning: The configuration option "asyncio_default_fixture_loop_scope" is unset.
+The event loop scope for asynchronous fixtures will default to the fixture caching scope. Future versions of pytest-asyncio will default the loop scope for asynchronous fixtures to function scope. Set the default fixture loop scope explicitly in order to avoid unexpected behavior in the future. Valid fixture loop scopes are: "function", "class", "module", "package", "session"
+
+  warnings.warn(PytestDeprecationWarning(_DEFAULT_FIXTURE_LOOP_SCOPE_UNSET))
+============================= test session starts =============================
+platform win32 -- Python 3.12.6, pytest-8.3.5, pluggy-1.6.0 -- C:\Program Files\Python312\python.exe
+cachedir: .pytest_cache
+hypothesis profile 'default'
+benchmark: 4.0.0 (defaults: timer=time.perf_counter disable_gc=False min_rounds=5 min_time=0.000005 max_time=1.0 calibration_precision=10 warmup=False warmup_iterations=100000)
+metadata: {'Python': '3.12.6', 'Platform': 'Windows-11-10.0.26100-SP0', 'Packages': {'pytest': '8.3.5', 'pluggy': '1.6.0'}, 'Plugins': {'anyio': '4.10.0', 'hypothesis': '6.139.2', 'asyncio': '1.2.0', 'base-url': '2.1.0', 'benchmark': '4.0.0', 'cov': '7.0.0', 'html': '4.1.1', 'metadata': '3.1.1', 'playwright': '0.7.1'}, 'Base URL': ''}
+rootdir: D:\Projects\main
+configfile: .pytest.ini
+plugins: anyio-4.10.0, hypothesis-6.139.2, asyncio-1.2.0, base-url-2.1.0, benchmark-4.0.0, cov-7.0.0, html-4.1.1, metadata-3.1.1, playwright-0.7.1
+asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 17 items
+
+tests/browser_automation/test_code_collapse_comprehensive.py::TestFunctionalValidation::test_1_1_button_insertion_and_coverage[chromium] PASSED [  5%]
+tests/browser_automation/test_code_collapse_comprehensive.py::TestFunctionalValidation::test_1_2_collapse_expand_animation[chromium] PASSED [ 11%]
+tests/browser_automation/test_code_collapse_comprehensive.py::TestFunctionalValidation::test_1_3_master_controls[chromium] PASSED [ 17%]
+tests/browser_automation/test_code_collapse_comprehensive.py::TestFunctionalValidation::test_1_4_state_persistence[chromium] PASSED [ 23%]
+tests/browser_automation/test_code_collapse_comprehensive.py::TestFunctionalValidation::test_1_5_keyboard_shortcuts[chromium] PASSED [ 29%]
+tests/browser_automation/test_code_collapse_comprehensive.py::TestPerformanceValidation::test_2_1_collapse_expand_fps[chromium] FAILED [ 35%]
+tests/browser_automation/test_code_collapse_comprehensive.py::TestPerformanceValidation::test_2_2_button_gap_measurement[chromium] PASSED [ 41%]
+tests/browser_automation/test_code_collapse_comprehensive.py::TestPerformanceValidation::test_2_3_mobile_responsive_gap[chromium] PASSED [ 47%]
+tests/browser_automation/test_code_collapse_comprehensive.py::TestSelectorCoverage::test_3_1_console_coverage_report[chromium] PASSED [ 52%]
+tests/browser_automation/test_code_collapse_comprehensive.py::TestSelectorCoverage::test_3_2_all_blocks_have_buttons[chromium] PASSED [ 58%]
+tests/browser_automation/test_code_collapse_comprehensive.py::TestAccessibility::test_5_1_aria_attributes[chromium] PASSED [ 64%]
+tests/browser_automation/test_code_collapse_comprehensive.py::TestAccessibility::test_5_2_keyboard_navigation[chromium] PASSED [ 70%]
+tests/browser_automation/test_code_collapse_comprehensive.py::TestRegression::test_6_1_mobile_responsive[chromium] PASSED [ 76%]
+tests/browser_automation/test_code_collapse_comprehensive.py::TestRegression::test_6_2_print_preview_expands_all[chromium] PASSED [ 82%]
+tests/browser_automation/test_code_collapse_comprehensive.py::TestEdgeCases::test_7_1_hard_refresh_race_condition[chromium] PASSED [ 88%]
+tests/browser_automation/test_code_collapse_comprehensive.py::TestEdgeCases::test_7_2_localstorage_disabled[chromium] PASSED [ 94%]
+tests/browser_automation/test_code_collapse_comprehensive.py::TestEdgeCases::test_7_3_rapid_click_handling[chromium] PASSED [100%]
+
+================================== FAILURES ===================================
+______ TestPerformanceValidation.test_2_1_collapse_expand_fps[chromium] _______
+tests\browser_automation\test_code_collapse_comprehensive.py:219: in test_2_1_collapse_expand_fps
+    assert collapse_result["smooth"], \
+E   AssertionError: Collapse animation not smooth: 44.2 FPS
+E   assert False
+        collapse_result = {'duration_ms': 542.7000000476837,
+ 'fps_estimate': 44.22332780153173,
+ 'smooth': False,
+ 'target_met': False}
+        helper     = <utils.playwright_helper.PlaywrightHelper object at 0x000001CB58C10530>
+        performance_analyzer = <utils.performance_analyzer.PerformanceAnalyzer object at 0x000001CB58C126F0>
+        self       = <tests.browser_automation.test_code_collapse_comprehensive.TestPerformanceValidation object at 0x000001CB5884EB70>
+- Generated html report: file:///D:/Projects/main/tests/browser_automation/artifacts/reports/report_chromium_20251012_142108.html -
+=========================== short test summary info ===========================
+FAILED tests/browser_automation/test_code_collapse_comprehensive.py::TestPerformanceValidation::test_2_1_collapse_expand_fps[chromium] - AssertionError: Collapse animation not smooth: 44.2 FPS
+assert False
+=================== 1 failed, 16 passed in 63.61s (0:01:03) ===================
+Running command: pytest tests/browser_automation/test_code_collapse_comprehensive.py --browser=chromium -v --tb=short --html=tests/browser_automation/artifacts/reports/report_chromium_20251012_142108.html --self-contained-html
+
+
+[FAIL] Tests failed in chromium

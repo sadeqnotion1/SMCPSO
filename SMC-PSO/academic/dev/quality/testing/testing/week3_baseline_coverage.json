@@ -1,0 +1,25 @@
+{
+  "timestamp": "2025-12-21T19:35:34.300182",
+  "phase": "Week 3 Campaign",
+  "coverage_summary": {
+    "baseline_coverage_percent": 2.86,
+    "target_coverage_percent": 20.0,
+    "gap_to_target_pp": 17.14,
+    "total_statements": 39930,
+    "covered_statements": 1141,
+    "missing_statements": 38789
+  },
+  "critical_modules": {
+    "control_analysis": 0.0,
+    "simplified_dynamics": 0.0,
+    "simulation_runner": 0.0,
+    "statistics": 11.5,
+    "disturbances": 0.0,
+    "config_compatibility": 0.0
+  },
+  "coverage_measurement_status": "OPERATIONAL (HTML/JSON reports)",
+  "reports_generated": {
+    "html": ".cache/htmlcov/index.html",
+    "xml": ".cache/coverage.xml"
+  }
+}

@@ -1,0 +1,1268 @@
+/* ========================================
+   BEGINNER ROADMAP STYLING
+   Week 2: CSS & Visual Enhancements
+   ======================================== */
+
+/* ===== 1. ROOT VARIABLES & COLOR SCHEME ===== */
+
+:root {
+    /* Phase Color Palette (WCAG AA Compliant) */
+    --phase1-color: #2563eb;     /* Blue - Foundation */
+    --phase1-bg: #dbeafe;        /* Light blue */
+    --phase1-bg-light: #f0f9ff;  /* Lighter blue for backgrounds */
+
+    --phase2-color: #10b981;     /* Green - Core Concepts */
+    --phase2-bg: #d1fae5;        /* Light green */
+    --phase2-bg-light: #f0fdf4;  /* Lighter green */
+
+    --phase3-color: #f59e0b;     /* Orange - Hands-On */
+    --phase3-bg: #fef3c7;        /* Light orange */
+    --phase3-bg-light: #fffbeb;  /* Lighter orange */
+
+    --phase4-color: #8b5cf6;     /* Purple - Advancing */
+    --phase4-bg: #ede9fe;        /* Light purple */
+    --phase4-bg-light: #faf5ff;  /* Lighter purple */
+
+    --phase5-color: #ef4444;     /* Red - Mastery */
+    --phase5-bg: #fee2e2;        /* Light red */
+    --phase5-bg-light: #fef2f2;  /* Lighter red */
+
+    /* Spacing (8-point grid) */
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-5: 24px;
+    --space-6: 32px;
+    --space-7: 48px;
+
+    /* Shadows */
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 6px 18px rgba(11, 39, 99, 0.25);
+    --shadow-lg: 0 12px 32px rgba(37, 99, 235, 0.35);
+
+    /* Border Radius */
+    --radius-sm: 6px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+
+    /* Transitions */
+    --transition-fast: 0.15s ease;
+    --transition-base: 0.2s ease;
+    --transition-slow: 0.3s ease;
+}
+
+/* ===== 2. PHASE CONTAINER STYLING ===== */
+
+.phase-container {
+    border-left: 6px solid var(--phase-color, #2563eb);
+    background: linear-gradient(90deg, var(--phase-bg), transparent);
+    border-radius: var(--radius-md);
+    padding: var(--space-5);
+    margin: var(--space-5) 0;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow var(--transition-base), transform var(--transition-base);
+}
+
+.phase-container:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+/* Phase-specific color application */
+.phase-1 { --phase-color: var(--phase1-color); --phase-bg: var(--phase1-bg); --phase-bg-light: var(--phase1-bg-light); }
+.phase-2 { --phase-color: var(--phase2-color); --phase-bg: var(--phase2-bg); --phase-bg-light: var(--phase2-bg-light); }
+.phase-3 { --phase-color: var(--phase3-color); --phase-bg: var(--phase3-bg); --phase-bg-light: var(--phase3-bg-light); }
+.phase-4 { --phase-color: var(--phase4-color); --phase-bg: var(--phase4-bg); --phase-bg-light: var(--phase4-bg-light); }
+.phase-5 { --phase-color: var(--phase5-color); --phase-bg: var(--phase5-bg); --phase-bg-light: var(--phase5-bg-light); }
+
+/* Mobile responsive */
+@media (max-width: 767px) {
+    .phase-container {
+        padding: var(--space-4);
+        margin: var(--space-4) 0;
+    }
+}
+
+/* ===== 3. PHASE HEADER STYLING ===== */
+
+.phase-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-5);
+    flex-wrap: wrap;
+    gap: var(--space-3);
+}
+
+.phase-title {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: var(--phase-color, #2563eb);
+    margin: 0;
+}
+
+.phase-duration {
+    background: var(--phase-color, #2563eb);
+    color: white;
+    padding: var(--space-2) var(--space-4);
+    border-radius: 999px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    white-space: nowrap;
+    box-shadow: var(--shadow-sm);
+}
+
+.phase-meta {
+    display: flex;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+    font-size: 0.9375rem;
+    color: #616774;
+}
+
+/* Mobile responsive */
+@media (max-width: 767px) {
+    .phase-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .phase-title {
+        font-size: 1.5rem;
+    }
+}
+
+/* ===== 4. PROGRESS BAR STYLING ===== */
+
+.phase-progress {
+    height: 8px;
+    background: #e5e7eb;
+    border-radius: 4px;
+    overflow: hidden;
+    margin: var(--space-4) 0;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--phase-color, #2563eb), lighter);
+    border-radius: 4px;
+    animation: progressGrow 1.5s ease-out forwards;
+    box-shadow: 0 2px 4px rgba(37, 99, 235, 0.3);
+}
+
+@keyframes progressGrow {
+    from {
+        width: 0;
+        opacity: 0.5;
+    }
+    to {
+        width: var(--progress-percent, 100%);
+        opacity: 1;
+    }
+}
+
+/* Progress timeline (master index) */
+.progress-timeline {
+    display: flex;
+    gap: var(--space-2);
+    margin: var(--space-5) 0;
+    flex-wrap: wrap;
+}
+
+.progress-step {
+    flex: 1;
+    min-width: 100px;
+    height: 12px;
+    background: #e5e7eb;
+    border-radius: 6px;
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-step.phase-1 { --phase-color: var(--phase1-color); }
+.progress-step.phase-2 { --phase-color: var(--phase2-color); }
+.progress-step.phase-3 { --phase-color: var(--phase3-color); }
+.progress-step.phase-4 { --phase-color: var(--phase4-color); }
+.progress-step.phase-5 { --phase-color: var(--phase5-color); }
+
+.progress-step::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    background: var(--phase-color);
+    border-radius: 6px;
+    animation: progressFill 1.2s ease-out forwards;
+}
+
+@keyframes progressFill {
+    from {
+        width: 0;
+        opacity: 0;
+    }
+    to {
+        width: 100%;
+        opacity: 1;
+    }
+}
+
+/* Mobile responsive */
+@media (max-width: 767px) {
+    .progress-timeline {
+        gap: var(--space-1);
+    }
+
+    .progress-step {
+        min-width: 60px;
+        height: 10px;
+    }
+}
+
+/* ===== 5. COLLAPSIBLE SECTIONS (details/summary) ===== */
+
+details {
+    border-left: 4px solid var(--phase-color, #2563eb);
+    background: var(--phase-bg-light, #f0f9ff);
+    border-radius: var(--radius-md);
+    padding: var(--space-4);
+    margin: var(--space-4) 0;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow var(--transition-base), background var(--transition-base);
+}
+
+details:hover {
+    box-shadow: var(--shadow-md);
+    background: var(--phase-bg);
+}
+
+details[open] {
+    box-shadow: var(--shadow-md);
+}
+
+summary {
+    cursor: pointer;
+    user-select: none;
+    font-weight: 600;
+    color: var(--phase-color, #2563eb);
+    font-size: 1.125rem;
+    padding: var(--space-2);
+    margin: calc(var(--space-2) * -1);
+    display: flex;
+    align-items: center;
+    transition: color var(--transition-base);
+}
+
+summary:hover {
+    color: var(--phase-color);
+    opacity: 0.8;
+}
+
+summary::marker {
+    color: var(--phase-color, #2563eb);
+}
+
+details > * {
+    margin-top: var(--space-4);
+}
+
+details > :first-child {
+    margin-top: 0;
+}
+
+/* Mobile responsive */
+@media (max-width: 767px) {
+    details {
+        padding: var(--space-3);
+    }
+
+    summary {
+        font-size: 1rem;
+    }
+}
+
+/* ===== 6. RESOURCE CARDS (sphinx-design grid-item-card) ===== */
+
+.grid-item-card {
+    border-left: 5px solid var(--phase-color, #2563eb);
+    border-radius: var(--radius-md);
+    transition: transform var(--transition-base), box-shadow var(--transition-base),
+                border-color var(--transition-slow);
+    background: white;
+    padding: var(--space-4);
+    box-shadow: var(--shadow-sm);
+}
+
+.grid-item-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-md);
+    border-left-color: var(--phase-color);
+}
+
+.grid-item-card h3 {
+    color: var(--phase-color, #2563eb);
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-top: 0;
+}
+
+.grid-item-card p {
+    color: #616774;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+}
+
+.grid-item-card a {
+    color: var(--phase-color, #2563eb);
+    font-weight: 600;
+    text-decoration: none;
+    transition: opacity var(--transition-base);
+}
+
+.grid-item-card a:hover {
+    opacity: 0.8;
+    text-decoration: underline;
+}
+
+/* Grid layout responsive */
+.grid {
+    display: grid;
+    gap: var(--space-4);
+}
+
+@media (max-width: 767px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* ===== 7. BREADCRUMB STYLING ===== */
+
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin: var(--space-4) 0;
+    padding: var(--space-3) var(--space-4);
+    background: #f9fafb;
+    border-radius: var(--radius-md);
+    font-size: 0.9375rem;
+    border: 1px solid #e5e7eb;
+}
+
+.breadcrumb a {
+    color: var(--phase-color, #2563eb);
+    text-decoration: none;
+    transition: opacity var(--transition-base);
+}
+
+.breadcrumb a:hover {
+    opacity: 0.8;
+    text-decoration: underline;
+}
+
+.breadcrumb span {
+    color: #9ca3af;
+    margin: 0 var(--space-1);
+}
+
+/* Mobile responsive */
+@media (max-width: 767px) {
+    .breadcrumb {
+        font-size: 0.8125rem;
+        padding: var(--space-2) var(--space-3);
+    }
+}
+
+/* ===== 8. NAVIGATION LINKS ===== */
+
+.phase-navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: var(--space-7) 0 var(--space-4);
+    padding: var(--space-4);
+    background: linear-gradient(90deg, var(--phase-bg-light), transparent);
+    border-radius: var(--radius-md);
+    border-top: 2px solid var(--phase-color);
+}
+
+.phase-nav-prev,
+.phase-nav-next {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--phase-color);
+    font-weight: 600;
+    text-decoration: none;
+    transition: gap var(--transition-base), color var(--transition-base);
+}
+
+.phase-nav-prev:hover,
+.phase-nav-next:hover {
+    gap: var(--space-3);
+    opacity: 0.8;
+}
+
+.phase-nav-prev::before {
+    content: '←';
+}
+
+.phase-nav-next::after {
+    content: '→';
+}
+
+.phase-nav-center {
+    text-align: center;
+    color: #616774;
+    font-size: 0.9375rem;
+}
+
+/* Mobile responsive */
+@media (max-width: 767px) {
+    .phase-navigation {
+        flex-direction: column;
+        gap: var(--space-3);
+    }
+}
+
+/* ===== 9. TOPIC BADGES ===== */
+
+.topic-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    background: var(--phase-color, #2563eb);
+    color: white;
+    padding: var(--space-1) var(--space-3);
+    border-radius: var(--radius-sm);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    margin: var(--space-1);
+    box-shadow: var(--shadow-sm);
+}
+
+.topic-badge:hover {
+    opacity: 0.9;
+    box-shadow: var(--shadow-md);
+}
+
+/* ===== 10. DIFFICULTY INDICATORS ===== */
+
+.difficulty-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.difficulty-easy {
+    background: #d1fae5;
+    color: #065f46;
+    border-left: 2px solid #10b981;
+}
+
+.difficulty-medium {
+    background: #fef3c7;
+    color: #78350f;
+    border-left: 2px solid #f59e0b;
+}
+
+.difficulty-hard {
+    background: #fee2e2;
+    color: #7f1d1d;
+    border-left: 2px solid #ef4444;
+}
+
+/* ===== 11. RESPONSIVE UTILITIES ===== */
+
+@media (max-width: 375px) {
+    /* Extra small mobile optimization */
+    html {
+        font-size: 14px;
+    }
+}
+
+@media (min-width: 375px) and (max-width: 767px) {
+    /* Mobile optimization */
+    .phase-container {
+        padding: var(--space-4);
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+    /* Tablet optimization */
+    .phase-container {
+        padding: var(--space-5);
+    }
+}
+
+@media (min-width: 1024px) {
+    /* Desktop optimization */
+    .phase-container {
+        padding: var(--space-5);
+    }
+}
+
+/* ===== 12. ACCESSIBILITY ===== */
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .phase-container,
+    .phase-progress,
+    .progress-fill,
+    .progress-step::after,
+    .grid-item-card,
+    .phase-nav-prev,
+    .phase-nav-next,
+    summary {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+    .phase-container {
+        border-left-width: 8px;
+    }
+
+    details {
+        border-left-width: 5px;
+    }
+
+    .grid-item-card {
+        border-left-width: 6px;
+    }
+}
+
+/* Dark mode support (if applicable) */
+@media (prefers-color-scheme: dark) {
+    .breadcrumb {
+        background: #1f2937;
+        border-color: #374151;
+    }
+
+    .breadcrumb span {
+        color: #6b7280;
+    }
+
+    .phase-navigation {
+        background: linear-gradient(90deg, rgba(37, 99, 235, 0.1), transparent);
+    }
+}
+
+/* Print styles */
+@media print {
+    details[open] summary {
+        border-bottom: 1px solid var(--phase-color);
+    }
+
+    .phase-navigation {
+        display: none;
+    }
+}
+
+/* ===== 13. ANIMATIONS ===== */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.phase-container {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* ===== 14. PHASE PROGRESS BARS (Week 4 Addition) ===== */
+
+/* Individual phase progress bars */
+.phase-progress {
+    height: 12px;
+    background: linear-gradient(90deg, #e5e7eb, #f3f4f6);
+    border-radius: 6px;
+    overflow: hidden;
+    margin: var(--space-5) 0;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.phase-progress .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--phase-color, #2563eb), var(--phase-bg-light, #dbeafe));
+    border-radius: 6px;
+    animation: progressGrowSmooth 1.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    box-shadow: 0 2px 6px rgba(37, 99, 235, 0.4);
+    position: relative;
+}
+
+/* Shimmer effect on progress bar */
+.phase-progress .progress-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg,
+        transparent,
+        rgba(255, 255, 255, 0.3),
+        transparent);
+    animation: shimmer 2s infinite;
+}
+
+@keyframes progressGrowSmooth {
+    0% {
+        width: 0;
+        opacity: 0.6;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        width: var(--progress-percent, 100%);
+        opacity: 1;
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        left: -100%;
+    }
+    100% {
+        left: 100%;
+    }
+}
+
+/* Phase-specific progress colors (override CSS variables) */
+.phase-1 .phase-progress .progress-fill {
+    background: linear-gradient(90deg, #2563eb, #93c5fd);
+}
+
+.phase-2 .phase-progress .progress-fill {
+    background: linear-gradient(90deg, #10b981, #a7f3d0);
+}
+
+.phase-3 .phase-progress .progress-fill {
+    background: linear-gradient(90deg, #f59e0b, #fcd34d);
+}
+
+.phase-4 .phase-progress .progress-fill {
+    background: linear-gradient(90deg, #8b5cf6, #c4b5fd);
+}
+
+.phase-5 .phase-progress .progress-fill {
+    background: linear-gradient(90deg, #ef4444, #fca5a5);
+}
+
+/* Checklist styling for progress tracking */
+.phase-progress + p input[type="checkbox"] {
+    margin-right: var(--space-2);
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.phase-progress + p label {
+    cursor: pointer;
+    user-select: none;
+}
+
+/* Percentage label overlay */
+.phase-progress::before {
+    content: attr(data-progress);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #1f2937;
+    z-index: 10;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+/* Mobile responsive progress bars */
+@media (max-width: 767px) {
+    .phase-progress {
+        height: 10px;
+        margin: var(--space-4) 0;
+    }
+
+    .phase-progress::before {
+        font-size: 0.625rem;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .phase-progress {
+        border: 2px solid var(--phase-color);
+    }
+
+    .phase-progress .progress-fill {
+        box-shadow: none;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .phase-progress .progress-fill {
+        animation: none !important;
+    }
+
+    .phase-progress .progress-fill::after {
+        animation: none !important;
+    }
+}
+
+/* ===== 15. SPHINX-DESIGN DROPDOWN ENHANCEMENTS ===== */
+
+/* Base dropdown styling improvements */
+.sd-dropdown {
+    transition: all var(--transition-base);
+    margin-bottom: var(--space-3);
+}
+
+.sd-dropdown > .sd-summary-title {
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.sd-dropdown:hover > .sd-summary-title {
+    transform: translateX(4px);
+}
+
+.sd-dropdown[open] > .sd-summary-title {
+    color: var(--phase-color);
+    font-weight: 600;
+}
+
+.sd-dropdown[open] {
+    background: var(--phase-bg-light);
+    box-shadow: var(--shadow-md);
+    border-radius: var(--radius-md);
+    padding: var(--space-2);
+}
+
+/* Enhanced icon colors for better contrast */
+.sd-dropdown[data-sd-icon="octicon-light-bulb"] .sd-summary-icon {
+    color: #10b981;  /* Green for success/tips */
+}
+
+.sd-dropdown[data-sd-icon="octicon-alert"] .sd-summary-icon {
+    color: #f59e0b;  /* Orange for warnings */
+}
+
+.sd-dropdown[data-sd-icon="octicon-mortar-board"] .sd-summary-icon {
+    color: #3b82f6;  /* Blue for education */
+}
+
+.sd-dropdown[data-sd-icon="octicon-tools"] .sd-summary-icon {
+    color: #8b5cf6;  /* Purple for technical */
+}
+
+/* Nested dropdown styling (2 levels max) */
+.sd-dropdown .sd-dropdown {
+    margin-left: var(--space-4);
+    margin-top: var(--space-3);
+    border-left: 3px solid var(--phase-color);
+    padding-left: var(--space-3);
+}
+
+.sd-dropdown .sd-dropdown[open] {
+    background: rgba(37, 99, 235, 0.05);
+}
+
+/* Smoother dropdown content reveal */
+.sd-dropdown .sd-summary-content {
+    animation: fadeInDown 0.3s ease-out;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===== 16. TIMELINE & METRICS GRID (Week 4: Mermaid Diagrams & Timeline) ===== */
+
+/* Timeline container */
+.mermaid {
+    margin: var(--space-6) auto;
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+/* Metrics grid layout */
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-4);
+    margin: var(--space-6) 0;
+    padding: var(--space-4);
+    background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+    border-radius: var(--radius-lg);
+}
+
+/* Metric card base styles */
+.metric-card {
+    background: white;
+    border-radius: var(--radius-md);
+    padding: var(--space-5);
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--transition-base), box-shadow var(--transition-base);
+    border-left: 5px solid var(--phase-color, #2563eb);
+}
+
+.metric-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+}
+
+.metric-card h4 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--phase-color, #2563eb);
+    margin: 0 0 var(--space-3) 0;
+}
+
+.metric-card .difficulty-badge {
+    display: inline-block;
+    margin: var(--space-2) 0;
+}
+
+.metric-card .time-estimate {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin: var(--space-2) 0;
+}
+
+.metric-card .pace {
+    font-size: 0.9375rem;
+    color: #616774;
+    margin: var(--space-2) 0 0 0;
+}
+
+/* Phase-specific metric card colors */
+.phase-1-metric {
+    --phase-color: var(--phase1-color);
+    border-left-color: var(--phase1-color);
+}
+
+.phase-1-metric h4 {
+    color: var(--phase1-color);
+}
+
+.phase-2-metric {
+    --phase-color: var(--phase2-color);
+    border-left-color: var(--phase2-color);
+}
+
+.phase-2-metric h4 {
+    color: var(--phase2-color);
+}
+
+.phase-3-metric {
+    --phase-color: var(--phase3-color);
+    border-left-color: var(--phase3-color);
+}
+
+.phase-3-metric h4 {
+    color: var(--phase3-color);
+}
+
+.phase-4-metric {
+    --phase-color: var(--phase4-color);
+    border-left-color: var(--phase4-color);
+}
+
+.phase-4-metric h4 {
+    color: var(--phase4-color);
+}
+
+.phase-5-metric {
+    --phase-color: var(--phase5-color);
+    border-left-color: var(--phase5-color);
+}
+
+.phase-5-metric h4 {
+    color: var(--phase5-color);
+}
+
+/* Responsive: Mobile (320px-767px) */
+@media (max-width: 767px) {
+    .metrics-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-3);
+        padding: var(--space-3);
+    }
+
+    .metric-card {
+        padding: var(--space-4);
+    }
+
+    .metric-card h4 {
+        font-size: 1.125rem;
+    }
+
+    .metric-card .time-estimate {
+        font-size: 1.25rem;
+    }
+
+    .mermaid {
+        margin: var(--space-4) 0;
+    }
+}
+
+/* Responsive: Tablet (768px-1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+    .metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-4);
+    }
+}
+
+/* Responsive: Desktop (1024px-1439px) */
+@media (min-width: 1024px) and (max-width: 1439px) {
+    .metrics-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--space-4);
+    }
+}
+
+/* Responsive: Large Desktop (1440px+) */
+@media (min-width: 1440px) {
+    .metrics-grid {
+        grid-template-columns: repeat(5, 1fr);
+        gap: var(--space-5);
+    }
+}
+
+/* Mermaid diagram responsive adjustments */
+@media (max-width: 767px) {
+    .mermaid svg {
+        max-width: 100%;
+        height: auto;
+    }
+}
+
+/* Print styles for timeline and metrics */
+@media print {
+    .metrics-grid {
+        grid-template-columns: repeat(5, 1fr);
+        gap: var(--space-2);
+        page-break-inside: avoid;
+    }
+
+    .metric-card {
+        box-shadow: none;
+        border: 1px solid #e5e7eb;
+    }
+
+    .mermaid {
+        page-break-inside: avoid;
+    }
+}
+
+/* ===== 20. SEMANTIC BREADCRUMB NAVIGATION (WEEK 6) ===== */
+
+/* Base breadcrumb navigation container */
+.breadcrumb-nav {
+    display: flex;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+}
+
+.breadcrumb-list {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-wrap: wrap;
+}
+
+.breadcrumb-item {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.breadcrumb-link {
+    color: #4b5563;
+    text-decoration: none;
+    transition: color var(--transition-base);
+    font-weight: 500;
+}
+
+.breadcrumb-link:hover {
+    color: #2563eb;
+    text-decoration: underline;
+}
+
+.breadcrumb-separator {
+    color: #9ca3af;
+    font-weight: 300;
+    user-select: none;
+}
+
+.breadcrumb-text {
+    color: #111827;
+    font-weight: 600;
+}
+
+/* Phase badge styles - color-coded for each phase */
+.phase-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius-md);
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1.25;
+    transition: all var(--transition-base);
+}
+
+/* Phase 1: Blue (Computing Fundamentals) */
+.phase-badge.phase-1 {
+    background-color: #eff6ff;
+    color: #1e40af;
+    border: 1px solid #bfdbfe;
+}
+
+/* Phase 2: Green (Core Concepts) */
+.phase-badge.phase-2 {
+    background-color: #ecfdf5;
+    color: #059669;
+    border: 1px solid #a7f3d0;
+}
+
+/* Phase 3: Orange (Hands-On Learning) */
+.phase-badge.phase-3 {
+    background-color: #fef3c7;
+    color: #d97706;
+    border: 1px solid #fde68a;
+}
+
+/* Phase 4: Purple (Advancing Skills) */
+.phase-badge.phase-4 {
+    background-color: #f5f3ff;
+    color: #7c3aed;
+    border: 1px solid #ddd6fe;
+}
+
+/* Phase 5: Red (Mastery Path) */
+.phase-badge.phase-5 {
+    background-color: #fee2e2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+}
+
+/* Mobile responsive breadcrumbs */
+@media (max-width: 767px) {
+    .breadcrumb-list {
+        gap: var(--space-1);
+        flex-wrap: nowrap;
+    }
+
+    .breadcrumb-text {
+        font-size: 0.875rem;
+        max-width: 150px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .phase-badge {
+        font-size: 0.8125rem;
+        padding: 0.2rem 0.6rem;
+    }
+}
+
+@media (max-width: 375px) {
+    .breadcrumb-text {
+        max-width: 100px;
+    }
+
+    .breadcrumb-link {
+        font-size: 0.875rem;
+    }
+}
+
+/* ========================================================================
+   RESOURCE CARDS - Week 6 Implementation (Agent 2)
+   Lines 1101-1200 (100 lines allocated)
+   ======================================================================== */
+
+/* Base resource card styling */
+.resource-card {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.2s ease;
+}
+
+/* Resource type badges - color-coded left border with gradients */
+
+/* Video resources (red gradient) */
+.resource-video {
+    border-left: 4px solid transparent;
+    border-image: linear-gradient(to bottom, #dc2626, #ef4444) 1;
+}
+
+.resource-video::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(to bottom, #dc2626, #ef4444);
+}
+
+/* Article resources (green gradient) */
+.resource-article {
+    border-left: 4px solid transparent;
+    border-image: linear-gradient(to bottom, #059669, #10b981) 1;
+}
+
+.resource-article::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(to bottom, #059669, #10b981);
+}
+
+/* Interactive resources (orange gradient) */
+.resource-interactive {
+    border-left: 4px solid transparent;
+    border-image: linear-gradient(to bottom, #d97706, #f59e0b) 1;
+}
+
+.resource-interactive::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(to bottom, #d97706, #f59e0b);
+}
+
+/* Tool resources (purple gradient) */
+.resource-tool {
+    border-left: 4px solid transparent;
+    border-image: linear-gradient(to bottom, #7c3aed, #8b5cf6) 1;
+}
+
+.resource-tool::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(to bottom, #7c3aed, #8b5cf6);
+}
+
+/* Documentation resources (blue gradient) */
+.resource-docs {
+    border-left: 4px solid transparent;
+    border-image: linear-gradient(to bottom, #1e40af, #3b82f6) 1;
+}
+
+.resource-docs::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(to bottom, #1e40af, #3b82f6);
+}
+
+/* Hover animations for resource cards */
+.resource-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* Duration and level badges styling */
+.resource-card em {
+    font-style: normal;
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.resource-card strong {
+    font-weight: 600;
+}
+
+/* Mobile responsive - single column on mobile */
+@media (max-width: 767px) {
+    .resource-card {
+        margin-bottom: 1rem;
+    }
+
+    .resource-card em {
+        font-size: 0.8125rem;
+    }
+}
+
+/* Tablet - 2 columns */
+@media (min-width: 768px) and (max-width: 1023px) {
+    /* Cards will show 2 columns via sphinx-design grid-2 */
+}
+
+/* Desktop - 3 columns */
+@media (min-width: 1024px) {
+    /* Cards will show 3 columns via sphinx-design grid-3 */
+}
+
+/* Accessibility - reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .resource-card {
+        transition: none;
+    }
+
+    .resource-card:hover {
+        transform: none;
+    }
+}
+
+/* ===== END OF FILE ===== */

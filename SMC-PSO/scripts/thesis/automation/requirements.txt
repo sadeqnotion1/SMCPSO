@@ -1,0 +1,22 @@
+# Automated Thesis Verification Dependencies
+# Created: November 5, 2025
+
+# Core dependencies
+pyyaml>=6.0.1        # Configuration file parsing
+anthropic>=0.39.0     # Claude API for claims extraction, completeness
+sympy>=1.12          # Symbolic math verification
+numpy>=1.24.0        # Numerical operations
+scipy>=1.11.0        # Statistical validation
+
+# Text processing
+regex>=2023.12.25    # Advanced pattern matching
+markdown>=3.5.1      # Markdown parsing
+beautifulsoup4>=4.12.0  # HTML/XML parsing (for LaTeX extraction)
+
+# Reporting
+tabulate>=0.9.0      # Table formatting for reports
+jinja2>=3.1.2        # Template engine for HTML reports
+
+# Optional (for advanced features)
+# matplotlib>=3.8.0  # Visualization (if needed)
+# pandas>=2.1.0      # Data analysis (if needed)

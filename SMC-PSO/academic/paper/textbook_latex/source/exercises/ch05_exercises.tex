@@ -1,0 +1,298 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CHAPTER 5 EXERCISES: Adaptive Sliding Mode Control
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section*{Exercises}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Conceptual Questions}
+
+\begin{exercise}[Adaptation Law Motivation]
+\label{ex:ch5_adaptation_motivation}
+Explain why adaptive gain tuning is necessary when model uncertainty is large.
+\begin{enumerate}[label=(\alph*)]
+    \item What happens if $K$ is too small (underestimated)?
+    \item What happens if $K$ is too large (overestimated)?
+    \item How does online adaptation resolve this trade-off?
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Dead Zone Purpose]
+\label{ex:ch5_dead_zone}
+The dead zone prevents adaptation when $|\sigma| < \delta$.
+\begin{enumerate}[label=(\alph*)]
+    \item Why is this necessary in the presence of measurement noise?
+    \item What happens if $\delta$ is too small?
+    \item What happens if $\delta$ is too large?
+    \item Propose a guideline for selecting $\delta$ based on sensor noise level
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Leak Rate Physical Meaning]
+\label{ex:ch5_leak_rate}
+The leak term $-\alpha K$ in the adaptation law serves multiple purposes.
+\begin{enumerate}[label=(\alph*)]
+    \item Explain why it prevents unbounded gain growth
+    \item How does it help with time-varying disturbances?
+    \item What is the trade-off of increasing $\alpha$?
+\end{enumerate}
+\end{exercise}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Derivation Problems}
+
+\begin{exercise}[Adaptive Law Derivation]
+\label{ex:ch5_adaptive_derivation}
+Derive the piecewise adaptive law from Lyapunov stability analysis.
+\begin{enumerate}[label=(\alph*)]
+    \item Start with $V = \frac{1}{2}\sigma^2 + \frac{1}{2\gamma}(K - \hat{K})^2$
+    \item Compute $\dot{V}$ assuming $u = u_{eq} - \hat{K} \sign(\sigma)$
+    \item Choose $\dot{\hat{K}} = \gamma |\sigma|$ to make $\dot{V} \leq 0$
+    \item Add dead zone: $\dot{\hat{K}} = 0$ if $|\sigma| < \delta$
+    \item Add leak: $\dot{\hat{K}} = \gamma |\sigma| - \alpha \hat{K}$
+    \item Prove that $\sigma, \tilde{K} \to 0$ asymptotically
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Bounded Adaptation Proof]
+\label{ex:ch5_bounded_adaptation}
+Prove that the adaptive gain remains bounded if leak term is included.
+\begin{enumerate}[label=(\alph*)]
+    \item Assume $\dot{\hat{K}} = \gamma |\sigma| - \alpha \hat{K}$ with $\alpha > 0$
+    \item Show that $\hat{K}(t) \leq \frac{\gamma \sigma_{\max}}{\alpha}$ where $\sigma_{\max} = \max_t |\sigma(t)|$
+    \item If $\sigma_{\max}$ is bounded (from Lyapunov stability), then $\hat{K}$ is bounded
+    \item What happens if $\alpha = 0$ (no leak)?
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Rate Limiting Analysis]
+\label{ex:ch5_rate_limiting}
+Analyze the effect of rate limiting on the adaptive law.
+\begin{enumerate}[label=(\alph*)]
+    \item Implement: $\dot{\hat{K}}_{\text{actual}} = \text{clip}(\dot{\hat{K}}_{\text{desired}}, -r_{\max}, r_{\max})$
+    \item Derive a modified Lyapunov stability proof accounting for rate limits
+    \item Determine the maximum safe $r_{\max}$ to preserve stability
+    \item Compare performance with and without rate limiting
+\end{enumerate}
+\end{exercise}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Tuning Problems}
+
+\begin{exercise}[Adaptation Rate Selection]
+\label{ex:ch5_adaptation_rate}
+Tune the adaptation rate $\gamma$ experimentally.
+\begin{enumerate}[label=(\alph*)]
+    \item Start with $\gamma = 0.1$ s$^{-1}$, simulate with time-varying disturbance $d(t) = 5\sin(2\pi t)$ N
+    \item Increase $\gamma$ to 0.5, 1.0, 2.0, 5.0 s$^{-1}$ and observe gain evolution $\hat{K}(t)$
+    \item Measure overshoot in $\hat{K}$ and settling time of $\sigma$
+    \item Determine the optimal $\gamma$ that balances fast adaptation with minimal overshoot
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Dead Zone Tuning]
+\label{ex:ch5_dead_zone_tuning}
+Design the dead zone thickness $\delta$ based on sensor noise.
+\begin{enumerate}[label=(\alph*)]
+    \item Add Gaussian noise to angle measurements: $\theta_{\text{meas}} = \theta_{\text{true}} + \mathcal{N}(0, \sigma_n^2)$ with $\sigma_n = 0.005$ rad
+    \item Simulate adaptive SMC with $\delta = 0$, $0.005$, $0.01$, $0.02$ rad
+    \item Measure steady-state gain variance: $\text{Var}(\hat{K})$ after $t > 5$ s
+    \item Choose $\delta$ such that $\text{Var}(\hat{K}) < 1$ N$^2$ (stable adaptation)
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Time-Varying Disturbance Rejection]
+\label{ex:ch5_time_varying_disturbance}
+Test adaptive SMC against time-varying disturbances.
+\begin{enumerate}[label=(\alph*)]
+    \item Apply $d(t) = A(t) \sin(\omega t)$ where $A(t) = 5 + 10 e^{-t}$ N (decreasing amplitude)
+    \item Compare adaptive SMC (initial $\hat{K}(0) = 5$ N) to fixed-gain SMC ($K = 15$ N)
+    \item Plot $\hat{K}(t)$ and show that it tracks the disturbance amplitude
+    \item Measure control effort: $\int_0^T |u(t)| dt$ for both controllers
+    \item Show that adaptive SMC uses less control effort once disturbance decreases
+\end{enumerate}
+\end{exercise}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Implementation Problems}
+
+\begin{exercise}[Adaptive SMC Implementation]
+\label{ex:ch5_adaptive_impl}
+Implement the complete adaptive SMC controller:
+
+\begin{lstlisting}[language=Python]
+class AdaptiveSMC:
+    def __init__(self, lambda1, lambda2, k1, k2, K0, gamma, alpha, delta, epsilon, Kmin=1.0, Kmax=50.0):
+        """
+        Initialize adaptive SMC controller.
+
+        Args:
+            lambda1, lambda2, k1, k2: sliding surface parameters
+            K0: initial switching gain
+            gamma: adaptation rate
+            alpha: leak rate
+            delta: dead zone thickness
+            epsilon: boundary layer thickness
+            Kmin, Kmax: gain bounds
+        """
+        self.lambda1 = lambda1
+        self.lambda2 = lambda2
+        self.k1 = k1
+        self.k2 = k2
+        self.K_hat = K0  # Adaptive gain
+        self.gamma = gamma
+        self.alpha = alpha
+        self.delta = delta
+        self.epsilon = epsilon
+        self.Kmin = Kmin
+        self.Kmax = Kmax
+
+    def adapt_gain(self, sigma, dt):
+        """
+        Update adaptive gain K_hat.
+
+        Args:
+            sigma: current sliding surface value
+            dt: timestep
+
+        Returns:
+            dK_dt: gain derivative (for logging)
+        """
+        # Piecewise adaptation law with dead zone and leak
+        if abs(sigma) > self.delta:
+            dK_dt = self.gamma * abs(sigma) - self.alpha * self.K_hat
+        else:
+            dK_dt = -self.alpha * self.K_hat
+
+        # Update gain (Euler integration)
+        self.K_hat += dK_dt * dt
+
+        # Enforce bounds
+        self.K_hat = np.clip(self.K_hat, self.Kmin, self.Kmax)
+
+        return dK_dt
+
+    def compute_control(self, state, params, dt):
+        """
+        Compute adaptive SMC control output.
+
+        Args:
+            state: current state
+            params: system parameters
+            dt: timestep for adaptation
+
+        Returns:
+            u: control force (N)
+        """
+        sigma = self.compute_sliding_surface(state)
+        u_eq = self.compute_equivalent_control(state, params)
+
+        # Adaptive switching control
+        sigma_sat = np.clip(sigma / self.epsilon, -1.0, 1.0)
+        u_switch = -self.K_hat * sigma_sat
+
+        # Update adaptive gain
+        dK_dt = self.adapt_gain(sigma, dt)
+
+        return u_eq + u_switch
+
+    def get_gain(self):
+        """Return current adaptive gain."""
+        return self.K_hat
+
+    def reset(self, K0=None):
+        """Reset adaptive gain."""
+        if K0 is not None:
+            self.K_hat = K0
+\end{lstlisting}
+\end{exercise}
+
+\begin{exercise}[Gain Evolution Visualization]
+\label{ex:ch5_gain_evolution}
+Visualize adaptive gain evolution under different scenarios:
+
+\begin{lstlisting}[language=Python]
+import matplotlib.pyplot as plt
+
+def plot_adaptive_gain_evolution(scenarios, T=10.0, dt=0.01):
+    """
+    Plot adaptive gain evolution for multiple scenarios.
+
+    Args:
+        scenarios: list of dicts with keys 'disturbance', 'label', 'gamma'
+        T: simulation duration (s)
+        dt: timestep (s)
+    """
+    fig, axes = plt.subplots(2, 1, figsize=(10, 8))
+
+    for scenario in scenarios:
+        disturbance_func = scenario['disturbance']
+        gamma = scenario['gamma']
+        label = scenario['label']
+
+        # Initialize controller
+        controller = AdaptiveSMC(lambda1=5.0, lambda2=5.0, k1=1.0, k2=1.0,
+                                  K0=5.0, gamma=gamma, alpha=0.1, delta=0.01, epsilon=0.02)
+
+        # Simulate
+        time = []
+        K_hat_history = []
+        disturbance_history = []
+        state = np.array([0, 0.1, 0.05, 0, 0, 0])
+
+        for i in range(int(T/dt)):
+            t = i * dt
+            d = disturbance_func(t)
+
+            time.append(t)
+            K_hat_history.append(controller.get_gain())
+            disturbance_history.append(abs(d))
+
+            u = controller.compute_control(state, params, dt)
+            state = rk4_step(state, u + d, dt, params)
+
+        # Plot gain evolution
+        axes[0].plot(time, K_hat_history, label=label)
+
+        # Plot disturbance
+        axes[1].plot(time, disturbance_history, label=label, linestyle='--')
+
+    axes[0].set_ylabel('Adaptive Gain $\\hat{K}$ (N)')
+    axes[0].legend()
+    axes[0].grid()
+
+    axes[1].set_xlabel('Time (s)')
+    axes[1].set_ylabel('Disturbance Magnitude (N)')
+    axes[1].legend()
+    axes[1].grid()
+
+    plt.tight_layout()
+    plt.show()
+
+# Test scenarios
+scenarios = [
+    {'disturbance': lambda t: 10 * np.sin(2*np.pi*t), 'gamma': 1.0, 'label': 'Constant amp, $\\gamma=1$'},
+    {'disturbance': lambda t: (15 - 10*t/10) * np.sin(2*np.pi*t), 'gamma': 1.0, 'label': 'Decreasing amp, $\\gamma=1$'},
+    {'disturbance': lambda t: 10 * np.sin(2*np.pi*t), 'gamma': 5.0, 'label': 'Constant amp, $\\gamma=5$'}
+]
+plot_adaptive_gain_evolution(scenarios, T=10.0)
+\end{lstlisting}
+\end{exercise}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Advanced Problems}
+
+\begin{exercise}[Adaptive STA Combination]
+\label{ex:ch5_adaptive_sta}
+Combine adaptive gain tuning with the super-twisting algorithm.
+\begin{enumerate}[label=(\alph*)]
+    \item Modify the adaptive law for STA: $\dot{\hat{k}}_1 = \gamma_1 |s|^{1/2}$
+    \item Ensure STA stability conditions remain satisfied as gains adapt
+    \item Implement and test on DIP benchmark
+    \item Compare to fixed-gain STA and adaptive classical SMC
+\end{enumerate}
+\end{exercise}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% End of Chapter 5 Exercises
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

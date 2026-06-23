@@ -1,0 +1,44 @@
+{
+  "test_type": "MT-8 Reproducibility Test",
+  "random_seed": 42,
+  "save_prefix": "mt8_repro_seed42",
+  "controllers_optimized": [
+    "classical_smc"
+  ],
+  "n_particles": 30,
+  "n_iterations": 50,
+  "timestamp": "2025-12-16T10:14:59.943553",
+  "results": [
+    {
+      "controller_name": "classical_smc",
+      "random_seed": 42,
+      "original_gains": [
+        5.0,
+        5.0,
+        5.0,
+        0.5,
+        0.5,
+        0.5
+      ],
+      "optimized_gains": [
+        24.698689977893583,
+        8.34722433137984,
+        5.659440209569074,
+        3.201636617193734,
+        4.620562647862135,
+        0.09383483900591871
+      ],
+      "nominal_cost_before": 9.14268289189507,
+      "nominal_cost_after": 8.911109744188918,
+      "disturbed_cost_before": 9.152412409912786,
+      "disturbed_cost_after": 8.911862153617873,
+      "robust_cost_before": 9.144985519677858,
+      "robust_cost_after": 8.911504739153175,
+      "improvement_pct": 2.553101697343178,
+      "n_iterations": 50,
+      "n_particles": 30,
+      "converged": true,
+      "timestamp": "2025-12-16T10:14:59.939813"
+    }
+  ]
+}

@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIP SMC PSO - Interactive Performance Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .chart-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .chart-card h2 {
+            color: #667eea;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin-top: 15px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        footer {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .legend-item {
+            display: inline-block;
+            margin: 0 15px;
+            font-size: 0.9em;
+        }
+
+        .legend-color {
+            display: inline-block;
+            width: 20px;
+            height: 12px;
+            margin-right: 5px;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎯 DIP SMC PSO Performance Dashboard</h1>
+            <p class="subtitle">Interactive visualization of controller performance benchmarks and PSO optimization convergence</p>
+        </header>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Best Controller</div>
+                <div class="stat-value">Classical SMC</div>
+                <div class="stat-label">100.0 Overall Score</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Fastest Computation</div>
+                <div class="stat-value">0.022 ms</div>
+                <div class="stat-label">Real-time capable</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">PSO Iterations</div>
+                <div class="stat-value">150</div>
+                <div class="stat-label">Optimal convergence</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Controllers Tested</div>
+                <div class="stat-value">4</div>
+                <div class="stat-label">SMC variants</div>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="chart-card">
+                <h2>📊 Settling Time Comparison</h2>
+                <div class="chart-container">
+                    <canvas id="settlingTimeChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <h2>⚡ Computational Efficiency</h2>
+                <div class="chart-container">
+                    <canvas id="computationalChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <h2>📈 PSO Convergence Comparison</h2>
+                <div class="chart-container">
+                    <canvas id="psoConvergenceChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <h2>🎯 Stability Scores (Radar)</h2>
+                <div class="chart-container">
+                    <canvas id="stabilityRadarChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <h2>📉 Overshoot Analysis</h2>
+                <div class="chart-container">
+                    <canvas id="overshootChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <h2>🔧 PSO Parameter Sensitivity</h2>
+                <div class="chart-container">
+                    <canvas id="psoSensitivityChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p><strong>DIP-SMC-PSO Project</strong> | Double Inverted Pendulum Sliding Mode Control with PSO Optimization</p>
+            <p style="margin-top: 10px; color: #666;">
+                <div class="legend-item">
+                    <span class="legend-color" style="background: rgba(75, 192, 192, 0.8);"></span> Classical SMC
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color" style="background: rgba(255, 99, 132, 0.8);"></span> STA-SMC
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color" style="background: rgba(54, 162, 235, 0.8);"></span> Adaptive SMC
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color" style="background: rgba(255, 206, 86, 0.8);"></span> Hybrid Adaptive-STA
+                </div>
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // Load data from JSON files
+        async function loadData(filename) {
+            try {
+                const response = await fetch(`./data/${filename}`);
+                return await response.json();
+            } catch (error) {
+                console.error(`Error loading ${filename}:`, error);
+                return null;
+            }
+        }
+
+        async function initDashboard() {
+            // Load all data files
+            const settlingTimeData = await loadData('../performance_charts/settling_time_comparison.json');
+            const computationalData = await loadData('../performance_charts/computational_efficiency.json');
+            const psoComparisonData = await loadData('pso_comparison.json');
+            const stabilityData = await loadData('../performance_charts/stability_scores.json');
+            const overshootData = await loadData('../performance_charts/overshoot_analysis.json');
+            const psoSensitivityData = await loadData('../performance_charts/pso_sensitivity_heatmap.json');
+
+            // Chart 1: Settling Time Comparison
+            if (settlingTimeData) {
+                new Chart(document.getElementById('settlingTimeChart'), {
+                    type: 'bar',
+                    data: settlingTimeData.data,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: { display: true, text: 'Settling Time with 95% CI' },
+                            legend: { display: true }
+                        },
+                        scales: {
+                            y: { beginAtZero: true, title: { display: true, text: 'Time (seconds)' } }
+                        }
+                    }
+                });
+            }
+
+            // Chart 2: Computational Efficiency
+            if (computationalData) {
+                new Chart(document.getElementById('computationalChart'), {
+                    type: 'bar',
+                    data: computationalData.data,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: { display: true, text: 'Instantiation vs Computation Time' },
+                            legend: { display: true }
+                        },
+                        scales: {
+                            y: { beginAtZero: true, title: { display: true, text: 'Time (milliseconds)' } }
+                        }
+                    }
+                });
+            }
+
+            // Chart 3: PSO Convergence
+            if (psoComparisonData) {
+                new Chart(document.getElementById('psoConvergenceChart'), {
+                    type: 'line',
+                    data: psoComparisonData,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: { display: true, text: 'PSO Cost Function Convergence' },
+                            legend: { display: true, position: 'top' }
+                        },
+                        scales: {
+                            y: {
+                                type: 'logarithmic',
+                                title: { display: true, text: 'Cost (log scale)' }
+                            },
+                            x: { title: { display: true, text: 'Iteration' } }
+                        }
+                    }
+                });
+            }
+
+            // Chart 4: Stability Radar
+            if (stabilityData) {
+                new Chart(document.getElementById('stabilityRadarChart'), {
+                    type: 'radar',
+                    data: stabilityData.data,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: { display: true, text: 'Controller Stability Assessment' },
+                            legend: { display: true, position: 'top' }
+                        },
+                        scales: {
+                            r: {
+                                beginAtZero: true,
+                                max: 100,
+                                ticks: { stepSize: 20 }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Chart 5: Overshoot Analysis
+            if (overshootData) {
+                new Chart(document.getElementById('overshootChart'), {
+                    type: 'bar',
+                    data: overshootData.data,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: { display: true, text: 'Maximum Overshoot Distribution' },
+                            legend: { display: false }
+                        },
+                        scales: {
+                            y: { beginAtZero: true, title: { display: true, text: 'Overshoot (%)' } }
+                        }
+                    }
+                });
+            }
+
+            // Chart 6: PSO Parameter Sensitivity
+            if (psoSensitivityData) {
+                new Chart(document.getElementById('psoSensitivityChart'), {
+                    type: 'bar',
+                    data: psoSensitivityData.data,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        indexAxis: 'y',
+                        plugins: {
+                            title: { display: true, text: 'PSO Hyperparameter Sensitivity' },
+                            legend: { display: false }
+                        },
+                        scales: {
+                            x: {
+                                beginAtZero: true,
+                                title: { display: true, text: 'Sensitivity Level' },
+                                ticks: { stepSize: 1 }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        // Initialize dashboard when page loads
+        window.addEventListener('DOMContentLoaded', initDashboard);
+    </script>
+</body>
+</html>

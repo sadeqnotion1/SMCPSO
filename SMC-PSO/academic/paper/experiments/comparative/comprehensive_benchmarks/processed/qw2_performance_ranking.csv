@@ -1,0 +1,5 @@
+rank,controller_name,compute_time_us,settling_time_s,overshoot_pct,energy_j,convergence_ms,overall_score_pct,best_metric,notes
+1,STA SMC,24.2,1.82,2.3,11.8,1850,92.5,"Settling Time, Overshoot, Energy","Best overall performance; highest research value"
+2,Hybrid Adaptive STA,26.8,1.95,3.5,12.3,1920,88.3,"Balanced across all metrics","Production-recommended; combines performance & robustness"
+3,Classical SMC,18.5,2.15,5.8,12.4,2100,85.1,"Compute Speed, Determinism","Embedded systems choice; simplest algorithm"
+4,Adaptive SMC,31.6,2.35,8.2,13.6,2400,78.4,"Robustness to uncertainty","Online parameter estimation; trades performance for adaptivity"

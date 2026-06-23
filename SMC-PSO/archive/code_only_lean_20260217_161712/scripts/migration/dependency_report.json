@@ -1,0 +1,319 @@
+{
+  "scan_date": "2025-12-19",
+  "base_directory": "scripts",
+  "total_files": 195,
+  "files_analyzed": {
+    "scripts\\analysis\\compute_performance_metrics.py": {
+      "sys_path_appends": [],
+      "relative_imports": [],
+      "hardcoded_paths": [],
+      "old_benchmarks_refs": [],
+      "other_script_imports": [
+        {
+          "line": 12,
+          "module": "analysis.compute_performance_metrics",
+          "content": "from scripts.analysis.compute_performance_metrics import compute_all_metrics"
+        },
+        {
+          "line": 387,
+          "module": "analysis.compute_performance_metrics",
+          "content": "print(\"  from scripts.analysis.compute_performance_metrics import compute_all_metrics\")"
+        }
+      ]
+    },
+    "scripts\\analysis\\screenshot_docs.py": {
+      "sys_path_appends": [],
+      "relative_imports": [],
+      "hardcoded_paths": [
+        {
+          "line": 175,
+          "path": "\\n📸 Generating screenshots...\\n",
+          "content": "print(\"\\n📸 Generating screenshots...\\n\")"
+        }
+      ],
+      "old_benchmarks_refs": [],
+      "other_script_imports": []
+    },
+    "scripts\\docs\\generate_audit_report.py": {
+      "sys_path_appends": [],
+      "relative_imports": [],
+      "hardcoded_paths": [
+        {
+          "line": 103,
+          "path": "][:100]}...\\n  ```\\n",
+          "content": "md.append(f\"  ```\\n  {match['full_line'][:100]}...\\n  ```\\n\")"
+        }
+      ],
+      "old_benchmarks_refs": [],
+      "other_script_imports": []
+    },
+    "scripts\\migration\\analyze_dependencies.py": {
+      "sys_path_appends": [],
+      "relative_imports": [
+        {
+          "line": 52,
+          "import": "..",
+          "content": "# Pattern 2: Relative imports (from .. import, from ... import)"
+        },
+        {
+          "line": 52,
+          "import": "...",
+          "content": "# Pattern 2: Relative imports (from .. import, from ... import)"
+        }
+      ],
+      "hardcoded_paths": [
+        {
+          "line": 66,
+          "path": "../something",
+          "content": "r'[\"\\'](\\.\\./[^\"\\']+)[\"\\']',           # '../something'"
+        },
+        {
+          "line": 66,
+          "path": "../something",
+          "content": "r'[\"\\'](\\.\\./[^\"\\']+)[\"\\']',           # '../something'"
+        },
+        {
+          "line": 67,
+          "path": "../../something",
+          "content": "r'[\"\\'](\\.\\./\\.\\./[^\"\\']+)[\"\\']',      # '../../something'"
+        },
+        {
+          "line": 67,
+          "path": "../../something",
+          "content": "r'[\"\\'](\\.\\./\\.\\./[^\"\\']+)[\"\\']',      # '../../something'"
+        },
+        {
+          "line": 67,
+          "path": "../../something",
+          "content": "r'[\"\\'](\\.\\./\\.\\./[^\"\\']+)[\"\\']',      # '../../something'"
+        }
+      ],
+      "old_benchmarks_refs": [
+        {
+          "line": 83,
+          "pattern": "benchmarks/analysis",
+          "content": "r'benchmarks/analysis',"
+        },
+        {
+          "line": 84,
+          "pattern": "benchmarks/benchmark",
+          "content": "r'benchmarks/benchmark',"
+        },
+        {
+          "line": 85,
+          "pattern": "benchmarks/comparison",
+          "content": "r'benchmarks/comparison',"
+        },
+        {
+          "line": 86,
+          "pattern": "benchmarks/.*\\.log",
+          "content": "r'benchmarks/.*\\.log'  # Log files should be in .logs/ now"
+        }
+      ],
+      "other_script_imports": [
+        {
+          "line": 97,
+          "module": "*",
+          "content": "# Pattern 5: Imports from other scripts (from scripts.* import)"
+        }
+      ]
+    },
+    "scripts\\migration\\update_benchmark_paths.py": {
+      "sys_path_appends": [],
+      "relative_imports": [],
+      "hardcoded_paths": [],
+      "old_benchmarks_refs": [
+        {
+          "line": 35,
+          "pattern": "benchmarks/.*\\.log",
+          "content": "'.logs/benchmarks/mt8_disturbance_rejection.log': '.logs/benchmarks/mt8_disturbance_rejection.log',"
+        },
+        {
+          "line": 36,
+          "pattern": "benchmarks/.*\\.log",
+          "content": "'.logs/benchmarks/mt7_robustness.log': '.logs/benchmarks/mt7_robustness.log',"
+        }
+      ],
+      "other_script_imports": []
+    },
+    "scripts\\research\\monitor_pso_progress.py": {
+      "sys_path_appends": [],
+      "relative_imports": [],
+      "hardcoded_paths": [],
+      "old_benchmarks_refs": [
+        {
+          "line": 25,
+          "pattern": "benchmarks/.*\\.log",
+          "content": "LOG_FILE = Path(\"benchmarks/research/phase4_2/pso_optimization.log\")"
+        }
+      ],
+      "other_script_imports": []
+    },
+    "scripts\\thesis\\checkpoint_verification.py": {
+      "sys_path_appends": [],
+      "relative_imports": [],
+      "hardcoded_paths": [],
+      "old_benchmarks_refs": [],
+      "other_script_imports": [
+        {
+          "line": 471,
+          "module": "thesis.checkpoint_verification",
+          "content": "print(\"  from scripts.thesis.checkpoint_verification import save_checkpoint, create_checkpoint\")"
+        }
+      ]
+    },
+    "scripts\\thesis\\verify_chapter.py": {
+      "sys_path_appends": [],
+      "relative_imports": [],
+      "hardcoded_paths": [],
+      "old_benchmarks_refs": [],
+      "other_script_imports": [
+        {
+          "line": 42,
+          "module": "thesis.verify_equations",
+          "content": "from scripts.thesis.verify_equations import verify_chapter_equations"
+        },
+        {
+          "line": 43,
+          "module": "thesis.verify_citations",
+          "content": "from scripts.thesis.verify_citations import verify_chapter_citations, extract_references"
+        },
+        {
+          "line": 44,
+          "module": "thesis.verify_figures",
+          "content": "from scripts.thesis.verify_figures import verify_chapter_figures_tables"
+        },
+        {
+          "line": 45,
+          "module": "thesis.checkpoint_verification",
+          "content": "from scripts.thesis.checkpoint_verification import ("
+        }
+      ]
+    },
+    "scripts\\validation\\validate_tutorial_01_experiments.py": {
+      "sys_path_appends": [],
+      "relative_imports": [],
+      "hardcoded_paths": [],
+      "old_benchmarks_refs": [],
+      "other_script_imports": [
+        {
+          "line": 32,
+          "module": "analysis.compute_performance_metrics",
+          "content": "from scripts.analysis.compute_performance_metrics import compute_all_metrics, PerformanceMetrics"
+        }
+      ]
+    },
+    "scripts\\research\\lt7_final_paper\\lt7_bootstrap_convergence.py": {
+      "sys_path_appends": [],
+      "relative_imports": [],
+      "hardcoded_paths": [
+        {
+          "line": 128,
+          "path": "This may take a few minutes...\\n",
+          "content": "print(\"This may take a few minutes...\\n\")"
+        }
+      ],
+      "old_benchmarks_refs": [],
+      "other_script_imports": []
+    },
+    "scripts\\research\\mt6_boundary_layer\\mt6_adaptive_boundary_layer_pso.py": {
+      "sys_path_appends": [],
+      "relative_imports": [],
+      "hardcoded_paths": [],
+      "old_benchmarks_refs": [
+        {
+          "line": 49,
+          "pattern": "benchmarks/.*\\.log",
+          "content": "logging.FileHandler('benchmarks/mt6_adaptive_optimization.log'),"
+        }
+      ],
+      "other_script_imports": []
+    },
+    "scripts\\research\\mt6_boundary_layer\\mt6_statistical_comparison.py": {
+      "sys_path_appends": [],
+      "relative_imports": [],
+      "hardcoded_paths": [
+        {
+          "line": 270,
+          "path": "\\nPerforming statistical comparisons...\\n",
+          "content": "print(\"\\nPerforming statistical comparisons...\\n\")"
+        }
+      ],
+      "old_benchmarks_refs": [],
+      "other_script_imports": []
+    },
+    "scripts\\research\\mt7_robustness\\mt7_statistical_comparison.py": {
+      "sys_path_appends": [],
+      "relative_imports": [],
+      "hardcoded_paths": [
+        {
+          "line": 299,
+          "path": "s t-test comparison...\\n",
+          "content": "print(\"\\nPerforming Welch's t-test comparison...\\n\")"
+        }
+      ],
+      "old_benchmarks_refs": [],
+      "other_script_imports": []
+    },
+    "scripts\\research\\mt8_disturbances\\mt8_disturbance_rejection.py": {
+      "sys_path_appends": [],
+      "relative_imports": [],
+      "hardcoded_paths": [],
+      "old_benchmarks_refs": [
+        {
+          "line": 63,
+          "pattern": "benchmarks/.*\\.log",
+          "content": "logging.FileHandler('.logs/benchmarks/mt8_disturbance_rejection.log'),"
+        }
+      ],
+      "other_script_imports": []
+    },
+    "scripts\\research\\mt8_disturbances\\mt8_robust_pso.py": {
+      "sys_path_appends": [],
+      "relative_imports": [],
+      "hardcoded_paths": [],
+      "old_benchmarks_refs": [
+        {
+          "line": 40,
+          "pattern": "benchmarks/.*\\.log",
+          "content": "logging.FileHandler('benchmarks/mt8_robust_pso.log'),"
+        }
+      ],
+      "other_script_imports": []
+    },
+    "scripts\\research\\mt8_disturbances\\mt8_validate_robust_gains.py": {
+      "sys_path_appends": [],
+      "relative_imports": [],
+      "hardcoded_paths": [],
+      "old_benchmarks_refs": [],
+      "other_script_imports": [
+        {
+          "line": 32,
+          "module": "mt8_disturbance_rejection",
+          "content": "from scripts.mt8_disturbance_rejection import ("
+        }
+      ]
+    },
+    "scripts\\thesis\\automation\\validate_statistics.py": {
+      "sys_path_appends": [],
+      "relative_imports": [],
+      "hardcoded_paths": [
+        {
+          "line": 380,
+          "path": "**Text**: {claim.claim_text[:100]}...\\n\\n",
+          "content": "f.write(f\"**Text**: {claim.claim_text[:100]}...\\n\\n\")"
+        }
+      ],
+      "old_benchmarks_refs": [],
+      "other_script_imports": []
+    }
+  },
+  "summary": {
+    "files_with_sys_path": 0,
+    "files_with_relative_imports": 1,
+    "files_with_hardcoded_paths": 7,
+    "files_with_old_benchmarks": 6,
+    "files_with_script_imports": 6,
+    "total_issues": 17
+  }
+}

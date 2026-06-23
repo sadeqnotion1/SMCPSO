@@ -1,0 +1,97 @@
+% ==============================================================================
+% MASTER'S THESIS - MAIN DOCUMENT
+% ==============================================================================
+% Title: Sliding Mode Control of Double-Inverted Pendulum
+%        with Particle Swarm Optimization
+% Author: [Your Name]
+% Institution: [Your University]
+% Date: [Submission Date]
+% ==============================================================================
+
+\documentclass[12pt,twoside,openright]{report}
+
+% Load preamble (packages, formatting, custom commands)
+\input{preamble}
+
+% Load metadata (title, author, abstract)
+\input{metadata}
+
+% ==============================================================================
+% DOCUMENT BEGIN
+% ==============================================================================
+
+\begin{document}
+
+% ==============================================================================
+% FRONT MATTER (Roman numerals)
+% ==============================================================================
+\frontmatter
+
+% Title page
+\maketitle
+
+% Abstract
+\input{front/abstract}
+
+% Acknowledgments
+\input{front/acknowledgments}
+
+% Table of contents
+\tableofcontents
+
+% List of figures
+\listoffigures
+
+% List of tables
+\listoftables
+
+% Nomenclature (mathematical symbols)
+\input{front/nomenclature}
+
+% ==============================================================================
+% MAIN MATTER (Arabic numerals)
+% ==============================================================================
+\mainmatter
+
+% Part I: Introduction and Background
+\include{chapters/chapter01_introduction}
+\include{chapters/chapter02_literature_review}
+\include{chapters/chapter03_problem_formulation}
+
+% Part II: Theoretical Foundations
+\include{chapters/chapter04_mathematical_modeling}
+\include{chapters/chapter05_smc_theory}
+\include{chapters/chapter06_chattering_mitigation}
+\include{chapters/chapter07_pso_optimization}
+
+% Part III: Implementation
+\include{chapters/chapter08_implementation}
+\include{chapters/chapter09_experimental_setup}
+
+% Part IV: Results and Analysis
+\include{chapters/chapter10_results_comparison}
+\include{chapters/chapter11_results_robustness}
+\include{chapters/chapter12_results_pso}
+\include{chapters/chapter13_lyapunov_stability}
+
+% Part V: Conclusion
+\include{chapters/chapter14_discussion}
+\include{chapters/chapter15_conclusion}
+
+% ==============================================================================
+% BACK MATTER
+% ==============================================================================
+\backmatter
+
+% Appendices
+\appendix
+\include{appendices/appendix_a_proofs}
+\include{appendices/appendix_b_code}
+\include{appendices/appendix_c_data}
+\include{appendices/appendix_d_config}
+
+% Bibliography
+\bibliographystyle{IEEEtran}
+\bibliography{bibliography/references}
+
+\end{document}

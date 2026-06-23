@@ -1,0 +1,133 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{E027}
+\lhead{DIP-SMC-PSO Learning Episode}
+\rfoot{\thepage}
+
+\title{\Large\textbf{E027: Appendix Reference Part 3}}
+\author{DIP-SMC-PSO Educational Series}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section*{Overview}
+
+This episode covers appendix reference part 3 from the DIP-SMC-PSO project.
+
+\textbf{Part:} Appendix
+
+\textbf{Duration:} 15-20 minutes
+
+\textbf{Source:} Comprehensive Presentation Materials
+
+\newpage
+
+\section{Codebase Statistics}
+
+**Project Scale Metrics:**
+
+    \begin{tabular}{lrrr}
+        \toprule
+        **Category** & **Files** & **Lines** & **Size** \\
+        \midrule
+        Source (`src/`) & 120 & 15,000 & 450 KB \\
+        Tests (`tests/`) & 85 & 8,000 & 280 KB \\
+        Docs (`docs/`) & 814 & 20,000 & 3.2 MB \\
+        Scripts (`scripts/`) & 173 & 6,000 & 220 KB \\
+        \bottomrule
+    \end{tabular}
+
+\section{Research Output Statistics}
+
+**Research Phase Deliverables:**
+
+    **Phase 5 Research (October 29 - November 7, 2025):**
+    
+        - **Tasks completed:** 11/11 (100\
+        - **Quick wins:** 5 tasks (8 hours)
+        - **Medium-term:** 4 tasks (18 hours)
+        - **Long-term:** 2 tasks (46 hours)
+        - **Total effort:** 72 hours over 8 weeks
+
+    **Research Artifacts:**
+    
+        - **LT-7 Paper:** SUBMISSION-READY (v2.1), 14 figures, comprehensive bibliography
+        - **Experimental data:** 16 MB (controller-based + cross-controller studies)
+        - **Benchmark logs:** 10 MB (MT-5, MT-7, MT-8, LT-6)
+        - **Lyapunov proofs:** ~1,000 lines (LT-4)
+        - **Theory documentation:** ~2,000 lines (QW-1)
+
+\section{Quality Metrics}
+
+**Code Quality \& Testing:**
+
+    \begin{tabular}{lcc}
+        \toprule
+        **Metric** & **Target** & **Current** \\
+        \midrule
+        Test pass rate & 100\
+        Critical issues & 0 & [OK] 0 \\
+        High-priority issues & ≤3 & [OK] 0 \\
+        Code coverage (overall) & ≥85\
+        Coverage (critical) & ≥95\
+        Thread safety tests & 100\
+        Browser tests & 100\
+        \midrule
+        Documentation files & -- & 985 \\
+        Navigation systems & -- & 11 \\
+        Learning paths & -- & 5 \\
+        \bottomrule
+    \end{tabular}
+
+    **Production Readiness Score:**
+    
+        - **Current:** 23.9/100 \statuserror (NOT production-ready)
+        - **Status:** Research-ready [OK], controllers functional
+
+\section{Performance Benchmarks Summary}
+
+**Controller Performance Rankings:**
+
+    \begin{tabular}{lrrrr}
+        \toprule
+        **Controller** & **Settle (s)** & **Energy** & **Chatter** & **Rank** \\
+        \midrule
+        Hybrid Adaptive STA & 1.8 & 45 & Low & 1 \\
+        STA SMC & 2.1 & 52 & Low & 2 \\
+        Adaptive SMC & 2.3 & 48 & Medium & 3 \\
+        Classical SMC & 2.5 & 55 & High & 4 \\
+        Swing-Up & 3.2 & 68 & Medium & 5 \\
+        MPC (experimental) & 2.8 & 42 & Low & 6 \\
+        \bottomrule
+    \end{tabular}
+
+    **PSO Optimization Results:**
+    
+        - **Convergence:** 50-80 generations (30 particles)
+        - **Speedup:** 3.1× (Numba JIT), 20.8× (vectorized batch)
+        - **Robustness:** Validated across 100 random seeds (MT-7)
+
+\newpage
+
+\section*{{Resources}}
+
+\begin{itemize}
+    \item \textbf{Repository:} \url{https://github.com/theSadeQ/dip-smc-pso.git}
+    \item \textbf{Documentation:} See \texttt{docs/} directory
+    \item \textbf{Getting Started:} \texttt{docs/guides/getting-started.md}
+\end{itemize}
+
+\vfill
+
+\noindent\textit{Educational podcast episode generated from comprehensive presentation materials}
+
+\end{document}

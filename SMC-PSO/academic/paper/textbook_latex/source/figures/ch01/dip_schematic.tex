@@ -1,0 +1,66 @@
+% Double Inverted Pendulum Schematic
+% TikZ diagram for Chapter 1
+
+\begin{tikzpicture}[scale=1.2]
+    % Ground
+    \fill[pattern=north east lines] (-2, -0.3) rectangle (2, 0);
+    \draw[thick] (-2, 0) -- (2, 0);
+
+    % Cart
+    \draw[thick, fill=gray!20] (-0.6, 0) rectangle (0.6, 0.8);
+    \node at (0, 0.4) {\textbf{Cart}};
+    \node[below] at (0, -0.15) {$M$};
+
+    % Wheels
+    \draw[fill=black] (-0.4, 0) circle (0.15);
+    \draw[fill=black] (0.4, 0) circle (0.15);
+
+    % Force arrow
+    \draw[->, ultra thick, red] (0.8, 0.4) -- (1.6, 0.4) node[midway, above] {$u(t)$};
+
+    % First pendulum (link 1)
+    \coordinate (pivot1) at (0, 0.8);
+    \coordinate (mass1) at ({0.8*sin(25)}, {0.8 + 0.8*cos(25)});
+
+    \draw[thick, blue] (pivot1) -- (mass1);
+    \draw[fill=blue!30] (mass1) circle (0.2);
+    \node at (mass1) {$m_1$};
+
+    % Angle arc for theta1
+    \draw[->] (0, 1.2) arc (90:65:0.4);
+    \node at (0.3, 1.35) {$\theta_1$};
+
+    % Length label L1
+    \draw[<->, dashed] (0.15, 0.8) -- (0.15, {0.8 + 0.4*cos(25)});
+    \node[right] at (0.15, {0.8 + 0.2}) {$L_1$};
+
+    % Second pendulum (link 2)
+    \coordinate (pivot2) at (mass1);
+    \coordinate (mass2) at ({0.8*sin(25) + 0.6*sin(35)}, {0.8 + 0.8*cos(25) + 0.6*cos(35)});
+
+    \draw[thick, green!50!black] (pivot2) -- (mass2);
+    \draw[fill=green!30] (mass2) circle (0.18);
+    \node at (mass2) {$m_2$};
+
+    % Angle arc for theta2
+    \draw[->] (mass1) ++({0.3*sin(25)}, {0.3*cos(25)}) arc (90:55:0.3);
+    \node at ({0.8*sin(25) + 0.25}, {0.8 + 0.8*cos(25) + 0.25}) {$\theta_2$};
+
+    % Length label L2
+    \draw[<->, dashed] ({0.8*sin(25) + 0.1}, {0.8 + 0.8*cos(25)}) --
+                       ({0.8*sin(25) + 0.1}, {0.8 + 0.8*cos(25) + 0.3*cos(35)});
+    \node[right] at ({0.8*sin(25) + 0.1}, {0.8 + 0.8*cos(25) + 0.15}) {$L_2$};
+
+    % Cart position x
+    \draw[<->, thick] (-1.5, -0.6) -- (0, -0.6);
+    \node[below] at (-0.75, -0.6) {$x(t)$};
+
+    % Coordinate system
+    \draw[->, thick] (2.5, -0.5) -- (3.2, -0.5) node[right] {$x$};
+    \draw[->, thick] (2.5, -0.5) -- (2.5, 0.2) node[above] {$y$};
+
+    % Reference dashed lines (vertical)
+    \draw[dashed, gray] (0, 0.8) -- (0, 2.5);
+    \draw[dashed, gray] (mass1) -- ({0.8*sin(25)}, 2.5);
+
+\end{tikzpicture}

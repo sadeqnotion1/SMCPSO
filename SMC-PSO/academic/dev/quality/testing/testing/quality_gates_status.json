@@ -1,0 +1,39 @@
+{
+  "timestamp": "2025-11-19T09:19:12.116307",
+  "production_ready": false,
+  "quality_gates_passed": false,
+  "blocking_issues": [
+    "Overall coverage 25.1% below threshold 85.0%",
+    "Critical coverage 94.2% below threshold 95.0%",
+    "Safety-critical coverage 94.2% below threshold 100.0%",
+    "Branch coverage 17.0% below threshold 80.0%"
+  ],
+  "coverage_summary": {
+    "overall": 25.111450139684177,
+    "critical": 94.21487603305785,
+    "safety": 94.21487603305785,
+    "branch": 16.955110870740942
+  },
+  "detailed_metrics": {
+    "total_statements": 39377,
+    "covered_statements": 10793,
+    "total_branches": 11094,
+    "covered_branches": 1881,
+    "critical_modules": {
+      "total_statements": 363,
+      "covered_statements": 342,
+      "coverage_percent": 94.21487603305785
+    },
+    "safety_critical_modules": {
+      "total_statements": 363,
+      "covered_statements": 342,
+      "coverage_percent": 94.21487603305785
+    }
+  },
+  "thresholds": {
+    "overall_coverage": 85.0,
+    "critical_coverage": 95.0,
+    "safety_coverage": 100.0,
+    "branch_coverage": 80.0
+  }
+}

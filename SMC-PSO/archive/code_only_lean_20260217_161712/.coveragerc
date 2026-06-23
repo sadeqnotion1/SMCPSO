@@ -1,0 +1,104 @@
+# Coverage.py Configuration
+# DIP SMC PSO Testing Infrastructure
+# Week 17: Testing Infrastructure Maturity - Phase 1
+
+[run]
+# Source code to measure coverage for
+source = src
+
+# Files to omit from coverage
+omit =
+    */tests/*
+    */test_*
+    */__pycache__/*
+    */.*
+    */.venv/*
+    */venv/*
+    */ENV/*
+    setup.py
+    */__init__.py  # Often just imports, low value
+
+# Enable branch coverage (in addition to line coverage)
+branch = True
+
+# Parallel execution support (for pytest-xdist)
+parallel = True
+
+# Concurrency support
+concurrency = multiprocessing
+
+[report]
+# Precision for coverage percentages
+precision = 2
+
+# Show lines that weren't executed
+show_missing = True
+
+# Don't show files with 100% coverage (focus on gaps)
+skip_covered = False
+
+# Skip empty files
+skip_empty = True
+
+# Sort by percentage covered
+sort = Cover
+
+# Exclude lines with comments from coverage
+exclude_lines =
+    # Standard pragmas
+    pragma: no cover
+
+    # Debug-only code
+    def __repr__
+    if self\.debug
+
+    # Defensive programming
+    raise AssertionError
+    raise NotImplementedError
+
+    # Abstract methods
+    @abstractmethod
+    @abc.abstractmethod
+
+    # Type checking
+    if TYPE_CHECKING:
+    if typing.TYPE_CHECKING:
+
+    # Main execution guards
+    if __name__ == .__main__.:
+
+    # Platform-specific code
+    if sys.platform
+
+    # Ellipsis (pass placeholder)
+    \.\.\.
+
+[html]
+# HTML report output directory
+directory = .cache/htmlcov
+
+# Title for HTML report
+title = DIP SMC PSO Coverage Report
+
+[xml]
+# XML output file for CI/CD integration
+output = .cache/coverage.xml
+
+[json]
+# JSON output for programmatic analysis
+output = .cache/coverage.json
+show_contexts = True
+
+[paths]
+# Source paths (for combining coverage from different environments)
+source =
+    src/
+    */src/
+    */dip-smc-pso/src/
+
+# Safety-Critical Components (100% coverage required)
+# These will be validated separately by quality gates
+# - src/controllers/smc/core/switching_functions.py
+# - src/controllers/smc/core/sliding_surface.py
+# - src/controllers/base/control_primitives.py
+# - src/plant/core/state_validation.py

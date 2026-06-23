@@ -1,0 +1,107 @@
+# AUDIT REPORT: Section 3 - Controller Design
+
+**Date:** December 26, 2025
+**Auditor:** Gemini Agent
+**Target Document:** LT-7-RESEARCH-PAPER-v2.1 (Section 3)
+**Status:** **CONDITIONAL PASS** (Critical Issues Identified)
+
+---
+
+## 1. Executive Summary
+
+Section 3 details the design of seven SMC variants. The structure is logical, providing control laws, parameters, and tuning guidelines. However, a rigorous audit following the **Enhanced Rigor Protocol** has identified multiple **SEVERITY 1 (CRITICAL)** and **SEVERITY 2 (HIGH)** issues.
+
+Most notably, the **$\beta \neq 1$ error** identified in the Section 4 audit propagates into Section 3. The control law definitions for Classical SMC, Adaptive SMC, and STA-SMC implicitly assume a normalized input gain ($\beta=1$) or fail to explicitly incorporate the term $(LM^{-1}B)^{-1}$ in the *switching* part of the control law (though it appears in $u_{eq}$). This leads to a scaling error in the effective switching gain, meaning the actual applied gain is $K \cdot \beta \approx 0.78 K$, reducing robustness by 22%.
+
+Additionally, several numerical claims regarding chattering reduction and computational cost contain inconsistencies when cross-checked with the provided tables and calculations.
+
+---
+
+## 2. Detailed Findings
+
+### 2.1 Mathematical Rigor & Implicit Assumptions
+
+*   **Assumption of $\beta=1$ in Switching Terms (SEVERITY 1):**
+    *   **Equation:** Classical SMC (Section 3.2): $u = u_{\text{eq}} - K \cdot \text{sat}(\sigma/\epsilon) - k_d \sigma$.
+    *   **Derivation Check:**
+        *   Dynamics: $\dot{\sigma} = L\ddot{q} = L M^{-1} (Bu + d - C\dot{q} - G - F)$.
+        *   Substitute $u$: $\dot{\sigma} = \beta (u_{\text{eq}} - K \text{sat} - k_d \sigma) + \beta d + \dots$
+        *   With $u_{eq}$ cancelling dynamics: $\dot{\sigma} = -\beta K \text{sat} - \beta k_d \sigma + \beta d$.
+    *   **Impact:** The effective switching gain is $\beta K$, not $K$. Since $\beta \approx 0.78$ (Section 4 Example), the actual gain is 22% lower than the "nominal" design value $K$. If $K$ is tuned to satisfy $K > \bar{d}$, the *actual* condition becomes $0.78 K > \bar{d}$, requiring $K > 1.28 \bar{d}$.
+    *   **Invalidation:** This invalidates the parameter tuning guidelines (Section 3.9) which suggest $K = 1.2\bar{d}$ (this would fail since $1.2 \times 0.78 = 0.936 < 1.0$).
+
+*   **STA Finite-Time Bound Formula (SEVERITY 2):**
+    *   **Equation:** $T_{\text{reach}} \leq \frac{2 |\sigma(0)|^{1/2}}{K_1 - \sqrt{2 K_2 \bar{d}}}$
+    *   **Issue:** The denominator assumes effective gains $K_1, K_2$. If the controller is $u = u_{\text{eq}} + u_{\text{STA}}$, and dynamics have $\beta$, then effective gains are $\beta K_1, \beta K_2$. The formula should likely be scaled or the gains interpreted as "effective gains". The text does not clarify this scaling.
+
+*   **Derivative Gain Formulation (SEVERITY 3):**
+    *   **Equation:** $u = \dots - k_d \sigma$.
+    *   **Dimensional Check:** $u$ is Force [N]. $\sigma$ is weighted sum of angles [rad] and velocities [rad/s]. $k_d$ must have units [N/(rad + rad/s)]. This implies $k_d$ is valid, but the term "Damping" is usually associated with $\dot{x}$ or $\dot{\sigma}$. Proportional feedback on $\sigma$ acts like a stiffness/damping hybrid on the surface.
+
+### 2.2 Data/Results Rigor & Verification
+
+| Claim | Location | Calculation | Source | Verified? | Notes |
+|-------|----------|-------------|--------|-----------|-------|
+| "18.5 $\mu s$ computation" | Sec 3.2 | Sum of ops table | Table 3.2 | âœ“ | Sums to 18.5. |
+| "74% chattering reduction" | Sec 3.3 | (Classical-STA)/Classical | Sec 7.3 Data (Index 8.2 vs 2.1) | âœ“ | $(8.2 - 2.1)/8.2 = 6.1/8.2 \approx 74.4\%$. Matches. |
+| "15% model uncertainty tolerance" | Sec 3.4 | N/A (Predictive claim) | Section 8.1 | â‌Œ | Section 8.1 claims "16% mismatch" later. Small discrepancy (15 vs 16). |
+| "50.4x degradation" | Abstract/Sec 7 | $(107.61-2.14)/2.14$ | Table 8.3 | â‌Œ | Calc: $49.28$x. Text says $50.4$x. 2.2% error. |
+| "Chattering Index < 3 with $\epsilon=0.01$" | Sec 3.9.2 | Threshold check | Sec 7.3 Data | âœ“ | STA Index = 2.1 < 3. Verified. |
+| "Computation 24.2 $\mu s$ for STA" | Sec 3.3 | Sum of ops | Table 3.2 | âœ“ | Sums to 24.2. |
+
+### 2.3 Cross-Section Consistency
+
+*   **Assumption Mismatch ($\beta$):**
+    *   **Section 3:** Assumes $\beta=1$ implicitly in gain definitions (or absorbs it into K).
+    *   **Section 4:** Explicitly calculates $\beta \approx 0.78$.
+    *   **Conflict:** If Section 3 tuning relies on $K > \bar{d}$, and Section 4 says effective gain is $0.78 K$, then tuning rules in 3.9 are unsafe.
+
+*   **Experimental Gain Values:**
+    *   **Section 3.9 (Tuning):** Recommends $K_{\text{STA}} \approx 30$ (Lyapunov) then optimize to $12-20$.
+    *   **Abstract:** Reports STA settling time 1.82s.
+    *   **Consistency:** The gains used for the 1.82s result (likely PSO optimized) should be explicitly stated in Section 3 or referenced from Section 5. Section 3.9 mentions $K_1=12.0$ as a "typical value", which matches the PSO result.
+
+---
+
+## 3. Severity-Classified Issues
+
+### âڑ ï¸ڈ SEVERITY 1 (CRITICAL)
+1.  **Implicit $\beta=1$ Assumption in Control Laws:**
+    *   **Location:** Section 3.2, 3.3, 3.4 (Control Equations).
+    *   **Impact:** Actual control authority is scaled by $\beta \approx 0.78$. This reduces effective gains, potentially violating stability conditions derived in Section 4 if $K$ is chosen close to the theoretical lower bound.
+    *   **Fix:**
+        *   Option A: Pre-multiply switching terms by $(LM^{-1}B)^{-1}$ (inverse of control authority).
+        *   Option B: Explicitly state that gains $K, K_1, K_2$ are "effective gains" and must be scaled by $1/\beta$ when implemented.
+
+### âڑ ï¸ڈ SEVERITY 2 (HIGH)
+1.  **Numerical Discrepancy in Degradation Claim:**
+    *   **Location:** Abstract and Section 7 references.
+    *   **Claim:** "50.4x degradation".
+    *   **Fact:** Calculation yields $49.3$x.
+    *   **Impact:** Undermines precision. Suggests manual error or different dataset used for abstract.
+    *   **Fix:** Correct text to "approximately 50x" or use exact calculated value "49.3x".
+
+2.  **MPC Real-Time Feasibility Contradiction:**
+    *   **Location:** Table 3.2 vs Text.
+    *   **Claim:** MPC > 100 $\mu s$ is "Marginal" for 10kHz (100 $\mu s$ limit).
+    *   **Fact:** If compute time > 100 $\mu s$, it is **NOT** feasible for 100 $\mu s$ loop. It is "Infeasible". "Marginal" implies it's close to valid. >100 could be 200 or 1000.
+    *   **Fix:** Change status to "Infeasible" for 10kHz, or clarify if >100 refers to a different platform.
+
+### âڑ ï¸ڈ SEVERITY 3 (MEDIUM)
+1.  **Damping Term Terminology:**
+    *   **Location:** Section 3.2.
+    *   **Issue:** Calling $-k_d \sigma$ "derivative gain" is slightly confusing since $\sigma$ contains both position and velocity. It acts as a proportional gain on the sliding variable.
+    *   **Fix:** Rename to "Sliding Surface Damping" or "Proportional Surface Feedback".
+
+---
+
+## 4. Recommendations
+
+1.  **Refactor Control Laws:** Update equations in 3.2-3.4 to include the control allocation term $(LM^{-1}B)^{-1}$ in the switching part, or add a bold note: **"Note: Gains K must be scaled by $\beta^{-1}$ in implementation to match theoretical bounds."**
+2.  **Correct Tuning Guidelines:** Update Section 3.9.1 Step 2 to: "Set initial $K = 1.5 \bar{d} / \beta_{min}$" to account for the control authority scaling.
+3.  **Harmonize Numerical Claims:** Update the "50.4x" claim to "49.3x" throughout the paper.
+4.  **Clarify MPC Constraints:** Explicitly state MPC is infeasible for >5kHz loops on standard hardware, justifying its exclusion from the primary real-time comparison.
+
+---
+
+**Final Score:** 6/10 (Requires Mandatory Fixes for Validity)

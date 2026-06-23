@@ -1,0 +1,50 @@
+{
+  "configuration": {
+    "n_runs": 100,
+    "n_success": 100,
+    "success_rate": 100.0,
+    "seed": 42,
+    "sim_time": 10.0,
+    "dt": 0.01,
+    "boundary_layer_thickness": 0.02,
+    "boundary_layer_slope": 0.0
+  },
+  "statistics": {
+    "chattering_index": {
+      "mean": 6.37048486507953,
+      "std": 1.2002558597443105,
+      "ci_lower": 6.1323280627743015,
+      "ci_upper": 6.6086416673847586
+    },
+    "settling_time": {
+      "mean": 10.0,
+      "std": 0.0,
+      "ci_lower": NaN,
+      "ci_upper": NaN
+    },
+    "overshoot_theta1": {
+      "mean": 5.360544998281324,
+      "std": 0.31811619978034333,
+      "ci_lower": 5.297423842665956,
+      "ci_upper": 5.423666153896693
+    },
+    "overshoot_theta2": {
+      "mean": 9.871492157998235,
+      "std": 3.0504219329438125,
+      "ci_lower": 9.266222267138135,
+      "ci_upper": 10.476762048858335
+    },
+    "control_energy": {
+      "mean": 5231.71359992308,
+      "std": 2887.9514479031704,
+      "ci_lower": 4658.681378116729,
+      "ci_upper": 5804.745821729432
+    },
+    "rms_control": {
+      "mean": 21.497210706649216,
+      "std": 7.852252576907459,
+      "ci_lower": 19.939153439586466,
+      "ci_upper": 23.055267973711967
+    }
+  }
+}

@@ -1,0 +1,194 @@
+% ============================================================================
+% SECTION 11: CONFIGURATION & DEPLOYMENT
+% ============================================================================
+\section{Configuration \& Deployment}
+
+\begin{frame}{Configuration System Architecture}
+    \textbf{Central Configuration: \texttt{config.yaml}}
+
+    \vspace{0.3cm}
+
+    \textbf{Configuration Domains:}
+    \begin{enumerate}
+        \item \textbf{Physics Parameters}
+        \begin{itemize}
+            \item Cart mass, pole lengths/masses/inertias
+            \item Gravitational constant, friction coefficients
+        \end{itemize}
+
+        \item \textbf{Controller Settings}
+        \begin{itemize}
+            \item Gains, boundary layers, adaptation rates
+            \item Specific parameters per controller type
+        \end{itemize}
+
+        \item \textbf{PSO Parameters}
+        \begin{itemize}
+            \item Particles (30), generations (50-100)
+            \item Inertia weight (0.729), cognitive/social coefficients (1.494)
+        \end{itemize}
+
+        \item \textbf{Simulation Settings}
+        \begin{itemize}
+            \item Time step (0.01s), duration (10s)
+            \item Initial conditions, solver method (RK45)
+        \end{itemize}
+
+        \item \textbf{HIL Configuration}
+        \begin{itemize}
+            \item Network addresses, ports, timeouts
+            \item Safety limits, emergency stop thresholds
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Configuration Loading \& Validation}
+    \textbf{Pydantic-Based Strict Validation:}
+
+    \vspace{0.3cm}
+
+    \begin{lstlisting}
+from src.config import load_config
+
+# Load with strict validation
+config = load_config("config.yaml", allow_unknown=False)
+
+# Access validated parameters
+cart_mass = config.physics.cart_mass
+controller_gains = config.controller.classical_smc.gains
+pso_particles = config.optimization.pso.num_particles
+    \end{lstlisting}
+
+    \vspace{0.3cm}
+
+    \textbf{Validation Features:}
+    \begin{itemize}
+        \item Type checking (float, int, str, list)
+        \item Range validation (e.g., $m_{\text{cart}} > 0$)
+        \item Required field enforcement
+        \item Unknown field rejection (typo detection)
+    \end{itemize}
+
+    \vspace{0.3cm}
+
+    \begin{alertblock}{Configuration-First Philosophy}
+        Define parameters in \texttt{config.yaml} \textbf{before} implementation changes \\
+        Prevents scattered magic numbers in code
+    \end{alertblock}
+\end{frame}
+
+\begin{frame}[fragile]{CLI Interface}
+    \textbf{Command-Line Interface: \texttt{simulate.py}}
+
+    \vspace{0.3cm}
+
+    \textbf{Common Usage Patterns:}
+    \begin{lstlisting}[language=bash]
+# Basic simulation
+python simulate.py --ctrl classical_smc --plot
+
+# PSO optimization
+python simulate.py --ctrl sta_smc --run-pso --save gains.json
+
+# Load pre-tuned gains
+python simulate.py --load tuned_gains.json --plot
+
+# Custom configuration
+python simulate.py --config custom_config.yaml --ctrl adaptive_smc
+
+# HIL mode
+python simulate.py --run-hil --plot
+
+# Print current configuration
+python simulate.py --print-config
+    \end{lstlisting}
+
+    \vspace{0.3cm}
+
+    \textbf{Features:}
+    \begin{itemize}
+        \item Tab completion support
+        \item Detailed help messages (\texttt{--help})
+        \item Progress bars for long-running operations
+        \item Automatic result saving
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Web Interface: Streamlit Dashboard}
+    \textbf{Interactive Web UI for Non-Technical Users:}
+
+    \vspace{0.3cm}
+
+    \textbf{Dashboard Features:}
+    \begin{enumerate}
+        \item \textbf{Controller Selection}
+        \begin{itemize}
+            \item Dropdown menu for 7 controller types
+            \item Real-time parameter adjustment sliders
+        \end{itemize}
+
+        \item \textbf{Simulation Control}
+        \begin{itemize}
+            \item Start/stop buttons
+            \item Duration and time step configuration
+            \item Initial condition presets
+        \end{itemize}
+
+        \item \textbf{Real-Time Visualization}
+        \begin{itemize}
+            \item Animated pendulum motion
+            \item State trajectory plots (angles, velocities)
+            \item Control input time series
+        \end{itemize}
+
+        \item \textbf{Performance Metrics}
+        \begin{itemize}
+            \item Settling time calculation
+            \item Overshoot percentage
+            \item Energy consumption (∫u²dt)
+            \item Chattering frequency analysis
+        \end{itemize}
+
+        \item \textbf{PSO Integration}
+        \begin{itemize}
+            \item One-click gain optimization
+            \item Convergence curve visualization
+            \item Gain comparison table
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Web UI Technology Stack}
+    \textbf{Launch Command:}
+    \begin{lstlisting}[language=bash]
+streamlit run streamlit_app.py
+# Opens browser at http://localhost:8501
+    \end{lstlisting}
+
+    \vspace{0.3cm}
+
+    \textbf{Implementation Technologies:}
+    \begin{itemize}
+        \item \textbf{Streamlit:} Reactive web framework
+        \item \textbf{Plotly:} Interactive charts (zoom, pan, hover)
+        \item \textbf{Matplotlib:} Static publication-quality plots
+        \item \textbf{NumPy/SciPy:} Backend computation
+    \end{itemize}
+
+    \vspace{0.3cm}
+
+    \textbf{WCAG 2.1 Level AA Compliance:}
+    \begin{itemize}
+        \item Keyboard navigation support
+        \item Screen reader compatibility
+        \item Color contrast ratio ≥4.5:1
+        \item Responsive design (4 breakpoints)
+    \end{itemize}
+
+    \vspace{0.3cm}
+
+    \begin{block}{Phase 3 Achievement}
+        \success{Complete} -- 34/34 UI issues resolved, WCAG AA validated \\
+        UI work now in MAINTENANCE MODE
+    \end{block}
+\end{frame}
