@@ -78,3 +78,6 @@ settings.local.json
 # Temporary agent fixes
 **/.agents/fixes/
 
+# Backup archives
+SMC-PSO-beta-backup-*.zip
+

@@ -73,3 +73,14 @@
 - Committed and pushed all changes directly to the `main` branch on origin.
 - **Stop point / next:** M3 Fifth Slice — Port `src/utils/analysis/`.
 
+## 2026-06-24 — Session 8: M3 Slice 5 (analysis / statistics) Port & Audit
+- Installed SciPy (scipy==1.13.1) in the python environment and backed up the repository (`SMC-PSO-beta-backup-*.zip`).
+- Copied Milestone 3 Slice 5 files (`src/utils/analysis/`, updated `src/utils/__init__.py`, new tests, and updated audit card) into `SMC-PSO-beta/`.
+- Fixed test failures in `test_analysis.py` by converting return values of `reject_null_hypothesis` from numpy boolean types to standard Python `bool` types inside `statistics.py` (resolving identity `is True`/`is False` checks).
+- Verified the code with 92 passed tests (`python -m pytest tests/test_utils/ -q`) and ran import smoke check.
+- Documented findings (`S5-A1`..`S5-A4`) in the audit ledger and updated Summary counters (open P2 bumped to 13).
+- Set next step in handoff (`NEXT.md`) to port/audit M3 Slice 6 (`utils/monitoring` / diagnostics + telemetry).
+- Committed and pushed all changes directly to the `main` branch on origin.
+- **Stop point / next:** M3 Sixth Slice — Port `src/utils/monitoring/`.
+
+

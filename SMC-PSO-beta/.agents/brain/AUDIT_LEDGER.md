@@ -37,12 +37,16 @@
 | S4-A4 | 2026-06-24 | utils | A | P3 | dead/redundant code in safe_divide (flag-only) | OPEN | |
 | S4-A5 | 2026-06-24 | utils | A | P3 | EPSILON_GENERAL defined but never used and not exported (flag-only) | OPEN | |
 | UTILS-DEDUP-5 | 2026-06-24 | utils | A | P2 | EPSILON_EXP duplicates hardcoded saturation overflow clamp (flag-only) | OPEN | |
+| S5-A1 | 2026-06-24 | utils | A | P3 | ASCII-normalized statistics/__init__ banners in analysis | FIXED | src/utils/analysis/statistics.py (2026-06-24) |
+| S5-A2 | 2026-06-24 | utils | A | P3 | ASCII hyphens replaced non-breaking hyphens in statistics.py docstrings | FIXED | src/utils/analysis/statistics.py (2026-06-24) |
+| S5-A3 | 2026-06-24 | utils | A | P2 | return type uses builtin any instead of typing.Any (flag-only) | OPEN | |
+| S5-A4 | 2026-06-24 | utils | A | P3 | builtin callable used as type annotation instead of typing.Callable (flag-only) | OPEN | |
 
 ## Summary counters (update on each session)
 - Open P0: 0
 - Open P1: 0 (W1 verified genuine 2026-06-24; F-PLANT-1 fixed 2026-06-24)
-- Open P2: 12 (plant.A7, M2.v6, F-PLANT-2, F-PLANT-3, UTILS-DEDUP-1, UTILS-DEDUP-2, S2-A3, UTILS-DEDUP-3, S3-A4, UTILS-DEDUP-4, S4-A2, UTILS-DEDUP-5)
-- Modules accepted to trunk: M1 (config), M2 (plant), M3 Slice 1 (utils types+validation), M3 Slice 2 (utils control.primitives), M3 Slice 3 (utils testing.reproducibility), M3 Slice 4 (utils numerical_stability)
+- Open P2: 13 (plant.A7, M2.v6, F-PLANT-2, F-PLANT-3, UTILS-DEDUP-1, UTILS-DEDUP-2, S2-A3, UTILS-DEDUP-3, S3-A4, UTILS-DEDUP-4, S4-A2, UTILS-DEDUP-5, S5-A3)
+- Modules accepted to trunk: M1 (config), M2 (plant), M3 Slice 1 (utils types+validation), M3 Slice 2 (utils control.primitives), M3 Slice 3 (utils testing.reproducibility), M3 Slice 4 (utils numerical_stability), M3 Slice 5 (utils analysis)
 
 ## M2 / plant -- 2026-06-23
 - [P0] plant.B1  Inertia matrix M(q) incorrect (M12,M22,M23 spurious terms). Proof: KE-vs-M residual 2.95e-1. Status: FIXED (migration/plant).
@@ -116,3 +120,9 @@
 - [P3] S4-A4  dead/redundant code in safe_divide. Status: OPEN.
 - [P3] S4-A5  EPSILON_GENERAL defined but never used and not exported. Status: OPEN.
 - [P2] UTILS-DEDUP-5  EPSILON_EXP (700.0) duplicates hardcoded saturation overflow clamp in slice 2. Status: OPEN.
+
+## M3 / utils slice 5 -- 2026-06-24
+- [P3] S5-A1  ASCII-normalized statistics/__init__ banners in analysis. Status: FIXED (src/utils/analysis/statistics.py).
+- [P3] S5-A2  ASCII hyphens replaced non-breaking hyphens in statistics.py docstrings. Status: FIXED (src/utils/analysis/statistics.py).
+- [P2] S5-A3  return type uses builtin any instead of typing.Any. Status: OPEN.
+- [P3] S5-A4  builtin callable used as type annotation instead of typing.Callable. Status: OPEN.
