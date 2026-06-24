@@ -63,3 +63,13 @@
 - Documented findings (`S3-A1`..`S3-A5`, `S3-B4`, `UTILS-DEDUP-4`) in the audit ledger and updated Summary counters (open P2 bumped to 10).
 - Set next step in handoff (`NEXT.md`) to port/audit M3 Slice 4 (`numerical_stability` / safe_operations).
 - **Stop point / next:** M3 Fourth Slice — Port `src/utils/numerical_stability/`.
+
+## 2026-06-24 — Session 7: M3 Slice 4 (numerical_stability / safe operations) Port & Audit
+- Backed up the repository (`SMC-PSO-beta-backup-*.zip`).
+- Copied Milestone 3 Slice 4 files (`src/utils/numerical_stability/`, updated `src/utils/__init__.py`, new tests, and updated audit card) into `SMC-PSO-beta/`.
+- Verified the code with 75 passed tests (`python -m pytest tests/test_utils/ -q`) and ran smoke check imports.
+- Documented findings (`S4-A1`..`S4-A5`, `UTILS-DEDUP-5`) in the audit ledger and updated Summary counters (open P2 bumped to 12).
+- Set next step in handoff (`NEXT.md`) to port/audit M3 Slice 5 (`utils/analysis` / statistical analysis + metrics).
+- Committed and pushed all changes directly to the `main` branch on origin.
+- **Stop point / next:** M3 Fifth Slice — Port `src/utils/analysis/`.
+

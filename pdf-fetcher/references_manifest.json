@@ -1,0 +1,79 @@
+{
+  "_comment": "Candidate references for the SMC-PSO-beta double inverted pendulum (DIP) on a cart. verify_references.py checks each DOI against Crossref metadata + (legal) Unpaywall open-access PDF text. 'expected.system' must be 'double' for any reference used as the source of DIP physical parameters. NEVER fabricate an entry to make a check pass.",
+  "references": [
+    {
+      "key": "Bogdanov2004",
+      "title": "Optimal Control of a Double Inverted Pendulum on a Cart",
+      "authors": "Alexander Bogdanov",
+      "year": 2004,
+      "doi": null,
+      "alt_locator": "Technical Report CSE-04-006, OGI School of Science and Engineering, OHSU",
+      "expected": { "system": "double", "must_contain": ["double inverted pendulum", "cart", "Lagrang", "inertia"] },
+      "role": "PRIMARY DIP parameter + M/C/G derivation source (absolute-angle). No DOI; confirm via archived PDF."
+    },
+    {
+      "key": "Graichen2007",
+      "title": "Swing-up of the double pendulum on a cart by feedforward and feedback control with experimental validation",
+      "authors": "Knut Graichen, Michael Treuer, Michael Zeitz",
+      "year": 2007,
+      "doi": "10.1016/j.automatica.2006.07.023",
+      "expected": { "system": "double", "must_contain": ["double pendulum", "cart", "experiment"] },
+      "role": "Experimentally-validated DIP-on-cart with measured parameters. NOTE: frequently miscited as 2005; confirm year=2007."
+    },
+    {
+      "key": "Zhong2001",
+      "title": "Energy and passivity based control of the double inverted pendulum on a cart",
+      "authors": "Wei Zhong, Hannes Rock",
+      "year": 2001,
+      "doi": "10.1109/CCA.2001.973983",
+      "expected": { "system": "double", "must_contain": ["double inverted pendulum", "passivity", "cart"] },
+      "role": "Passivity/energy-shaping DIP; relevant to skew-symmetry + energy invariants. Confirm DOI/arnumber 973983."
+    },
+    {
+      "key": "Moreno2008",
+      "title": "A Lyapunov approach to second-order sliding mode controllers and observers",
+      "authors": "Jaime A. Moreno, Marisol Osorio",
+      "year": 2008,
+      "doi": "10.1109/CDC.2008.4739356",
+      "expected": { "system": "n/a", "must_contain": ["super-twisting", "Lyapunov"] },
+      "role": "STA Lyapunov proof source (controllers.bib). Already verified authentic."
+    },
+    {
+      "key": "Sandve2013",
+      "title": "Ten Simple Rules for Reproducible Computational Research",
+      "authors": "Geir Kjetil Sandve, Anton Nekrutenko, James Taylor, Eivind Hovig",
+      "year": 2013,
+      "doi": "10.1371/journal.pcbi.1003285",
+      "expected": { "system": "n/a", "must_contain": ["reproducible"] },
+      "role": "Reproducibility governance. Already verified authentic."
+    },
+    {
+      "key": "Slotine1991",
+      "title": "Applied Nonlinear Control",
+      "authors": "Jean-Jacques E. Slotine, Weiping Li",
+      "year": 1991,
+      "doi": null,
+      "alt_locator": "Prentice Hall, ISBN 0130408905",
+      "expected": { "system": "n/a", "must_contain": ["sliding"] },
+      "role": "Textbook; sliding-surface + boundary-layer. Confirm via ISBN, no DOI."
+    },
+    {
+      "key": "Prasad2014_SUSPECT",
+      "title": "Modeling and simulation of double inverted pendulum",
+      "authors": "Prasad et al. (claimed)",
+      "year": 2014,
+      "doi": "10.11591/ijece.v4i2.5694",
+      "expected": { "system": "double", "must_contain": ["double inverted pendulum"] },
+      "role": "SUSPECTED FABRICATION. Expect Crossref to NOT resolve this DOI to this title. Document the negative result; do NOT re-add to config.bib."
+    },
+    {
+      "key": "Prasad2012_single",
+      "title": "Modelling and simulation for optimal control of nonlinear inverted pendulum dynamical system using PID controller and LQR",
+      "authors": "Lal Bahadur Prasad, Barjeev Tyagi, Hari Om Gupta",
+      "year": 2012,
+      "doi": "10.1109/AMS.2012.21",
+      "expected": { "system": "single", "must_contain": ["inverted pendulum"] },
+      "role": "REAL but SINGLE inverted pendulum. Confirms provenance mismatch: cannot source DIP parameters. Document, do not use for DIP params."
+    }
+  ]
+}

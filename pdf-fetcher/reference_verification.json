@@ -1,0 +1,180 @@
+[
+  {
+    "key": "Bogdanov2004",
+    "doi": null,
+    "checks": [
+      {
+        "level": "INFO",
+        "msg": "No DOI (Bogdanov2004). Confirm manually via: Technical Report CSE-04-006, OGI School of Science and Engineering, OHSU"
+      }
+    ],
+    "verdict": "MANUAL"
+  },
+  {
+    "key": "Graichen2007",
+    "doi": "10.1016/j.automatica.2006.07.023",
+    "checks": [
+      {
+        "level": "INFO",
+        "msg": "Crossref title: Swing-up of the double pendulum on a cart by feedforward and feedback control with experimental validation (2007)"
+      },
+      {
+        "level": "OK",
+        "msg": "title overlap with expected = 100%"
+      },
+      {
+        "level": "OK",
+        "msg": "year matches (2007)"
+      },
+      {
+        "level": "INFO",
+        "msg": "no legal open-access PDF (Unpaywall) -- metadata-only verification"
+      }
+    ],
+    "verdict": "PASS",
+    "crossref": {
+      "doi": "10.1016/j.automatica.2006.07.023",
+      "title": "Swing-up of the double pendulum on a cart by feedforward and feedback control with experimental validation",
+      "authors": "Knut Graichen, Michael Treuer, Michael Zeitz",
+      "year": 2007
+    }
+  },
+  {
+    "key": "Zhong2001",
+    "doi": "10.1109/CCA.2001.973983",
+    "checks": [
+      {
+        "level": "INFO",
+        "msg": "Crossref title: Energy and passivity based control of the double inverted pendulum on a cart (2002)"
+      },
+      {
+        "level": "OK",
+        "msg": "title overlap with expected = 100%"
+      },
+      {
+        "level": "OK",
+        "msg": "year matches (2002)"
+      },
+      {
+        "level": "INFO",
+        "msg": "no legal open-access PDF (Unpaywall) -- metadata-only verification"
+      }
+    ],
+    "verdict": "PASS",
+    "crossref": {
+      "doi": "10.1109/cca.2001.973983",
+      "title": "Energy and passivity based control of the double inverted pendulum on a cart",
+      "authors": "Wei Zhong, H. Rock",
+      "year": 2002
+    }
+  },
+  {
+    "key": "Moreno2008",
+    "doi": "10.1109/CDC.2008.4739356",
+    "checks": [
+      {
+        "level": "INFO",
+        "msg": "Crossref title: A Lyapunov approach to second-order sliding mode controllers and observers (2008)"
+      },
+      {
+        "level": "OK",
+        "msg": "title overlap with expected = 100%"
+      },
+      {
+        "level": "OK",
+        "msg": "year matches (2008)"
+      },
+      {
+        "level": "INFO",
+        "msg": "no legal open-access PDF (Unpaywall) -- metadata-only verification"
+      }
+    ],
+    "verdict": "PASS",
+    "crossref": {
+      "doi": "10.1109/cdc.2008.4739356",
+      "title": "A Lyapunov approach to second-order sliding mode controllers and observers",
+      "authors": "Jaime A. Moreno, Marisol Osorio",
+      "year": 2008
+    }
+  },
+  {
+    "key": "Sandve2013",
+    "doi": "10.1371/journal.pcbi.1003285",
+    "checks": [
+      {
+        "level": "INFO",
+        "msg": "Crossref title: Ten Simple Rules for Reproducible Computational Research (2013)"
+      },
+      {
+        "level": "OK",
+        "msg": "title overlap with expected = 100%"
+      },
+      {
+        "level": "OK",
+        "msg": "year matches (2013)"
+      },
+      {
+        "level": "INFO",
+        "msg": "no legal open-access PDF (Unpaywall) -- metadata-only verification"
+      }
+    ],
+    "verdict": "PASS",
+    "crossref": {
+      "doi": "10.1371/journal.pcbi.1003285",
+      "title": "Ten Simple Rules for Reproducible Computational Research",
+      "authors": "Geir Kjetil Sandve, Anton Nekrutenko, James Taylor et al.",
+      "year": 2013
+    }
+  },
+  {
+    "key": "Slotine1991",
+    "doi": null,
+    "checks": [
+      {
+        "level": "INFO",
+        "msg": "No DOI (Slotine1991). Confirm manually via: Prentice Hall, ISBN 0130408905"
+      }
+    ],
+    "verdict": "MANUAL"
+  },
+  {
+    "key": "Prasad2014_SUSPECT",
+    "doi": "10.11591/ijece.v4i2.5694",
+    "checks": [
+      {
+        "level": "ERROR",
+        "msg": "DOI did NOT resolve on Crossref -> likely fabricated/incorrect"
+      }
+    ],
+    "verdict": "FAIL"
+  },
+  {
+    "key": "Prasad2012_single",
+    "doi": "10.1109/AMS.2012.21",
+    "checks": [
+      {
+        "level": "INFO",
+        "msg": "Crossref title: Modelling and Simulation for Optimal Control of Nonlinear Inverted Pendulum Dynamical System Using PID Controller and LQR (2012)"
+      },
+      {
+        "level": "OK",
+        "msg": "title overlap with expected = 100%"
+      },
+      {
+        "level": "OK",
+        "msg": "year matches (2012)"
+      },
+      {
+        "level": "INFO",
+        "msg": "no legal open-access PDF (Unpaywall) -- metadata-only verification"
+      }
+    ],
+    "verdict": "PASS",
+    "crossref": {
+      "doi": "10.1109/ams.2012.21",
+      "title": "Modelling and Simulation for Optimal Control of Nonlinear Inverted Pendulum Dynamical System Using PID Controller and LQR",
+      "authors": "Lal Bahadur Prasad, Barjeev Tyagi, Hari Om Gupta",
+      "year": 2012
+    }
+  }
+]
