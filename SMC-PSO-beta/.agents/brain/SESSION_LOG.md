@@ -36,3 +36,12 @@
 - Stripped temporary build artifacts from the workspace.
 - Updated `AUDIT_LEDGER.md` and `STATE.md` to reflect M2 completion.
 - **Stop point / next:** M3 — Port `src/utils/` and verify metrics definitions.
+
+## 2026-06-24 — Session 4: M3 Slice 1 (types + validation) Port & Audit
+- Backed up the repository (`SMC-PSO-beta-backup-*.zip`).
+- Pulled the latest changes from `main`.
+- Copied Milestone 3 Slice 1 files (`src/utils/control/types/`, `src/utils/control/validation/`, tests, and audit card) into `SMC-PSO-beta/`.
+- Verified the code with 18 passed tests (`python -m pytest tests/test_utils/ -q`) and verified imports from `src/`.
+- Documented findings (`U1`..`U4`, `UTILS-DEDUP-1`, `UTILS-DEDUP-2`) in the audit ledger and updated Summary counters (open P2 bumped to 6).
+- Set next step in handoff (`NEXT.md`) to port/audit M3 Slice 2 (`control.primitives`).
+- **Stop point / next:** M3 Second Slice — Port `src/utils/control/primitives/`.

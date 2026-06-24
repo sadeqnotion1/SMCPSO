@@ -4,11 +4,11 @@
 > (port -> audit A+B -> prove C -> gate -> accept). ASCII markers only.
 > Repo: https://github.com/sadeqnotion1/smcpso (`SMC-PSO-beta/`)
 
-## -> The one next task (M3): port + AUDIT `src/utils/` -- FIRST SLICE: types + validation only
-M2 (plant, full) is [DONE] and accepted on main. Start M3 on a fresh branch `migration/utils`.
-Scope is deliberately narrow this pass (owner decision, 2026-06-24):
-- FIRST SLICE = the **types** and **validation** primitives under `src/utils/` ONLY.
-- Logging, metrics, and visualization are LATER slices of M3 -- do NOT port them yet.
+## -> The one next task (M3): port + AUDIT `src/utils/` -- SECOND SLICE: control.primitives (saturation, seeding)
+M3 Slice 1 (types + validation) is [DONE] and accepted on main.
+Scope for the second slice:
+- SECOND SLICE = `src/utils/control/primitives/` (such as saturation, seed-setting, etc.) ONLY.
+- Logging, metrics, visualization, analysis, infrastructure, monitoring, numerical_stability, testing are LATER slices of M3 -- do NOT port them yet.
 
 ## Decisions locked this session (2026-06-24)
 - Scope cut: types + validation first; defer logging/metrics/viz to later M3 slices.
@@ -23,21 +23,14 @@ Scope is deliberately narrow this pass (owner decision, 2026-06-24):
 - Existing beta stubs (if any) under `SMC-PSO-beta/src/utils/`: anchor edits, do not blind-overwrite.
 
 ## Start the next chat with this
-> "Read .agents/AGENTS.md + brain. M2 Plant is DONE. Begin M3 -- Utils, FIRST SLICE = types +
-> validation ONLY (skip logging/metrics/viz this pass). Dedupe vs core/ = FLAG-ONLY (log dupes
-> as P2, do not refactor; core/ is a deprecated shim -- do not port). Port faithfully from
-> SMC-PSO/src/utils/, minimal/additive/anchored, back up first. Show the file-level plan BEFORE
-> writing code; file the Audit Card to brain/audits/utils.md; gate P0=0/P1=0."
+> "Read .agents/AGENTS.md + brain. M3 Slice 1 (types + validation) is DONE. Begin M3 Second Slice -- `control.primitives` (saturation, seed-setting). Dedupe vs core/ = FLAG-ONLY. Port faithfully from SMC-PSO/src/utils/control/primitives/, minimal/additive/anchored. Show the file-level plan BEFORE writing code; file the Audit Card update; gate P0=0/P1=0."
 
-## Definition of done for M3 first slice (the gate)
-- types + validation modules ported to beta `src/utils/`; logging/metrics/viz untouched/deferred.
+## Definition of done for M3 second slice (the gate)
+- control.primitives modules ported to beta `src/utils/control/primitives/`.
 - Lens A: no fake/placeholder code, no hallucinated APIs, no dead code; findings logged.
-- Lens B: validation predicates + any type/metric definitions match their scientific/physical
-  meaning (units, bounds); cross-checked where a reference exists.
-- Lens C: real + property unit tests for types/validation (bound checks, NaN guards); coverage
-  on the validation paths.
-- Dedup overlaps with core/ logged as [P2] (flag-only). Audit Card filed (brain/audits/utils.md),
-  ledger updated, P0 = 0 / P1 = 0. Then mark the M3 slice in STATE.md / ROADMAP.md.
+- Lens B: saturation functions, seed validation, etc. match mathematical correctness (e.g. saturation bounds correctly clamped).
+- Lens C: unit tests for saturation and seeding logic; coverage on control primitives paths.
+- Dedup overlaps with core/ logged as [P2] (flag-only). Audit Card updated, ledger updated, P0 = 0 / P1 = 0.
 
 ## Watch-items carried in (do NOT lose)
 - M2.v5 [P2/OPEN]: golden source-parity (SMC-PSO/ trajectories vs beta) was NEVER run -- M2 was
