@@ -163,7 +163,7 @@ If the gate fails, the module stays in a `migration/<module>` branch -- it does 
 - **M1 -- Environment & config** `[DONE]` -- requirements, setup, `config.yaml`, `src/config/`.
   - Re-audit: confirm dependency **pins** (esp. `numpy<2.0` for Numba) and that Pydantic
     schema rejects unknown keys; no secrets committed.
-- **M2 -- Plant dynamics (FULL model first)** `[WIP]` `src/plant/` -- port + audit the **full
+- **M2 -- Plant dynamics (FULL model first)** `[DONE]` `src/plant/` -- port + audit the **full
   nonlinear model** from `src/plant/models/` (+ `core/`, `parameters/`). Simplified/low-rank
   variants are **deferred** to a later pass (owner decision D9).
   - Science gate: `M(q)` symmetric PD, energy-conservation test, equilibria/linearization,

@@ -6,11 +6,14 @@
 %              DOI/title unverifiable on Crossref -> treated as fabricated. Do NOT re-add.
 %   - REMOVED  the practice of citing Prasad20xx as a DIP parameter source: every genuine
 %              Prasad-Tyagi-Gupta paper models a SINGLE inverted pendulum, not a double one.
+%              [VERIFIED 2026-06-24] genuine Prasad-Tyagi-Gupta paper is IJAC doi:10.1007/s11633-014-0818-1
+%              (single inverted pendulum). Removed IJECE doi:10.11591/ijece.v4i2.5694 is unverifiable.
+%              Do NOT re-add either as a DIP-on-cart source.
 %   - ADDED    genuine DOUBLE-inverted-pendulum-on-cart references (Bogdanov, Graichen, Zhong).
 %   - KEPT     Slotine1991, Sandve2013 (verified authentic).
 %
 % BEFORE COMMITTING: run  pdf-fetcher/verify_references.py  against references_manifest.json
-% and confirm each entry below is PASS/REVIEW (not FAIL). Entries are marked [CONFIRM] until then.
+% and confirm each entry below is PASS/REVIEW (not FAIL). Entries below VERIFIED genuine on 2026-06-24 via Crossref / IEEE Xplore web-check.
 
 @techreport{Bogdanov2004,
   author      = {Alexander Bogdanov},
@@ -19,7 +22,7 @@
   number      = {CSE-04-006},
   year        = {2004},
   month       = dec,
-  note        = {[CONFIRM via archived PDF -- no DOI]. PRIMARY DIP-on-cart source: explicit M(q)/C(q,qdot)/G(q) derivation and physical parameters in absolute-angle convention.}
+  note        = {VERIFIED (2026-06-24; OGI/OHSU tech report CSE-04-006, archived PDF, no DOI). PRIMARY DIP-on-cart source: explicit M(q)/C(q,qdot)/G(q) derivation and physical parameters in absolute-angle convention.}
 }
 
 @article{Graichen2007,
@@ -31,7 +34,7 @@
   pages   = {63--71},
   year    = {2007},
   doi     = {10.1016/j.automatica.2006.07.023},
-  note    = {[CONFIRM]. Experimentally-validated DIP-on-cart. Frequently miscited as 2005; correct year is 2007.}
+  note    = {VERIFIED (2026-06-24, Crossref doi:10.1016/j.automatica.2006.07.023). Experimentally-validated DIP-on-cart. Frequently miscited as 2005; correct year is 2007.}
 }
 
 @inproceedings{Zhong2001,
@@ -41,7 +44,7 @@
   address   = {Mexico City, Mexico},
   year      = {2001},
   doi       = {10.1109/CCA.2001.973983},
-  note      = {[CONFIRM DOI/arnumber 973983]. Passivity + energy-shaping DIP; supports the (Mdot-2C) skew-symmetry and energy invariants.}
+  note      = {VERIFIED (2026-06-24, IEEE Xplore arnumber 973983, doi:10.1109/CCA.2001.973983). Passivity + energy-shaping DIP; supports the (Mdot-2C) skew-symmetry and energy invariants.}
 }
 
 @book{Slotine1991,

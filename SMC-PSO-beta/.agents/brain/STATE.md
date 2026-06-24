@@ -38,7 +38,7 @@ scaffold, **dependency-first AND audit-driven**: every module is ported, audited
 - (RESOLVED D10) Reference equations: use repo `references/` (proofs + bib), validate authenticity.
 
 ## Known risks / watch-items
-- W1 (ledger): `references/proofs/` + `.bib` may be AI-fabricated -- validate before trusting.
+- [RESOLVED] W1 (ledger): `references/proofs/` + `.bib` verified genuine.
 - Source has duplicated logic: `src/core/` vs `src/simulation/`, `src/optimizer/` vs
   `src/optimization/`, and a nested `src/plant/core/` -- canonical wins; shims dropped.
   Do NOT port the deprecated dirs.

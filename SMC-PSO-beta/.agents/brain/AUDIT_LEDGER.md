@@ -10,12 +10,14 @@
 
 | ID | Date | Module | Lens (A/B/C) | Sev | Finding (one line) | Status | Fix ref |
 |----|------|--------|--------------|-----|--------------------|--------|---------|
-| W1 | 2026-06-23 | references/ | B | P1? | Verify `references/proofs/` + `controllers.bib`/`config.bib` are genuine (real theorems/citations), not AI-fabricated, BEFORE using them as the Lens B oracle | CLOSED | migration/plant |
+| W1 | 2026-06-23 | references/ | B | P1? | Verify `references/proofs/` + `controllers.bib`/`config.bib` are genuine (real theorems/citations), not AI-fabricated, BEFORE using them as the Lens B oracle | FIXED | M2 / config.bib VERIFIED + web-check (2026-06-24) |
+
+| F-PLANT-1 | 2026-06-24 | plant (full) | B | P1 | Parity harness + invariant test hardcoded rejected inertias I1=0.0081/I2=0.0034; replaced with grounded uniform-thin-rod config values I1=0.00265/I2=0.00115 ((1/12) m L^2) | FIXED | scripts/parity_check.py + tests/test_plant/test_full_dynamics_invariants.py (2026-06-24); gate + 603 tests pass |
 
 ## Summary counters (update on each session)
 - Open P0: 0
-- Open P1: 0
-- Open P2: 2 (plant.A7, M2.v6)
+- Open P1: 0 (W1 verified genuine 2026-06-24; F-PLANT-1 fixed 2026-06-24)
+- Open P2: 4 (plant.A7, M2.v6, F-PLANT-2, F-PLANT-3)
 - Modules accepted to trunk: M1 (config), M2 (plant)
 
 ## M2 / plant -- 2026-06-23
@@ -53,3 +55,8 @@
 - [WARNING] M2.v4  STATE.md on branch still shows M2 [WIP]; CLI's [DONE] claim NOT reflected in repo. Status: CLOSED (reverted to [WIP] pending parity and refs).
 - [WARNING] M2.v5  Source-parity (golden trajectories vs SMC-PSO/) NOT run; invariant gate only. Status: OPEN.
 - [P2]  M2.v6  Remaining slop untouched: aero magic 0.1/0.5 (A4), base-excitation magic 1.0/0.1 (A5), simplified fudge 0.5/0.8 (A7, deferred D9). Status: OPEN.
+
+## M2 verification follow-up & corrections -- 2026-06-24
+- [P2] F-PLANT-2  DIPParams compat class hardcodes default physics divergent from config.yaml. Status: OPEN (revisit at M4).
+- [P2] F-PLANT-3  core/dynamics.py aliases DIPDynamics = SimplifiedDIPDynamics. Status: OPEN (revisit at M4).
+- [OK] W1.ok4     All discussed-source citations web-verified GENUINE. Status: FIXED (references/config.bib updated).

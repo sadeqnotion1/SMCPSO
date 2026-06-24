@@ -24,7 +24,7 @@ from plant.core.physics_matrices_corrected import (  # noqa: E402
 
 # Nominal params from config.yaml [physics]
 P = DIPParameters(m0=1.5, m1=0.2, m2=0.15, L1=0.4, L2=0.3,
-                  Lc1=0.2, Lc2=0.15, I1=0.0081, I2=0.0034, g=9.81)
+                  Lc1=0.2, Lc2=0.15, I1=0.00265, I2=0.00115, g=9.81)
 
 RNG = np.random.default_rng(42)
 fails = []
