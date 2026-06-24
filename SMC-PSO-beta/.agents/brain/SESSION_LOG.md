@@ -83,4 +83,12 @@
 - Committed and pushed all changes directly to the `main` branch on origin.
 - **Stop point / next:** M3 Sixth Slice — Port `src/utils/monitoring/`.
 
+## 2026-06-24 — Session 9: Establish W-REFS Thesis References Harvest Workstream
+- Backed up the repository (`SMC-PSO-beta-backup-*.zip`).
+- Created the new reference ledger (`.agents/brain/REFERENCES_LEDGER.md`) seeded from audits up to M3 slice 5.
+- Updated `ROADMAP.md` and `NEXT.md` to pause module porting and make W-REFS reference back-fill the immediate next priority task.
+- Added a `W-REFS-INFO` entry to `AUDIT_LEDGER.md` recording the opening of the W-REFS workstream.
+- Committed and pushed all changes directly to the `main` branch on origin.
+- **Stop point / next:** W-REFS — Exhaustive scan of M1/M2/M3 and bibliography collection.
+
 
