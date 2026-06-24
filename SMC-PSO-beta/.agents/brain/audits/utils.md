@@ -6,73 +6,82 @@
 - **Module:** `src/utils/`
 - **Source ref:** `SMC-PSO/src/utils/`
 - **Branch:** `main` (no migration branch -- Delivery Standard 5.5)
-- **Status:** [WIP]  (slices 1-2 accepted; module not complete)
-- **Slices done:** 1 = control types + validation; 2 = control.primitives (saturation)
-- **Slices remaining:** control seeding/testing.reproducibility, analysis, infrastructure, monitoring, numerical_stability, testing, visualization
+- **Status:** [WIP]  (slices 1-3 accepted; module not complete)
+- **Slices done:** 1 = control types + validation; 2 = control.primitives (saturation); 3 = testing.reproducibility (seeding)
+- **Slices remaining:** testing.dev_tools, testing.fault_injection, analysis, infrastructure, monitoring, numerical_stability, visualization, top-level helpers (config_compatibility, control_analysis, disturbances, model_uncertainty, seed, streamlit_theme)
 
 ---
 
 ## SLICE 1 -- control/types + control/validation  (2026-06-24, ACCEPTED)
 
-### Lens A -- AI-slop / code quality
-| # | File:line | Finding | Sev | Fix / status |
-|---|-----------|---------|-----|--------------|
-| A1 | src/utils/__init__.py | Source top-level __init__ re-exports 7 not-yet-ported subpackages + saturate/set_global_seed/Visualizer; verbatim port would ImportError. | P1 | RESOLVED -- slice-scoped __init__ exposing only ported items; widen per slice. |
-| A2 | control/types/control_outputs.py (References) | Citation "vol. 4, no. 7 ... 2005" wrong issue. Real: JOT vol. 4, no. 5 (July 2005), pp. 75-94. | P2 | FIXED -- no.7 -> no.5 + verified JOT URL. |
-| A3 | control/types/control_outputs.py (docstrings) | Docstring/annotation drift (Tuple[(),...] / Tuple[float,float] / Tuple[float,float,float] vs Tuple[Any,...]/Tuple[float,...]). | P3 | FLAG-ONLY -- faithful port. |
-| A4 | all ported files | Non-ASCII (smart quotes, dashes, >= glyph) vs D8. | P3 | FIXED -- ASCII normalized. |
+### Lens A
+| # | File:line | Finding | Sev | Fix |
+|---|-----------|---------|-----|-----|
+| A1 | src/utils/__init__.py | Verbatim top-level __init__ re-exports unported domains -> ImportError. | P1 | RESOLVED -- slice-scoped __init__. |
+| A2 | control/types/control_outputs.py | Citation "vol. 4, no. 7" wrong; real JOT vol. 4, no. 5 (2005). | P2 | FIXED + verified URL. |
+| A3 | control/types/control_outputs.py | Docstring/annotation drift on state tuples. | P3 | FLAG-ONLY. |
+| A4 | all | Non-ASCII chars vs D8. | P3 | FIXED. |
 
-### Lens B -- correctness
-| # | What | Finding | Sev | Status |
-|---|------|---------|-----|--------|
-| B1 | require_positive / require_finite | isinstance(value,(int,float)) accepts bool (True->1.0). | P3 | FLAG-ONLY. |
-| B2 | validator semantics | strict/allow_zero, None/NaN/inf rejection, inclusive/exclusive range, probability [0,1] all correct. | OK | PASS. |
+### Lens B
+- B1 [P3 FLAG]: validators accept bool as number. B2 [OK]: semantics correct.
 
-### Lens C -- tests
-- 18 tests (14 validation + 4 types), all pass.
-
-### Dedupe (FLAG-ONLY)
-- UTILS-DEDUP-1 [P2]: control.validation.require_positive/require_finite overlaps plant/configurations/validation.py PhysicsParameterValidator. Do NOT consolidate.
-- UTILS-DEDUP-2 [P2]: control.validation.require_in_range overlaps plant validate_numerical_parameter(min,max) + config/schemas.py pydantic validators. Flag-only.
-
-### Gate: P0=0, P1=0 -> ACCEPT slice 1.
+### Lens C: 18 tests pass (14 validation + 4 types).
+### Dedupe: UTILS-DEDUP-1, UTILS-DEDUP-2 [P2 FLAG-ONLY] (overlap with plant/config validators).
+### Gate: P0=0, P1=0 -> ACCEPT.
 
 ---
 
 ## SLICE 2 -- control/primitives (saturation)  (2026-06-24, ACCEPTED)
 
-Source: `SMC-PSO/src/utils/control/primitives/{__init__,saturation}.py`.
-Scope note: the source `primitives/` dir contains ONLY `saturation.py` (saturate,
-smooth_sign, dead_zone). "Seeding" (set_global_seed) is NOT here -- it lives in
-`testing/reproducibility/seed.py` and belongs to the later `testing` slice. NEXT.md's
-"saturation, seeding" wording is corrected by this slice (see APPLY step 5).
+### Lens A
+| # | File | Finding | Sev | Fix |
+|---|------|---------|-----|-----|
+| S2-A1 | primitives/saturation.py | Banner path wrong (`control/saturation.py`). | P3 | FIXED. |
+| S2-A2 | primitives/saturation.py | Non-ASCII (sigma glyph, nb-hyphens, arrows). | P3 | FIXED. |
+| S2-A3 | primitives/saturation.py `saturate` | Docstring contradicts code+inline-comments about `slope` (formula says multiply, code divides; "lower=smoother" backwards). | P2 | FLAG-ONLY (verbatim port; tests assert real behavior). |
+| S2-A4 | primitives/__init__.py | `from .saturation import *` + no __all__ leaks names; primitives `__all__=[]`. | P3 | FLAG-ONLY. |
+
+### Lens B: saturate (tanh/linear), smooth_sign, dead_zone all verified correct.
+### Lens C: 14 new tests; full suite 32 pass.
+### Dedupe: UTILS-DEDUP-3 [P2 FLAG, low-confidence] (controllers may reimplement saturation).
+### Gate: P0=0, P1=0 -> ACCEPT.
+
+---
+
+## SLICE 3 -- testing/reproducibility (seeding)  (2026-06-24, ACCEPTED)
+
+Source: `SMC-PSO/src/utils/testing/reproducibility/{__init__,seed.py}`.
+Scope: ONLY the `reproducibility` subpackage. `testing.dev_tools` and
+`testing.fault_injection` are deferred to later slices. `set_global_seed` is now
+re-exported at the `utils` top level (source backward-compat).
 
 ### Lens A -- AI-slop / code quality
 | # | File:line | Finding | Sev | Fix / status |
 |---|-----------|---------|-----|--------------|
-| S2-A1 | primitives/saturation.py (banner) | Banner path read `src/utils/control/saturation.py`; actual is `.../primitives/saturation.py`. | P3 | FIXED -- banner path corrected. |
-| S2-A2 | primitives/saturation.py | Non-ASCII in docstrings/comments (sigma glyph, non-breaking hyphens, `->` arrows). | P3 | FIXED -- ASCII normalized (behavior unchanged). |
-| S2-A3 | primitives/saturation.py `saturate` docstring | DOUBLE doc/code mismatch about `slope`: (1) docstring formula says `tanh((slope*sigma)/epsilon)` but code computes `tanh(sigma/(epsilon*slope))` (divides, not multiplies); (2) docstring says "Lower values (2-5) provide smoother transitions" and "steep slopes (10+) behaved like discontinuous", but mathematically a LARGER slope shrinks the argument => gentler/smoother, and SMALLER slope => steeper/more sign-like. The inline comments are CORRECT; the docstring is misleading. | P2 | FLAG-ONLY -- ported verbatim (ASCII only), behavior unchanged. Recommend author reconcile docstring wording/formula. Tests assert the ACTUAL behavior (higher slope = gentler). |
-| S2-A4 | primitives/__init__.py | `from .saturation import *` with no `__all__` in saturation leaks np/warnings/Literal/Union into the primitives namespace; and primitives `__all__ = []` means `from primitives import *` exports nothing. Direct imports still work. | P3 | FLAG-ONLY -- faithful port. |
+| S3-A1 | seed.py + reproducibility/__init__.py banners | Banner paths missing the `testing/` segment (read `src/utils/reproducibility/...`). | P3 | FIXED -- corrected to `src/utils/testing/reproducibility/...`. |
+| S3-A2 | seed.py | Non-ASCII: smart quotes, non-breaking hyphens (pseudo-random, 32-bit, built-in). | P3 | FIXED -- ASCII normalized. |
+| S3-A3 | seed.py docstrings (3 sites) | HALLUCINATED CITATION ARTIFACTS of the form `<CJK-bracket>675644021986605 + dagger + L385-L388<CJK-bracket>` -- they reference no bibliography in the file and are LLM web-citation cruft (a clear AI-slop tell). | P2 | FIXED -- removed the bogus markers (kept the surrounding prose). No real source was discarded; there was no References section. |
+| S3-A4 | reproducibility/__init__.py | Two "dummy" backward-compat shims: `with_seed(seed)` is a no-op decorator that IGNORES `seed` entirely (never seeds before the wrapped call), and `random_seed_context(seed)` has DEAD restore code (`old_seed = None` then `if old_seed is not None` is never true) -- it seeds on enter but never restores prior state on exit. | P2 | FLAG-ONLY -- ported verbatim (faithful). Recommend implementing properly or removing if unused. Tests document the actual (no-restore) behavior. |
+| S3-A5 | seed.py `set_global_seed` docstring example | Stale import path `from src.utils.seed import set_global_seed`. | P3 | FIXED -- corrected to `from utils.testing.reproducibility import set_global_seed`. |
 
 ### Lens B -- scientific / mathematical correctness
-| # | What it should match | Finding | Sev | Status |
-|---|----------------------|---------|-----|--------|
-| S2-B1 | tanh boundary-layer switching | `tanh(clip(sigma/(epsilon*slope), -700, 700))`: bounded in (-1,1), odd, overflow-guarded, saturates to +/-1 for large \|sigma\|. Correct continuous sign approximation. | OK | PASS (tests). |
-| S2-B2 | linear method | `clip(sigma/epsilon, -1, 1)` + RuntimeWarning. Correct piecewise-linear saturation. | OK | PASS. |
-| S2-B3 | dead_zone | `0` for \|x\|<=threshold else `x - threshold*sign(x)` (unity-slope dead zone); rejects threshold<=0; scalar->float, array->array. Correct. | OK | PASS. |
-| S2-B4 | smooth_sign | Delegates to saturate(method=tanh); sign(0)=0. Correct. | OK | PASS. |
+| # | What | Finding | Sev | Status |
+|---|------|---------|-----|--------|
+| S3-B1 | set_global_seed | Seeds Python `random` + NumPy legacy global RNG; `None` is a no-op; int coercion guarded by try/except. Reproducible. | OK | PASS (tests). |
+| S3-B2 | SeedManager.spawn | Deterministic 32-bit seeds derived from master Generator; records `history`; range [0, 2**32-2]. | OK | PASS. |
+| S3-B3 | create_rng | Deterministic `default_rng(int(seed))`; `None` -> fresh generator; invalid seed -> fallback generator. | OK | PASS. |
+| S3-B4 | set_global_seed | Uses NumPy LEGACY global `np.random.seed` (RandomState), not the modern Generator API. Acceptable for backward-compat; modern code should prefer `create_rng`/`SeedManager`. | P3 | FLAG-ONLY (nit). |
 
-### Lens C -- tests + numeric parity
-- [x] 14 new tests in tests/test_utils/test_control_primitives.py (epsilon guard, unknown-method guard, zero, tanh bounded+odd, slope-monotonicity reflecting REAL behavior, linear clip+warn, array shape preservation, overflow guard, smooth_sign==saturate, dead-zone guards/shift/scalar/array, convenience re-export identity).
-- [x] Full suite (slice 1 + slice 2) = 32 tests, all pass (sandbox-verified with numpy).
-- Parity: N/A -- deterministic primitives, no stored golden trajectory. (M2.v5 golden parity unrelated, still open.)
+### Lens C -- tests + parity
+- [x] 12 new tests in tests/test_utils/test_reproducibility.py: global-seed reproducibility, None=no-op stream semantics, SeedManager determinism/history/range, None master seed, create_rng determinism/None/invalid-fallback, set_seed alias identity, with_seed identity-decorator, random_seed_context seeds-within-block, package + top-level export alignment.
+- [x] Full suite (slices 1+2+3) = 44 tests, all pass (sandbox-verified, numpy 2.4.6).
+- Parity: N/A (deterministic seeding utilities; M2.v5 golden parity unrelated, still open).
 
 ### Dedupe (FLAG-ONLY)
-- UTILS-DEDUP-3 [P2, low-confidence]: switching/saturation logic may be reimplemented inside individual controllers; couldn't grep (tool disabled). Watch-item: controllers should import `utils.control.primitives.saturate` rather than rolling their own. Do NOT consolidate this pass.
+- UTILS-DEDUP-4 [P2, low-confidence]: the source also has a TOP-LEVEL `src/utils/seed.py` (not ported in this slice) alongside `testing/reproducibility/seed.py`. Possible duplicate seeding logic + the wrong banner paths suggest a prior file move. Watch-item: reconcile the two seed modules when the top-level utils helpers are ported. Do NOT consolidate this pass.
 
-### Gate: P0=0, P1=0 -> ACCEPT slice 2. Module `utils` remains [WIP].
-- Deliberate divergences (-> DECISIONS.md): slice-scoped __init__ widened to add primitives + `saturate` backward-compat re-export; banner path corrected (S2-A1); ASCII normalization (S2-A2).
+### Gate: P0=0, P1=0 -> ACCEPT slice 3. Module `utils` remains [WIP].
+- Deliberate divergences (-> DECISIONS.md): slice-scoped `testing/__init__` (only reproducibility); widened utils `__init__` (+testing, +set_global_seed re-export, v0.3.0-m3slice3); removed hallucinated citation markers (S3-A3); corrected banner + docstring import paths (S3-A1/A5).
 
 ---
 

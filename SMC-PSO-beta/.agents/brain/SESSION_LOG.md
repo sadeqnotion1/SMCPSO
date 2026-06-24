@@ -54,3 +54,12 @@
 - Documented findings (`S2-A1`..`S2-A4`, `UTILS-DEDUP-3`) in the audit ledger and updated Summary counters (open P2 bumped to 8).
 - Set next step in handoff (`NEXT.md`) to port/audit M3 Slice 3 (`testing.reproducibility` / seeding).
 - **Stop point / next:** M3 Third Slice — Port `src/utils/testing/reproducibility/`.
+
+## 2026-06-24 — Session 6: M3 Slice 3 (testing.reproducibility / seeding) Port & Audit
+- Backed up the repository (`SMC-PSO-beta-backup-*.zip`).
+- Pulled the latest changes from `main`.
+- Copied Milestone 3 Slice 3 files (`src/utils/testing/reproducibility/`, updated `__init__.py` files, new tests, and updated audit card) into `SMC-PSO-beta/`.
+- Verified the code with 44 passed tests (`python -m pytest tests/test_utils/ -q`) and verified imports from `src/`.
+- Documented findings (`S3-A1`..`S3-A5`, `S3-B4`, `UTILS-DEDUP-4`) in the audit ledger and updated Summary counters (open P2 bumped to 10).
+- Set next step in handoff (`NEXT.md`) to port/audit M3 Slice 4 (`numerical_stability` / safe_operations).
+- **Stop point / next:** M3 Fourth Slice — Port `src/utils/numerical_stability/`.
