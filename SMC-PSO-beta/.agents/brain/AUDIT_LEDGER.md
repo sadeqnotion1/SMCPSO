@@ -42,6 +42,7 @@
 | S5-A3 | 2026-06-24 | utils | A | P2 | return type uses builtin any instead of typing.Any (flag-only) | OPEN | |
 | S5-A4 | 2026-06-24 | utils | A | P3 | builtin callable used as type annotation instead of typing.Callable (flag-only) | OPEN | |
 | W-REFS-INFO | 2026-06-24 | references | D | INFO | W-REFS harvest workstream opened; REFERENCES_LEDGER.md created | FIXED | REFERENCES_LEDGER.md (2026-06-24) |
+| W-REFS-DONE | 2026-06-24 | references | D | INFO | W-REFS: REFERENCES_LEDGER.md created and back-filled (M1/M2/M3 s1-5); Lens D added to audit loop; 0 dangling proof keys | FIXED | REFERENCES_LEDGER.md (2026-06-24) |
 
 ## Summary counters (update on each session)
 - Open P0: 0

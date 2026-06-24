@@ -60,14 +60,15 @@
 - Verify `references/proofs/` + `controllers.bib`/`config.bib` are genuine, not AI-fabricated,
   before using them as the correctness oracle. Closed 2026-06-24 (config.bib web-verified).
 
-### [WIP] W-REFS -- Reference harvest & thesis bibliography  <- NEXT PRIORITY
-- Maintain `brain/REFERENCES_LEDGER.md`: a single running bibliography of EVERY reference the
-  ported code cites or relies on, captured as we audit each module (thesis-facing).
-- W1 only *verified* the existing .bib; W-REFS *accumulates* all references and tracks status
-  (VERIFIED / CITED-UNVERIF / CANDIDATE / REMOVED-FAKE).
-- **Immediate task:** back-fill all references surfaced up to M3 slice 5, then add a
-  "Lens D -- references" step to the per-module audit loop so no future reference is missed.
-- See NEXT.md.
+### [WIP] W-REFS -- Reference harvest & thesis bibliography
+- `brain/REFERENCES_LEDGER.md`: a single running bibliography of EVERY reference the ported code
+  cites or relies on (thesis-facing). W1 only *verified* the existing .bib; W-REFS *accumulates*
+  all references with status (VERIFIED / VERIFIED-STD / PRINCIPLE / CANDIDATE / REMOVED-FAKE).
+- [DONE] Back-fill of M1 (config), M2 (plant + references/), M3 slices 1-5 -- 14 refs catalogued,
+  10 web-verified, 3 principles/benchmarks, 2 fabricated-removed; 0 dangling proof keys (2026-06-24).
+- [DONE] "Lens D -- references" added to the per-module audit loop (each future slice appends).
+- [TODO] GAP-1: catalogue `references/undiscussed_sources/` PDFs as their modules are reached
+  (mostly M5/M6). Needs local directory enumeration.
 
 > Skipped on purpose (deprecated compat shims): `src/core/`, `src/optimizer/`, `src/deprecated/`.
 > Full audit checklists + gate live in `brain/MIGRATION_PLAN.md`.
