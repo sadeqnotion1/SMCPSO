@@ -5,15 +5,15 @@
 """
 Utilities package for DIP-SMC-PSO project (beta).
 
-M3 FIRST SLICE (2026-06-24): types + validation only.
+M3 slices ported so far (2026-06-24): types + validation (slice 1), control
+primitives / saturation (slice 2).
 
-The source repo's utils package re-exports many domains (analysis,
+The source repo's utils package re-exports many more domains (analysis,
 infrastructure, monitoring, numerical_stability, testing, visualization) plus
-backward-compat helpers (saturate, set_global_seed, Visualizer). Those modules
-are NOT ported in this slice, so importing them here would raise ImportError.
-This slice-scoped __init__ deliberately exposes ONLY the control types and
-validation primitives that exist so far. Later M3 slices should widen these
-re-exports as each domain is ported and audited.
+backward-compat helpers (set_global_seed, Visualizer). Those are NOT ported
+yet, so importing them here would raise ImportError. This slice-scoped
+__init__ deliberately exposes ONLY what exists so far. Later M3 slices should
+widen these re-exports as each domain is ported and audited.
 """
 
 from . import control
@@ -29,6 +29,7 @@ from .control.validation import (
     require_in_range,
     require_probability,
 )
+from .control.primitives import saturate
 
 __all__ = [
     "control",
@@ -40,6 +41,7 @@ __all__ = [
     "require_finite",
     "require_in_range",
     "require_probability",
+    "saturate",
 ]
 
-__version__ = "0.1.0-m3slice1"
+__version__ = "0.2.0-m3slice2"

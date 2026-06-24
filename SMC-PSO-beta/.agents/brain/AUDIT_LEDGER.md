@@ -19,12 +19,17 @@
 | U4 | 2026-06-24 | utils | B | P3 | require_positive / require_finite accepts bool as number (flag-only) | OPEN | |
 | UTILS-DEDUP-1 | 2026-06-24 | utils | A | P2 | require_positive / require_finite overlap with plant/config validators (flag-only) | OPEN | |
 | UTILS-DEDUP-2 | 2026-06-24 | utils | A | P2 | require_in_range overlap with plant/config validators (flag-only) | OPEN | |
+| S2-A1 | 2026-06-24 | utils | A | P3 | saturation banner path corrected | FIXED | src/utils/control/primitives/saturation.py (2026-06-24) |
+| S2-A2 | 2026-06-24 | utils | A | P3 | ASCII normalization in saturation.py | FIXED | src/utils/control/primitives/saturation.py (2026-06-24) |
+| S2-A3 | 2026-06-24 | utils | A | P2 | saturate docstring contradicts code/inline comments about slope | OPEN | |
+| S2-A4 | 2026-06-24 | utils | A | P3 | primitives __all__=[] / star-import leak (flag-only) | OPEN | |
+| UTILS-DEDUP-3 | 2026-06-24 | utils | A | P2 | possible saturation reimplementation inside controllers (flag-only) | OPEN | |
 
 ## Summary counters (update on each session)
 - Open P0: 0
 - Open P1: 0 (W1 verified genuine 2026-06-24; F-PLANT-1 fixed 2026-06-24)
-- Open P2: 6 (plant.A7, M2.v6, F-PLANT-2, F-PLANT-3, UTILS-DEDUP-1, UTILS-DEDUP-2)
-- Modules accepted to trunk: M1 (config), M2 (plant), M3 Slice 1 (utils types+validation)
+- Open P2: 8 (plant.A7, M2.v6, F-PLANT-2, F-PLANT-3, UTILS-DEDUP-1, UTILS-DEDUP-2, S2-A3, UTILS-DEDUP-3)
+- Modules accepted to trunk: M1 (config), M2 (plant), M3 Slice 1 (utils types+validation), M3 Slice 2 (utils control.primitives)
 
 ## M2 / plant -- 2026-06-23
 - [P0] plant.B1  Inertia matrix M(q) incorrect (M12,M22,M23 spurious terms). Proof: KE-vs-M residual 2.95e-1. Status: FIXED (migration/plant).
@@ -74,3 +79,10 @@
 - [P3] U4  require_positive / require_finite accepts bool as number (flag-only). Status: OPEN.
 - [P2] UTILS-DEDUP-1  require_positive / require_finite overlap with plant/config validators (flag-only). Status: OPEN.
 - [P2] UTILS-DEDUP-2  require_in_range overlap with plant/config validators (flag-only). Status: OPEN.
+
+## M3 / utils slice 2 -- 2026-06-24
+- [P3] S2-A1  saturation banner path corrected. Status: FIXED (src/utils/control/primitives/saturation.py).
+- [P3] S2-A2  ASCII normalization in saturation.py. Status: FIXED (src/utils/control/primitives/saturation.py).
+- [P2] S2-A3  saturate docstring contradicts code + inline comments about slope. Status: OPEN.
+- [P3] S2-A4  primitives __all__=[] / star-import leak. Status: OPEN.
+- [P2] UTILS-DEDUP-3  possible saturation reimplementation inside controllers. Status: OPEN.

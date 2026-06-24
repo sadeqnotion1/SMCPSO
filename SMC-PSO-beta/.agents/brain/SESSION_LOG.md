@@ -45,3 +45,12 @@
 - Documented findings (`U1`..`U4`, `UTILS-DEDUP-1`, `UTILS-DEDUP-2`) in the audit ledger and updated Summary counters (open P2 bumped to 6).
 - Set next step in handoff (`NEXT.md`) to port/audit M3 Slice 2 (`control.primitives`).
 - **Stop point / next:** M3 Second Slice — Port `src/utils/control/primitives/`.
+
+## 2026-06-24 — Session 5: M3 Slice 2 (control.primitives / saturation) Port & Audit
+- Backed up the repository (`SMC-PSO-beta-backup-*.zip`).
+- Pulled the latest changes from `main`.
+- Copied Milestone 3 Slice 2 files (`src/utils/control/primitives/`, updated `__init__.py` files, new tests, and updated audit card) into `SMC-PSO-beta/`.
+- Verified the code with 32 passed tests (`python -m pytest tests/test_utils/ -q`) and verified imports from `src/`.
+- Documented findings (`S2-A1`..`S2-A4`, `UTILS-DEDUP-3`) in the audit ledger and updated Summary counters (open P2 bumped to 8).
+- Set next step in handoff (`NEXT.md`) to port/audit M3 Slice 3 (`testing.reproducibility` / seeding).
+- **Stop point / next:** M3 Third Slice — Port `src/utils/testing/reproducibility/`.

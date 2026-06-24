@@ -19,7 +19,7 @@
 - Build the shared **parity harness** here (`scripts/parity_check.py` + golden baselines).
 
 ## [WIP] M3 -- Utils & primitives  <- ACTIVE
-- `src/utils/` (Slice 1: types + validation [DONE]; remaining slices [TODO]). Dedupe vs `core/`; verify metric defs.
+- `src/utils/` (Slices 1 & 2 [DONE]; remaining slices [TODO]). Dedupe vs `core/`; verify metric defs.
 
 ## [TODO] M4 -- Controllers base + simulation core
 - `src/controllers/base.py`, `src/simulation/`. Integrator + energy/parity on an uncontrolled
