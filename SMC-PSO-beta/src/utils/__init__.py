@@ -56,7 +56,7 @@ __all__ = [
     "set_global_seed",
 ]
 
-__version__ = "0.5.0-m3slice5"
+__version__ = "0.5.0-m3slice7"
 
 # >>> M3-SLICE6-MONITORING (added by APPLY; idempotent) >>>
 # Registers the monitoring + infrastructure subpackages and bumps the utils
@@ -67,5 +67,5 @@ try:
             __all__.append(_m3s6)
 except (NameError, AttributeError):
     pass
-__version__ = "0.5.0-m3slice6"
+__version__ = "0.5.0-m3slice7"
 # <<< M3-SLICE6-MONITORING <<<

@@ -19,8 +19,8 @@
 - Build the shared **parity harness** here (`scripts/parity_check.py` + golden baselines).
 
 ## [WIP] M3 -- Utils & primitives  <- ACTIVE
-- `src/utils/` (Slices 1-5 [DONE]: types+validation, control.primitives, testing.reproducibility,
-  numerical_stability, analysis). Remaining slices [TODO]: infrastructure, monitoring,
+- `src/utils/` (Slices 1-7 [DONE]: types+validation, control.primitives, testing.reproducibility,
+  numerical_stability, analysis, monitoring, infrastructure). Remaining slices [TODO]:
   visualization, testing.dev_tools/fault_injection, top-level helpers. Dedupe vs `core/`;
   verify metric defs. NOTE: analysis (slice 5) adds the first SciPy dependency.
 

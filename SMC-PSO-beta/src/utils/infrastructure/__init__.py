@@ -1,16 +1,14 @@
-"""Infrastructure utilities for the SMC-PSO project.
+"""
+Infrastructure utilities for low-level system operations.
 
-This package groups low-level infrastructure helpers. For the M3 slice-6
-monitoring port, only the threading primitives subpackage is required and
-shipped; the remaining infrastructure submodules are intentionally deferred.
-
-NOTE: This minimal package initializer was authored additively by the
-monitoring migration kit so that ``src.utils.infrastructure.threading`` can be
-imported standalone without pulling in not-yet-ported submodules.
+Modules:
+    logging: Structured logging configuration and handlers
+    memory: Memory pool management
+    threading: Thread-safety primitives and atomic operations
 """
 
+from . import logging
+from . import memory
 from . import threading
 
-__all__ = [
-    'threading',
-]
+__all__ = ['logging', 'memory', 'threading']

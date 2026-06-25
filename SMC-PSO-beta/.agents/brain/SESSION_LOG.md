@@ -100,4 +100,21 @@
 - Committed and pushed all changes directly to the `main` branch on origin.
 - **Stop point / next:** M3 Sixth Slice — Port `src/utils/monitoring/`.
 
+## 2026-06-25 — Session 11: M3 Slice 6 (monitoring) Port & Audit
+- Ported 16 monitoring modules + `infrastructure/threading` dependency from `SMC-PSO` @ `3cb7e438` (byte-faithful bodies; banners normalized; CRLF->LF).
+- Added NEW additive `infrastructure/__init__.py` (imports only `threading`).
+- Authored 26 tests (`tests/test_utils/test_monitoring/**`); all green.
+- Audit: P1 MON-DEP-1 (psutil); P2 MON-LAT-1 + MON-LENSA-1; P3 MON-LENSA-2 / MON-STA-2 / MON-UNICODE-1 / MON-EMOJI-1; MON-PROV-1 provenance.
+- Delivered backup-first, additive, anchored kit: APPLY.ps1 + APPLY.sh + MANIFEST.sha256 + requirements.snippet.txt + START_HERE.md.
+
+## 2026-06-25 — Session 12: M3 Slice 7 (infrastructure: logging + memory) Port & Audit
+- Ported logging/ (6 files) and memory/ (2 files) from source @3cb7e438; widened
+  infrastructure/__init__.py to logging + memory + threading.
+- Lens A: normalized mangled banners in both memory files (stray `\\\`, wrong path).
+- Audit gate: P0=0, P1=0; 1xP2 + 5xP3, all FLAG-only.
+- Added 6 test files / 41 cases; all pass (py3.13.13, numpy 2.4.6, PyYAML 6.0.3).
+- No new dependency (PyYAML + numpy already in beta stack).
+- Delivered as drop-in ZIP with APPLY.ps1 / APPLY.sh (backup-first, idempotent).
+- **Stop point / next:** M3 Eighth Slice — Port `src/utils/visualization/`.
+
 

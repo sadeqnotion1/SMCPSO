@@ -55,8 +55,8 @@
 ## Summary counters (update on each session)
 - Open P0: 0
 - Open P1: 0 (W1 verified genuine 2026-06-24; F-PLANT-1 fixed 2026-06-24)
-- Open P2: 15 (plant.A7, M2.v6, F-PLANT-2, F-PLANT-3, UTILS-DEDUP-1, UTILS-DEDUP-2, S2-A3, UTILS-DEDUP-3, S3-A4, UTILS-DEDUP-4, S4-A2, UTILS-DEDUP-5, S5-A3, MON-LAT-1, MON-LENSA-1)
-- Modules accepted to trunk: M1 (config), M2 (plant), M3 Slice 1 (utils types+validation), M3 Slice 2 (utils control.primitives), M3 Slice 3 (utils testing.reproducibility), M3 Slice 4 (utils numerical_stability), M3 Slice 5 (utils analysis), M3 Slice 6 (utils monitoring + infrastructure/threading)
+- Open P2: 16 (plant.A7, M2.v6, F-PLANT-2, F-PLANT-3, UTILS-DEDUP-1, UTILS-DEDUP-2, S2-A3, UTILS-DEDUP-3, S3-A4, UTILS-DEDUP-4, S4-A2, UTILS-DEDUP-5, S5-A3, MON-LAT-1, MON-LENSA-1, INFRA-LOG-1)
+- Modules accepted to trunk: M1 (config), M2 (plant), M3 Slice 1 (utils types+validation), M3 Slice 2 (utils control.primitives), M3 Slice 3 (utils testing.reproducibility), M3 Slice 4 (utils numerical_stability), M3 Slice 5 (utils analysis), M3 Slice 6 (utils monitoring + infrastructure/threading), M3 Slice 7 (utils infrastructure: logging + memory)
 
 ## M2 / plant -- 2026-06-23
 - [P0] plant.B1  Inertia matrix M(q) incorrect (M12,M22,M23 spurious terms). Proof: KE-vs-M residual 2.95e-1. Status: FIXED (migration/plant).
@@ -147,3 +147,10 @@
 - [P3] MON-EMOJI-1  unicode emojis in coverage_monitoring.py alert strings violate no-emojis rule. Status: OPEN.
 - [P3] MON-PROV-1  hardcoded dip-smc-pso repository identity and Issue #9 in coverage_monitoring.py. Status: OPEN.
 
+## M3 / utils slice 7 -- 2026-06-25
+- [P2] INFRA-LOG-1  Default file log dir `academic/logs` absent in beta; auto-created via mkdir; consider `logs/` or LOG_DIR. Status: OPEN.
+- [P3] INFRA-LOG-DEPR-1  `datetime.utcfromtimestamp` deprecated (py3.12+) in JSON/Metric formatters. Status: OPEN.
+- [P3] INFRA-LOG-LENSA-1  Broad/bare except in compression, async writer, flush (intentional logging resilience). Status: OPEN.
+- [P3] INFRA-LOG-LENSA-2  Dead var `time_tuple` in doRollover; no-op `pass` branch in `_rotate_size`. Status: OPEN.
+- [P3] INFRA-MEM-1  get_block returns array but return_block needs index; caller tracks mapping. Status: OPEN.
+- [P3] INFRA-PROV-1  memory docstrings reference source-repo "Issue #17 (CRIT-008)". Status: OPEN.
