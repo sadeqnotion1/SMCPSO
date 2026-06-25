@@ -81,3 +81,8 @@ settings.local.json
 # Backup archives
 SMC-PSO-beta-backup-*.zip
 
+# Agent/Script backup directories
+**/.backup-*/
+**/.backup-monitoring-*/
+
+
