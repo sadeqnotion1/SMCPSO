@@ -100,12 +100,39 @@ P0=0, P1=0, no emojis, no `python3`, ASCII-only ship code. Open-P2 carried.
 
 ---
 
+## Slice 6 - monitoring + infrastructure/threading (ACCEPT)
+
+Ported `src/utils/monitoring/**` (16 modules) + `src/utils/infrastructure/threading/**` (AtomicCounter dependency) + `src/utils/infrastructure/__init__.py`.
+
+### Capability / dependency note (IMPORTANT)
+- Core monitoring introduces a dependency on `psutil`. The applier (`APPLY.ps1`) automatically ensures that `psutil>=5.9` is listed in `requirements.txt`.
+- Verification requires `psutil` installed in the python environment.
+
+### Lens A - findings
+| # | File:loc | Finding | Sev | Action |
+|---|----------|---------|-----|--------|
+| MON-DEP-1 | memory_monitor.py / realtime/__init__.py | Unconditional `import psutil` in realtime modules causes import failure if `psutil` is absent | P1 | FIXED (added to requirements) |
+| MON-LENSA-1 | visualization.py:66 | Bare `except:` in matplotlib style configuration swallows KeyboardInterrupt and system exits | P2 | FLAG (ported verbatim) |
+| MON-LENSA-2 | coverage_monitoring.py, metrics_collector_control.py | Broad `except Exception as e` in coverage recording and callback loops | P3 | FLAG (ported verbatim) |
+| MON-UNICODE-1 | stability.py, diagnostics.py | non-ASCII math glyphs (sigma, kappa, angle-bracket) in docstrings | P3 | FLAG (preserved verbatim) |
+| MON-EMOJI-1 | coverage_monitoring.py | Unicode emojis in alert strings violate the no-emoji rule | P3 | FLAG (preserved verbatim) |
+
+### Lens B - math / correctness
+- MON-LAT-1 (P2): `LatencyMonitor.end()` flags a missed deadline at `latency > dt*margin`, whereas `missed_rate()` and `enforce()` check `sample > dt`. Characterization test documented this current mismatch (`test_end_vs_missed_rate_threshold_mismatch`).
+- MON-STA-2 (P3): Stability monitors leak `numpy.bool_` instead of standard Python `bool` in result dictionaries. Characterization test covers this.
+
+### Lens C - tests / coverage
+- 26 tests covering atomic primitives, data models, diagnostics, latency, memory monitoring, package import, and stability monitoring.
+- All 26 tests passed in the local repository environment.
+
+### Gate
+P0=0, P1=0 (MON-DEP-1 mitigated with package requirement). Open P2 carried.
+-> ACCEPT.
+
+---
+
 ## Open items / watch-list
-- M3 remains WIP. Remaining utils domains: infrastructure, monitoring,
-  visualization, testing.dev_tools, testing.fault_injection, and top-level
-  helpers (config_compatibility, control_analysis, disturbances,
-  model_uncertainty, seed, streamlit_theme). Widen `utils/__init__.py` as each
-  lands.
-- UTILS-DEDUP-4 (seed.py duplication) and UTILS-DEDUP-5 (overflow constant 700)
-  remain FLAG-only pending later slices.
-- New: ensure `scipy` is in beta requirements (slice 5 dependency).
+- M3 remains WIP. Remaining utils domains: visualization, testing.dev_tools, testing.fault_injection, and top-level helpers (config_compatibility, control_analysis, disturbances, model_uncertainty, seed, streamlit_theme). Widen `utils/__init__.py` as each lands.
+- UTILS-DEDUP-4 (seed.py duplication) and UTILS-DEDUP-5 (overflow constant 700) remain FLAG-only pending later slices.
+- Carry MON-LAT-1 (threshold mismatch), MON-LENSA-1 (bare except) as open items.
+

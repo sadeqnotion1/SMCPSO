@@ -57,3 +57,15 @@ __all__ = [
 ]
 
 __version__ = "0.5.0-m3slice5"
+
+# >>> M3-SLICE6-MONITORING (added by APPLY; idempotent) >>>
+# Registers the monitoring + infrastructure subpackages and bumps the utils
+# version for M3 slice 6. Guarded so re-applying is a no-op.
+try:
+    for _m3s6 in ("monitoring", "infrastructure"):
+        if _m3s6 not in __all__:
+            __all__.append(_m3s6)
+except (NameError, AttributeError):
+    pass
+__version__ = "0.5.0-m3slice6"
+# <<< M3-SLICE6-MONITORING <<<

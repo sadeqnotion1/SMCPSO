@@ -43,12 +43,20 @@
 | S5-A4 | 2026-06-24 | utils | A | P3 | builtin callable used as type annotation instead of typing.Callable (flag-only) | OPEN | |
 | W-REFS-INFO | 2026-06-24 | references | D | INFO | W-REFS harvest workstream opened; REFERENCES_LEDGER.md created | FIXED | REFERENCES_LEDGER.md (2026-06-24) |
 | W-REFS-DONE | 2026-06-24 | references | D | INFO | W-REFS: REFERENCES_LEDGER.md created and back-filled (M1/M2/M3 s1-5); Lens D added to audit loop; 0 dangling proof keys | FIXED | REFERENCES_LEDGER.md (2026-06-24) |
+| MON-DEP-1 | 2026-06-25 | utils | A | P1 | unconditional `import psutil` in realtime/memory_monitor.py | FIXED | src/utils/monitoring/realtime/__init__.py + requirements.txt (2026-06-25) |
+| MON-LAT-1 | 2026-06-25 | utils | B | P2 | `LatencyMonitor.end()` Miss threshold uses `dt*margin` while `missed_rate()` uses `dt` | OPEN | |
+| MON-LENSA-1 | 2026-06-25 | utils | A | P2 | bare `except:` in visualization.py matplotlib style setup | OPEN | |
+| MON-LENSA-2 | 2026-06-25 | utils | A | P3 | broad `except Exception as e` in coverage_monitoring.py, metrics_collector_control.py | OPEN | |
+| MON-STA-2 | 2026-06-25 | utils | B | P3 | `numpy.bool_` leakage in stability.py monitor result dicts | OPEN | |
+| MON-UNICODE-1 | 2026-06-25 | utils | A | P3 | non-ASCII math glyphs in stability.py/diagnostics.py docstrings | OPEN | |
+| MON-EMOJI-1 | 2026-06-25 | utils | A | P3 | unicode emojis in coverage_monitoring.py alert strings | OPEN | |
+| MON-PROV-1 | 2026-06-25 | utils | C | P3 | hardcoded `theSadeQ/dip-smc-pso` and "Issue #9" in coverage_monitoring.py | OPEN | |
 
 ## Summary counters (update on each session)
 - Open P0: 0
 - Open P1: 0 (W1 verified genuine 2026-06-24; F-PLANT-1 fixed 2026-06-24)
-- Open P2: 13 (plant.A7, M2.v6, F-PLANT-2, F-PLANT-3, UTILS-DEDUP-1, UTILS-DEDUP-2, S2-A3, UTILS-DEDUP-3, S3-A4, UTILS-DEDUP-4, S4-A2, UTILS-DEDUP-5, S5-A3)
-- Modules accepted to trunk: M1 (config), M2 (plant), M3 Slice 1 (utils types+validation), M3 Slice 2 (utils control.primitives), M3 Slice 3 (utils testing.reproducibility), M3 Slice 4 (utils numerical_stability), M3 Slice 5 (utils analysis)
+- Open P2: 15 (plant.A7, M2.v6, F-PLANT-2, F-PLANT-3, UTILS-DEDUP-1, UTILS-DEDUP-2, S2-A3, UTILS-DEDUP-3, S3-A4, UTILS-DEDUP-4, S4-A2, UTILS-DEDUP-5, S5-A3, MON-LAT-1, MON-LENSA-1)
+- Modules accepted to trunk: M1 (config), M2 (plant), M3 Slice 1 (utils types+validation), M3 Slice 2 (utils control.primitives), M3 Slice 3 (utils testing.reproducibility), M3 Slice 4 (utils numerical_stability), M3 Slice 5 (utils analysis), M3 Slice 6 (utils monitoring + infrastructure/threading)
 
 ## M2 / plant -- 2026-06-23
 - [P0] plant.B1  Inertia matrix M(q) incorrect (M12,M22,M23 spurious terms). Proof: KE-vs-M residual 2.95e-1. Status: FIXED (migration/plant).
@@ -128,3 +136,14 @@
 - [P3] S5-A2  ASCII hyphens replaced non-breaking hyphens in statistics.py docstrings. Status: FIXED (src/utils/analysis/statistics.py).
 - [P2] S5-A3  return type uses builtin any instead of typing.Any. Status: OPEN.
 - [P3] S5-A4  builtin callable used as type annotation instead of typing.Callable. Status: OPEN.
+
+## M3 / utils slice 6 -- 2026-06-25
+- [P1] MON-DEP-1  unconditional import of psutil in realtime/memory_monitor.py causing ModuleNotFoundError if psutil is absent. Status: FIXED (applied requirements additions).
+- [P2] MON-LAT-1  LatencyMonitor.end Miss threshold uses dt*margin while missed_rate uses dt, causing dual, inconsistent definitions of deadline-miss. Status: OPEN.
+- [P2] MON-LENSA-1  bare except in visualization.py matplotlib style setup swallows KeyboardInterrupt and other errors. Status: OPEN.
+- [P3] MON-LENSA-2  broad except Exception as e in coverage_monitoring.py and metrics_collector_control.py. Status: OPEN.
+- [P3] MON-STA-2  numpy.bool_ leakage in stability.py monitor result dicts instead of Python bool. Status: OPEN.
+- [P3] MON-UNICODE-1  non-ASCII math glyphs (sigma, kappa, angle-bracket) in stability.py/diagnostics.py docstrings. Status: OPEN.
+- [P3] MON-EMOJI-1  unicode emojis in coverage_monitoring.py alert strings violate no-emojis rule. Status: OPEN.
+- [P3] MON-PROV-1  hardcoded dip-smc-pso repository identity and Issue #9 in coverage_monitoring.py. Status: OPEN.
+

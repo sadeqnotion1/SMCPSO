@@ -61,14 +61,14 @@
 | REF-X01 | Prasad-Tyagi-Gupta, IJECE doi:10.11591/ijece.v4i2.5694 ("double inverted pendulum") | was in config.bib / proofs | REMOVED-FAKE (unverifiable; genuine Prasad work is SINGLE-IP, IJAC doi:10.1007/s11633-014-0818-1) |
 | REF-X02 | Hallucinated citation glyph artifacts in seed.py docstrings | M3 s3 : seed.py | REMOVED-FAKE (S3-A3) |
 
-## Scan coverage (2026-06-24)
+## Scan coverage (2026-06-25)
 
 - **M1 config**: `config.yaml` header carries only INTERNAL provenance (Issue #2 / Issue #18 / MT-8
   reports, docs/*.md, artifacts/*.json) -- no academic citations. Nothing to add to the bibliography.
 - **M2 plant**: academic citations are centralized in `references/` (not inline in `src/plant/**`).
   All `.bib` keys cited by the proofs resolve (Bogdanov2004, Graichen2007, Moreno2008, Slotine1991) --
   **no dangling citation keys**. Proofs additionally invoke the named principles REF-015/REF-016.
-- **M3 slices 1-5**: all in-code citations captured (REF-001..010).
+- **M3 slices 1-6**: all in-code citations captured (REF-001..010 for slices 1-5; slice 6 has no academic citations, but contains a repository provenance flag MON-PROV-1).
 - **W1 cross-check**: the 6 catalogued `.bib` refs are all web-verified genuine; the fabricated
   Prasad ref stays removed.
 
