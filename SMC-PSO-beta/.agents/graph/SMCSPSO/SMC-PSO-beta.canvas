@@ -1,0 +1,336 @@
+{
+  "nodes": [
+    {
+      "id": "config",
+      "type": "file",
+      "file": "config/config.md",
+      "x": 0,
+      "y": 0,
+      "width": 250,
+      "height": 130,
+      "color": "3"
+    },
+    {
+      "id": "cli",
+      "type": "file",
+      "file": "entrypoint/cli.md",
+      "x": 400,
+      "y": -100,
+      "width": 250,
+      "height": 130,
+      "color": "5"
+    },
+    {
+      "id": "web",
+      "type": "file",
+      "file": "entrypoint/web.md",
+      "x": 400,
+      "y": 100,
+      "width": 250,
+      "height": 130,
+      "color": "5"
+    },
+    {
+      "id": "factory",
+      "type": "file",
+      "file": "module/factory.md",
+      "x": 800,
+      "y": 0,
+      "width": 250,
+      "height": 130,
+      "color": "2"
+    },
+    {
+      "id": "smc_adaptive",
+      "type": "file",
+      "file": "controller/smc_adaptive.md",
+      "x": 1200,
+      "y": -300,
+      "width": 250,
+      "height": 130,
+      "color": "6"
+    },
+    {
+      "id": "smc_classical",
+      "type": "file",
+      "file": "controller/smc_classical.md",
+      "x": 1200,
+      "y": -100,
+      "width": 250,
+      "height": 130,
+      "color": "6"
+    },
+    {
+      "id": "smc_hybrid",
+      "type": "file",
+      "file": "controller/smc_hybrid.md",
+      "x": 1200,
+      "y": 100,
+      "width": 250,
+      "height": 130,
+      "color": "6"
+    },
+    {
+      "id": "smc_sta",
+      "type": "file",
+      "file": "controller/smc_sta.md",
+      "x": 1200,
+      "y": 300,
+      "width": 250,
+      "height": 130,
+      "color": "6"
+    },
+    {
+      "id": "cost",
+      "type": "file",
+      "file": "module/cost.md",
+      "x": 1600,
+      "y": -100,
+      "width": 250,
+      "height": 130,
+      "color": "1"
+    },
+    {
+      "id": "pso",
+      "type": "file",
+      "file": "module/pso.md",
+      "x": 1600,
+      "y": 100,
+      "width": 250,
+      "height": 130,
+      "color": "1"
+    },
+    {
+      "id": "runner",
+      "type": "file",
+      "file": "module/runner.md",
+      "x": 2000,
+      "y": -200,
+      "width": 250,
+      "height": 130,
+      "color": "4"
+    },
+    {
+      "id": "safety_guards",
+      "type": "file",
+      "file": "module/safety_guards.md",
+      "x": 2000,
+      "y": 0,
+      "width": 250,
+      "height": 130,
+      "color": "4"
+    },
+    {
+      "id": "vector_sim",
+      "type": "file",
+      "file": "module/vector_sim.md",
+      "x": 2000,
+      "y": 200,
+      "width": 250,
+      "height": 130,
+      "color": "4"
+    },
+    {
+      "id": "analysis",
+      "type": "file",
+      "file": "module/analysis.md",
+      "x": 2400,
+      "y": -300,
+      "width": 250,
+      "height": 130,
+      "color": "2"
+    },
+    {
+      "id": "hil",
+      "type": "file",
+      "file": "module/hil.md",
+      "x": 2400,
+      "y": -100,
+      "width": 250,
+      "height": 130,
+      "color": "2"
+    },
+    {
+      "id": "plant_models",
+      "type": "file",
+      "file": "module/plant_models.md",
+      "x": 2400,
+      "y": 100,
+      "width": 250,
+      "height": 130,
+      "color": "2"
+    },
+    {
+      "id": "utils",
+      "type": "file",
+      "file": "module/utils.md",
+      "x": 2400,
+      "y": 300,
+      "width": 250,
+      "height": 130,
+      "color": "2"
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge_1",
+      "fromNode": "cli",
+      "fromSide": "right",
+      "toNode": "factory",
+      "toSide": "left",
+      "label": "creates"
+    },
+    {
+      "id": "edge_2",
+      "fromNode": "web",
+      "fromSide": "right",
+      "toNode": "factory",
+      "toSide": "left",
+      "label": "creates"
+    },
+    {
+      "id": "edge_3",
+      "fromNode": "config",
+      "fromSide": "right",
+      "toNode": "factory",
+      "toSide": "left",
+      "label": "configures"
+    },
+    {
+      "id": "edge_4",
+      "fromNode": "factory",
+      "fromSide": "right",
+      "toNode": "smc_classical",
+      "toSide": "left",
+      "label": "instantiates"
+    },
+    {
+      "id": "edge_5",
+      "fromNode": "factory",
+      "fromSide": "right",
+      "toNode": "smc_sta",
+      "toSide": "left",
+      "label": "instantiates"
+    },
+    {
+      "id": "edge_6",
+      "fromNode": "factory",
+      "fromSide": "right",
+      "toNode": "smc_adaptive",
+      "toSide": "left",
+      "label": "instantiates"
+    },
+    {
+      "id": "edge_7",
+      "fromNode": "factory",
+      "fromSide": "right",
+      "toNode": "smc_hybrid",
+      "toSide": "left",
+      "label": "instantiates"
+    },
+    {
+      "id": "edge_8",
+      "fromNode": "smc_classical",
+      "fromSide": "right",
+      "toNode": "runner",
+      "toSide": "left",
+      "label": "runs_in"
+    },
+    {
+      "id": "edge_9",
+      "fromNode": "smc_sta",
+      "fromSide": "right",
+      "toNode": "runner",
+      "toSide": "left",
+      "label": "runs_in"
+    },
+    {
+      "id": "edge_10",
+      "fromNode": "smc_adaptive",
+      "fromSide": "right",
+      "toNode": "runner",
+      "toSide": "left",
+      "label": "runs_in"
+    },
+    {
+      "id": "edge_11",
+      "fromNode": "smc_hybrid",
+      "fromSide": "right",
+      "toNode": "runner",
+      "toSide": "left",
+      "label": "runs_in"
+    },
+    {
+      "id": "edge_12",
+      "fromNode": "runner",
+      "fromSide": "right",
+      "toNode": "plant_models",
+      "toSide": "left",
+      "label": "simulates"
+    },
+    {
+      "id": "edge_13",
+      "fromNode": "runner",
+      "fromSide": "bottom",
+      "toNode": "vector_sim",
+      "toSide": "top",
+      "label": "uses"
+    },
+    {
+      "id": "edge_14",
+      "fromNode": "runner",
+      "fromSide": "bottom",
+      "toNode": "safety_guards",
+      "toSide": "top",
+      "label": "uses"
+    },
+    {
+      "id": "edge_15",
+      "fromNode": "factory",
+      "fromSide": "right",
+      "toNode": "pso",
+      "toSide": "left",
+      "label": "tuned_by"
+    },
+    {
+      "id": "edge_16",
+      "fromNode": "pso",
+      "fromSide": "top",
+      "toNode": "cost",
+      "toSide": "bottom",
+      "label": "evaluates"
+    },
+    {
+      "id": "edge_17",
+      "fromNode": "pso",
+      "fromSide": "right",
+      "toNode": "runner",
+      "toSide": "left",
+      "label": "drives"
+    },
+    {
+      "id": "edge_18",
+      "fromNode": "runner",
+      "fromSide": "right",
+      "toNode": "analysis",
+      "toSide": "left",
+      "label": "feeds"
+    },
+    {
+      "id": "edge_19",
+      "fromNode": "runner",
+      "fromSide": "right",
+      "toNode": "hil",
+      "toSide": "left",
+      "label": "optional"
+    },
+    {
+      "id": "edge_20",
+      "fromNode": "runner",
+      "fromSide": "right",
+      "toNode": "utils",
+      "toSide": "left",
+      "label": "uses"
+    }
+  ]
+}

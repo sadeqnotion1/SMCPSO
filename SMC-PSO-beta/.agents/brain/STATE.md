@@ -13,7 +13,7 @@ scaffold, **dependency-first AND audit-driven**: every module is ported, audited
 | Milestone | Scope | Status |
 |-----------|-------|--------|
 | M1 Environment & config | requirements / setup / config.yaml / `src/config/` | [DONE] (re-audit pins owed) |
-| M2 Plant dynamics (FULL model first) | `src/plant/models/` full model + parity harness | [DONE] physical consistency verified, W1 refs resolved, parity documented |
+| M2 Plant dynamics (FULL model first) | `src/plant/models/` FULL model only + parity harness (simplified/low-rank scaffolds present but out of M2 scope -> see D9 row) | [DONE] physical consistency verified, W1 refs resolved, parity documented |
 | M3 Utils & primitives | `src/utils/` | [WIP] (Slices 1-7 accepted) |
 | M4 Controllers base + sim core | `src/controllers/base.py`, `src/simulation/` | [TODO] |
 | M5 Controller implementations | classical / sta / adaptive / hybrid + factory | [TODO] |
@@ -23,7 +23,7 @@ scaffold, **dependency-first AND audit-driven**: every module is ported, audited
 | M9 Entry points | `simulate.py`, `streamlit_app.py` | [TODO] |
 | M10 Benchmarks (+ integration/assets) | `src/benchmarks/` (was missing) | [TODO] |
 | M11 Verification suite & gates | `tests/`, coverage gates, CI | [TODO] |
-| -- plant simplified/low-rank | deferred follow-up after M2 (D9) | [TODO] |
+| -- plant simplified/low-rank | scaffold files present in beta (src/plant/models/simplified/, src/plant/models/lowrank/); validation + parity-testing deferred follow-up after M2 (D9) | [TODO] (scaffolded, not yet validated) |
 
 ## Audit posture (why this plan changed)
 - Repo was largely AI-generated -> every ported file is **"guilty until verified."**
