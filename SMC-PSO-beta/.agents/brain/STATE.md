@@ -13,9 +13,9 @@ scaffold, **dependency-first AND audit-driven**: every module is ported, audited
 | Milestone | Scope | Status |
 |-----------|-------|--------|
 | M1 Environment & config | requirements / setup / config.yaml / `src/config/` | [DONE] (re-audit pins owed) |
-| M2 Plant dynamics (FULL model first) | `src/plant/models/` FULL model only + parity harness (simplified/low-rank scaffolds present but out of M2 scope -> see D9 row) | [DONE] physical consistency verified, W1 refs resolved, parity documented |
+| M2 Plant dynamics (FULL model first) | `src/plant/models/` FULL model only + parity harness (simplified/low-rank scaffolds present but out of M2 scope -> see D9 row) | [DONE] physical consistency verified, W1 refs resolved, parity documented — Finding #2 resolved 2026-06-28 |
 | M3 Utils & primitives | `src/utils/` | [WIP] (Slices 1-7 accepted) |
-| M4 Controllers base + sim core | `src/controllers/base.py`, `src/simulation/` | [TODO] |
+| M4 Controllers base + sim core | `src/controllers/base.py`, `src/simulation/` | [WIP] — Slice 1 base.py DONE; Slices 2–6 TODO |
 | M5 Controller implementations | classical / sta / adaptive / hybrid + factory | [TODO] |
 | M6 Optimization | `src/optimization/` | [TODO] |
 | M7 Interfaces / HIL | `src/interfaces/` (was missing from old plan) | [TODO] |
@@ -45,3 +45,21 @@ scaffold, **dependency-first AND audit-driven**: every module is ported, audited
 - Source has a stray mojibake file (`DProjects...compile.bat`) -- do NOT carry it over.
 - `numpy<2.0` must stay pinned for Numba; verify in M1 re-audit.
 - Numba batch path must keep numeric parity with the pure-Python path.
+- [OPEN — M5] Trap A: state-ordering; canonical=GROUPED, adapters shipped.
+
+---
+
+## Session update — 2026-06-28 (M4 boundary)
+- **Finding #2 (physics_matrices): RESOLVED.** Corrected math wired into
+  `physics_matrices.py`; `physics.py` delegates to it. Verified by
+  `tests/test_plant/test_full_dynamics_invariants.py` (all invariants pass).
+  M2 acceptance re-closed.
+- **M4 Slice 1 (`src/controllers/base.py`): DONE.** Flattened from the source
+  `controllers/base/` package; AI-slop citation tokens removed.
+- **Trap A (state ordering): PINNED.** Canonical = GROUPED
+  `[x, theta1, theta2, x_dot, theta1_dot, theta2_dot]`
+  (see `.agents/brain/STATE_VECTOR_CONVENTION.md`). Adapters + guard test shipped.
+  Controller-side conversion is deferred to **M5** and is the top open risk.
+- **M4 Slices 2–6:** still TODO (simulation core → integrators → safety →
+  engines/orchestrators → results).
+

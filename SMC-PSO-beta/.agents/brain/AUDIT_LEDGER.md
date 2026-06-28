@@ -154,3 +154,31 @@
 - [P3] INFRA-LOG-LENSA-2  Dead var `time_tuple` in doRollover; no-op `pass` branch in `_rotate_size`. Status: OPEN.
 - [P3] INFRA-MEM-1  get_block returns array but return_block needs index; caller tracks mapping. Status: OPEN.
 - [P3] INFRA-PROV-1  memory docstrings reference source-repo "Issue #17 (CRIT-008)". Status: OPEN.
+
+---
+
+## 2026-06-28 — M4 boundary closeout
+
+### Finding #2 — physics_matrices (RESOLVED)
+- Corrected energy-consistent / passivity-compliant Christoffel-Coriolis math wired
+  into `physics_matrices.py`; `physics.py` (full-fidelity) delegates to the corrected
+  base matrices.
+- Evidence: `pytest tests/test_plant/test_full_dynamics_invariants.py` — all invariant
+  tests pass (energy drift, SPD inertia, skew-symmetry of (Mdot - 2C)).
+- Effect: re-opened M2 acceptance is now closed.
+
+### Trap A — state-vector ordering mismatch (PINNED; controller wiring deferred)
+- **Severity: P0** if left unmanaged — silent wrong dynamics, no exception, tests stay green.
+- Plant (corrected physics, now live) uses GROUPED `[x, theta1, theta2, x_dot, theta1_dot, theta2_dot]`.
+- Legacy controllers documented INTERLEAVED `[x, x_dot, theta1, theta1_dot, theta2, theta2_dot]`.
+- Action taken: declared GROUPED canonical (`.agents/brain/STATE_VECTOR_CONVENTION.md`),
+  shipped boundary adapters (`src/plant/state_convention.py`) + guard test
+  (`tests/test_plant/test_state_vector_convention.py`).
+- **Open item (M5):** controllers must call `interleaved_to_grouped()` at the plant
+  boundary; add an integration test asserting it. `test_full_dynamics_invariants.py`
+  does NOT catch this.
+
+### M4 status
+- Slice 1 (`src/controllers/base.py`) ported, cleaned (AI-slop removed), flattened. Done.
+- Slices 2–6 (simulation core, integrators, safety, engines/orchestrators, results): TODO.
+
