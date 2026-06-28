@@ -182,3 +182,20 @@
 - Slice 1 (`src/controllers/base.py`) ported, cleaned (AI-slop removed), flattened. Done.
 - Slices 2–6 (simulation core, integrators, safety, engines/orchestrators, results): TODO.
 
+---
+
+### M4 Slice 2 — simulation/core (accepted 2026-06-28)
+- Scope: src/simulation/core/{interfaces,simulation_context,state_space,time_domain}.py + core/__init__ + minimal simulation/__init__.
+- Lens A: no hallucinated citation tokens in core/ (Trap E was confined to control_primitives, handled in Slice 1). Banners normalized to Slice 1 style.
+- Lens B findings:
+  - P1 #S2-1 compute_energy(): docstring said "total energy" but returns KINETIC only; also silently assumes GROUPED ordering (Trap A). FIX: docstring corrected; grouped assumption pinned by test. Math unchanged (parity preserved).
+  - P2 #S2-2 AdaptiveTimeStep: error exponent hard-coded to 1/4 regardless of integrator order. Deferred to Slice 3 (integrators) where it is actually consumed.
+  - P2 #S2-3 interfaces.PerformanceMonitor duplicates a name the source simulation/__init__ imports from .safety. No real collision (different module path; not exported by core/__init__). Revisit in Slice 4.
+- Decisions:
+  - Trap C: ported core/ SimulationContext; context/ twin NOT ported (deferred drop to Slice 4 alongside safety).
+  - Trap D: shipped a MINIMAL simulation/__init__ (no subpackage re-exports / legacy aliases). Full re-export deferred until Slices 3-6 land.
+  - Trap F mirror: kept core as a subpackage (matches source); graph node `runner` maps to src/simulation/.
+  - simulation_context: wrap_physics_config import made LAZY so core imports before utils/factory exist. Call-time behavior identical.
+- Gate: P0=0, P1=0 (S2-1 resolved). pytest 24/24 green. parity OK. import-without-unported-deps OK. No src/core imports.
+
+

@@ -15,7 +15,7 @@ scaffold, **dependency-first AND audit-driven**: every module is ported, audited
 | M1 Environment & config | requirements / setup / config.yaml / `src/config/` | [DONE] (re-audit pins owed) |
 | M2 Plant dynamics (FULL model first) | `src/plant/models/` FULL model only + parity harness (simplified/low-rank scaffolds present but out of M2 scope -> see D9 row) | [DONE] physical consistency verified, W1 refs resolved, parity documented — Finding #2 resolved 2026-06-28 |
 | M3 Utils & primitives | `src/utils/` | [WIP] (Slices 1-7 accepted) |
-| M4 Controllers base + sim core | `src/controllers/base.py`, `src/simulation/` | [WIP] — Slice 1 base.py DONE; Slices 2–6 TODO |
+| M4 Controllers base + sim core | `src/controllers/base.py`, `src/simulation/` | [WIP] — Slices 1-2 DONE (base.py; simulation/core); Slices 3-6 TODO |
 | M5 Controller implementations | classical / sta / adaptive / hybrid + factory | [TODO] |
 | M6 Optimization | `src/optimization/` | [TODO] |
 | M7 Interfaces / HIL | `src/interfaces/` (was missing from old plan) | [TODO] |
@@ -60,6 +60,12 @@ scaffold, **dependency-first AND audit-driven**: every module is ported, audited
   `[x, theta1, theta2, x_dot, theta1_dot, theta2_dot]`
   (see `.agents/brain/STATE_VECTOR_CONVENTION.md`). Adapters + guard test shipped.
   Controller-side conversion is deferred to **M5** and is the top open risk.
-- **M4 Slices 2–6:** still TODO (simulation core → integrators → safety →
-  engines/orchestrators → results).
+- **M4 Slice 2 (`src/simulation/core/`): DONE.** Ported interfaces, simulation_context,
+  state_space, time_domain + minimal `simulation/__init__`. Trap C: dropped the `context/`
+  twin (deferred to Slice 4). Trap D: minimal package __init__, legacy aliases deferred.
+  `wrap_physics_config` import made lazy so `import src.simulation.core` works before
+  utils/factory land. 24/24 tests green; parity vs source OK; no `src/core` imports.
+- **M4 Slice 3 (integrators) is next.** Watch-item carried: AdaptiveTimeStep exponent
+  (1/4) should be tied to integrator order there.
+
 
