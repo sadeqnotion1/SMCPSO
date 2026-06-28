@@ -128,37 +128,13 @@ class FullFidelityPhysicsComputer:
 
     def _compute_full_inertia_matrix(self, state: np.ndarray) -> np.ndarray:
         """Compute full inertia matrix with all coupling terms."""
-        _, theta1, theta2, _, _, _ = state
-
-        return self._compute_full_inertia_matrix_numba(
-            theta1, theta2,
-            self.config.cart_mass,
-            self.config.pendulum1_mass,
-            self.config.pendulum2_mass,
-            self.config.pendulum1_length,
-            self.config.pendulum2_length,
-            self.config.pendulum1_com,
-            self.config.pendulum2_com,
-            self.config.pendulum1_inertia,
-            self.config.pendulum2_inertia
-        )
+        return self.base_matrices.compute_inertia_matrix(state)
 
     def _compute_full_coriolis_matrix(self, state: np.ndarray) -> np.ndarray:
         """Compute full Coriolis matrix with all nonlinear terms."""
-        _, theta1, theta2, _, theta1_dot, theta2_dot = state
-
-        return self._compute_full_coriolis_matrix_numba(
-            theta1, theta2, theta1_dot, theta2_dot,
-            self.config.pendulum1_mass,
-            self.config.pendulum2_mass,
-            self.config.pendulum1_length,
-            self.config.pendulum2_length,
-            self.config.pendulum1_com,
-            self.config.pendulum2_com,
-            self.config.include_coriolis_effects,
-            self.config.include_centrifugal_effects,
-            self.config.include_gyroscopic_effects
-        )
+        if self.config.include_coriolis_effects and self.config.include_centrifugal_effects:
+            return self.base_matrices.compute_coriolis_matrix(state)
+        return np.zeros((3, 3))
 
     def _compute_full_gravity_vector(self, state: np.ndarray) -> np.ndarray:
         """Compute full gravity vector."""

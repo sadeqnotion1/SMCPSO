@@ -1,7 +1,6 @@
-#======================================================================================\\\
-#========================= src/plant/core/physics_matrices.py =========================\\\
-#======================================================================================\\\
-
+#======================================================================================
+#========================= src/plant/core/physics_matrices.py =========================
+#======================================================================================
 """
 Physics Matrix Computation for DIP Systems.
 
@@ -10,7 +9,8 @@ Provides focused components for computing the fundamental physics matrices:
 - Coriolis Matrix (C): Velocity-dependent forces
 - Gravity Vector (G): Gravitational forces
 
-Split from monolithic dynamics for clarity, testability, and reusability.
+This version wraps the verified-correct equations from physics_matrices_corrected.py
+to resolve the M2 passivity/energy-drift inconsistency (Finding #2).
 """
 
 from __future__ import annotations
@@ -24,6 +24,8 @@ except ImportError:
         def decorator(func):
             return func
         return decorator
+
+from .physics_matrices_corrected import DIPParameters, inertia_matrix, coriolis_matrix, gravity_vector
 
 
 class PhysicsMatrixComputer(Protocol):
@@ -46,9 +48,7 @@ class DIPPhysicsMatrices:
     """
     Double Inverted Pendulum physics matrix computation.
 
-    Encapsulates the mathematical computation of fundamental physics matrices
-    for the DIP system. Uses numerical optimizations (JIT compilation) for
-    performance while maintaining clear mathematical structure.
+    Wraps the verified-correct equations from physics_matrices_corrected.py.
     """
 
     def __init__(self, parameters: Any):
@@ -60,82 +60,46 @@ class DIPPhysicsMatrices:
         """
         self.params = parameters
 
-        # Extract commonly used parameters for performance
-        self.m0 = parameters.cart_mass
-        self.m1 = parameters.pendulum1_mass
-        self.m2 = parameters.pendulum2_mass
-        self.L1 = parameters.pendulum1_length
-        self.L2 = parameters.pendulum2_length
-        self.Lc1 = parameters.pendulum1_com
-        self.Lc2 = parameters.pendulum2_com
-        self.I1 = parameters.pendulum1_inertia
-        self.I2 = parameters.pendulum2_inertia
-        self.g = parameters.gravity
-
-        # Friction coefficients
-        self.c0 = parameters.cart_friction
-        self.c1 = parameters.joint1_friction
-        self.c2 = parameters.joint2_friction
+        # Map to verified parameters structure
+        self.p = DIPParameters(
+            m0=parameters.cart_mass,
+            m1=parameters.pendulum1_mass,
+            m2=parameters.pendulum2_mass,
+            L1=parameters.pendulum1_length,
+            L2=parameters.pendulum2_length,
+            Lc1=parameters.pendulum1_com,
+            Lc2=parameters.pendulum2_com,
+            I1=parameters.pendulum1_inertia,
+            I2=parameters.pendulum2_inertia,
+            g=parameters.gravity
+        )
 
     def compute_inertia_matrix(self, state: np.ndarray) -> np.ndarray:
         """
         Compute the inertia matrix M(q) for the DIP system.
 
-        The inertia matrix represents the mass distribution and coupling
-        between the degrees of freedom.
-
         Args:
             state: System state [x, theta1, theta2, x_dot, theta1_dot, theta2_dot]
-
-        Returns:
-            3x3 inertia matrix M(q)
         """
-        _, theta1, theta2, _, _, _ = state
-
-        return self._compute_inertia_matrix_numba(
-            theta1, theta2, self.m0, self.m1, self.m2,
-            self.L1, self.L2, self.Lc1, self.Lc2, self.I1, self.I2
-        )
+        return inertia_matrix(self.p, state[1], state[2])
 
     def compute_coriolis_matrix(self, state: np.ndarray) -> np.ndarray:
         """
         Compute the Coriolis matrix C(q, q̇) for the DIP system.
 
-        The Coriolis matrix captures velocity-dependent forces including
-        centripetal and Coriolis effects.
-
         Args:
             state: System state [x, theta1, theta2, x_dot, theta1_dot, theta2_dot]
-
-        Returns:
-            3x3 Coriolis matrix C(q, q̇)
         """
-        _, theta1, theta2, _, theta1_dot, theta2_dot = state
-
-        return self._compute_coriolis_matrix_numba(
-            theta1, theta2, theta1_dot, theta2_dot,
-            self.m1, self.m2, self.L1, self.L2, self.Lc1, self.Lc2
-        )
+        return coriolis_matrix(self.p, state[:3], state[3:])
 
     def compute_gravity_vector(self, state: np.ndarray) -> np.ndarray:
         """
         Compute the gravity vector G(q) for the DIP system.
 
-        The gravity vector represents gravitational forces acting on
-        the pendulum links.
-
         Args:
             state: System state [x, theta1, theta2, x_dot, theta1_dot, theta2_dot]
-
-        Returns:
-            3x1 gravity vector G(q)
         """
-        _, theta1, theta2, _, _, _ = state
-
-        return self._compute_gravity_vector_numba(
-            theta1, theta2, self.m1, self.m2,
-            self.L1, self.Lc1, self.Lc2, self.g
-        )
+        return gravity_vector(self.p, state[1], state[2])
 
     def compute_all_matrices(self, state: np.ndarray) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
         """
@@ -143,127 +107,26 @@ class DIPPhysicsMatrices:
 
         Args:
             state: System state [x, theta1, theta2, x_dot, theta1_dot, theta2_dot]
-
-        Returns:
-            Tuple of (M, C, G) matrices
         """
-        M = self.compute_inertia_matrix(state)
-        C = self.compute_coriolis_matrix(state)
-        G = self.compute_gravity_vector(state)
-        return M, C, G
-
-    @staticmethod
-    @njit(cache=True)
-    def _compute_inertia_matrix_numba(
-        theta1: float, theta2: float,
-        m0: float, m1: float, m2: float,
-        L1: float, L2: float, Lc1: float, Lc2: float,
-        I1: float, I2: float
-    ) -> np.ndarray:
-        """JIT-compiled inertia matrix computation."""
-
-        c1 = np.cos(theta1)
-        c2 = np.cos(theta2)
-        c12 = np.cos(theta1 - theta2)
-
-        # Inertia matrix elements
-        M11 = m0 + m1 + m2
-        M12 = (m1 * Lc1 + m2 * L1) * c1
-        M13 = m2 * Lc2 * c2
-
-        M21 = M12
-        M22 = m1 * Lc1**2 + m2 * L1**2 + I1
-        M23 = m2 * L1 * Lc2 * c12
-
-        M31 = M13
-        M32 = M23
-        M33 = m2 * Lc2**2 + I2
-
-        M = np.array([
-            [M11, M12, M13],
-            [M21, M22, M23],
-            [M31, M32, M33]
-        ])
-
-        return M
-
-    @staticmethod
-    @njit(cache=True)
-    def _compute_coriolis_matrix_numba(
-        theta1: float, theta2: float,
-        theta1_dot: float, theta2_dot: float,
-        m1: float, m2: float,
-        L1: float, L2: float, Lc1: float, Lc2: float
-    ) -> np.ndarray:
-        """JIT-compiled Coriolis matrix computation."""
-
-        s1 = np.sin(theta1)
-        s2 = np.sin(theta2)
-        s12 = np.sin(theta1 - theta2)
-
-        # Coefficients
-        a1 = m1 * Lc1 + m2 * L1
-        a2 = m2 * Lc2
-        a12 = m2 * L1 * Lc2
-
-        # Coriolis matrix elements (friction moved out of Coriolis matrix)
-        C11 = 0.0
-        C12 = -a1 * s1 * theta1_dot
-        C13 = -a2 * s2 * theta2_dot
-
-        C21 = 0.0
-        C22 = 0.0
-        C23 = a12 * s12 * theta2_dot
-
-        C31 = 0.0
-        C32 = -a12 * s12 * theta1_dot
-        C33 = 0.0
-
-        C = np.array([
-            [C11, C12, C13],
-            [C21, C22, C23],
-            [C31, C32, C33]
-        ])
-
-        return C
-
-    @staticmethod
-    @njit(cache=True)
-    def _compute_gravity_vector_numba(
-        theta1: float, theta2: float,
-        m1: float, m2: float,
-        L1: float, Lc1: float, Lc2: float, g: float
-    ) -> np.ndarray:
-        """JIT-compiled gravity vector computation."""
-
-        s1 = np.sin(theta1)
-        s2 = np.sin(theta2)
-
-        G1 = 0.0
-        G2 = (m1 * Lc1 + m2 * L1) * g * s1
-        G3 = m2 * Lc2 * g * s2
-
-        G = np.array([G1, G2, G3])
-
-        return G
+        return (
+            self.compute_inertia_matrix(state),
+            self.compute_coriolis_matrix(state),
+            self.compute_gravity_vector(state)
+        )
 
 
 class SimplifiedDIPPhysicsMatrices(DIPPhysicsMatrices):
     """
     Simplified physics matrices for computational efficiency.
-
-    Uses approximations and simplifications suitable for control design
-    while maintaining essential dynamics characteristics.
     """
 
     def compute_inertia_matrix(self, state: np.ndarray) -> np.ndarray:
         """Simplified inertia matrix with reduced coupling terms."""
         _, theta1, theta2, _, _, _ = state
 
-        # Simplified computation with reduced cross-coupling
         return self._compute_simplified_inertia_matrix_numba(
-            theta1, theta2, self.m0, self.m1, self.m2,
-            self.L1, self.L2, self.Lc1, self.Lc2, self.I1, self.I2
+            theta1, theta2, self.p.m0, self.p.m1, self.p.m2,
+            self.p.L1, self.p.L2, self.p.Lc1, self.p.Lc2, self.p.I1, self.p.I2
         )
 
     @staticmethod
@@ -275,13 +138,10 @@ class SimplifiedDIPPhysicsMatrices(DIPPhysicsMatrices):
         I1: float, I2: float
     ) -> np.ndarray:
         """Simplified inertia matrix computation."""
-
-        # Diagonal-dominant approximation for faster computation
         M11 = m0 + m1 + m2
         M22 = m1 * Lc1**2 + m2 * L1**2 + I1 + m2 * Lc2**2 + I2
         M33 = m2 * Lc2**2 + I2
 
-        # Reduced off-diagonal terms
         c1 = np.cos(theta1)
         c2 = np.cos(theta2)
 
