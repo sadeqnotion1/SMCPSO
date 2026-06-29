@@ -241,7 +241,17 @@
   - **S5-4:** `simulation/__init__.py` docstring-only update (Slice 5 regrouping + Trap F note); package stays import side-effect free; package-level re-exports + `_guard_*` aliases (Trap D) deferred to Slice 6.
 - **Carry-forward:** Slice 6 = `strategies/` (MonteCarloStrategy) + Trap-D re-exports + remap S5-2 plant paths. Before retiring `engines/` (M6/M9), grep repo for importers of `src.simulation.engines` / `src.core.vector_sim` / `src.core.simulation_runner`.
 
+---
 
+## M4 Slice 6 — simulation/strategies + package wiring (Trap D close) — M4 COMPLETE
 
-
-
+- **Date:** applied with Slice 6 kit. **Verdict:** PORT AS-IS (banner-normalize only). 0 functional edits.
+- **Files (3):** `strategies/{__init__,monte_carlo}.py` (NEW; exports MonteCarloStrategy);   `simulation/__init__.py` (REPLACED docstring-only with the fully-wired original surface   + legacy aliases + factory fns).
+- **Diff vs source:** banner + line-ending only (`chg_lines=3`/file). Norm sha256(12):   strategies/__init__ `8f6fee91fbd3`, strategies/monte_carlo `c7ea679557a1`,   simulation/__init__ `8ad30c37a4d6`.
+- **Gate:** 19/19 tests (12 strategies + 7 package-surface) + regression green; STRUCTURAL   parity OK (banner-only) + BEHAVIORAL OK (MonteCarlo stats vs numpy ref); P0=0, P1=0;   no `src.core` imports.
+- **Findings:**
+  - **S6-1 (Trap D close):** package-level re-exports + legacy aliases (get_step_fn, step,     run_simulation, simulate=simulate_batch, rk45_step, _guard_no_nan/_energy/_bounds) +     factory fns (create_simulation_engine, run_monte_carlo_analysis) wired by shipping the     original `__init__` banner-normalized. Every name verified to resolve in beta. NB: this     makes `import src.simulation` EAGER (requires scipy) — intended final-wiring behavior.     No current caller depends on the package-level surface (grep of `from src.simulation     import` across both repos = EMPTY); reproduced for forward-compat.
+  - **S6-2:** `MonteCarloStrategy._run_parallel_simulations` is a documented sequential     placeholder (not real multiprocessing) — matches source; preserved, not "fixed".
+  - **S5-2 (now UNBLOCKED, deferred):** beta has since grown `src/config/` (schemas.py) and     `src/plant/` (models/), so the legacy `sequential.py` plant-path remap is now feasible.     NOT done here (edits a shipped byte-clean file + needs the real plant/config symbol     names, which were not pulled). Tracked as a focused follow-up slice with its own audit.
+- **Milestone:** M4 (simulation framework) COMPLETE — Slices 1-6 all on `main`.
+- **Carry-forward:** (1) S5-2 remap slice (pull src/plant/models + src/config/schemas symbols).   (2) Before retiring legacy engines/src.core (M6/M9): grep importers of `src.simulation.engines`   / `src.core.vector_sim` / `src.core.simulation_runner`.
