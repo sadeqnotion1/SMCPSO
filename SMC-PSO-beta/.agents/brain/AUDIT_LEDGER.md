@@ -198,4 +198,21 @@
   - simulation_context: wrap_physics_config import made LAZY so core imports before utils/factory exist. Call-time behavior identical.
 - Gate: P0=0, P1=0 (S2-1 resolved). pytest 24/24 green. parity OK. import-without-unported-deps OK. No src/core imports.
 
+---
+
+### M4 Slice 3 — simulation/integrators (accepted 2026-06-29)
+- Scope: src/simulation/integrators/{base,factory,compatibility}.py + fixed_step/{euler,runge_kutta} + discrete/zero_order_hold + adaptive/{runge_kutta,error_control} + 4 __init__ + docstring-only simulation/__init__.
+- Headline: ZERO functional edits. Integrators depend only on core.interfaces (Slice 2) + numpy/scipy; ported byte-identical to source except #=== banner normalization (machine-verified banner-only diff, 12 files).
+- Lens A: no hallucinated citation tokens in integrators/. NOTE: legacy engines/adaptive_integrator.py (NOT ported; Slice 5) DOES contain Trap-E citation tokens — flag for Slice 5; integrators/adaptive/runge_kutta.rk45_step is the clean replacement.
+  - P3 #S3-3 factory.get_integrator_info(): getattr(cls,'ORDER') always None (property is lowercase instance 'order'); 'adaptive' derived from type-name substring (wrong for dp45/dormand_prince). Metadata helper only; kept for parity; deferred.
+  - P3 #S3-4 ZeroOrderHold.order returns float('inf') though ABC types order->int. Semantically intended (exact for LTI). Kept; test asserts ==inf.
+  - P3 IntegratorSafetyWrapper uses print() not logging; compatibility.py keeps a 2nd small registry (DRY). Kept; deferred.
+- Lens B findings:
+  - P1 #S3-1 (RESOLVES carried watch-item S2-2): adaptive error control IS order-aware. ErrorController.update_step_size uses (tol/err)**(1/order) accept, 1/(order+1) reject; DormandPrince45 passes order=5. Pinned by test_error_controller_is_order_aware.
+  - P2 #S3-2 (new carried watch-item): core/time_domain.AdaptiveTimeStep (Slice 2) still hard-codes 1/4 and is NOT order-aware — but it is NOT used on the integrator path (superseded by ErrorController). Deprecate/route through ErrorController when engines wire adaptive stepping in Slice 5.
+  - P2 #S3-3(B) error-norm convention differs new vs legacy (RMS+old-state-scale vs L2+max-scale). Propagated y5 is IDENTICAL for accepted steps (formula parity); only suggested_dt/accept-threshold differ. Pinned by test_dp45_state_parity_with_legacy_rk45_step. Documented; no action.
+- Decisions: Trap D still deferred (rk45_step ships inside adaptive/runge_kutta where source defines it; package-level alias deferred). simulation/__init__ docstring updated only. engines/adaptive_integrator.py deliberately NOT ported (Slice 5).
+- Gate: P0=0, P1=0 (S3-1 resolved). pytest 47/47 green. structural parity banner-only + numerical correctness OK. import-without-unported-deps OK. No src/core imports.
+
+
 
