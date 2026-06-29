@@ -469,3 +469,19 @@ Earlier ledger/STATE entries recorded a pre-commit SHA (chicken-and-egg). Verifi
 - M4 S5 = `a1834d5ac87583b4e8cac6fbd2a9eb4108c41eed` (ledger previously said `d62e12d7…`).
 - M4 S6 = `8f6407386bf9f14f177fb797c5520a02cf896be0` (ledger/STATE previously said `0cc017d3…`).
 Going forward, record the **parent** SHA at kit-build time and the **actual** push SHA in the CLI report.
+
+---
+
+## M5 · Slice 2 — Super-Twisting SMC port
+
+- **When:** 2026-06-29
+- **Source → Target:** `src/controllers/smc/sta_smc.py` (monolith, `SuperTwistingSMC`) → `src/controllers/sta_smc.py` (flat, NEW); `src/controllers/__init__.py` widened to export `SuperTwistingSMC`.
+- **Transforms (only):** EOL/banner normalize; Trap-E citation-token strip (0 remain); relocation `from ...utils` → `from ..utils` (3x). No numeric/algorithmic edits.
+- **Dropped (AI-slop):** modular twin `smc/algorithms/super_twisting/*` (monolith is factory-canonical; only its Config is used — deferred to S5).
+- **Retained + flagged:** dead `_sta_smc_control_numba` (never called); `numba` kept behind `_DummyNumba` try/except fallback.
+- **Traps:** A = no-op (already grouped, verified); B = no `src.core`; E = tokens stripped.
+- **Gate:** `parity_check_m5_slice2.py` → STRUCTURAL OK (byte-identical to transformed source) + BEHAVIORAL OK (400 cases, max|du|=max|dz|=0.0, incl. saturation + anti-windup); 18/18 unit tests.
+- **Lens B:** true STA law `u=-K1|s|^½ sgn(s)+z-d s`, `z+=z-K2 sgn(s)dt+Kaw(u_sat-u_raw)dt`; Moreno-Osorio `K1>K2>0` enforced in `validate_gains`; config K1=8>K2=4.
+- **Findings for review:** (1) monolith-vs-modular drop; (2) standalone class not yet ControllerInterface ABC (S5); (3) dead numba fn retained for later cleanup.
+- **Commit:** `0291875150821d3f98fcde64ffec2110c92131e3` (record parent `0af69b18d203923fde188981df262a0445d470d0`).
+
