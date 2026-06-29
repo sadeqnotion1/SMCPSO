@@ -15,7 +15,7 @@ scaffold, **dependency-first AND audit-driven**: every module is ported, audited
 | M1 Environment & config | requirements / setup / config.yaml / `src/config/` | [DONE] (re-audit pins owed) |
 | M2 Plant dynamics (FULL model first) | `src/plant/models/` FULL model only + parity harness (simplified/low-rank scaffolds present but out of M2 scope -> see D9 row) | [DONE] physical consistency verified, W1 refs resolved, parity documented — Finding #2 resolved 2026-06-28 |
 | M3 Utils & primitives | `src/utils/` | [WIP] (Slices 1-7 accepted) |
-| M4 Controllers base + sim core | `src/controllers/base.py`, `src/simulation/` | [WIP] — Slices 1-3 DONE (base.py; simulation/core; integrators); Slices 4-6 TODO |
+| M4 Controllers base + sim core | `src/controllers/base.py`, `src/simulation/` | [WIP] — Slices 1-4 DONE (base.py; simulation/core; integrators; safety + Trap C); Slices 5-6 TODO |
 | M5 Controller implementations | classical / sta / adaptive / hybrid + factory | [TODO] |
 | M6 Optimization | `src/optimization/` | [TODO] |
 | M7 Interfaces / HIL | `src/interfaces/` (was missing from old plan) | [TODO] |
@@ -70,11 +70,20 @@ scaffold, **dependency-first AND audit-driven**: every module is ported, audited
   factory and compatibility wrappers. ZERO functional edits — byte-identical to source modulo
   banner normalization (machine-verified). 47/47 tests green; structural + numerical parity OK;
   no src/core imports.
-- **Watch-item S2-2 RESOLVED (S3-1):** the integrator adaptive path IS order-aware via
-  ErrorController (order=5). NEW watch-item: the standalone core/time_domain.AdaptiveTimeStep
-  is still 1/4-hard-coded but unused by integrators — deprecate/route through ErrorController in
-  Slice 5. Also flag for Slice 5: engines/adaptive_integrator.py carries Trap-E citation tokens.
-- **M4 Slice 4 (safety) is next** — resolves Trap C (drop the context/ twin alongside safety/).
+- **M4 Slice 4 (`src/simulation/safety/`): DONE.** Ported guards, constraints, monitors,
+  recovery. ZERO functional edits — byte-identical to source modulo banner normalization
+  (machine-verified). 25/25 tests green; structural + behavioral parity OK; no src/core imports.
+- **Trap C RESOLVED:** the `context/` twin was DROPPED (not ported). core.SimulationContext
+  (Slice 2) is a strict superset of context/simulation_context; safety/guards supersedes
+  context/safety_guards (identical frozen substrings). Nothing unique lost.
+- **Watch-item S2-3 RESOLVED (false alarm):** safety.PerformanceMonitor IS
+  core.interfaces.PerformanceMonitor (re-export, not a duplicate); concrete impl is
+  SimulationPerformanceMonitor.
+- **NOTE (frozen substrings):** safety guard messages keep literal `<i>/<val>/<max>/<t>`
+  placeholders ON PURPOSE (acceptance-test matching) — do not "fix" them.
+- **M4 Slice 5 (engines/orchestrators) is next** — also: route core/time_domain.AdaptiveTimeStep
+  through ErrorController (S3-2) and clean Trap-E citation tokens in engines/adaptive_integrator.py.
+
 
 
 

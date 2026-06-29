@@ -214,5 +214,18 @@
 - Decisions: Trap D still deferred (rk45_step ships inside adaptive/runge_kutta where source defines it; package-level alias deferred). simulation/__init__ docstring updated only. engines/adaptive_integrator.py deliberately NOT ported (Slice 5).
 - Gate: P0=0, P1=0 (S3-1 resolved). pytest 47/47 green. structural parity banner-only + numerical correctness OK. import-without-unported-deps OK. No src/core imports.
 
+---
+
+### M4 Slice 4 — simulation/safety (+ Trap C closure) (accepted 2026-06-29)
+- Scope: src/simulation/safety/{__init__,guards,constraints,monitors,recovery}.py + docstring-only simulation/__init__. DROPPED the src/simulation/context/ twin (NOT ported).
+- Headline: ZERO functional edits. safety depends only on core.interfaces (Slice 2) + numpy; ported byte-identical to source except #=== banner normalization (machine-verified banner-only diff, 5/5 files).
+- Trap C RESOLVED: core/simulation_context.py (Slice 2) is a strict SUPERSET of context/simulation_context.py (adds register_component/get_component/create_simulation_engine/get_simulation_parameters + newer dynamics loader). context/safety_guards.py (_guard_*, RuntimeError) superseded by safety/guards.py (guard_*, SafetyViolationError <: RuntimeError) with identical frozen substrings. Source __init__ already imports SimulationContext from .core, not .context. => context/ dropped, nothing unique lost.
+- Watch-item S2-3 RESOLVED (false alarm): safety.PerformanceMonitor is a re-export of core.interfaces.PerformanceMonitor (via monitors.py), not a duplicate class; concrete impl is SimulationPerformanceMonitor. Pinned by test_safety_import (is-identity).
+- Lens A: no citation tokens in safety/. P3 #S4-1 error messages carry literal placeholders <i>/<val>/<max>/<t> — these are INTENTIONAL frozen test-matching substrings (do not modify); preserved verbatim, flagged so future cleanup doesn't break acceptance tests. P3 #S4-4 apply_safety_guards approximates time as step_idx*0.01 (hard dt); kept for parity, revisit when engines wire real t (Slice 5).
+- Lens B: P3 #S4-2 guards define 'energy' as ||state||^2 (not physical kinetic+potential); self-consistent, matches source; route through plant energy fn post-M4. P3 #S4-3 EnergyGuard.check uses sum(state**2) (no axis) vs legacy guard_energy sum(.,axis=-1); identical for single state, differ only batched; kept.
+- Decisions: Trap D still deferred — package-level simulation/__init__ re-exports (safety + _guard_* aliases) wait for Slice 6 (orchestrators/results/strategies absent). simulation/__init__ docstring updated only; still side-effect free.
+- Gate: P0=0, P1=0. pytest 22/22 green (5 files). structural parity banner-only + behavioral correctness OK. import-without-unported-deps OK. No src/core imports. context/ twin absent.
+
+
 
 
