@@ -15,7 +15,7 @@ scaffold, **dependency-first AND audit-driven**: every module is ported, audited
 | M1 Environment & config | requirements / setup / config.yaml / `src/config/` | [DONE] (re-audit pins owed) |
 | M2 Plant dynamics (FULL model first) | `src/plant/models/` FULL model only + parity harness (simplified/low-rank scaffolds present but out of M2 scope -> see D9 row) | [DONE] physical consistency verified, W1 refs resolved, parity documented — Finding #2 resolved 2026-06-28 |
 | M3 Utils & primitives | `src/utils/` | [WIP] (Slices 1-7 accepted) |
-| M4 Controllers base + sim core | `src/controllers/base.py`, `src/simulation/` | [WIP] — Slices 1-4 DONE (base.py; simulation/core; integrators; safety + Trap C); Slices 5-6 TODO |
+| M4 Controllers base + sim core | `src/controllers/base.py`, `src/simulation/` | [WIP] — Slices 1-5 DONE (base.py; simulation/core; integrators; safety; results; orchestrators; engines DROPPED / Trap F); Slice 6 TODO |
 | M5 Controller implementations | classical / sta / adaptive / hybrid + factory | [TODO] |
 | M6 Optimization | `src/optimization/` | [TODO] |
 | M7 Interfaces / HIL | `src/interfaces/` (was missing from old plan) | [TODO] |
@@ -81,8 +81,24 @@ scaffold, **dependency-first AND audit-driven**: every module is ported, audited
   SimulationPerformanceMonitor.
 - **NOTE (frozen substrings):** safety guard messages keep literal `<i>/<val>/<max>/<t>`
   placeholders ON PURPOSE (acceptance-test matching) — do not "fix" them.
-- **M4 Slice 5 (engines/orchestrators) is next** — also: route core/time_domain.AdaptiveTimeStep
-  through ErrorController (S3-2) and clean Trap-E citation tokens in engines/adaptive_integrator.py.
+- **M4 Slice 5 (results + orchestrators; engines DROPPED / Trap F) — DONE @ d62e12d7.** Ported results (containers, exporters, processors, validators) and orchestrators (base, sequential, batch, parallel, real_time). 26 tests green, banner-only structural + RK4 behavioral parity OK, no `src/core/` imports.
+- Remaining: **M4 Slice 6** = `strategies/` (MonteCarloStrategy) + package-level `simulation/__init__` re-exports & `_guard_*` aliases (Trap D close) + remap legacy plant paths (S5-2).
+
+## M4 Traps status
+- Trap A (state ordering): active convention `[x, theta1, theta2, x_dot, theta1_dot, theta2_dot]`.
+- Trap B (`src/core/*` shims): NOT ported.
+- Trap C (`context/` twin): dropped (Slice 4).
+- Trap D (package-level re-exports): DEFERRED to Slice 6.
+- Trap E (citation tokens): none in ported files (only token was in dropped `engines/`).
+- Trap F (`engines/` deprecated duplicate): DROPPED (Slice 5).
+
+## Slice ledger
+- Slice 2 core — DONE `2e7f5a0ca93487871e00117c89ac6b2e7650820c`
+- Slice 3 integrators — DONE `ed82b3c82659891ea2c7279154827db41285d38d`
+- Slice 4 safety (+Trap C) — DONE `239df497011b20221b4ff238569f53f7552272ff`
+- Slice 5 results + orchestrators (+Trap F) — DONE `d62e12d739c86dadf861e7540cacc80ce3416009`
+- Slice 6 strategies (+Trap D) — PENDING
+
 
 
 

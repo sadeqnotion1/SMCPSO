@@ -226,6 +226,22 @@
 - Decisions: Trap D still deferred — package-level simulation/__init__ re-exports (safety + _guard_* aliases) wait for Slice 6 (orchestrators/results/strategies absent). simulation/__init__ docstring updated only; still side-effect free.
 - Gate: P0=0, P1=0. pytest 22/22 green (5 files). structural parity banner-only + behavioral correctness OK. import-without-unported-deps OK. No src/core imports. context/ twin absent.
 
+---
+
+## M4 Slice 5 — simulation/results + simulation/orchestrators (engines DROPPED, Trap F)
+
+- **Date:** applied with Slice 5 kit. **Verdict:** PORT AS-IS (banner-normalize only).
+- **Files (11):** `results/{__init__,containers,exporters,processors,validators}.py` (6 exports); `orchestrators/{__init__,base,sequential,batch,parallel,real_time}.py` (5 exports). Plus docstring-only `simulation/__init__.py`.
+- **Diff vs source:** banner-only (3-line `#=` banner, CRLF->LF + trailing backslash strip) = 9 bytes/file.
+- **Gate:** 26/26 tests (14 results + 12 orchestrators); STRUCTURAL parity OK (banner-only) + BEHAVIORAL OK (RK4 vs closed-form); P0=0, P1=0; no `src/core/` imports.
+- **Findings:**
+  - **S5-1 (supersedes S3-2):** `core/time_domain.AdaptiveTimeStep.update_step_size` hard-coded `(1/4)` exponent left UNTOUCHED — dead on canonical path (adaptive stepping uses order-aware `ErrorController` in `integrators/adaptive`). Resolved by analysis; editing shipped Slice-2 code would add parity risk for zero benefit.
+  - **S5-2:** legacy `orchestrators/sequential.py` helpers `get_step_fn`/`step`/`_load_full_step`/`_load_lowrank_step` reference pre-migration `src.config.schemas` + `...plant.models.dip_full`/`dip_lowrank`; lazy + dead on canonical path; preserved byte-identical; remap deferred to Slice 6/M6.
+  - **S5-3 (Trap F closure):** `engines/` (adaptive_integrator, simulation_runner, vector_sim) DROPPED — duplicate of integrators+orchestrators, reachable only via `src/core/*` shims (Trap B), still imported removed `context/` (Trap C), carried lone Trap-E citation token. Analogous to Slice 4 Trap-C drop.
+  - **S5-4:** `simulation/__init__.py` docstring-only update (Slice 5 regrouping + Trap F note); package stays import side-effect free; package-level re-exports + `_guard_*` aliases (Trap D) deferred to Slice 6.
+- **Carry-forward:** Slice 6 = `strategies/` (MonteCarloStrategy) + Trap-D re-exports + remap S5-2 plant paths. Before retiring `engines/` (M6/M9), grep repo for importers of `src.simulation.engines` / `src.core.vector_sim` / `src.core.simulation_runner`.
+
+
 
 
 
