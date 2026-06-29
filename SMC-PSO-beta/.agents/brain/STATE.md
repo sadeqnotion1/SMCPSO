@@ -15,8 +15,8 @@ scaffold, **dependency-first AND audit-driven**: every module is ported, audited
 | M1 Environment & config | requirements / setup / config.yaml / `src/config/` | [DONE] (re-audit pins owed) |
 | M2 Plant dynamics (FULL model first) | `src/plant/models/` FULL model only + parity harness (simplified/low-rank scaffolds present but out of M2 scope -> see D9 row) | [DONE] physical consistency verified, W1 refs resolved, parity documented — Finding #2 resolved 2026-06-28 |
 | M3 Utils & primitives | `src/utils/` | [WIP] (Slices 1-7 accepted) |
-| M4 Controllers base + sim core | `src/controllers/base.py`, `src/simulation/` | [DONE] — Slices 1-6 all on main (framework complete) @ 0cc017d3 |
-| M5 Controller implementations | classical / sta / adaptive / hybrid + factory | [TODO] |
+| M4 Controllers base + sim core | `src/controllers/base.py`, `src/simulation/` | [DONE] — Slices 1-6 all on main (framework complete) @ 8f640738 |
+| M5 Controller implementations | classical / sta / adaptive / hybrid + factory | [IN PROGRESS] — Slices 1 (classical) on main @ 3daa54f0; S2-S5 pending |
 | M6 Optimization | `src/optimization/` | [TODO] |
 | M7 Interfaces / HIL | `src/interfaces/` (was missing from old plan) | [TODO] |
 | M8 Analysis | `src/analysis/` (was missing) | [TODO] |
@@ -81,8 +81,8 @@ scaffold, **dependency-first AND audit-driven**: every module is ported, audited
   SimulationPerformanceMonitor.
 - **NOTE (frozen substrings):** safety guard messages keep literal `<i>/<val>/<max>/<t>`
   placeholders ON PURPOSE (acceptance-test matching) — do not "fix" them.
-- **M4 Slice 5 (results + orchestrators; engines DROPPED / Trap F) — DONE @ d62e12d7.** Ported results (containers, exporters, processors, validators) and orchestrators (base, sequential, batch, parallel, real_time). 26 tests green, banner-only structural + RK4 behavioral parity OK, no `src/core/` imports.
-- **M4 Slice 6 (strategies + package wiring / Trap D) — DONE @ 0cc017d3.** Ported strategies (monte_carlo) and wired package re-exports (get_step_fn, step, run_simulation, simulate, rk45_step, _guard_* aliases). 19 tests green, banner-only structural + Monte Carlo behavioral parity OK, no `src/core/` imports. M4 Complete.
+- **M4 Slice 5 (results + orchestrators; engines DROPPED / Trap F) — DONE @ a1834d5a.** Ported results (containers, exporters, processors, validators) and orchestrators (base, sequential, batch, parallel, real_time). 26 tests green, banner-only structural + RK4 behavioral parity OK, no `src/core/` imports.
+- **M4 Slice 6 (strategies + package wiring / Trap D) — DONE @ 8f640738.** Ported strategies (monte_carlo) and wired package re-exports (get_step_fn, step, run_simulation, simulate, rk45_step, _guard_* aliases). 19 tests green, banner-only structural + Monte Carlo behavioral parity OK, no `src/core/` imports. M4 Complete.
 
 ## M4 Traps status — ALL CLOSED
 - Trap A (state ordering `[x, theta1, theta2, x_dot, theta1_dot, theta2_dot]`): respected.
@@ -100,11 +100,20 @@ scaffold, **dependency-first AND audit-driven**: every module is ported, audited
 - Slice 2 core — DONE `2e7f5a0ca93487871e00117c89ac6b2e7650820c`
 - Slice 3 integrators — DONE `ed82b3c82659891ea2c7279154827db41285d38d`
 - Slice 4 safety (+Trap C) — DONE `239df497011b20221b4ff238569f53f7552272ff`
-- Slice 5 results + orchestrators (+Trap F) — DONE `d62e12d739c86dadf861e7540cacc80ce3416009`
-- Slice 6 strategies + package wiring (+Trap D) — DONE `0cc017d3acfa453553645e9d9f7992d295e355bb`
+- Slice 5 results + orchestrators (+Trap F) — DONE `a1834d5ac87583b4e8cac6fbd2a9eb4108c41eed`
+- Slice 6 strategies + package wiring (+Trap D) — DONE `8f6407386bf9f14f177fb797c5520a02cf896be0`
+
+## M5 Slice ledger
+- S1 classical_smc.py ...... [DONE]   @ 3daa54f0a2caedffc21a418520336209c15d7f1d  (parent 8f640738)
+- S2 sta_smc.py ............ [PENDING] (true STA form; K1>K2>0 Moreno-Osorio)
+- S3 adaptive_smc.py ....... [PENDING] (bounded adaptation)
+- S4 hybrid_adaptive_sta ... [PENDING] (anti-Zeno)
+- S5 factory.py + __init__ . [PENDING] (wire surface; reconcile ControllerInterface ABC)
+
+Note: `src/controllers/__init__.py` is slice-scoped (exports only `ClassicalSMC` + base re-exports) and must be widened as S2-S5 land.
 
 ## Next milestone
-- Proceed to M5 per MIGRATION_PLAN.md.
+- Proceed to M6 per MIGRATION_PLAN.md.
 
 
 
