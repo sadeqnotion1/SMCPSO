@@ -18,22 +18,22 @@
   approximation-error bound for simplified/low-rank.
 - Build the shared **parity harness** here (`scripts/parity_check.py` + golden baselines).
 
-## [WIP] M3 -- Utils & primitives  <- ACTIVE
+## [WIP] M3 -- Utils & primitives (Slices 1-7 accepted)
 - `src/utils/` (Slices 1-7 [DONE]: types+validation, control.primitives, testing.reproducibility,
   numerical_stability, analysis, monitoring, infrastructure). Remaining slices [TODO]:
   visualization, testing.dev_tools/fault_injection, top-level helpers. Dedupe vs `core/`;
   verify metric defs. NOTE: analysis (slice 5) adds the first SciPy dependency.
 
-## [TODO] M4 -- Controllers base + simulation core
+## [DONE] M4 -- Controllers base + simulation core
 - `src/controllers/base.py`, `src/simulation/`. Integrator + energy/parity on an uncontrolled
   drop test; one full end-to-end sim runs.
 
-## [TODO] M5 -- Controller implementations  (highest scrutiny)
+## [DONE] M5 -- Controller implementations  (highest scrutiny)
 - classical / sta / adaptive / hybrid + `factory.py`.
 - Science gate: Lyapunov/reaching per controller; STA gain conditions; adaptive boundedness;
   chattering index; actuator saturation behavior.
 
-## [TODO] M6 -- Optimization
+## [WIP] M6 -- Optimization  <- ACTIVE
 - `src/optimization/` (PSO + objectives + validation). Fitness penalizes instability; bounds
   respected; seed-reproducible; hold-out scenarios.
 

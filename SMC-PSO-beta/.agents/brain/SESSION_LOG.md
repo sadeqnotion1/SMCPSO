@@ -118,3 +118,51 @@
 - **Stop point / next:** M3 Eighth Slice — Port `src/utils/visualization/`.
 
 
+
+## 2026-06-28 — Session 13: M4 Boundary Closeout & Slices 2-4
+- Corrected energy-consistent Christoffel-Coriolis physics matrices in plant (resolved M2 verification).
+- Shipped state vector grouped-vs-interleaved convention boundary adapters in plant.
+- Ported simulation core (M4 Slice 2), simulation integrators (M4 Slice 3), and simulation safety guards (M4 Slice 4). All green.
+
+## 2026-06-29 — Session 14: M4 Slice 5 (results + orchestrators) Port
+- Ported results containers/processors and sequential/batch/parallel orchestrators from source.
+- Dropped deprecated engines directory and resolved duplicate context components.
+
+## 2026-06-29 — Session 15: M4 Slice 6 (strategies + package wiring) — M4 COMPLETE
+- Ported MonteCarloStrategy.
+- Wired simulation package surface in simulation/__init__.py with legacy aliases and factory functions.
+- Milestone M4 marked as DONE.
+
+## 2026-06-29 — Session 16: M5 Slice 1 (classical SMC) Port
+- Ported ClassicalSMC monolith from source, removing modular-twin duplicates and AI-slop citation tokens.
+- Behavioral parity verified (max|du| = 0.0).
+
+## 2026-06-29 — Session 17: M5 Slice 2 (super-twisting SMC) Port
+- Ported SuperTwistingSMC monolith, verified Moreno-Osorio gain conditions, and handled numba fallback.
+- Behavioral parity verified (max|du| = 0.0).
+
+## 2026-06-30 — Session 18: M5 Slice 3 (adaptive SMC) Port
+- Ported AdaptiveSMC monolith with dead-zone rate-limited adaptation.
+- Behavioral parity verified (max|du| = 0.0).
+
+## 2026-06-30 — Session 19: M5 Slice 4 (hybrid adaptive STA-SMC) Port
+- Ported HybridAdaptiveSTASMC monolith with anti-Zeno/sliding gain adaptation.
+- Behavioral parity verified (max|du| = 0.0).
+
+## 2026-06-30 — Session 20: M5 Slice 5 (controller factory + ABC reconcile) — M5 COMPLETE
+- Consolidated factory subpackages into flat factory.py exporting SMCType, registry, create_controller, and PSO wrapper interfaces.
+- Verified 74/74 gates (structural, unit, and behavioral parity) green.
+- Milestone M5 marked as DONE.
+
+## 2026-06-30 — Session 21: M6 Slice 1a (batched simulation restore)
+- Restored simulate_system_batch closed-loop batched simulation function inside src/simulation/orchestrators/batch.py.
+- Verified all 22 behavioral and structural checks.
+
+## 2026-06-30 — Session 22: M6 Slice 1a-fix (logging import)
+- Fixed missing logging import in orchestrators/batch.py (latent NameError in exception handlers).
+- Installed Loop Protocol in START.md.
+
+## 2026-06-30 — Session 23: M6 Slice 1b (PSOTuner port)
+- Ported PSOTuner from legacy pso_optimizer.py, rewired seed.py to reproducibility utility, and authored minimal exporters.
+- Verified all 34 structural, fidelity, and behavioral checks.
+- STOP POINT: Ready for M6 Slice 2 (integration/pso_factory_bridge.py).
