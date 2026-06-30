@@ -513,3 +513,16 @@ Going forward, record the **parent** SHA at kit-build time and the **actual** pu
 - **Lens B:** law `u = -k1*sqrt(|s|)*sat(s) + u_int - k_d*s + u_cart + u_eq`, `u_int += -k2*sat(s)*dt`; dead-zone-gated leaky/taper/time-tapered adaptation; emergency reset on divergence.
 - **Findings for review:** (1) monolith-vs-modular drop; (2) standalone class not yet ControllerInterface ABC (S5); (3) broken `__del__` (intended local inside `cleanup()`) preserved verbatim to maintain byte-parity; (4) dead `use_equivalent` kwarg preserved.
 - **Commit:** `bee626406fd5e800f7ad4c308912fff42a62c2ee` (record parent `a461e9d72c2039cf5fc9bd679bf5a603f3469e35`).
+
+
+---
+
+## M5 · Slice 5 — Controller Factory and Wiring port
+
+- **When:** 2026-06-30
+- **Source → Target:** `src/controllers/factory/` (multiple files) → `src/controllers/factory.py` (flat, NEW, sha `909ed188be7a…`); `src/controllers/__init__.py` widened to export the factory surface.
+- **Transforms (only):** Consolidated base.py, registry.py, fallback_configs.py, types.py, validation.py and legacy_factory.py into a clean, flat beta-native `factory.py` adapter. Normalized line endings to LF, 86-col banners. No unported dependencies (core/plant) imported (Trap B).
+- **Dropped (AI-slop):** modular-twin coupling in registry, legacy_factory build code for unported controllers (conditional_hybrid, MPC, swing_up, etc.), fallback configs, thread-locks.
+- **ABC Reconcile:** Monolith constructors and interfaces kept as-is, with signature mismatch documented in package `__init__.py`. Interface unification deferred to future cleanup.
+- **Gate:** `run_gate.py` (newly shipped) → STRUCTURAL OK (clean imports, LF-only, banners) + UNIT OK (49 checks pass) + BEHAVIORAL PARITY OK (4/4 controllers, 50 random states each vs direct construction, max|du| = 0.0). 74/74 gate tests green.
+- **Commit:** `788f1e9359047cc877086bdde0fd840c998d47a3` (record parent `0f3348320421f8a81dd6e62ce46e4d1cfcca6139`).

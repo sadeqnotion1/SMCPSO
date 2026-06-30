@@ -16,7 +16,7 @@ scaffold, **dependency-first AND audit-driven**: every module is ported, audited
 | M2 Plant dynamics (FULL model first) | `src/plant/models/` FULL model only + parity harness (simplified/low-rank scaffolds present but out of M2 scope -> see D9 row) | [DONE] physical consistency verified, W1 refs resolved, parity documented — Finding #2 resolved 2026-06-28 |
 | M3 Utils & primitives | `src/utils/` | [WIP] (Slices 1-7 accepted) |
 | M4 Controllers base + sim core | `src/controllers/base.py`, `src/simulation/` | [DONE] — Slices 1-6 all on main (framework complete) @ 8f640738 |
-| M5 Controller implementations | classical / sta / adaptive / hybrid + factory | [IN PROGRESS] — S1-S4 on main @ bee62640; S5 pending |
+| M5 Controller implementations | classical / sta / adaptive / hybrid + factory | [DONE] — S1-S5 complete on main @ 788f1e93 |
 | M6 Optimization | `src/optimization/` | [TODO] |
 | M7 Interfaces / HIL | `src/interfaces/` (was missing from old plan) | [TODO] |
 | M8 Analysis | `src/analysis/` (was missing) | [TODO] |
@@ -108,7 +108,7 @@ scaffold, **dependency-first AND audit-driven**: every module is ported, audited
 - S2 sta_smc.py ............ [DONE]   @ 7c2dfc65e8a6042db62908f5d05051a62939fb2b
 - S3 adaptive_smc.py ....... [DONE]   @ 00eb5696b8d515994ac2cadd858876b4a15d746c  (parent 7c2dfc65)
 - S4 hybrid_adaptive_sta ... [DONE]   @ bee626406fd5e800f7ad4c308912fff42a62c2ee
-- S5 factory.py + __init__ . [PENDING] (wire surface incl. SuperTwistingSMCConfig + AdaptiveSMCConfig; reconcile ControllerInterface ABC)
+- S5 factory.py + __init__ . [DONE]   @ 788f1e9359047cc877086bdde0fd840c998d47a3
 
 Note: `src/controllers/__init__.py` now exports `ClassicalSMC` + `SuperTwistingSMC` + `AdaptiveSMC` + `HybridAdaptiveSTASMC` (still slice-scoped; widen as S5 lands).
 
