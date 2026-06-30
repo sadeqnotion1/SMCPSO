@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 import time
+import logging
 from typing import Callable, Optional
 import numpy as np
 
