@@ -497,4 +497,4 @@ Going forward, record the **parent** SHA at kit-build time and the **actual** pu
 - **Gate:** `parity_check_m5_slice3.py` → STRUCTURAL OK (byte-identical to transformed source) + BEHAVIORAL OK (400 cases, max|du|=max|dK|=max|dt_sld|=0.0); 22/22 unit tests.
 - **Lens B:** law `u=-K*sat(s/eps)-alpha*s`; dead-zone-gated leaky rate-limited adaptation `dK=gamma|s|-leak(K-K0)` (0 inside dead-zone), `K^+=clip(K+dK dt,K_min,K_max)`; `K_min<=K_init<=K_max` enforced.
 - **Findings for review:** (1) monolith-vs-modular drop; (2) standalone class not yet ControllerInterface ABC (S5); (3) state_vars=(K,last_u,time_in_sliding) carries adaptive gain.
-- **Commit:** `8483c97e0fc9f3b58ce1180bb3d1c7606f4bbc36` (record parent `7c2dfc65e8a6042db62908f5d05051a62939fb2b`).
+- **Commit:** `00eb5696b8d515994ac2cadd858876b4a15d746c` (record parent `7c2dfc65e8a6042db62908f5d05051a62939fb2b`).
