@@ -114,6 +114,7 @@ Note: `src/controllers/__init__.py` now exports `ClassicalSMC` + `SuperTwistingS
 
 ## M6 Optimization Ledger
 - S1a simulate_system_batch .. [DONE]   @ 4e5ad7f8306749cadb9a91c05b7a164774efa253
+- S1a-fix import logging .... [DONE]   @ ca1e553d4d3bc83935b53794aea8be1d70e35cb4
 - S1b PSOTuner port .......... [PENDING] (optimization workhorse)
 - S2 integration bridge ...... [PENDING] (pso_factory_bridge.py re-wiring)
 

@@ -51,6 +51,7 @@
 | MON-UNICODE-1 | 2026-06-25 | utils | A | P3 | non-ASCII math glyphs in stability.py/diagnostics.py docstrings | OPEN | |
 | MON-EMOJI-1 | 2026-06-25 | utils | A | P3 | unicode emojis in coverage_monitoring.py alert strings | OPEN | |
 | MON-PROV-1 | 2026-06-25 | utils | C | P3 | hardcoded `theSadeQ/dip-smc-pso` and "Issue #9" in coverage_monitoring.py | OPEN | |
+| M6-S1a-1 | 2026-06-30 | optimization/simulation | A | P1 | simulate_system_batch used logging.* but batch.py did not import logging (latent NameError in controller-init / history handlers) | FIXED | src/simulation/orchestrators/batch.py @ ca1e553d4d3bc83935b53794aea8be1d70e35cb4 |
 
 ## Summary counters (update on each session)
 - Open P0: 0
