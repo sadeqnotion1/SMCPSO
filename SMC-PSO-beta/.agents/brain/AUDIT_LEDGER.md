@@ -498,3 +498,18 @@ Going forward, record the **parent** SHA at kit-build time and the **actual** pu
 - **Lens B:** law `u=-K*sat(s/eps)-alpha*s`; dead-zone-gated leaky rate-limited adaptation `dK=gamma|s|-leak(K-K0)` (0 inside dead-zone), `K^+=clip(K+dK dt,K_min,K_max)`; `K_min<=K_init<=K_max` enforced.
 - **Findings for review:** (1) monolith-vs-modular drop; (2) standalone class not yet ControllerInterface ABC (S5); (3) state_vars=(K,last_u,time_in_sliding) carries adaptive gain.
 - **Commit:** `00eb5696b8d515994ac2cadd858876b4a15d746c` (record parent `7c2dfc65e8a6042db62908f5d05051a62939fb2b`).
+
+
+---
+
+## M5 · Slice 4 — Hybrid Adaptive STA-SMC port
+
+- **When:** 2026-06-30
+- **Source → Target:** `src/controllers/smc/hybrid_adaptive_sta_smc.py` (monolith, `HybridAdaptiveSTASMC`, sha `85d67e32…`) → `src/controllers/hybrid_adaptive_sta_smc.py` (flat, NEW, sha `b5d0e46a5cfa`); `src/controllers/__init__.py` widened to export `HybridAdaptiveSTASMC`.
+- **Transforms (only):** EOL/banner normalize; Trap-E citation-token strip (0 remain); relocation `from ...utils` → `from ..utils` (1x). No numeric/algorithmic edits.
+- **Dropped (AI-slop):** modular twin `smc/algorithms/hybrid/*` (monolith is factory-canonical; Config deferred to S5).
+- **Traps:** A = no-op (already grouped, verified); B = no `src.core`; E = tokens stripped. No numba in this module.
+- **Gate:** `run_gate.py` → STRUCTURAL OK (byte-identical to transformed source) + BEHAVIORAL OK (400 cases, max|du|=max|dk1|=max|dk2|=max|du_int|=max|ds|=0.0); 25/25 unit tests.
+- **Lens B:** law `u = -k1*sqrt(|s|)*sat(s) + u_int - k_d*s + u_cart + u_eq`, `u_int += -k2*sat(s)*dt`; dead-zone-gated leaky/taper/time-tapered adaptation; emergency reset on divergence.
+- **Findings for review:** (1) monolith-vs-modular drop; (2) standalone class not yet ControllerInterface ABC (S5); (3) broken `__del__` (intended local inside `cleanup()`) preserved verbatim to maintain byte-parity; (4) dead `use_equivalent` kwarg preserved.
+- **Commit:** `bee626406fd5e800f7ad4c308912fff42a62c2ee` (record parent `a461e9d72c2039cf5fc9bd679bf5a603f3469e35`).
