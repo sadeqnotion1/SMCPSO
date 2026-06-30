@@ -59,14 +59,15 @@
 | M6-S2-3 | 2026-06-30 | optimization/integration | B | P3 | bridge _get_default_gains fallbacks differ from factory registry defaults | FLAGGED | src/optimization/integration/pso_factory_bridge.py |
 | M7-S1-1 | 2026-06-30 | interfaces/core | A | P3 | StreamingProtocol defined in protocols.py but not exported by core/__init__.py | FLAGGED | src/interfaces/core/__init__.py |
 | M7-S1-2 | 2026-06-30 | interfaces/core | A | P3 | redundant import Tuple in protocols.py (L19) separate from L16 | FLAGGED | src/interfaces/core/protocols.py |
-| M7-S2-1 | 2026-06-30 | interfaces/data_exchange | A | P1 | DataPacket.unpack() sliced header at data[:12] instead of data[:16] leading to struct unpack errors | FIXED | src/interfaces/data_exchange/data_types.py @ 17b6a67acd2941ba28459f1144a0d097c04fcc8b |
-| M7-S2-2 | 2026-06-30 | interfaces/data_exchange | A | P2 | __all__ exported nonexistent PerformanceSerializer and SerializationMetrics causing ImportError on star-imports | FIXED | src/interfaces/data_exchange/__init__.py @ 17b6a67acd2941ba28459f1144a0d097c04fcc8b |
+| M7-S2-1 | 2026-06-30 | interfaces/data_exchange | A | P1 | DataPacket.unpack() sliced header at data[:12] instead of data[:16] leading to struct unpack errors | FIXED | src/interfaces/data_exchange/data_types.py @ a6c2b8ba30fcca7e83e5a53cc5f388b177294069 |
+| M7-S2-2 | 2026-06-30 | interfaces/data_exchange | A | P2 | __all__ exported nonexistent PerformanceSerializer and SerializationMetrics causing ImportError on star-imports | FIXED | src/interfaces/data_exchange/__init__.py @ a6c2b8ba30fcca7e83e5a53cc5f388b177294069 |
 | M7-S2-3 | 2026-06-30 | interfaces/data_exchange | A | P1 | streaming.py async loop processes wait synchronously via condition lock instead of awaiting, causing event-loop hangs on stop() | FLAGGED | src/interfaces/data_exchange/streaming.py |
 | M7-S2-4 | 2026-06-30 | interfaces/data_exchange | B | P3 | duplicate MessageType and Priority enums vs core package definitions | FLAGGED | src/interfaces/data_exchange/data_types.py |
+| M7-S2-5 | 2026-06-30 | interfaces/data_exchange | A | P3 | DataPacket.unpack payload guard off-by-4 (12 -> 16 + payload_length); completes M7-S2-1 | FIXED | src/interfaces/data_exchange/data_types.py @ a6c2b8ba30fcca7e83e5a53cc5f388b177294069 |
 
 ## Summary counters (update on each session)
 - Open P0: 0
-- Open P1: 0 (W1 verified genuine 2026-06-24; F-PLANT-1 fixed 2026-06-24)
+- Open P1: 1 (M7-S2-3 streaming async-hang, deferred to dedicated remediation slice)
 - Open P2: 16 (plant.A7, M2.v6, F-PLANT-2, F-PLANT-3, UTILS-DEDUP-1, UTILS-DEDUP-2, S2-A3, UTILS-DEDUP-3, S3-A4, UTILS-DEDUP-4, S4-A2, UTILS-DEDUP-5, S5-A3, MON-LAT-1, MON-LENSA-1, INFRA-LOG-1)
 - Modules accepted to trunk: M1 (config), M2 (plant), M3 Slice 1 (utils types+validation), M3 Slice 2 (utils control.primitives), M3 Slice 3 (utils testing.reproducibility), M3 Slice 4 (utils numerical_stability), M3 Slice 5 (utils analysis), M3 Slice 6 (utils monitoring + infrastructure/threading), M3 Slice 7 (utils infrastructure: logging + memory)
 
@@ -391,6 +392,6 @@ Going forward, record the **parent** SHA at kit-build time and the **actual** pu
 
 - **When:** 2026-06-30
 - **Source → Target:** `SMC-PSO/src/interfaces/data_exchange/` → `src/interfaces/data_exchange/` (NEW); contains 7 files (`__init__.py`, `data_types.py`, `factory.py`, `factory_resilient.py`, `schemas.py`, `serializers.py`, `streaming.py`).
-- **Transforms (only):** LF EOL normalization, 86-col centered banner regeneration, trailing-newline normalization, bake in two fixes: `DataPacket.unpack()` (guard size/slice corrected to 16 bytes) and `__init__.py` (removed phantom `PerformanceSerializer`/`SerializationMetrics` from `__all__`).
-- **Gate:** `run_gate.py` (from kit) → STRUCTURAL OK (compile, centered banners, relative imports, clean __all__) + FIDELITY OK (matches expected sha256) + BEHAVIORAL OK (formats round-trip: JSON, Pickle, Custom binary, Compression wrap; schemas and custom validators; thread-safe StreamBuffer FIFO and backpressure). 100/100 gate checks green.
-- **Commit:** `17b6a67acd2941ba28459f1144a0d097c04fcc8b` (record parent `6c8264efa21b60d0eee807c3f4f3a6a2471efb13`).
+- **Transforms (only):** LF EOL normalization, 86-col centered banner regeneration, trailing-newline normalization, bake in three fixes: `DataPacket.unpack()` (guard size/slice corrected to 16 bytes; payload guard corrected to 16 + payload_length) and `__init__.py` (removed phantom `PerformanceSerializer`/`SerializationMetrics` from `__all__`).
+- **Gate:** `run_gate.py` (from kit) → STRUCTURAL OK (compile, centered banners, relative imports, clean __all__) + FIDELITY OK (matches expected sha256) + BEHAVIORAL OK (formats round-trip: JSON, Pickle, Custom binary, Compression wrap; schemas and custom validators; thread-safe StreamBuffer FIFO and backpressure; rejects truncated payload). 102/102 gate checks green.
+- **Commit:** `a6c2b8ba30fcca7e83e5a53cc5f388b177294069` (record parent `6c8264efa21b60d0eee807c3f4f3a6a2471efb13`).
