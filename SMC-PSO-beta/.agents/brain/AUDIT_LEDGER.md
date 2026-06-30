@@ -59,6 +59,10 @@
 | M6-S2-3 | 2026-06-30 | optimization/integration | B | P3 | bridge _get_default_gains fallbacks differ from factory registry defaults | FLAGGED | src/optimization/integration/pso_factory_bridge.py |
 | M7-S1-1 | 2026-06-30 | interfaces/core | A | P3 | StreamingProtocol defined in protocols.py but not exported by core/__init__.py | FLAGGED | src/interfaces/core/__init__.py |
 | M7-S1-2 | 2026-06-30 | interfaces/core | A | P3 | redundant import Tuple in protocols.py (L19) separate from L16 | FLAGGED | src/interfaces/core/protocols.py |
+| M7-S2-1 | 2026-06-30 | interfaces/data_exchange | A | P1 | DataPacket.unpack() sliced header at data[:12] instead of data[:16] leading to struct unpack errors | FIXED | src/interfaces/data_exchange/data_types.py @ 17b6a67acd2941ba28459f1144a0d097c04fcc8b |
+| M7-S2-2 | 2026-06-30 | interfaces/data_exchange | A | P2 | __all__ exported nonexistent PerformanceSerializer and SerializationMetrics causing ImportError on star-imports | FIXED | src/interfaces/data_exchange/__init__.py @ 17b6a67acd2941ba28459f1144a0d097c04fcc8b |
+| M7-S2-3 | 2026-06-30 | interfaces/data_exchange | A | P1 | streaming.py async loop processes wait synchronously via condition lock instead of awaiting, causing event-loop hangs on stop() | FLAGGED | src/interfaces/data_exchange/streaming.py |
+| M7-S2-4 | 2026-06-30 | interfaces/data_exchange | B | P3 | duplicate MessageType and Priority enums vs core package definitions | FLAGGED | src/interfaces/data_exchange/data_types.py |
 
 ## Summary counters (update on each session)
 - Open P0: 0
@@ -380,3 +384,13 @@ Going forward, record the **parent** SHA at kit-build time and the **actual** pu
 - **Transforms (only):** LF EOL normalization, 86-col centered banner regeneration, trailing-newline normalization.
 - **Gate:** `run_gate.py` (from kit) → STRUCTURAL OK (LF, compiles, centered banners, relative imports, no slop, exported __all__) + FIDELITY OK (matches expected sha256) + BEHAVIORAL OK (symbols resolve, instantiate dataclasses, ABC protocols abstract, method smoke). 53/53 gate checks green.
 - **Commit:** `6c8264efa21b60d0eee807c3f4f3a6a2471efb13` (record parent `1e321e1aca248a76a05c25512c61b4e9ad8ce35f`).
+
+---
+
+## M7 · Slice 2 — Interfaces Data Exchange Submodule
+
+- **When:** 2026-06-30
+- **Source → Target:** `SMC-PSO/src/interfaces/data_exchange/` → `src/interfaces/data_exchange/` (NEW); contains 7 files (`__init__.py`, `data_types.py`, `factory.py`, `factory_resilient.py`, `schemas.py`, `serializers.py`, `streaming.py`).
+- **Transforms (only):** LF EOL normalization, 86-col centered banner regeneration, trailing-newline normalization, bake in two fixes: `DataPacket.unpack()` (guard size/slice corrected to 16 bytes) and `__init__.py` (removed phantom `PerformanceSerializer`/`SerializationMetrics` from `__all__`).
+- **Gate:** `run_gate.py` (from kit) → STRUCTURAL OK (compile, centered banners, relative imports, clean __all__) + FIDELITY OK (matches expected sha256) + BEHAVIORAL OK (formats round-trip: JSON, Pickle, Custom binary, Compression wrap; schemas and custom validators; thread-safe StreamBuffer FIFO and backpressure). 100/100 gate checks green.
+- **Commit:** `17b6a67acd2941ba28459f1144a0d097c04fcc8b` (record parent `6c8264efa21b60d0eee807c3f4f3a6a2471efb13`).
