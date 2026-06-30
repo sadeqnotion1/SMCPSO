@@ -17,7 +17,7 @@ scaffold, **dependency-first AND audit-driven**: every module is ported, audited
 | M3 Utils & primitives | `src/utils/` | [WIP] (Slices 1-7 accepted) |
 | M4 Controllers base + sim core | `src/controllers/base.py`, `src/simulation/` | [DONE] — Slices 1-6 all on main (framework complete) @ 8f640738 |
 | M5 Controller implementations | classical / sta / adaptive / hybrid + factory | [DONE] — S1-S5 complete on main @ 788f1e93 |
-| M6 Optimization | `src/optimization/` | [IN PROGRESS] — S1a on main @ 4e5ad7f8; S1b-S2 pending |
+| M6 Optimization | `src/optimization/` | [IN PROGRESS] — S1a-S1b on main @ ba126625; S2 pending |
 | M7 Interfaces / HIL | `src/interfaces/` (was missing from old plan) | [TODO] |
 | M8 Analysis | `src/analysis/` (was missing) | [TODO] |
 | M9 Entry points | `simulate.py`, `streamlit_app.py` | [TODO] |
@@ -104,9 +104,9 @@ scaffold, **dependency-first AND audit-driven**: every module is ported, audited
 - Slice 6 strategies + package wiring (+Trap D) — DONE `8f6407386bf9f14f177fb797c5520a02cf896be0`
 
 ## M5 Slice ledger
-- S1 classical_smc.py ...... [DONE]   @ 0af69b18d203923fde188981df262a0445d470d0
-- S2 sta_smc.py ............ [DONE]   @ 7c2dfc65e8a6042db62908f5d05051a62939fb2b
-- S3 adaptive_smc.py ....... [DONE]   @ 00eb5696b8d515994ac2cadd858876b4a15d746c  (parent 7c2dfc65)
+- S1 classical_smc.py ...... [DONE]   @ 3daa54f0a2caedffc21a418520336209c15d7f1d
+- S2 sta_smc.py ............ [DONE]   @ 0291875150821d3f98fcde64ffec2110c92131e3
+- S3 adaptive_smc.py ....... [DONE]   @ 00eb5696b8d515994ac2cadd858876b4a15d746c  (parent 02918751)
 - S4 hybrid_adaptive_sta ... [DONE]   @ bee626406fd5e800f7ad4c308912fff42a62c2ee
 - S5 factory.py + __init__ . [DONE]   @ 788f1e9359047cc877086bdde0fd840c998d47a3
 
@@ -115,7 +115,7 @@ Note: `src/controllers/__init__.py` now exports `ClassicalSMC` + `SuperTwistingS
 ## M6 Optimization Ledger
 - S1a simulate_system_batch .. [DONE]   @ 4e5ad7f8306749cadb9a91c05b7a164774efa253
 - S1a-fix import logging .... [DONE]   @ ca1e553d4d3bc83935b53794aea8be1d70e35cb4
-- S1b PSOTuner port .......... [PENDING] (optimization workhorse)
+- S1b PSOTuner port .......... [DONE]   @ ba126625131d8ff00b1558362ec05c5d92640a70
 - S2 integration bridge ...... [PENDING] (pso_factory_bridge.py re-wiring)
 
 ## Next milestone
