@@ -17,7 +17,7 @@ scaffold, **dependency-first AND audit-driven**: every module is ported, audited
 | M3 Utils & primitives | `src/utils/` | [WIP] (Slices 1-7 accepted) |
 | M4 Controllers base + sim core | `src/controllers/base.py`, `src/simulation/` | [DONE] — Slices 1-6 all on main (framework complete) @ 8f640738 |
 | M5 Controller implementations | classical / sta / adaptive / hybrid + factory | [DONE] — S1-S5 complete on main @ 788f1e93 |
-| M6 Optimization | `src/optimization/` | [TODO] |
+| M6 Optimization | `src/optimization/` | [IN PROGRESS] — S1a on main @ 4e5ad7f8; S1b-S2 pending |
 | M7 Interfaces / HIL | `src/interfaces/` (was missing from old plan) | [TODO] |
 | M8 Analysis | `src/analysis/` (was missing) | [TODO] |
 | M9 Entry points | `simulate.py`, `streamlit_app.py` | [TODO] |
@@ -112,8 +112,13 @@ scaffold, **dependency-first AND audit-driven**: every module is ported, audited
 
 Note: `src/controllers/__init__.py` now exports `ClassicalSMC` + `SuperTwistingSMC` + `AdaptiveSMC` + `HybridAdaptiveSTASMC` (still slice-scoped; widen as S5 lands).
 
+## M6 Optimization Ledger
+- S1a simulate_system_batch .. [DONE]   @ 4e5ad7f8306749cadb9a91c05b7a164774efa253
+- S1b PSOTuner port .......... [PENDING] (optimization workhorse)
+- S2 integration bridge ...... [PENDING] (pso_factory_bridge.py re-wiring)
+
 ## Next milestone
-- Proceed to M6 per MIGRATION_PLAN.md.
+- Proceed to S1b (PSOTuner port) per M6 file request.
 
 
 

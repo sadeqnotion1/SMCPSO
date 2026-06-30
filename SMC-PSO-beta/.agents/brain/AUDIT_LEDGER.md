@@ -331,3 +331,14 @@ Going forward, record the **parent** SHA at kit-build time and the **actual** pu
 - **ABC Reconcile:** Monolith constructors and interfaces kept as-is, with signature mismatch documented in package `__init__.py`. Interface unification deferred to future cleanup.
 - **Gate:** `run_gate.py` (newly shipped) → STRUCTURAL OK (clean imports, LF-only, banners) + UNIT OK (49 checks pass) + BEHAVIORAL PARITY OK (4/4 controllers, 50 random states each vs direct construction, max|du| = 0.0). 74/74 gate tests green.
 - **Commit:** `788f1e9359047cc877086bdde0fd840c998d47a3` (record parent `0f3348320421f8a81dd6e62ce46e4d1cfcca6139`).
+
+
+---
+
+## M6 · Slice 1a — Restore simulate_system_batch
+
+- **When:** 2026-06-30
+- **Source → Target:** `src/simulation/engines/vector_sim.py::simulate_system_batch` (legacy engine dropped in M4 S5) → `src/simulation/orchestrators/batch.py` (appended, NEW); `src/simulation/__init__.py` widened to export `simulate_system_batch`.
+- **Transforms (only):** Restored the closed-loop batched simulation routine. EOL/banner normalized to LF, 86-col banners. No `[CIT-*]` tokens, no `src.core` imports, no numba decorators.
+- **Gate:** `run_gate.py` (from kit) → STRUCTURAL OK (compile, single definition, LF, no banned tokens) + FIDELITY OK (matches reviewed snippet) + BEHAVIORAL OK (shapes, saturations, early-stopping, convergence tolerances, particle broadcast, determinism). 22/22 gate checks green.
+- **Commit:** `4e5ad7f8306749cadb9a91c05b7a164774efa253` (record parent `8677a356d5d401ab8cb42df044dc0821f4f7d364`).
