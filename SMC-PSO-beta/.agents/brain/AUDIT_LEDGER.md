@@ -485,3 +485,16 @@ Going forward, record the **parent** SHA at kit-build time and the **actual** pu
 - **Findings for review:** (1) monolith-vs-modular drop; (2) standalone class not yet ControllerInterface ABC (S5); (3) dead numba fn retained for later cleanup.
 - **Commit:** `0291875150821d3f98fcde64ffec2110c92131e3` (record parent `0af69b18d203923fde188981df262a0445d470d0`).
 
+---
+
+## M5 · Slice 3 — Adaptive SMC port
+
+- **When:** 2026-06-30
+- **Source → Target:** `src/controllers/smc/adaptive_smc.py` (monolith, `AdaptiveSMC`, sha `d8a2db6c…`) → `src/controllers/adaptive_smc.py` (flat, NEW, sha `0e82cf55a249`); `src/controllers/__init__.py` widened to export `AdaptiveSMC`.
+- **Transforms (only):** EOL/banner normalize; Trap-E citation-token strip (0 remain); relocation `from ...utils` → `from ..utils` (5x). No numeric/algorithmic edits.
+- **Dropped (AI-slop):** modular twin `smc/algorithms/adaptive/*` (monolith is factory-canonical; only its Config is used — deferred to S5).
+- **Traps:** A = no-op (already grouped, verified); B = no `src.core`; E = tokens stripped. No numba in this module.
+- **Gate:** `parity_check_m5_slice3.py` → STRUCTURAL OK (byte-identical to transformed source) + BEHAVIORAL OK (400 cases, max|du|=max|dK|=max|dt_sld|=0.0); 22/22 unit tests.
+- **Lens B:** law `u=-K*sat(s/eps)-alpha*s`; dead-zone-gated leaky rate-limited adaptation `dK=gamma|s|-leak(K-K0)` (0 inside dead-zone), `K^+=clip(K+dK dt,K_min,K_max)`; `K_min<=K_init<=K_max` enforced.
+- **Findings for review:** (1) monolith-vs-modular drop; (2) standalone class not yet ControllerInterface ABC (S5); (3) state_vars=(K,last_u,time_in_sliding) carries adaptive gain.
+- **Commit:** `8483c97e0fc9f3b58ce1180bb3d1c7606f4bbc36` (record parent `7c2dfc65e8a6042db62908f5d05051a62939fb2b`).

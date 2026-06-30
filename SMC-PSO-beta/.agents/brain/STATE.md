@@ -16,7 +16,7 @@ scaffold, **dependency-first AND audit-driven**: every module is ported, audited
 | M2 Plant dynamics (FULL model first) | `src/plant/models/` FULL model only + parity harness (simplified/low-rank scaffolds present but out of M2 scope -> see D9 row) | [DONE] physical consistency verified, W1 refs resolved, parity documented — Finding #2 resolved 2026-06-28 |
 | M3 Utils & primitives | `src/utils/` | [WIP] (Slices 1-7 accepted) |
 | M4 Controllers base + sim core | `src/controllers/base.py`, `src/simulation/` | [DONE] — Slices 1-6 all on main (framework complete) @ 8f640738 |
-| M5 Controller implementations | classical / sta / adaptive / hybrid + factory | [IN PROGRESS] — S1 (classical) + S2 (super-twisting) on main @ 02918751; S3-S5 pending |
+| M5 Controller implementations | classical / sta / adaptive / hybrid + factory | [IN PROGRESS] — S1 (classical) + S2 (super-twisting) + S3 (adaptive) on main @ 8483c97e; S4-S5 pending |
 | M6 Optimization | `src/optimization/` | [TODO] |
 | M7 Interfaces / HIL | `src/interfaces/` (was missing from old plan) | [TODO] |
 | M8 Analysis | `src/analysis/` (was missing) | [TODO] |
@@ -105,12 +105,12 @@ scaffold, **dependency-first AND audit-driven**: every module is ported, audited
 
 ## M5 Slice ledger
 - S1 classical_smc.py ...... [DONE]   @ 0af69b18d203923fde188981df262a0445d470d0
-- S2 sta_smc.py ............ [DONE]   @ 0291875150821d3f98fcde64ffec2110c92131e3  (parent 0af69b18)
-- S3 adaptive_smc.py ....... [PENDING] (bounded adaptation; gains [k1,k2,k3,k4,k5])
+- S2 sta_smc.py ............ [DONE]   @ 7c2dfc65e8a6042db62908f5d05051a62939fb2b
+- S3 adaptive_smc.py ....... [DONE]   @ 8483c97e0fc9f3b58ce1180bb3d1c7606f4bbc36  (parent 7c2dfc65)
 - S4 hybrid_adaptive_sta ... [PENDING] (anti-Zeno)
-- S5 factory.py + __init__ . [PENDING] (wire surface incl. SuperTwistingSMCConfig; reconcile ControllerInterface ABC)
+- S5 factory.py + __init__ . [PENDING] (wire surface incl. SuperTwistingSMCConfig + AdaptiveSMCConfig; reconcile ControllerInterface ABC)
 
-Note: `src/controllers/__init__.py` now exports `ClassicalSMC` + `SuperTwistingSMC` (still slice-scoped; widen as S3-S5 land).
+Note: `src/controllers/__init__.py` now exports `ClassicalSMC` + `SuperTwistingSMC` + `AdaptiveSMC` (still slice-scoped; widen as S4-S5 land).
 
 ## Next milestone
 - Proceed to M6 per MIGRATION_PLAN.md.
