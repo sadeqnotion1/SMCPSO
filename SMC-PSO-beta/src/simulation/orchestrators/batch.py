@@ -256,3 +256,223 @@ def simulate_batch(
         trajectories.append(states)
 
     return np.array(trajectories)
+
+
+def simulate_system_batch(
+    *,
+    controller_factory: Callable[[np.ndarray], Any],
+    particles: Any,
+    sim_time: float,
+    dt: float,
+    u_max: Optional[float] = None,
+    seed: Optional[int] = None,
+    params_list: Optional[Iterable[Any]] = None,
+    initial_state: Optional[Any] = None,
+    convergence_tol: Optional[float] = None,
+    grace_period: float = 0.0,
+    rng: Optional[np.random.Generator] = None,
+    **_kwargs: Any,
+) -> Any:
+    """Vectorised closed-loop batch simulation of multiple controllers.
+
+    Restored in M6 Slice 1a from the legacy ``simulation/engines/vector_sim``
+    facade (dropped in M4 S5). Instantiates one controller per particle gain
+    vector, drives each closed loop, and returns time, state, control and
+    sliding-surface arrays for the whole batch.
+
+    Returns ``(t, x_b, u_b, sigma_b)`` with shapes ``(N+1,)``, ``(B, N+1, D)``,
+    ``(B, N)`` and ``(B, N)``. When ``params_list`` is provided, returns a list
+    of such tuples (one per element); perturbed physics are replicated, matching
+    legacy behaviour.
+    """
+    import numpy as _np
+    part_arr = _np.asarray(particles, dtype=float)
+    if part_arr.ndim == 1:
+        part_arr = part_arr[_np.newaxis, :]
+    B, G = part_arr.shape
+    dt = float(dt)
+    sim_time = float(sim_time)
+    H = int(round(sim_time / dt)) if sim_time > 0 else 0
+    controllers = []
+    for j in range(B):
+        try:
+            ctrl = controller_factory(part_arr[j])
+        except Exception:
+            ctrl = controller_factory(part_arr[j])
+        controllers.append(ctrl)
+    if initial_state is None:
+        state_dim = None
+        try:
+            state_dim = int(getattr(controllers[0], "state_dim"))
+        except Exception:
+            try:
+                state_dim = int(getattr(controllers[0], "dynamics_model").state_dim)
+            except Exception:
+                state_dim = 6
+        init_b = _np.zeros((B, state_dim), dtype=float)
+    else:
+        init = _np.asarray(initial_state, dtype=float)
+        if init.ndim == 1:
+            init_b = _np.broadcast_to(init, (B, init.shape[0])).copy()
+        else:
+            init_b = init.copy()
+    t_arr = _np.zeros(H + 1, dtype=float)
+    x_b = _np.zeros((B, H + 1, init_b.shape[1]), dtype=float)
+    u_b = _np.zeros((B, H), dtype=float)
+    sigma_b = _np.zeros((B, H), dtype=float)
+    x_b[:, 0, :] = init_b
+    check_convergence = (convergence_tol is not None) and (convergence_tol is not False)
+    conv_tol = float(convergence_tol) if convergence_tol else 0.0
+    grace_steps = int(round(float(grace_period) / dt)) if grace_period > 0 else 0
+    state_vars = [None] * B
+    histories = [None] * B
+    for j, ctrl in enumerate(controllers):
+        try:
+            if hasattr(ctrl, "initialize_state"):
+                state_vars[j] = ctrl.initialize_state()
+        except Exception as e:
+            logging.getLogger(__name__).debug(
+                f"Controller {j} ({type(ctrl).__name__}) doesn't support state initialization: {e}"
+            )
+            state_vars[j] = None
+        try:
+            if hasattr(ctrl, "initialize_history"):
+                histories[j] = ctrl.initialize_history()
+        except Exception as e:
+            logging.getLogger(__name__).debug(
+                f"Controller {j} ({type(ctrl).__name__}) doesn't support history initialization: {e}"
+            )
+            histories[j] = None
+    u_limits = _np.full(B, _np.inf, dtype=float)
+    if u_max is not None:
+        u_limits[:] = float(u_max)
+    else:
+        for j, ctrl in enumerate(controllers):
+            if hasattr(ctrl, "max_force"):
+                try:
+                    u_limits[j] = float(getattr(ctrl, "max_force"))
+                except Exception:
+                    u_limits[j] = _np.inf
+    times = t_arr
+    for i in range(H):
+        t_now = i * dt
+        times[i] = t_now
+        for j, ctrl in enumerate(controllers):
+            x_curr = x_b[j, i]
+            try:
+                if hasattr(ctrl, "compute_control"):
+                    ret = ctrl.compute_control(x_curr, state_vars[j], histories[j])
+                    try:
+                        u_val = float(ret[0])
+                    except Exception:
+                        u_val = float(ret)
+                    try:
+                        if len(ret) >= 2:
+                            state_vars[j] = ret[1]
+                        if len(ret) >= 3:
+                            histories[j] = ret[2]
+                    except Exception:
+                        pass
+                    sigma_val = 0.0
+                    if hasattr(ret, "sigma"):
+                        sigma_val = float(ret.sigma)
+                    elif hasattr(ret, "__len__") and len(ret) >= 4:
+                        sigma_val = float(ret[3])
+                else:
+                    u_val = float(ctrl(t_now, x_curr))
+                    sigma_val = 0.0
+            except Exception as e:
+                if isinstance(e, Warning):
+                    raise
+                H = i
+                u_b = u_b[:, :i]
+                x_b = x_b[:, : i + 1]
+                sigma_b = sigma_b[:, :i]
+                times = times[: i + 1]
+                for jj, c in enumerate(controllers):
+                    hist = histories[jj]
+                    if hist is not None:
+                        try:
+                            setattr(c, "_last_history", hist)
+                        except Exception as e:
+                            logging.getLogger(__name__).debug(
+                                f"Could not attach history to controller {jj}: {e}"
+                            )
+                if params_list is not None:
+                    return [(_np.copy(times), _np.copy(x_b), _np.copy(u_b), _np.copy(sigma_b)) for _ in params_list]
+                return times, x_b, u_b, sigma_b
+            limit = u_limits[j]
+            if limit < _np.inf:
+                if u_val > limit:
+                    u_val = limit
+                elif u_val < -limit:
+                    u_val = -limit
+            u_b[j, i] = u_val
+            sigma_b[j, i] = sigma_val
+        early_stop = False
+        for j, ctrl in enumerate(controllers):
+            dyn = getattr(ctrl, "dynamics_model", None)
+            if dyn is None:
+                try:
+                    x_next = ctrl.step(x_b[j, i], u_b[j, i], dt)
+                except Exception:
+                    x_next = None
+            else:
+                try:
+                    x_next = dyn.step(x_b[j, i], u_b[j, i], dt)
+                except Exception:
+                    x_next = None
+            if x_next is None:
+                early_stop = True
+                break
+            x_next_arr = _np.asarray(x_next, dtype=float).reshape(-1)
+            if not _np.all(_np.isfinite(x_next_arr)):
+                early_stop = True
+                break
+            x_b[j, i + 1] = x_next_arr
+        if early_stop:
+            H = i
+            u_b = u_b[:, :i]
+            x_b = x_b[:, : i + 1]
+            sigma_b = sigma_b[:, :i]
+            times = times[: i + 1]
+            for jj, c in enumerate(controllers):
+                hist = histories[jj]
+                if hist is not None:
+                    try:
+                        setattr(c, "_last_history", hist)
+                    except Exception:
+                        pass
+            if params_list is not None:
+                return [(_np.copy(times), _np.copy(x_b), _np.copy(u_b), _np.copy(sigma_b)) for _ in params_list]
+            return times, x_b, u_b, sigma_b
+        if check_convergence and (i >= grace_steps):
+            max_sigma = _np.max(_np.abs(sigma_b[:, i]))
+            if max_sigma < conv_tol:
+                H = i + 1
+                u_b = u_b[:, : i + 1]
+                x_b = x_b[:, : i + 2]
+                sigma_b = sigma_b[:, : i + 1]
+                times = times[: i + 2]
+                for jj, c in enumerate(controllers):
+                    hist = histories[jj]
+                    if hist is not None:
+                        try:
+                            setattr(c, "_last_history", hist)
+                        except Exception:
+                            pass
+                if params_list is not None:
+                    return [(_np.copy(times), _np.copy(x_b), _np.copy(u_b), _np.copy(sigma_b)) for _ in params_list]
+                return times, x_b, u_b, sigma_b
+    times[H] = H * dt
+    for jj, c in enumerate(controllers):
+        hist = histories[jj]
+        if hist is not None:
+            try:
+                setattr(c, "_last_history", hist)
+            except Exception:
+                pass
+    result = (times, x_b, u_b, sigma_b)
+    if params_list is None:
+        return result
+    return [(_np.copy(times), _np.copy(x_b), _np.copy(u_b), _np.copy(sigma_b)) for _ in params_list]

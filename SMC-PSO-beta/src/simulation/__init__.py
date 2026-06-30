@@ -58,6 +58,7 @@ from .orchestrators.sequential import get_step_fn, step, run_simulation
 
 # Legacy vector simulation interface
 from .orchestrators.batch import simulate_batch as simulate
+from .orchestrators.batch import simulate_system_batch
 
 # Legacy adaptive integration
 from .integrators.adaptive.runge_kutta import rk45_step
@@ -100,6 +101,7 @@ __all__ = [
     "step",                  # Original step function
     "run_simulation",        # Original simulation runner
     "simulate",              # Original vector simulation function
+    "simulate_system_batch",  # Closed-loop batched roll-out (PSO driver), restored M6 S1a
     "rk45_step",             # Original adaptive integration function
     "_guard_no_nan", "_guard_energy", "_guard_bounds",  # Legacy safety guards
 ]
