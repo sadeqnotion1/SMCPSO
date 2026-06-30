@@ -57,6 +57,8 @@
 | M6-S2-1 | 2026-06-30 | optimization/integration | A | P3 | EnhancedPSOFactory duplicates simulator/scenario fitness logic instead of reusing simulate_system_batch | FLAGGED | src/optimization/integration/pso_factory_bridge.py |
 | M6-S2-2 | 2026-06-30 | optimization/integration | A | P3 | monkeypatches tuner._fitness = enhanced_fitness (brittle coupling to PSOTuner internals) | FLAGGED | src/optimization/integration/pso_factory_bridge.py |
 | M6-S2-3 | 2026-06-30 | optimization/integration | B | P3 | bridge _get_default_gains fallbacks differ from factory registry defaults | FLAGGED | src/optimization/integration/pso_factory_bridge.py |
+| M7-S1-1 | 2026-06-30 | interfaces/core | A | P3 | StreamingProtocol defined in protocols.py but not exported by core/__init__.py | FLAGGED | src/interfaces/core/__init__.py |
+| M7-S1-2 | 2026-06-30 | interfaces/core | A | P3 | redundant import Tuple in protocols.py (L19) separate from L16 | FLAGGED | src/interfaces/core/protocols.py |
 
 ## Summary counters (update on each session)
 - Open P0: 0
@@ -368,3 +370,13 @@ Going forward, record the **parent** SHA at kit-build time and the **actual** pu
 - **Transforms (only):** EOL CRLF -> LF; banner regenerated as 86-col path-centered banner; rewrote 5 absolute imports to relative depths.
 - **Gate:** `run_gate.py` (from kit) → STRUCTURAL OK (LF, compiles, single banner, relative imports, no CIT/CJK/nbsp slop, exported) + FIDELITY OK (matches expected sha256) + BEHAVIORAL OK (members, config, construct, enhanced factory & fitness, optimize_controller). 42/42 gate checks green.
 - **Commit:** `1e321e1aca248a76a05c25512c61b4e9ad8ce35f` (record parent `30d4448b0d5a5ba6000cde3f0c61d06b3975aaf6`).
+
+---
+
+## M7 · Slice 1 — Interfaces Core Submodule
+
+- **When:** 2026-06-30
+- **Source → Target:** `SMC-PSO/src/interfaces/core/` → `src/interfaces/core/` (NEW); contains `__init__.py`, `data_types.py`, and `protocols.py`.
+- **Transforms (only):** LF EOL normalization, 86-col centered banner regeneration, trailing-newline normalization.
+- **Gate:** `run_gate.py` (from kit) → STRUCTURAL OK (LF, compiles, centered banners, relative imports, no slop, exported __all__) + FIDELITY OK (matches expected sha256) + BEHAVIORAL OK (symbols resolve, instantiate dataclasses, ABC protocols abstract, method smoke). 53/53 gate checks green.
+- **Commit:** `6c8264efa21b60d0eee807c3f4f3a6a2471efb13` (record parent `1e321e1aca248a76a05c25512c61b4e9ad8ce35f`).
