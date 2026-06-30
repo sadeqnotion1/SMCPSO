@@ -291,7 +291,7 @@ Going forward, record the **parent** SHA at kit-build time and the **actual** pu
 - **Gate:** `parity_check_m5_slice2.py` → STRUCTURAL OK (byte-identical to transformed source) + BEHAVIORAL OK (400 cases, max|du|=max|dz|=0.0, incl. saturation + anti-windup); 18/18 unit tests.
 - **Lens B:** true STA law `u=-K1|s|^½ sgn(s)+z-d s`, `z+=z-K2 sgn(s)dt+Kaw(u_sat-u_raw)dt`; Moreno-Osorio `K1>K2>0` enforced in `validate_gains`; config K1=8>K2=4.
 - **Findings for review:** (1) monolith-vs-modular drop; (2) standalone class not yet ControllerInterface ABC (S5); (3) dead numba fn retained for later cleanup.
-- **Commit:** `0291875150821d3f98fcde64ffec2110c92131e3` (record parent `0af69b18d203923fde188981df262a0445d470d0`).
+- **Commit:** `0291875150821d3f98fcde64ffec2110c92131e3` (record parent `3daa54f0a2caedffc21a418520336209c15d7f1d`).
 
 ---
 
@@ -305,7 +305,7 @@ Going forward, record the **parent** SHA at kit-build time and the **actual** pu
 - **Gate:** `parity_check_m5_slice3.py` → STRUCTURAL OK (byte-identical to transformed source) + BEHAVIORAL OK (400 cases, max|du|=max|dK|=max|dt_sld|=0.0); 22/22 unit tests.
 - **Lens B:** law `u=-K*sat(s/eps)-alpha*s`; dead-zone-gated leaky rate-limited adaptation `dK=gamma|s|-leak(K-K0)` (0 inside dead-zone), `K^+=clip(K+dK dt,K_min,K_max)`; `K_min<=K_init<=K_max` enforced.
 - **Findings for review:** (1) monolith-vs-modular drop; (2) standalone class not yet ControllerInterface ABC (S5); (3) state_vars=(K,last_u,time_in_sliding) carries adaptive gain.
-- **Commit:** `00eb5696b8d515994ac2cadd858876b4a15d746c` (record parent `7c2dfc65e8a6042db62908f5d05051a62939fb2b`).
+- **Commit:** `00eb5696b8d515994ac2cadd858876b4a15d746c` (record parent `0291875150821d3f98fcde64ffec2110c92131e3`).
 
 
 ---
