@@ -54,6 +54,9 @@
 | M6-S1a-1 | 2026-06-30 | optimization/simulation | A | P1 | simulate_system_batch used logging.* but batch.py did not import logging (latent NameError in controller-init / history handlers) | FIXED | src/simulation/orchestrators/batch.py @ ca1e553d4d3bc83935b53794aea8be1d70e35cb4 |
 | M6-S1b-1 | 2026-06-30 | optimization | A | P3 | non-ASCII math glyphs (sigma, <=, +/-, x, Delta) retained in docstrings/log strings | FLAGGED | src/optimization/algorithms/pso_optimizer.py |
 | M6-S1b-2 | 2026-06-30 | optimization | B | P2 | legacy import src.utils.seed did not exist; create_rng rewired to utils.testing.reproducibility | FIXED | src/optimization/algorithms/pso_optimizer.py @ ba126625131d8ff00b1558362ec05c5d92640a70 |
+| M6-S2-1 | 2026-06-30 | optimization/integration | A | P3 | EnhancedPSOFactory duplicates simulator/scenario fitness logic instead of reusing simulate_system_batch | FLAGGED | src/optimization/integration/pso_factory_bridge.py |
+| M6-S2-2 | 2026-06-30 | optimization/integration | A | P3 | monkeypatches tuner._fitness = enhanced_fitness (brittle coupling to PSOTuner internals) | FLAGGED | src/optimization/integration/pso_factory_bridge.py |
+| M6-S2-3 | 2026-06-30 | optimization/integration | B | P3 | bridge _get_default_gains fallbacks differ from factory registry defaults | FLAGGED | src/optimization/integration/pso_factory_bridge.py |
 
 ## Summary counters (update on each session)
 - Open P0: 0
@@ -345,3 +348,23 @@ Going forward, record the **parent** SHA at kit-build time and the **actual** pu
 - **Transforms (only):** Restored the closed-loop batched simulation routine. EOL/banner normalized to LF, 86-col banners. No `[CIT-*]` tokens, no `src.core` imports, no numba decorators.
 - **Gate:** `run_gate.py` (from kit) → STRUCTURAL OK (compile, single definition, LF, no banned tokens) + FIDELITY OK (matches reviewed snippet) + BEHAVIORAL OK (shapes, saturations, early-stopping, convergence tolerances, particle broadcast, determinism). 22/22 gate checks green.
 - **Commit:** `4e5ad7f8306749cadb9a91c05b7a164774efa253` (record parent `8677a356d5d401ab8cb42df044dc0821f4f7d364`).
+
+---
+
+## M6 · Slice 1b — PSOTuner port
+
+- **When:** 2026-06-30
+- **Source → Target:** `SMC-PSO/src/optimization/algorithms/pso_optimizer.py` → `src/optimization/algorithms/pso_optimizer.py` (flat, NEW); `src/optimization/__init__.py` and `algorithms/__init__.py` created/widened to export `PSOTuner`.
+- **Transforms (only):** EOL CRLF -> LF; banner regenerated as 86-col path-centered banner; removed 10 trailing ` # [CIT-068]` tokens; normalized 3 non-breaking spaces (U+00A0); rewrote imports to beta-native relative form.
+- **Gate:** `run_gate.py` (from kit) → STRUCTURAL OK (LF, compiles, single class, exported, no CJK/CIT/nbsp/backslash slop) + FIDELITY OK (matches expected sha256) + BEHAVIORAL OK (constructs, normalises safely, cost aggregation, penalizes instability, run optimise). 34/34 gate checks green.
+- **Commit:** `ba126625131d8ff00b1558362ec05c5d92640a70` (record parent `8097fbc23a97d4cb95c286437bada15906dedae1`).
+
+---
+
+## M6 · Slice 2 — PSO <-> Controller-Factory Integration Bridge
+
+- **When:** 2026-06-30
+- **Source → Target:** `SMC-PSO/src/optimization/integration/` → `src/optimization/integration/` (flat, NEW); `src/optimization/integration/__init__.py` re-exports all integration bridge symbols.
+- **Transforms (only):** EOL CRLF -> LF; banner regenerated as 86-col path-centered banner; rewrote 5 absolute imports to relative depths.
+- **Gate:** `run_gate.py` (from kit) → STRUCTURAL OK (LF, compiles, single banner, relative imports, no CIT/CJK/nbsp slop, exported) + FIDELITY OK (matches expected sha256) + BEHAVIORAL OK (members, config, construct, enhanced factory & fitness, optimize_controller). 42/42 gate checks green.
+- **Commit:** `1e321e1aca248a76a05c25512c61b4e9ad8ce35f` (record parent `30d4448b0d5a5ba6000cde3f0c61d06b3975aaf6`).

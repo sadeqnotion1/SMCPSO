@@ -17,7 +17,7 @@ scaffold, **dependency-first AND audit-driven**: every module is ported, audited
 | M3 Utils & primitives | `src/utils/` | [WIP] (Slices 1-7 accepted) |
 | M4 Controllers base + sim core | `src/controllers/base.py`, `src/simulation/` | [DONE] — Slices 1-6 all on main (framework complete) @ 8f640738 |
 | M5 Controller implementations | classical / sta / adaptive / hybrid + factory | [DONE] — S1-S5 complete on main @ 788f1e93 |
-| M6 Optimization | `src/optimization/` | [IN PROGRESS] — S1a-S1b on main @ ba126625; S2 pending |
+| M6 Optimization | `src/optimization/` | [DONE] — S1a-S1b-S2 complete on main @ 1e321e1a |
 | M7 Interfaces / HIL | `src/interfaces/` (was missing from old plan) | [TODO] |
 | M8 Analysis | `src/analysis/` (was missing) | [TODO] |
 | M9 Entry points | `simulate.py`, `streamlit_app.py` | [TODO] |
@@ -116,10 +116,10 @@ Note: `src/controllers/__init__.py` now exports `ClassicalSMC` + `SuperTwistingS
 - S1a simulate_system_batch .. [DONE]   @ 4e5ad7f8306749cadb9a91c05b7a164774efa253
 - S1a-fix import logging .... [DONE]   @ ca1e553d4d3bc83935b53794aea8be1d70e35cb4
 - S1b PSOTuner port .......... [DONE]   @ ba126625131d8ff00b1558362ec05c5d92640a70
-- S2 integration bridge ...... [PENDING] (pso_factory_bridge.py re-wiring)
+- S2 integration bridge ...... [DONE]   @ 1e321e1aca248a76a05c25512c61b4e9ad8ce35f
 
 ## Next milestone
-- Proceed to S1b (PSOTuner port) per M6 file request.
+- Proceed to M7 Interfaces / HIL.
 
 
 
