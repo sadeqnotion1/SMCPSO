@@ -306,7 +306,7 @@ class DataPacket:
         version, packet_type, flags, sequence_number, payload_length, checksum = header_data
 
         # Extract payload
-        if len(data) < 12 + payload_length:
+        if len(data) < 16 + payload_length:
             raise ValueError("Insufficient data for payload")
 
         payload = data[16:16 + payload_length]
