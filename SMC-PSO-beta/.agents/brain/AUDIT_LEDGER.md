@@ -559,3 +559,21 @@ Open after M8-S2: P0=0, P1=0. (M8-S2-3 is P2/deferred-to-S6; M8-S2-4 is P3/accep
 
 Open after M8-S3a: **P0 = 0, P1 = 0** (P2: M8-S3a-1, M8-S2-3; various P3).
 
+---
+
+## M8-S3b — analysis/validation/ heavy modules
+
+| ID | Sev | Status | File | Note |
+|---|---|---|---|---|
+| M8-S3b-1 | P2 | FIXED (honest_degrade) | statistical_tests.py | 3 fabricated hardcoded p-values (Anderson-Darling ~L246, ADF ~L488, KPSS ~L513) presented approximate/guessed values as real. Nulled to `p_value=None` + `method='simplified'`; real statistic & critical value preserved. Pinned by test_validation_heavy.py. @ 25194860071fb6a473cdad8e192c7a274b17419e |
+| M8-S3b-2 | P3 | ACCEPTED | statistical_tests.py | Power analysis (`_perform_power_analysis`, `_calculate_required_sample_size`) uses REAL scipy (t.cdf/t.ppf/norm.ppf); approximate one-sample-t convention, not fabricated. Faithful port; no value to null. Documented approximation only. |
+| M8-S3b-3 | P2 | OPEN | benchmarking.py | `_extract_raw_performance_data` (~L582) returns `{}` (honest-empty, not fabricated) -> raw-data statistical comparisons are inert until wired to real trial data. |
+| M8-S3b-4 | P3 | ACCEPTED | monte_carlo.py | `_extreme_value_analysis` uses real `stats.genextreme.fit/.ppf` (block-maxima); Sobol/Morris sensitivity return honest `{'error': ...}` when unavailable. No fabrication. |
+| M8-S3b-5 | P3 | ACCEPTED | cross_validation.py | `_train_and_predict` (~L769) has real sklearn/callable/linear-regression fallback chain; functional. |
+
+### Slop fixed in S3b (P3, part of M8-S3b-1 port)
+- `monte_carlo.py`: U+00B1 (comment) -> `+/-`.
+- `statistical_tests.py`: U+2260 x2 (output labels "Mean/Median != 0") -> `!=`.
+
+Open after M8-S3b: **P0 = 0, P1 = 0** (P2: M8-S3b-3, M8-S3a-1, M8-S2-3; various P3).
+
