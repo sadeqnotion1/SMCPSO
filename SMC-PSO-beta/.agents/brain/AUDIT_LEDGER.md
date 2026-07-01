@@ -61,7 +61,7 @@
 | M7-S1-2 | 2026-06-30 | interfaces/core | A | P3 | redundant import Tuple in protocols.py (L19) separate from L16 | FLAGGED | src/interfaces/core/protocols.py |
 | M7-S2-1 | 2026-06-30 | interfaces/data_exchange | A | P1 | DataPacket.unpack() sliced header at data[:12] instead of data[:16] leading to struct unpack errors | FIXED | src/interfaces/data_exchange/data_types.py @ a6c2b8ba30fcca7e83e5a53cc5f388b177294069 |
 | M7-S2-2 | 2026-06-30 | interfaces/data_exchange | A | P2 | __all__ exported nonexistent PerformanceSerializer and SerializationMetrics causing ImportError on star-imports | FIXED | src/interfaces/data_exchange/__init__.py @ a6c2b8ba30fcca7e83e5a53cc5f388b177294069 |
-| M7-S2-3 | 2026-06-30 | interfaces/data_exchange | A | P1 | streaming.py async loop processes wait synchronously via condition lock instead of awaiting, causing event-loop hangs on stop() | FLAGGED | src/interfaces/data_exchange/streaming.py |
+| M7-S2-3 | 2026-06-30 | interfaces/data_exchange | A | P1 | streaming.py async loop processes wait synchronously via condition lock instead of awaiting, causing event-loop hangs on stop() | FIXED | src/interfaces/data_exchange/streaming.py @ bb513058b909e9588a9dd927030dd8be38fa5ee2 |
 | M7-S2-4 | 2026-06-30 | interfaces/data_exchange | B | P3 | duplicate MessageType and Priority enums vs core package definitions | FLAGGED | src/interfaces/data_exchange/data_types.py |
 | M7-S2-5 | 2026-06-30 | interfaces/data_exchange | A | P3 | DataPacket.unpack payload guard off-by-4 (12 -> 16 + payload_length); completes M7-S2-1 | FIXED | src/interfaces/data_exchange/data_types.py @ a6c2b8ba30fcca7e83e5a53cc5f388b177294069 |
 | M7-S3-1 | 2026-07-01 | interfaces/hardware | A | P1 | serial_devices.py: unguarded top-level import serial breaks package imports | FIXED | src/interfaces/hardware/serial_devices.py @ f76adc137b768cb835927e35a3d7016ceacf45e4 |
@@ -79,7 +79,7 @@
 
 ### Summary counters (update on each session)
 - Open P0: 0
-- Open P1: 1 (M7-S2-3 streaming async-hang, deferred to dedicated remediation slice)
+- Open P1: 0
 - Open P2: 16 (plant.A7, M2.v6, F-PLANT-2, F-PLANT-3, UTILS-DEDUP-1, UTILS-DEDUP-2, S2-A3, UTILS-DEDUP-3, S3-A4, UTILS-DEDUP-4, S4-A2, UTILS-DEDUP-5, S5-A3, MON-LAT-1, MON-LENSA-1, INFRA-LOG-1)
 - Modules accepted to trunk: M1 (config), M2 (plant), M3 Slice 1 (utils types+validation), M3 Slice 2 (utils control.primitives), M3 Slice 3 (utils testing.reproducibility), M3 Slice 4 (utils numerical_stability), M3 Slice 5 (utils analysis), M3 Slice 6 (utils monitoring + infrastructure/threading), M3 Slice 7 (utils infrastructure: logging + memory), M4 Slice 1 (base), M4 Slice 2 (core), M4 Slice 3 (integrators), M4 Slice 4 (safety), M4 Slice 5 (results/orchestrators), M4 Slice 6 (strategies), M5 Slice 1 (classical), M5 Slice 2 (sta), M5 Slice 3 (adaptive), M5 Slice 4 (hybrid), M5 Slice 5 (factory), M6 Slice 1a (batch), M6 Slice 1b (pso), M6 Slice 2 (integration), M7 Slice 1 (core), M7 Slice 2 (data_exchange), M7 Slice 3 (hardware), M7 Slice 4 (monitoring), M7 Slice 5 (network), M7 Slice 6 (hil)
 
@@ -476,3 +476,20 @@ Going forward, record the **parent** SHA at kit-build time and the **actual** pu
 
 **Milestone:** with S6, all six interfaces/ submodules (core, data_exchange, hardware, monitoring, network, hil) are ported.
 - Commit: `29bab7ab53c689bf9cba9ff412d104c92fcf4a6d` (record parent `bc0c8829a42d4440d4e824191e124ebe3a1cca4d`).
+
+---
+
+### M7 · P1 M7-S2-3 — streaming async-hang (CLOSED)
+
+- **M7-S2-3 [P1] FIXED** — `data_exchange/streaming.py`: `StreamBuffer` is a synchronous thread-safe buffer (`threading.Condition.wait`). The async loops `StreamingSerializer._process_stream` and `StreamingDeserializer._process_stream` called `self._buffer.get_batch(...)` directly on the event loop thread, so a blocking `Condition.wait(timeout)` froze the entire loop (starving other tasks, `asyncio.wait_for` timers, and `stop()`) → hang.
+  - Fix: offload the blocking read at both call-sites via `loop = asyncio.get_running_loop(); batch = await loop.run_in_executor(None, self._buffer.get_batch, batch_size, flush_interval)`. `StreamBuffer` unchanged (its thread-safety is what makes the executor offload correct). `stop()` -> `buffer.close()` notifies the condition, worker returns, awaited future resolves, loop exits cleanly.
+  - No change to streaming semantics/metrics/batching/backpressure; only where the blocking wait runs.
+- **Reproduction:** provided `repro_async_hang.py` hangs on unpatched trunk (30s watchdog kill); after fix prints heartbeats + exits 0.
+- **Regression test added:** `tests/test_interfaces/test_data_exchange_streaming_async.py` — runs the scenario in a daemon thread with a `join()` timeout so a frozen loop FAILS FAST instead of hanging. Verified: PASS on patched, FAIL (~15s) on unpatched.
+- **Env:** Python 3.9, raw asyncio, thread-mixed buffer.
+- **Clean:** no Lens-A slop, no banner slop (already-ported trunk), no Trap-B twins.
+
+**Related (deferred, not in this commit):** `FileStreamProcessor.process_file_stream` blocking file I/O in a coroutine; producer-side `add_data`/`send_message` with BLOCK backpressure on a full buffer from the loop thread. Both documented in APPLY.md as future follow-ups.
+
+**Gate:** py_compile GREEN; repro GREEN; regression test GREEN on patched / RED-fast on unpatched. Fix on trunk pending CLI apply/push.
+- Commit: `bb513058b909e9588a9dd927030dd8be38fa5ee2` (record parent `29bab7ab53c689bf9cba9ff412d104c92fcf4a6d`).

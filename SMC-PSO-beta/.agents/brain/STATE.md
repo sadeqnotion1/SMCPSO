@@ -18,7 +18,7 @@ scaffold, **dependency-first AND audit-driven**: every module is ported, audited
 | M4 Controllers base + sim core | `src/controllers/base.py`, `src/simulation/` | [DONE] — Slices 1-6 all on main (framework complete) @ 8f640738 |
 | M5 Controller implementations | classical / sta / adaptive / hybrid + factory | [DONE] — S1-S5 complete on main @ 788f1e93 |
 | M6 Optimization | `src/optimization/` | [DONE] — S1a-S1b-S2 complete on main @ 1e321e1a |
-| M7 Interfaces / HIL | src/interfaces/ (was missing from old plan) | [IN PROGRESS] — S1-S2 complete on main @ a6c2b8ba; S3 (hardware/) @ f76adc13; S4 (monitoring/) @ 6f77cfab; S5 (network/) @ bc0c8829; S6 (hil/) @ 29bab7ab53c689bf9cba9ff412d104c92fcf4a6d |
+| M7 Interfaces / HIL | src/interfaces/ (was missing from old plan) | [IN PROGRESS] — all 6 submodules ported (S1 core, S2 data_exchange @ a6c2b8ba, S3 hardware @ f76adc13, S4 monitoring @ 6f77cfab, S5 network @ bc0c8829, S6 hil @ 29bab7ab). P1 M7-S2-3 streaming async-hang CLOSED @ bb513058b909e9588a9dd927030dd8be38fa5ee2. Remaining: LAST interfaces/__init__.py (banner + lazy sub-module importer). |
 | M8 Analysis | `src/analysis/` (was missing) | [TODO] |
 | M9 Entry points | `simulate.py`, `streamlit_app.py` | [TODO] |
 | M10 Benchmarks (+ integration/assets) | `src/benchmarks/` (was missing) | [TODO] |
@@ -119,7 +119,7 @@ Note: `src/controllers/__init__.py` now exports `ClassicalSMC` + `SuperTwistingS
 - S2 integration bridge ...... [DONE]   @ 1e321e1aca248a76a05c25512c61b4e9ad8ce35f
 
 ## Next milestone
-- Proceed to M7 Streaming async-hang remediation (open P1 M7-S2-3).
+- Proceed to M7 last item: interfaces/__init__.py (banner + lazy sub-module importer).
 
 ## M7 Interfaces / HIL Ledger
 - S1 interfaces core ........ [DONE]   @ 6c8264efa21b60d0eee807c3f4f3a6a2471efb13
