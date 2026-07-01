@@ -316,9 +316,15 @@ class StreamingSerializer:
         while self._running:
             try:
                 # Get batch of items
-                batch = self._buffer.get_batch(
+                # M7-S2-3: the buffer uses synchronous threading.Condition
+                # waits; call it in a worker thread so a blocking wait never
+                # freezes the event loop (starving other tasks/timers/stop()).
+                loop = asyncio.get_running_loop()
+                batch = await loop.run_in_executor(
+                    None,
+                    self._buffer.get_batch,
                     self._config.batch_size,
-                    self._config.flush_interval
+                    self._config.flush_interval,
                 )
 
                 if not batch:
@@ -432,9 +438,15 @@ class StreamingDeserializer:
         while self._running:
             try:
                 # Get batch of items
-                batch = self._buffer.get_batch(
+                # M7-S2-3: the buffer uses synchronous threading.Condition
+                # waits; call it in a worker thread so a blocking wait never
+                # freezes the event loop (starving other tasks/timers/stop()).
+                loop = asyncio.get_running_loop()
+                batch = await loop.run_in_executor(
+                    None,
+                    self._buffer.get_batch,
                     self._config.batch_size,
-                    self._config.flush_interval
+                    self._config.flush_interval,
                 )
 
                 if not batch:
