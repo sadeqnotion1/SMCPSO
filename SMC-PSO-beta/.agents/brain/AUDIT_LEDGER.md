@@ -66,13 +66,15 @@
 | M7-S2-5 | 2026-06-30 | interfaces/data_exchange | A | P3 | DataPacket.unpack payload guard off-by-4 (12 -> 16 + payload_length); completes M7-S2-1 | FIXED | src/interfaces/data_exchange/data_types.py @ a6c2b8ba30fcca7e83e5a53cc5f388b177294069 |
 | M7-S3-1 | 2026-07-01 | interfaces/hardware | A | P1 | serial_devices.py: unguarded top-level import serial breaks package imports | FIXED | src/interfaces/hardware/serial_devices.py @ f76adc137b768cb835927e35a3d7016ceacf45e4 |
 | M7-S3-2 | 2026-07-01 | interfaces/hardware | A | P3 | stripped trailing backslashes from banner comment lines across 7 files | FIXED | src/interfaces/hardware/*.py @ f76adc137b768cb835927e35a3d7016ceacf45e4 |
+| M7-S4-1 | 2026-07-01 | interfaces/monitoring | A | P1 | diagnostics.py: unguarded top-level import psutil breaks package imports | FIXED | src/interfaces/monitoring/diagnostics.py @ 6f77cfab529eeaca8067a02cb376366bcc08bf5f |
+| M7-S4-2 | 2026-07-01 | interfaces/monitoring | A | P3 | stripped trailing backslashes from banner comment lines across 7 files | FIXED | src/interfaces/monitoring/*.py @ 6f77cfab529eeaca8067a02cb376366bcc08bf5f |
 
 
-## Summary counters (update on each session)
+### Summary counters (update on each session)
 - Open P0: 0
 - Open P1: 1 (M7-S2-3 streaming async-hang, deferred to dedicated remediation slice)
 - Open P2: 16 (plant.A7, M2.v6, F-PLANT-2, F-PLANT-3, UTILS-DEDUP-1, UTILS-DEDUP-2, S2-A3, UTILS-DEDUP-3, S3-A4, UTILS-DEDUP-4, S4-A2, UTILS-DEDUP-5, S5-A3, MON-LAT-1, MON-LENSA-1, INFRA-LOG-1)
-- Modules accepted to trunk: M1 (config), M2 (plant), M3 Slice 1 (utils types+validation), M3 Slice 2 (utils control.primitives), M3 Slice 3 (utils testing.reproducibility), M3 Slice 4 (utils numerical_stability), M3 Slice 5 (utils analysis), M3 Slice 6 (utils monitoring + infrastructure/threading), M3 Slice 7 (utils infrastructure: logging + memory), M4 Slice 1 (base), M4 Slice 2 (core), M4 Slice 3 (integrators), M4 Slice 4 (safety), M4 Slice 5 (results/orchestrators), M4 Slice 6 (strategies), M5 Slice 1 (classical), M5 Slice 2 (sta), M5 Slice 3 (adaptive), M5 Slice 4 (hybrid), M5 Slice 5 (factory), M6 Slice 1a (batch), M6 Slice 1b (pso), M6 Slice 2 (integration), M7 Slice 1 (core), M7 Slice 2 (data_exchange), M7 Slice 3 (hardware)
+- Modules accepted to trunk: M1 (config), M2 (plant), M3 Slice 1 (utils types+validation), M3 Slice 2 (utils control.primitives), M3 Slice 3 (utils testing.reproducibility), M3 Slice 4 (utils numerical_stability), M3 Slice 5 (utils analysis), M3 Slice 6 (utils monitoring + infrastructure/threading), M3 Slice 7 (utils infrastructure: logging + memory), M4 Slice 1 (base), M4 Slice 2 (core), M4 Slice 3 (integrators), M4 Slice 4 (safety), M4 Slice 5 (results/orchestrators), M4 Slice 6 (strategies), M5 Slice 1 (classical), M5 Slice 2 (sta), M5 Slice 3 (adaptive), M5 Slice 4 (hybrid), M5 Slice 5 (factory), M6 Slice 1a (batch), M6 Slice 1b (pso), M6 Slice 2 (integration), M7 Slice 1 (core), M7 Slice 2 (data_exchange), M7 Slice 3 (hardware), M7 Slice 4 (monitoring)
 
 ## M2 / plant -- 2026-06-23
 - [P0] plant.B1  Inertia matrix M(q) incorrect (M12,M22,M23 spurious terms). Proof: KE-vs-M residual 2.95e-1. Status: FIXED (migration/plant).
@@ -413,3 +415,20 @@ Going forward, record the **parent** SHA at kit-build time and the **actual** pu
 
 **Gate:** py_compile GREEN; import-safety GREEN (no optional deps). Fix on trunk pending CLI apply/push.
 - Commit: `f76adc137b768cb835927e35a3d7016ceacf45e4` (record parent `a6c2b8ba30fcca7e83e5a53cc5f388b177294069`).
+
+---
+
+### M7 · Slice 4 — `interfaces/monitoring/` (audited)
+
+- **M7-S4-1 [P1] FIXED** — `diagnostics.py`: unguarded top-level `import psutil`. Because `monitoring/__init__.py` imports `diagnostics`, a missing psutil made the *entire* `monitoring` package unimportable (health_monitor/metrics_collector/performance_tracker/alerting/dashboard all fell over). Wrapped in `try/except ImportError` -> `PSUTIL_AVAILABLE` (`psutil=None`), and added early `ImportError` guards in the three psutil entry points (`SystemDiagnosticCheck.run_check`, `NetworkDiagnosticCheck.run_check`, `DiagnosticEngine.get_system_profile`); existing per-check try/except paths degrade gracefully. Verified: all 6 modules + package import with psutil/aiohttp absent.
+- **M7-S4-2 [P3] FIXED** — banner de-slop: stripped stray trailing `\\\` from `#=` banner lines across all 7 files (21 lines). Comments only.
+
+**Clean (no findings):**
+- Lens A — no hallucinated citation tokens, no TODO/FIXME/placeholder/dead stubs.
+- Trap B — no `src.core` / `src.optimizer` deprecated-twin imports. `performance_tracker.py` imports the ported S2 sibling `src.interfaces.data_exchange.serializers` (present on trunk) — left as-is.
+- Lazy psutil imports (health_monitor, metrics_collector) and lazy aiohttp/aiohttp_cors imports (alerting, dashboard) already import-safe — untouched.
+
+**Gate:** py_compile GREEN; import-safety GREEN (no optional deps; data_exchange sibling stubbed to mirror trunk). Fix on trunk pending CLI apply/push.
+
+**Note:** legacy test `tests/test_utils/monitoring/test_stability_monitoring.py` is the only *monitor* test; it lives under `test_utils/`, not `test_interfaces/`. Not ported/changed in this slice.
+- Commit: `6f77cfab529eeaca8067a02cb376366bcc08bf5f` (record parent `f76adc137b768cb835927e35a3d7016ceacf45e4`).

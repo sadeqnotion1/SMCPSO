@@ -18,7 +18,7 @@ scaffold, **dependency-first AND audit-driven**: every module is ported, audited
 | M4 Controllers base + sim core | `src/controllers/base.py`, `src/simulation/` | [DONE] — Slices 1-6 all on main (framework complete) @ 8f640738 |
 | M5 Controller implementations | classical / sta / adaptive / hybrid + factory | [DONE] — S1-S5 complete on main @ 788f1e93 |
 | M6 Optimization | `src/optimization/` | [DONE] — S1a-S1b-S2 complete on main @ 1e321e1a |
-| M7 Interfaces / HIL | `src/interfaces/` (was missing from old plan) | [IN PROGRESS] — S1-S2 complete on main @ a6c2b8ba; S3 (hardware/) complete @ f76adc137b768cb835927e35a3d7016ceacf45e4; S4-S6 pending |
+| M7 Interfaces / HIL | src/interfaces/ (was missing from old plan) | [IN PROGRESS] — S1-S2 complete on main @ a6c2b8ba; S3 (hardware/) @ f76adc13; S4 (monitoring/) @ 6f77cfab529eeaca8067a02cb376366bcc08bf5f; S5-S6 pending |
 | M8 Analysis | `src/analysis/` (was missing) | [TODO] |
 | M9 Entry points | `simulate.py`, `streamlit_app.py` | [TODO] |
 | M10 Benchmarks (+ integration/assets) | `src/benchmarks/` (was missing) | [TODO] |
@@ -119,14 +119,14 @@ Note: `src/controllers/__init__.py` now exports `ClassicalSMC` + `SuperTwistingS
 - S2 integration bridge ...... [DONE]   @ 1e321e1aca248a76a05c25512c61b4e9ad8ce35f
 
 ## Next milestone
-- Proceed to M7 S4 (network interfaces).
+- Proceed to M7 S5 (network interfaces).
 
 ## M7 Interfaces / HIL Ledger
 - S1 interfaces core ........ [DONE]   @ 6c8264efa21b60d0eee807c3f4f3a6a2471efb13
 - S2 data exchange .......... [DONE]   @ a6c2b8ba30fcca7e83e5a53cc5f388b177294069
 - S3 hardware drivers ....... [DONE]   @ f76adc137b768cb835927e35a3d7016ceacf45e4
-- S4 network interfaces ..... [PENDING]
-- S5 monitoring dashboard ... [PENDING]
+- S4 monitoring ............. [DONE]   @ 6f77cfab529eeaca8067a02cb376366bcc08bf5f
+- S5 network interfaces ..... [PENDING]
 - S6 HIL simulation & wiring  [PENDING]
 
 
