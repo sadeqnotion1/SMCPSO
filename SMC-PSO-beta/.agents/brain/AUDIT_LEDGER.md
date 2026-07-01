@@ -68,13 +68,17 @@
 | M7-S3-2 | 2026-07-01 | interfaces/hardware | A | P3 | stripped trailing backslashes from banner comment lines across 7 files | FIXED | src/interfaces/hardware/*.py @ f76adc137b768cb835927e35a3d7016ceacf45e4 |
 | M7-S4-1 | 2026-07-01 | interfaces/monitoring | A | P1 | diagnostics.py: unguarded top-level import psutil breaks package imports | FIXED | src/interfaces/monitoring/diagnostics.py @ 6f77cfab529eeaca8067a02cb376366bcc08bf5f |
 | M7-S4-2 | 2026-07-01 | interfaces/monitoring | A | P3 | stripped trailing backslashes from banner comment lines across 7 files | FIXED | src/interfaces/monitoring/*.py @ 6f77cfab529eeaca8067a02cb376366bcc08bf5f |
+| M7-S5-1 | 2026-07-01 | interfaces/network | A | P1 | http_interface.py: unguarded top-level import aiohttp breaks package imports | FIXED | src/interfaces/network/http_interface.py @ bc0c8829a42d4440d4e824191e124ebe3a1cca4d |
+| M7-S5-2 | 2026-07-01 | interfaces/network | A | P1 | websocket_interface.py: unguarded top-level import websockets breaks package imports | FIXED | src/interfaces/network/websocket_interface.py @ bc0c8829a42d4440d4e824191e124ebe3a1cca4d |
+| M7-S5-3 | 2026-07-01 | interfaces/network | A | P1 | message_queue.py: zmq/aio_pika imports not import-safe (NameError on missing backends) | FIXED | src/interfaces/network/message_queue.py @ bc0c8829a42d4440d4e824191e124ebe3a1cca4d |
+| M7-S5-4 | 2026-07-01 | interfaces/network | A | P3 | stripped trailing backslashes from banner comment lines across 7 files | FIXED | src/interfaces/network/*.py @ bc0c8829a42d4440d4e824191e124ebe3a1cca4d |
 
 
 ### Summary counters (update on each session)
 - Open P0: 0
 - Open P1: 1 (M7-S2-3 streaming async-hang, deferred to dedicated remediation slice)
 - Open P2: 16 (plant.A7, M2.v6, F-PLANT-2, F-PLANT-3, UTILS-DEDUP-1, UTILS-DEDUP-2, S2-A3, UTILS-DEDUP-3, S3-A4, UTILS-DEDUP-4, S4-A2, UTILS-DEDUP-5, S5-A3, MON-LAT-1, MON-LENSA-1, INFRA-LOG-1)
-- Modules accepted to trunk: M1 (config), M2 (plant), M3 Slice 1 (utils types+validation), M3 Slice 2 (utils control.primitives), M3 Slice 3 (utils testing.reproducibility), M3 Slice 4 (utils numerical_stability), M3 Slice 5 (utils analysis), M3 Slice 6 (utils monitoring + infrastructure/threading), M3 Slice 7 (utils infrastructure: logging + memory), M4 Slice 1 (base), M4 Slice 2 (core), M4 Slice 3 (integrators), M4 Slice 4 (safety), M4 Slice 5 (results/orchestrators), M4 Slice 6 (strategies), M5 Slice 1 (classical), M5 Slice 2 (sta), M5 Slice 3 (adaptive), M5 Slice 4 (hybrid), M5 Slice 5 (factory), M6 Slice 1a (batch), M6 Slice 1b (pso), M6 Slice 2 (integration), M7 Slice 1 (core), M7 Slice 2 (data_exchange), M7 Slice 3 (hardware), M7 Slice 4 (monitoring)
+- Modules accepted to trunk: M1 (config), M2 (plant), M3 Slice 1 (utils types+validation), M3 Slice 2 (utils control.primitives), M3 Slice 3 (utils testing.reproducibility), M3 Slice 4 (utils numerical_stability), M3 Slice 5 (utils analysis), M3 Slice 6 (utils monitoring + infrastructure/threading), M3 Slice 7 (utils infrastructure: logging + memory), M4 Slice 1 (base), M4 Slice 2 (core), M4 Slice 3 (integrators), M4 Slice 4 (safety), M4 Slice 5 (results/orchestrators), M4 Slice 6 (strategies), M5 Slice 1 (classical), M5 Slice 2 (sta), M5 Slice 3 (adaptive), M5 Slice 4 (hybrid), M5 Slice 5 (factory), M6 Slice 1a (batch), M6 Slice 1b (pso), M6 Slice 2 (integration), M7 Slice 1 (core), M7 Slice 2 (data_exchange), M7 Slice 3 (hardware), M7 Slice 4 (monitoring), M7 Slice 5 (network)
 
 ## M2 / plant -- 2026-06-23
 - [P0] plant.B1  Inertia matrix M(q) incorrect (M12,M22,M23 spurious terms). Proof: KE-vs-M residual 2.95e-1. Status: FIXED (migration/plant).
@@ -432,3 +436,21 @@ Going forward, record the **parent** SHA at kit-build time and the **actual** pu
 
 **Note:** legacy test `tests/test_utils/monitoring/test_stability_monitoring.py` is the only *monitor* test; it lives under `test_utils/`, not `test_interfaces/`. Not ported/changed in this slice.
 - Commit: `6f77cfab529eeaca8067a02cb376366bcc08bf5f` (record parent `f76adc137b768cb835927e35a3d7016ceacf45e4`).
+
+---
+
+### M7 · Slice 5 — `interfaces/network/` (audited)
+
+- **M7-S5-1 [P1] FIXED** — `http_interface.py`: unguarded top-level `from aiohttp import web, ClientSession, ClientTimeout`; `__init__` imports it, so the whole `network` package was unimportable without aiohttp. Extra import-time trap: `@web.middleware` decorators (x3) + `web.Request`/`web.Response` signature annotations evaluated at class-definition time. Fix = `from __future__ import annotations` + guarded import (`AIOHTTP_AVAILABLE`) with a `web` shim providing a passthrough `middleware` decorator (other attr access raises clean ImportError); `ClientSession=ClientTimeout=None`; early ImportError guard in `connect()`.
+- **M7-S5-2 [P1] FIXED** — `websocket_interface.py`: unguarded top-level `import websockets` (same package-wide break); eager `websockets.WebSocketServerProtocol` annotations. Fix = `from __future__ import annotations` + guarded import (`WEBSOCKETS_AVAILABLE`, `websockets=None`) + early ImportError guard in `connect()`.
+- **M7-S5-3 [P1] FIXED** — `message_queue.py`: `zmq`/`aio_pika` were flag-guarded but NOT import-safe — `except` branches didn't bind `zmq=None`/`aio_pika=None`, and method signatures `zmq.asyncio.Socket` (L428) / `aio_pika.IncomingMessage` (L718) were evaluated at import → NameError. Fix = `from __future__ import annotations` + bind `zmq=None`/`aio_pika=None` in except. Existing `__init__` ZMQ/RABBITMQ_AVAILABLE runtime guards left intact.
+- **M7-S5-4 [P3] FIXED** — banner de-slop: stripped stray trailing `\\\` from `#=` banner lines across all 7 shipped files (21 lines). Comments only.
+
+**Decision (dup modules):** dropped `udp_interface_deadlock_free.py` and `udp_interface_threadsafe.py` from the port — both unreferenced by `__init__`/`factory` (only `udp_interface.py` is wired). Kept trunk clean per SadeQ's call. Deadlock-free adoption, if desired, is a deliberate future rewire (ties to deferred async-remediation).
+
+**Clean (no findings):** Lens A (no citation tokens / TODO / placeholder / dead stubs). Trap B (only `..core` relative imports, ported in S1). `tcp_interface.py`, `udp_interface.py`, `factory.py`, `__init__.py` import-safe as-is (banner-only).
+
+**Gate:** py_compile GREEN; import-safety GREEN with aiohttp/websockets/zmq/aio_pika all absent (all 6 modules + package; every *_AVAILABLE flag False; `core` sibling stubbed to mirror trunk); `connect()` raises clean ImportError when a backend is missing. Fix on trunk pending CLI apply/push.
+
+**Note:** no legacy tests exist for network/websocket/tcp/udp/zmq/mqtt under SMC-PSO/tests/.
+- Commit: `bc0c8829a42d4440d4e824191e124ebe3a1cca4d` (record parent `6f77cfab529eeaca8067a02cb376366bcc08bf5f`).
