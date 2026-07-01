@@ -532,7 +532,7 @@ valid under pinned `numpy<2.0`. Body byte-identical to source modulo banner + li
 | M8-SCHED-2 | P1 | S4 | `performance/control_analysis.py:24` imports `src.controllers.mpc.mpc_controller` (MPC excluded in M5) | GUARD: make lazy + guarded; log if MPC absent |
 | M8-SCHED-3 | P2 | S4 | `performance/stability_analysis.py:695` imports `src.plant.core.numerical_stability` (deprecated twin) | GUARD/remap: lazy + guarded import |
 | M8-SCHED-4 | P1 | S4 | `performance/robustness.py` perturbation methods (~479-689) `return nominal` with `# TODO: Implement actual perturbed simulation` - scientifically misleading | FIX IN-SLICE: implement real perturbation / re-simulation |
-| M8-SCHED-5 | P2 | S3 | `validation/statistical_benchmarks.py:24` imports `src.benchmarks.statistical_benchmarks_v2` (M10) | GUARD: lazy import |
+| M8-SCHED-5 | P2 | S3 | `validation/statistical_benchmarks.py:24` imports `src.benchmarks.statistical_benchmarks_v2` (M10) | VOID (docstring example only, no actual runtime import; see M8-S3a) |
 | M8-SCHED-6 | P2 | S5 | `visualization/*` eager matplotlib import | GUARD: lazy matplotlib |
 | M8-SCHED-7 | P2 | S6 | top-level `src/analysis/__init__.py` is EAGER (hard-fails today) | Replace with LAZY PEP-562 loader |
 
@@ -548,4 +548,14 @@ valid under pinned `numpy<2.0`. Body byte-identical to source modulo banner + li
 | M8-S2-4 | A | P3 | fdi.py:425-428 | _verify_interface() defined but never called at import (dead helper) | ACCEPTED — ported as-is; harmless, no import-time execution. |
 
 Open after M8-S2: P0=0, P1=0. (M8-S2-3 is P2/deferred-to-S6; M8-S2-4 is P3/accepted.)
+
+---
+
+## M8-S3a — analysis/validation/ foundation
+
+- **M8-S3a-1 | P2 | OPEN (latent, faithful-port)** — `statistical_benchmarks.py` convenience wrappers `run_trials_with_advanced_statistics` and `compare_controllers` perform a function-local `from .statistics import (...)` of names that are NOT defined in `statistics.py` (`perform_statistical_tests`, `compute_t_confidence_intervals`, `compute_bootstrap_confidence_intervals`, `compare_metric_distributions`). Calling either raises `ImportError`. Ported faithfully (code wins); module import and primary paths (`run_trials`, `StatisticalBenchmarks`, `compute_metrics`) are unaffected. Pinned by `test_latent_advanced_wrappers_raise_importerror`. Real fix deferred (revisit during S3b / analysis cleanup).
+- **M8-S3a-2 | P3 | FIXED** — `statistical_benchmarks.py` docstrings contained 2x U+2011 (non-breaking hyphen, L162/L193) and 1x U+2013 (en dash, L202). Normalized to ASCII `-`. No logic change.
+- **M8-S3a-3 | P3 | ACCEPTED** — `core.mock_trial_function` uses unseeded `np.random` to fabricate metrics, but is an explicitly labeled test mock for validation infrastructure (name-prefixed `mock_`), not a science path. Accepted as-is.
+
+Open after M8-S3a: **P0 = 0, P1 = 0** (P2: M8-S3a-1, M8-S2-3; various P3).
 
