@@ -72,13 +72,16 @@
 | M7-S5-2 | 2026-07-01 | interfaces/network | A | P1 | websocket_interface.py: unguarded top-level import websockets breaks package imports | FIXED | src/interfaces/network/websocket_interface.py @ bc0c8829a42d4440d4e824191e124ebe3a1cca4d |
 | M7-S5-3 | 2026-07-01 | interfaces/network | A | P1 | message_queue.py: zmq/aio_pika imports not import-safe (NameError on missing backends) | FIXED | src/interfaces/network/message_queue.py @ bc0c8829a42d4440d4e824191e124ebe3a1cca4d |
 | M7-S5-4 | 2026-07-01 | interfaces/network | A | P3 | stripped trailing backslashes from banner comment lines across 7 files | FIXED | src/interfaces/network/*.py @ bc0c8829a42d4440d4e824191e124ebe3a1cca4d |
+| M7-S6-1 | 2026-07-01 | interfaces/hil | A | P1 | data_logging.py: unguarded top-level import h5py breaks package imports | FIXED | src/interfaces/hil/data_logging.py @ 29bab7ab53c689bf9cba9ff412d104c92fcf4a6d |
+| M7-S6-2 | 2026-07-01 | interfaces/hil | A | P2 | controller_client.py, plant_server.py: shipped source contained AI citation slop | FIXED | src/interfaces/hil/{controller_client,plant_server}.py @ 29bab7ab53c689bf9cba9ff412d104c92fcf4a6d |
+| M7-S6-3 | 2026-07-01 | interfaces/hil | A | P3 | stripped trailing backslashes from banner comment lines across 9 files | FIXED | src/interfaces/hil/*.py @ 29bab7ab53c689bf9cba9ff412d104c92fcf4a6d |
 
 
 ### Summary counters (update on each session)
 - Open P0: 0
 - Open P1: 1 (M7-S2-3 streaming async-hang, deferred to dedicated remediation slice)
 - Open P2: 16 (plant.A7, M2.v6, F-PLANT-2, F-PLANT-3, UTILS-DEDUP-1, UTILS-DEDUP-2, S2-A3, UTILS-DEDUP-3, S3-A4, UTILS-DEDUP-4, S4-A2, UTILS-DEDUP-5, S5-A3, MON-LAT-1, MON-LENSA-1, INFRA-LOG-1)
-- Modules accepted to trunk: M1 (config), M2 (plant), M3 Slice 1 (utils types+validation), M3 Slice 2 (utils control.primitives), M3 Slice 3 (utils testing.reproducibility), M3 Slice 4 (utils numerical_stability), M3 Slice 5 (utils analysis), M3 Slice 6 (utils monitoring + infrastructure/threading), M3 Slice 7 (utils infrastructure: logging + memory), M4 Slice 1 (base), M4 Slice 2 (core), M4 Slice 3 (integrators), M4 Slice 4 (safety), M4 Slice 5 (results/orchestrators), M4 Slice 6 (strategies), M5 Slice 1 (classical), M5 Slice 2 (sta), M5 Slice 3 (adaptive), M5 Slice 4 (hybrid), M5 Slice 5 (factory), M6 Slice 1a (batch), M6 Slice 1b (pso), M6 Slice 2 (integration), M7 Slice 1 (core), M7 Slice 2 (data_exchange), M7 Slice 3 (hardware), M7 Slice 4 (monitoring), M7 Slice 5 (network)
+- Modules accepted to trunk: M1 (config), M2 (plant), M3 Slice 1 (utils types+validation), M3 Slice 2 (utils control.primitives), M3 Slice 3 (utils testing.reproducibility), M3 Slice 4 (utils numerical_stability), M3 Slice 5 (utils analysis), M3 Slice 6 (utils monitoring + infrastructure/threading), M3 Slice 7 (utils infrastructure: logging + memory), M4 Slice 1 (base), M4 Slice 2 (core), M4 Slice 3 (integrators), M4 Slice 4 (safety), M4 Slice 5 (results/orchestrators), M4 Slice 6 (strategies), M5 Slice 1 (classical), M5 Slice 2 (sta), M5 Slice 3 (adaptive), M5 Slice 4 (hybrid), M5 Slice 5 (factory), M6 Slice 1a (batch), M6 Slice 1b (pso), M6 Slice 2 (integration), M7 Slice 1 (core), M7 Slice 2 (data_exchange), M7 Slice 3 (hardware), M7 Slice 4 (monitoring), M7 Slice 5 (network), M7 Slice 6 (hil)
 
 ## M2 / plant -- 2026-06-23
 - [P0] plant.B1  Inertia matrix M(q) incorrect (M12,M22,M23 spurious terms). Proof: KE-vs-M residual 2.95e-1. Status: FIXED (migration/plant).
@@ -454,3 +457,22 @@ Going forward, record the **parent** SHA at kit-build time and the **actual** pu
 
 **Note:** no legacy tests exist for network/websocket/tcp/udp/zmq/mqtt under SMC-PSO/tests/.
 - Commit: `bc0c8829a42d4440d4e824191e124ebe3a1cca4d` (record parent `6f77cfab529eeaca8067a02cb376366bcc08bf5f`).
+
+---
+
+### M7 · Slice 6 — `interfaces/hil/` (audited)
+
+- **M7-S6-1 [P1] FIXED** — `data_logging.py`: unguarded top-level `import h5py`; `__init__` imports `data_logging`, so the whole `hil` package was unimportable without the optional HDF5 dep. Fix = guarded import (`H5PY_AVAILABLE`, `h5py=None` on miss) + raise-at-use `ImportError` guards in `_create_new_file()` (HDF5 branch) and `load_hdf5_data()`. CSV/JSON logging paths unaffected.
+- **M7-S6-2 [P2] FIXED** — Lens A / provenance: shipped source contained fabricated AI citation artifacts — 4 tokens of form `【<digits>†L..-L..】` in comments (controller_client.py x1, plant_server.py x3) and 15 `# [CIT-066]` markers on real code lines (controller_client.py x8, plant_server.py x7). Stripped all 19; comment prose and logic preserved. Post-strip scan: zero residual `【`/`】`/`†`/`[CIT-` tokens.
+- **M7-S6-3 [P3] FIXED** — banner de-slop: stripped trailing `\\\` (+ trailing spaces on 2 footer banners) from `#=` banner lines across all 9 files (29 lines). Comments only.
+
+**Judgment call (left in place):** `plant_server.py` comment `... See design review issue #44.` — possibly fabricated but unverifiable and harmless; not removed to avoid over-editing. Flagged to SadeQ.
+
+**Clean (no findings):** `real_time_sync.py` psutil already try/except-guarded and only used at runtime under `PSUTIL_AVAILABLE` (import-safe as-is, left untouched); `yaml` guarded in controller_client/plant_server (`yaml=None`); `src.config` guarded; `src.controllers.factory` / `src.plant.models.*` lazy in-function; `scipy.linalg` lazy in-function; `numpy` hard dep (unguarded by design, consistent with all slices). Trap B clean (M1 config / M2 plant / M5 controllers / ported M7 siblings; no src.core or src.optimizer). `enhanced_hil.py` = real EnhancedHILSystem wired by `__init__` (not a dup; nothing dropped).
+
+**Test note:** legacy `tests/test_interfaces/hil` is an extensionless (non-collectable) script outside src scope — NOT shipped in kit. Rename to `test_*.py` + separate audit if wanted on trunk.
+
+**Gate:** py_compile GREEN; import-safety GREEN with h5py/psutil/scipy absent (all 8 modules + package; H5PY_AVAILABLE=False, PSUTIL_AVAILABLE=False; core/hardware/network siblings stubbed to mirror trunk); residual-slop scan clean; `load_hdf5_data()` raises clean ImportError when h5py missing. Fix on trunk pending CLI apply/push.
+
+**Milestone:** with S6, all six interfaces/ submodules (core, data_exchange, hardware, monitoring, network, hil) are ported.
+- Commit: `29bab7ab53c689bf9cba9ff412d104c92fcf4a6d` (record parent `bc0c8829a42d4440d4e824191e124ebe3a1cca4d`).
