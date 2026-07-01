@@ -19,11 +19,44 @@ scaffold, **dependency-first AND audit-driven**: every module is ported, audited
 | M5 Controller implementations | classical / sta / adaptive / hybrid + factory | [DONE] — S1-S5 complete on main @ 788f1e93 |
 | M6 Optimization | `src/optimization/` | [DONE] — S1a-S1b-S2 complete on main @ 1e321e1a |
 | M7 Interfaces / HIL | src/interfaces/ (was missing from old plan) | [DONE] - all 6 submodules + top-level package __init__ (banner + lazy sub-module importer) on main. M7-S2-3 async-hang CLOSED @ bb513058. M7-S7 package __init__ @ 336d2cf56a0f3e7a7978a076a3d89bb5ee66f0a8. |
-| M8 Analysis | `src/analysis/` (was missing) | [TODO] |
+| M8 | Analysis | **[WIP]** | S1 core done @ aed89bad467017c1673695d7046bdd4fee86bcb4; S2-S6 pending (see M8 plan below) |
 | M9 Entry points | `simulate.py`, `streamlit_app.py` | [TODO] |
 | M10 Benchmarks (+ integration/assets) | `src/benchmarks/` (was missing) | [TODO] |
 | M11 Verification suite & gates | `tests/`, coverage gates, CI | [TODO] |
 | -- plant simplified/low-rank | scaffold files present in beta (src/plant/models/simplified/, src/plant/models/lowrank/); validation + parity-testing deferred follow-up after M2 (D9) | [TODO] (scaffolded, not yet validated) |
+
+## M8 - Analysis module (plan + locked decisions)
+
+**Scope:** port `SMC-PSO/src/analysis/` -> `SMC-PSO-beta/src/analysis/` (6 subpackages, 29 files).
+`src/utils/analysis/` is a SEPARATE module - already handled in M3; do not touch it here.
+`src/analysis/validation/statistics.py` (CI/bootstrap/ANOVA/etc.) is NOT a duplicate of
+`src/utils/analysis/statistics.py` (welch/monte-carlo) - keep both.
+
+**Dependency order (drives slice order):** `core` -> {`fault_detection`, `validation`, `performance`}
+-> `visualization` -> top-level `__init__`.
+
+**Slice plan (each = its own backup-first, gated, focused-commit kit, mirroring M7 cadence):**
+- **S1 core/** - interfaces, data_structures, metrics, __init__. No cross-module deps. **DONE @ `aed89bad467017c1673695d7046bdd4fee86bcb4`.**
+- **S2 fault_detection/** - fdi, fdi_system, residual_generators, threshold_adapters. core + scipy. Clean.
+- **S3 validation/** - 9 files. core + scipy. Guard the lazy `benchmarks` import in statistical_benchmarks.py.
+- **S4 performance/** - BLOCKED by cross-module coupling. See DECISIONS below.
+- **S5 visualization/** - matplotlib-heavy. Guard the matplotlib import (lazy) so import-time is clean.
+- **S6 reports/ (empty) + top-level src/analysis/__init__.py as a LAZY PEP-562 loader** (NOT the original eager __init__, which hard-fails today). Closes M8.
+
+**LOCKED DECISIONS (SadeQ, 2026-07-01) - do NOT defer to a later 'fix kit':**
+1. **performance/ deps -> Decouple & guard.** In S4: drop the `benchmarks.metrics.*` re-exports from
+   `performance/__init__.py` (keep only `ControlAnalyzer`); make the MPC import
+   (`src.controllers.mpc.mpc_controller`, excluded in M5) and the `src.plant.core.numerical_stability`
+   (deprecated twin) imports lazy + guarded. Port performance now; log residual coupling as findings.
+   Keeps M8 self-contained (no pulling M10 benchmarks forward).
+2. **robustness.py placeholders -> FIX IN-SLICE (S4).** Implement REAL perturbation / re-simulation in
+   the robustness methods that currently `return nominal` (lines ~479-689, multiple
+   `# TODO: Implement actual perturbed simulation`). Do it as part of S4; do not ship a hollow port.
+   Note: core/RobustnessMetrics honest-NaN behavior is fine and stays; this decision is about
+   `performance/robustness.py` which silently returns nominal data (scientifically misleading).
+
+**Namespace note:** submodule slices (S1-S5) ship WITHOUT a top-level `src/analysis/__init__.py`;
+`src.analysis` is a namespace package until S6 (same pattern proven in M7).
 
 ## Audit posture (why this plan changed)
 - Repo was largely AI-generated -> every ported file is **"guilty until verified."**
@@ -126,7 +159,7 @@ Note: `src/controllers/__init__.py` now exports `ClassicalSMC` + `SuperTwistingS
 - **M7 is now COMPLETE.** Open P0 = 0, Open P1 = 0.
 
 ## Next milestone
-- M7 COMPLETE. Proceed to **M8 Analysis** (`src/analysis/`, was missing) - request source tree + audit note.
+- Proceed to **M8-S2 (fault_detection/)**.
 
 ## M7 Interfaces / HIL Ledger
 - S1 interfaces core ........ [DONE]   @ 6c8264efa21b60d0eee807c3f4f3a6a2471efb13
@@ -136,6 +169,22 @@ Note: `src/controllers/__init__.py` now exports `ClassicalSMC` + `SuperTwistingS
 - S5 network interfaces ..... [DONE]   @ bc0c8829a42d4440d4e824191e124ebe3a1cca4d
 - S6 HIL simulation & wiring  [DONE]   @ 29bab7ab53c689bf9cba9ff412d104c92fcf4a6d
 - S7 interfaces/__init__.py ... [DONE]   @ 336d2cf56a0f3e7a7978a076a3d89bb5ee66f0a8  (banner + lazy sub-module importer; P1 package=__name__ fix)
+
+## M8 Analysis Ledger
+- S1 core/ .................. [DONE]   @ aed89bad467017c1673695d7046bdd4fee86bcb4  (foundation; interfaces, data_structures, metrics)
+- S2 fault_detection/ ....... [PENDING]
+- S3 validation/ ............ [PENDING]
+- S4 performance/ ........... [PENDING]
+- S5 visualization/ ......... [PENDING]
+- S6 reports/ & __init__ .... [PENDING]
+
+### Session update - 2026-07-01
+- M8 opened. Recon audit of the full `src/analysis/` pack complete (29 files, 6 subpackages).
+- Locked S4 decisions with SadeQ: (1) decouple & guard performance deps; (2) fix robustness.py
+  perturbation in-slice. Recorded above so they survive to S4.
+- **M8-S1 (core/) DONE @ aed89bad467017c1673695d7046bdd4fee86bcb4** (brain 9b40276): interfaces + data_structures + metrics
+  ported (banner slop stripped, CRLF->LF, no functional edits), +7 regression tests. Full suite 971 green.
+- **Next: M8-S2 (fault_detection/).**
 
 
 

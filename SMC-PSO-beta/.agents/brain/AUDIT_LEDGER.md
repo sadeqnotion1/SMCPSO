@@ -507,3 +507,33 @@ Going forward, record the **parent** SHA at kit-build time and the **actual** pu
 
 **Gate:** py_compile GREEN; package imports GREEN (all 84 advertised symbols resolve successfully); regression test GREEN (passes in ~20s); full pytest suite GREEN (964 passed). Fix on trunk pending CLI apply/push.
 - Commit: `336d2cf56a0f3e7a7978a076a3d89bb5ee66f0a8` (record parent `bb513058b909e9588a9dd927030dd8be38fa5ee2`).
+
+---
+
+## M8 - Analysis
+
+### M8-S1 core/ (FIXED / ported @ `aed89bad467017c1673695d7046bdd4fee86bcb4`)
+| ID | Sev | Lens | Finding | Resolution |
+|----|-----|------|---------|------------|
+| M8-S1-1 | P3 | A | Banner decoration carried trailing `\\\` (triple-backslash) slop on all 3 header lines of every core file | Stripped; header kept |
+| M8-S1-2 | P3 | A | CRLF line endings | Normalized to LF |
+| M8-S1-3 | P3 | B | Honest not-implemented calculators: `RobustnessMetrics._compute_metric` and `StabilityMetrics` freq-domain metrics WARN + return NaN; `ComparisonResult.get_winner` returns an interpretation string | Ported as-is (honest, documented; NOT fabricated values). Behavior unchanged; locked by test `test_honest_placeholders_warn_and_return_nan_not_fake` |
+
+**core/ verdict:** clean, no P0/P1. Real ISE/IAE/ITAE/settling/overshoot/rise/SSE math; `np.trapz`
+valid under pinned `numpy<2.0`. Body byte-identical to source modulo banner + line endings (machine-verified).
+
+### M8 SCHEDULED findings (discovered now; offending files NOT yet on trunk - resolve in the noted slice)
+> These are recorded so they are not forgotten. They are NOT open-on-trunk P1s because the files
+> that carry them are not ported yet; each is scheduled with a locked resolution.
+
+| ID | Sev | Slice | Finding | Planned resolution (locked) |
+|----|-----|-------|---------|------------------------------|
+| M8-SCHED-1 | P1 | S4 | `performance/__init__.py` re-exports from `...benchmarks.metrics.{control_metrics,stability_metrics}` (benchmarks = M10, not ported) | DECOUPLE: drop the re-exports, keep only `ControlAnalyzer` |
+| M8-SCHED-2 | P1 | S4 | `performance/control_analysis.py:24` imports `src.controllers.mpc.mpc_controller` (MPC excluded in M5) | GUARD: make lazy + guarded; log if MPC absent |
+| M8-SCHED-3 | P2 | S4 | `performance/stability_analysis.py:695` imports `src.plant.core.numerical_stability` (deprecated twin) | GUARD/remap: lazy + guarded import |
+| M8-SCHED-4 | P1 | S4 | `performance/robustness.py` perturbation methods (~479-689) `return nominal` with `# TODO: Implement actual perturbed simulation` - scientifically misleading | FIX IN-SLICE: implement real perturbation / re-simulation |
+| M8-SCHED-5 | P2 | S3 | `validation/statistical_benchmarks.py:24` imports `src.benchmarks.statistical_benchmarks_v2` (M10) | GUARD: lazy import |
+| M8-SCHED-6 | P2 | S5 | `visualization/*` eager matplotlib import | GUARD: lazy matplotlib |
+| M8-SCHED-7 | P2 | S6 | top-level `src/analysis/__init__.py` is EAGER (hard-fails today) | Replace with LAZY PEP-562 loader |
+
+**Open on trunk after M8-S1:  P0 = 0,  P1 = 0.**
