@@ -159,7 +159,7 @@ Note: `src/controllers/__init__.py` now exports `ClassicalSMC` + `SuperTwistingS
 - **M7 is now COMPLETE.** Open P0 = 0, Open P1 = 0.
 
 ## Next milestone
-- Proceed to **M8-S2 (fault_detection/)**.
+- Proceed to **M8-S3 (validation/)** (port 9 files; keep validation/statistics.py separate from utils/analysis/statistics.py; lazy-guard benchmarks import in statistical_benchmarks.py:24).
 
 ## M7 Interfaces / HIL Ledger
 - S1 interfaces core ........ [DONE]   @ 6c8264efa21b60d0eee807c3f4f3a6a2471efb13
@@ -172,7 +172,7 @@ Note: `src/controllers/__init__.py` now exports `ClassicalSMC` + `SuperTwistingS
 
 ## M8 Analysis Ledger
 - S1 core/ .................. [DONE]   @ aed89bad467017c1673695d7046bdd4fee86bcb4  (foundation; interfaces, data_structures, metrics)
-- S2 fault_detection/ ....... [PENDING]
+- S2 fault_detection/ ....... [DONE]   @ 74ef5361717983a2305fa04903774d0f9b5e2068  (fdi, fdi_system, residual_generators, threshold_adapters; fail-loud param-est; stripped fdi citation slop)
 - S3 validation/ ............ [PENDING]
 - S4 performance/ ........... [PENDING]
 - S5 visualization/ ......... [PENDING]
@@ -185,6 +185,15 @@ Note: `src/controllers/__init__.py` now exports `ClassicalSMC` + `SuperTwistingS
 - **M8-S1 (core/) DONE @ aed89bad467017c1673695d7046bdd4fee86bcb4** (brain 9b40276): interfaces + data_structures + metrics
   ported (banner slop stripped, CRLF->LF, no functional edits), +7 regression tests. Full suite 971 green.
 - **Next: M8-S2 (fault_detection/).**
+
+- M8-S2 applied: ported src/analysis/fault_detection/ (5 files) + tests/test_analysis/test_fault_detection.py (12 tests).
+  Faithful port except: fdi.py stripped 6 fabricated citation anchors + normalized U+2011 hyphen (M8-S2-1);
+  ParameterEstimationGenerator._estimate_parameters now raises NotImplementedError instead of fabricating via
+  np.random (M8-S2-2, locked decision: fail-loud). No top-level src/analysis/__init__.py yet (namespace pattern).
+  Note (flag only, resolve at S6): fdi_system.py ships a duplicate "legacy" FDIsystem + DynamicsProtocol with
+  DIFFERENT defaults (threshold 0.5, no hysteresis) vs fdi.py's calibrated 0.150 + hysteresis (M8-S2-3).
+- **M8-S2 DONE @ 74ef5361717983a2305fa04903774d0f9b5e2068** (brain d42164a).
+- **Next: M8-S3 (validation/).**
 
 
 

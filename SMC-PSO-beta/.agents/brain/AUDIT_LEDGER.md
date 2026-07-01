@@ -537,3 +537,15 @@ valid under pinned `numpy<2.0`. Body byte-identical to source modulo banner + li
 | M8-SCHED-7 | P2 | S6 | top-level `src/analysis/__init__.py` is EAGER (hard-fails today) | Replace with LAZY PEP-562 loader |
 
 **Open on trunk after M8-S1:  P0 = 0,  P1 = 0.**
+
+### M8-S2 — src/analysis/fault_detection/
+
+| ID | Lens | Sev | File:Line | Finding | Resolution |
+|----|------|-----|-----------|---------|------------|
+| M8-S2-1 | A | P2 | fdi.py:50,52,53,74,86,194 | 6 fabricated citation anchors 【digits†Lxxx-Lyyy】 + U+2011 non-breaking hyphen in docstrings | FIXED — anchors removed, hyphen normalized to ASCII; no code/logic changed |
+| M8-S2-2 | B | P2 | residual_generators.py:506-528 | ParameterEstimationGenerator._estimate_parameters fabricated estimates as nominal + np.random.normal(...) (random, non-reproducible, \"Placeholder estimation\") | FIXED (fail-loud, locked decision) — now raises NotImplementedError; np.random removed from file. generate_residual still catches Exception -> emits warnings + empty residuals (no fabricated data). Real system-ID (RLS) remains future work. |
+| M8-S2-3 | B | P2 | fdi_system.py:1044-1206 | Duplicate \"legacy\" FDIsystem + DynamicsProtocol with DIFFERENT defaults (residual_threshold=0.5, no hysteresis) vs fdi.py's calibrated FDIsystem (0.150 + hysteresis + bounded history). Two same-named classes = wiring ambiguity. | OPEN — flagged; port faithful. Canonical choice to be made when wiring top-level src/analysis/__init__.py in M8-S6. |
+| M8-S2-4 | A | P3 | fdi.py:425-428 | _verify_interface() defined but never called at import (dead helper) | ACCEPTED — ported as-is; harmless, no import-time execution. |
+
+Open after M8-S2: P0=0, P1=0. (M8-S2-3 is P2/deferred-to-S6; M8-S2-4 is P3/accepted.)
+
