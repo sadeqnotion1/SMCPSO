@@ -18,7 +18,7 @@ scaffold, **dependency-first AND audit-driven**: every module is ported, audited
 | M4 Controllers base + sim core | `src/controllers/base.py`, `src/simulation/` | [DONE] — Slices 1-6 all on main (framework complete) @ 8f640738 |
 | M5 Controller implementations | classical / sta / adaptive / hybrid + factory | [DONE] — S1-S5 complete on main @ 788f1e93 |
 | M6 Optimization | `src/optimization/` | [DONE] — S1a-S1b-S2 complete on main @ 1e321e1a |
-| M7 Interfaces / HIL | src/interfaces/ (was missing from old plan) | [IN PROGRESS] — all 6 submodules ported (S1 core, S2 data_exchange @ a6c2b8ba, S3 hardware @ f76adc13, S4 monitoring @ 6f77cfab, S5 network @ bc0c8829, S6 hil @ 29bab7ab). P1 M7-S2-3 streaming async-hang CLOSED @ bb513058b909e9588a9dd927030dd8be38fa5ee2. Remaining: LAST interfaces/__init__.py (banner + lazy sub-module importer). |
+| M7 Interfaces / HIL | src/interfaces/ (was missing from old plan) | [DONE] - all 6 submodules + top-level package __init__ (banner + lazy sub-module importer) on main. M7-S2-3 async-hang CLOSED @ bb513058. M7-S7 package __init__ @ 336d2cf56a0f3e7a7978a076a3d89bb5ee66f0a8. |
 | M8 Analysis | `src/analysis/` (was missing) | [TODO] |
 | M9 Entry points | `simulate.py`, `streamlit_app.py` | [TODO] |
 | M10 Benchmarks (+ integration/assets) | `src/benchmarks/` (was missing) | [TODO] |
@@ -118,8 +118,15 @@ Note: `src/controllers/__init__.py` now exports `ClassicalSMC` + `SuperTwistingS
 - S1b PSOTuner port .......... [DONE]   @ ba126625131d8ff00b1558362ec05c5d92640a70
 - S2 integration bridge ...... [DONE]   @ 1e321e1aca248a76a05c25512c61b4e9ad8ce35f
 
+## Session update - 2026-07-01 (M7 close)
+- **M7-S7 (`src/interfaces/__init__.py`): DONE @ 336d2cf56a0f3e7a7978a076a3d89bb5ee66f0a8.** Ported the top-level package banner + PEP 562 lazy sub-module importer from SMC-PSO/ source.
+- **P1 fix:** source hardcoded `import_module(..., package='interfaces')`, which breaks under the beta `src` layout; changed to `package=__name__`. Sandbox proof: ported resolves 84/84 advertised symbols under `src.interfaces`; the original resolved 0/84.
+- Lens B: all 84 `__all__`/`_LAZY_IMPORTS` names verified against the 6 ported submodules; no dangling refs and no imports of the deprecated network twins (dropped in the port).
+- Added `tests/test_interfaces/test_interfaces_package_init.py` (framework-info consistency + all advertised names resolve + unknown-attr raises).
+- **M7 is now COMPLETE.** Open P0 = 0, Open P1 = 0.
+
 ## Next milestone
-- Proceed to M7 last item: interfaces/__init__.py (banner + lazy sub-module importer).
+- M7 COMPLETE. Proceed to **M8 Analysis** (`src/analysis/`, was missing) - request source tree + audit note.
 
 ## M7 Interfaces / HIL Ledger
 - S1 interfaces core ........ [DONE]   @ 6c8264efa21b60d0eee807c3f4f3a6a2471efb13
@@ -128,6 +135,7 @@ Note: `src/controllers/__init__.py` now exports `ClassicalSMC` + `SuperTwistingS
 - S4 monitoring ............. [DONE]   @ 6f77cfab529eeaca8067a02cb376366bcc08bf5f
 - S5 network interfaces ..... [DONE]   @ bc0c8829a42d4440d4e824191e124ebe3a1cca4d
 - S6 HIL simulation & wiring  [DONE]   @ 29bab7ab53c689bf9cba9ff412d104c92fcf4a6d
+- S7 interfaces/__init__.py ... [DONE]   @ 336d2cf56a0f3e7a7978a076a3d89bb5ee66f0a8  (banner + lazy sub-module importer; P1 package=__name__ fix)
 
 
 

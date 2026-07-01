@@ -75,13 +75,16 @@
 | M7-S6-1 | 2026-07-01 | interfaces/hil | A | P1 | data_logging.py: unguarded top-level import h5py breaks package imports | FIXED | src/interfaces/hil/data_logging.py @ 29bab7ab53c689bf9cba9ff412d104c92fcf4a6d |
 | M7-S6-2 | 2026-07-01 | interfaces/hil | A | P2 | controller_client.py, plant_server.py: shipped source contained AI citation slop | FIXED | src/interfaces/hil/{controller_client,plant_server}.py @ 29bab7ab53c689bf9cba9ff412d104c92fcf4a6d |
 | M7-S6-3 | 2026-07-01 | interfaces/hil | A | P3 | stripped trailing backslashes from banner comment lines across 9 files | FIXED | src/interfaces/hil/*.py @ 29bab7ab53c689bf9cba9ff412d104c92fcf4a6d |
+| M7-S7-1 | 2026-07-01 | interfaces (package) | B | P1 | top-level __init__ lazy loader hardcoded `import_module(..., package='interfaces')`; breaks under beta `src` layout (src.interfaces) -> every lazy attribute access raised AttributeError | FIXED | src/interfaces/__init__.py @ 336d2cf56a0f3e7a7978a076a3d89bb5ee66f0a8 (package=__name__; sandbox proof 84/84 vs 0/84) |
+| M7-S7-2 | 2026-07-01 | interfaces (package) | A | P3 | trailing backslashes on the 3 banner comment lines | FIXED | src/interfaces/__init__.py @ 336d2cf56a0f3e7a7978a076a3d89bb5ee66f0a8 |
+| M7-S7-3 | 2026-07-01 | interfaces (package) | A | P3 | CRLF line endings + error/AttributeError message hardcoded 'interfaces' package name | FIXED | src/interfaces/__init__.py @ 336d2cf56a0f3e7a7978a076a3d89bb5ee66f0a8 (LF; messages tied to __name__) |
 
 
 ### Summary counters (update on each session)
 - Open P0: 0
 - Open P1: 0
 - Open P2: 16 (plant.A7, M2.v6, F-PLANT-2, F-PLANT-3, UTILS-DEDUP-1, UTILS-DEDUP-2, S2-A3, UTILS-DEDUP-3, S3-A4, UTILS-DEDUP-4, S4-A2, UTILS-DEDUP-5, S5-A3, MON-LAT-1, MON-LENSA-1, INFRA-LOG-1)
-- Modules accepted to trunk: M1 (config), M2 (plant), M3 Slice 1 (utils types+validation), M3 Slice 2 (utils control.primitives), M3 Slice 3 (utils testing.reproducibility), M3 Slice 4 (utils numerical_stability), M3 Slice 5 (utils analysis), M3 Slice 6 (utils monitoring + infrastructure/threading), M3 Slice 7 (utils infrastructure: logging + memory), M4 Slice 1 (base), M4 Slice 2 (core), M4 Slice 3 (integrators), M4 Slice 4 (safety), M4 Slice 5 (results/orchestrators), M4 Slice 6 (strategies), M5 Slice 1 (classical), M5 Slice 2 (sta), M5 Slice 3 (adaptive), M5 Slice 4 (hybrid), M5 Slice 5 (factory), M6 Slice 1a (batch), M6 Slice 1b (pso), M6 Slice 2 (integration), M7 Slice 1 (core), M7 Slice 2 (data_exchange), M7 Slice 3 (hardware), M7 Slice 4 (monitoring), M7 Slice 5 (network), M7 Slice 6 (hil)
+- Modules accepted to trunk: M1 (config), M2 (plant), M3 Slice 1 (utils types+validation), M3 Slice 2 (utils control.primitives), M3 Slice 3 (utils testing.reproducibility), M3 Slice 4 (utils numerical_stability), M3 Slice 5 (utils analysis), M3 Slice 6 (utils monitoring + infrastructure/threading), M3 Slice 7 (utils infrastructure: logging + memory), M4 Slice 1 (base), M4 Slice 2 (core), M4 Slice 3 (integrators), M4 Slice 4 (safety), M4 Slice 5 (results/orchestrators), M4 Slice 6 (strategies), M5 Slice 1 (classical), M5 Slice 2 (sta), M5 Slice 3 (adaptive), M5 Slice 4 (hybrid), M5 Slice 5 (factory), M6 Slice 1a (batch), M6 Slice 1b (pso), M6 Slice 2 (integration), M7 Slice 1 (core), M7 Slice 2 (data_exchange), M7 Slice 3 (hardware), M7 Slice 4 (monitoring), M7 Slice 5 (network), M7 Slice 6 (hil), M7 Slice 7 (interfaces package __init__ - closes M7)
 
 ## M2 / plant -- 2026-06-23
 - [P0] plant.B1  Inertia matrix M(q) incorrect (M12,M22,M23 spurious terms). Proof: KE-vs-M residual 2.95e-1. Status: FIXED (migration/plant).
@@ -493,3 +496,14 @@ Going forward, record the **parent** SHA at kit-build time and the **actual** pu
 
 **Gate:** py_compile GREEN; repro GREEN; regression test GREEN on patched / RED-fast on unpatched. Fix on trunk pending CLI apply/push.
 - Commit: `bb513058b909e9588a9dd927030dd8be38fa5ee2` (record parent `29bab7ab53c689bf9cba9ff412d104c92fcf4a6d`).
+
+---
+
+### M7 · Slice 7 — `interfaces/` Package Init (audited)
+
+- **M7-S7-1 [P1] FIXED** — `interfaces/__init__.py`: lazy loader hardcoded `import_module(..., package='interfaces')`. Because the beta tree uses `src.interfaces`, every lazy attribute access raised `AttributeError` (0/84 symbols resolved). Fixed by setting `package=__name__` (portable regardless of layout), proving all 84/84 symbols resolve successfully.
+- **M7-S7-2 [P3] FIXED** — banner de-slop: stripped trailing backslashes on the 3 banner comment lines.
+- **M7-S7-3 [P3] FIXED** — package desynchronization: normalized CRLF to LF, and corrected hardcoded package names in error/`AttributeError` messages to dynamic `{__name__}` references.
+
+**Gate:** py_compile GREEN; package imports GREEN (all 84 advertised symbols resolve successfully); regression test GREEN (passes in ~20s); full pytest suite GREEN (964 passed). Fix on trunk pending CLI apply/push.
+- Commit: `336d2cf56a0f3e7a7978a076a3d89bb5ee66f0a8` (record parent `bb513058b909e9588a9dd927030dd8be38fa5ee2`).
