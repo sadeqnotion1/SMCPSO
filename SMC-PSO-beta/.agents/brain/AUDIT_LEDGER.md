@@ -528,10 +528,10 @@ valid under pinned `numpy<2.0`. Body byte-identical to source modulo banner + li
 
 | ID | Sev | Slice | Finding | Planned resolution (locked) |
 |----|-----|-------|---------|------------------------------|
-| M8-SCHED-1 | P1 | S4 | `performance/__init__.py` re-exports from `...benchmarks.metrics.{control_metrics,stability_metrics}` (benchmarks = M10, not ported) | DECOUPLE: drop the re-exports, keep only `ControlAnalyzer` |
-| M8-SCHED-2 | P1 | S4 | `performance/control_analysis.py:24` imports `src.controllers.mpc.mpc_controller` (MPC excluded in M5) | GUARD: make lazy + guarded; log if MPC absent |
-| M8-SCHED-3 | P2 | S4 | `performance/stability_analysis.py:695` imports `src.plant.core.numerical_stability` (deprecated twin) | GUARD/remap: lazy + guarded import |
-| M8-SCHED-4 | P1 | S4 | `performance/robustness.py` perturbation methods (~479-689) `return nominal` with `# TODO: Implement actual perturbed simulation` - scientifically misleading | FIX IN-SLICE: implement real perturbation / re-simulation |
+| M8-SCHED-1 | P1 | S4 | `performance/__init__.py` re-exports from `...benchmarks.metrics.{control_metrics,stability_metrics}` (benchmarks = M10, not ported) | RESOLVED: dropped benchmarks re-exports, only export ControlAnalyzer |
+| M8-SCHED-2 | P1 | S4 | `performance/control_analysis.py:24` imports `src.controllers.mpc.mpc_controller` (MPC excluded in M5) | RESOLVED: MPC import lazy-guarded inside linearize_dip |
+| M8-SCHED-3 | P2 | S4 | `performance/stability_analysis.py:695` imports `src.plant.core.numerical_stability` (deprecated twin) | RESOLVED: guarded with local FallbackRegularizer (Tikhonov ridge) |
+| M8-SCHED-4 | P1 | S4 | `performance/robustness.py` perturbation methods (~479-689) `return nominal` with `# TODO: Implement actual perturbed simulation` - scientifically misleading | RESOLVED: real linear state-space re-simulation using scipy.signal.lsim |
 | M8-SCHED-5 | P2 | S3 | `validation/statistical_benchmarks.py:24` imports `src.benchmarks.statistical_benchmarks_v2` (M10) | VOID (docstring example only, no actual runtime import; see M8-S3a) |
 | M8-SCHED-6 | P2 | S5 | `visualization/*` eager matplotlib import | GUARD: lazy matplotlib |
 | M8-SCHED-7 | P2 | S6 | top-level `src/analysis/__init__.py` is EAGER (hard-fails today) | Replace with LAZY PEP-562 loader |
@@ -576,4 +576,14 @@ Open after M8-S3a: **P0 = 0, P1 = 0** (P2: M8-S3a-1, M8-S2-3; various P3).
 - `statistical_tests.py`: U+2260 x2 (output labels "Mean/Median != 0") -> `!=`.
 
 Open after M8-S3b: **P0 = 0, P1 = 0** (P2: M8-S3b-3, M8-S3a-1, M8-S2-3; various P3).
+
+---
+
+## M8-S4 — analysis/performance/
+
+- **M8-S4-1 | P2 | OPEN** — Dropping benchmarks re-exports could break downstream code importing `calculate_control_metrics` or `StabilityMetrics` from `src.analysis.performance`. Verified none exist in the ported package itself, but keep open as a warning.
+- **M8-S4-2 | P3 | ACCEPTED** — `control_metrics.py` math docstrings normalized from Unicode symbols (integral, delta, ^T, ^2, sqrt, etc.) to ASCII; cosmetic docstring-only change.
+- **M8-S4-3 | P3 | NOTE** — The linear re-simulation is an approximation of the nonlinear plant (by design, to keep the package decoupled from the simulation loop). Finite difference sensitivity remains unbiased by this linear approximation since both positive and negative perturbation branches run the same re-simulation.
+
+Open after M8-S4: **P0 = 0, P1 = 0** (P2: M8-S4-1, M8-S3b-3, M8-S3a-1, M8-S2-3; various P3).
 

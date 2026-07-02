@@ -19,7 +19,7 @@ scaffold, **dependency-first AND audit-driven**: every module is ported, audited
 | M5 Controller implementations | classical / sta / adaptive / hybrid + factory | [DONE] — S1-S5 complete on main @ 788f1e93 |
 | M6 Optimization | `src/optimization/` | [DONE] — S1a-S1b-S2 complete on main @ 1e321e1a |
 | M7 Interfaces / HIL | src/interfaces/ (was missing from old plan) | [DONE] - all 6 submodules + top-level package __init__ (banner + lazy sub-module importer) on main. M7-S2-3 async-hang CLOSED @ bb513058. M7-S7 package __init__ @ 336d2cf56a0f3e7a7978a076a3d89bb5ee66f0a8. |
-| M8 | Analysis | **[WIP]** | S1 core [DONE @ aed89ba], S2 fault_detection [DONE @ 74ef536], S3a validation-foundation [DONE @ b8d449d9fe4774f2df272582297e95c25de62d29], S3b validation-heavy [DONE @ 25194860071fb6a473cdad8e192c7a274b17419e], S4 performance [NEXT], S5 visualization, S6 reports+lazy __init__ |
+| M8 | Analysis | **[WIP]** | S1 core [DONE @ aed89ba], S2 fault_detection [DONE @ 74ef536], S3a validation-foundation [DONE @ b8d449d9fe4774f2df272582297e95c25de62d29], S3b validation-heavy [DONE @ 25194860071fb6a473cdad8e192c7a274b17419e], S4 performance [DONE @ bf11cac706580ecc263ef8b9c0bc587f0b607234], S5 visualization [NEXT], S6 reports+lazy __init__ |
 | M9 Entry points | `simulate.py`, `streamlit_app.py` | [TODO] |
 | M10 Benchmarks (+ integration/assets) | `src/benchmarks/` (was missing) | [TODO] |
 | M11 Verification suite & gates | `tests/`, coverage gates, CI | [TODO] |
@@ -159,7 +159,7 @@ Note: `src/controllers/__init__.py` now exports `ClassicalSMC` + `SuperTwistingS
 - **M7 is now COMPLETE.** Open P0 = 0, Open P1 = 0.
 
 ## Next milestone
-- Proceed to **M8-S4 (performance/)** (decouple-&-guard performance deps + fix robustness.py perturbation in-slice).
+- Proceed to **M8-S5 (visualization/)** (guard matplotlib imports lazily, resolve M8-SCHED-6).
 
 ## M7 Interfaces / HIL Ledger
 - S1 interfaces core ........ [DONE]   @ 6c8264efa21b60d0eee807c3f4f3a6a2471efb13
@@ -175,7 +175,7 @@ Note: `src/controllers/__init__.py` now exports `ClassicalSMC` + `SuperTwistingS
 - S2 fault_detection/ ....... [DONE]   @ 74ef5361717983a2305fa04903774d0f9b5e2068  (fdi, fdi_system, residual_generators, threshold_adapters; fail-loud param-est; stripped fdi citation slop)
 - S3a validation foundation . [DONE]   @ b8d449d9fe4774f2df272582297e95c25de62d29  (__init__, statistical_benchmarks, core, metrics, statistics; stripped unicode-dash)
 - S3b validation heavy ...... [DONE]   @ 25194860071fb6a473cdad8e192c7a274b17419e  (benchmarking, cross_validation, monte_carlo, statistical_tests; honest-degraded p-values; slop normalized)
-- S4 performance/ ........... [PENDING]
+- S4 performance/ ........... [DONE]   @ bf11cac706580ecc263ef8b9c0bc587f0b607234  (ControlAnalyzer, control_analysis, control_metrics, robustness, stability_analysis; real re-sims; MPC lazy-guarded)
 - S5 visualization/ ......... [PENDING]
 - S6 reports/ & __init__ .... [PENDING]
 
@@ -203,6 +203,10 @@ Note: `src/controllers/__init__.py` now exports `ClassicalSMC` + `SuperTwistingS
 - M8-S3b: Ported src/analysis/validation heavy modules: benchmarking.py, cross_validation.py, monte_carlo.py, statistical_tests.py. Decision honest_degrade applied to statistical_tests.py ONLY: nulled 3 fabricated hardcoded p-values (Anderson-Darling ~L246, ADF ~L488, KPSS ~L513) -> p_value=None + method='simplified'; real statistics/critical values preserved. Power analysis turned out to use real scipy (t.cdf/t.ppf/norm.ppf) -> no fabricated value to null; faithful port + P3 doc flag only. ASCII-slop normalized: U+00B1 (monte_carlo comment) -> +/-, U+2260 (2 statistical_tests labels) -> !=. __init__.py NOT modified (these 4 modules are import-by-path; source does not export them). Added tests/test_analysis/test_validation_heavy.py (12 tests incl. honest-degrade pins + over-degrade guards). M8-S3 fully complete.
 - **M8-S3b DONE @ 25194860071fb6a473cdad8e192c7a274b17419e** (brain 310b82f).
 - **Next: M8-S4 (performance/).**
+
+- M8-S4: Ported src/analysis/performance/ (5 modules). Dropped benchmarks re-exports (M8-SCHED-1); control_analysis MPC imports lazy-guarded (M8-SCHED-2); stability_analysis plant.core imports regularizer-guarded (M8-SCHED-3); robustness.py placeholder re-simulations replaced with real linear state-space re-simulation using scipy.signal.lsim (M8-SCHED-4). Added tests/test_analysis/test_performance.py (17 tests). Full test suite 1025 passed.
+- **M8-S4 DONE @ bf11cac706580ecc263ef8b9c0bc587f0b607234** (brain 7a7099c).
+- **Next: M8-S5 (visualization/).**
 
 
 
